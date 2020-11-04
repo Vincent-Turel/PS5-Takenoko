@@ -2,8 +2,8 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-    <groupId>TeamName</groupId> <!-- CHANGE ME -->
-    <artifactId>JarName</artifactId> <!-- CHANGE ME -->
+    <groupId>StonksDev</groupId> <!-- CHANGE ME -->
+    <artifactId>Takenoko</artifactId> <!-- CHANGE ME -->
     <version>0.2-SNAPSHOT</version> <!-- CHANGE ME -->
 
     <properties>
@@ -40,7 +40,7 @@
           </execution>
         </executions>
         <configuration>
-          <mainClass>fr.unice.polytech.startingpoint.Main</mainClass> <!-- CHANGE ME -->
+          <mainClass>dev.stonks.takenoko.Main</mainClass> <!-- CHANGE ME -->
 <!--          <arguments>
             <argument>argument1</argument>
           </arguments>

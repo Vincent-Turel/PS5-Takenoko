@@ -157,3 +157,5 @@ fabric.properties
 
 .idea/*
 JarName.iml
+
+target/*

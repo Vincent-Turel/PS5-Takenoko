@@ -1,4 +1,4 @@
-package fr.unice.polytech.startingpoint;
+package dev.stonks.takenoko;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

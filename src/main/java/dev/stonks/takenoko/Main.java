@@ -1,4 +1,4 @@
-package fr.unice.polytech.startingpoint;
+package dev.stonks.takenoko;
 
 public class Main {
 
