@@ -3,7 +3,7 @@
 ## Description du projet 
 Ce projet a pour objectif d'implémenter le jeu de plateau [Takenoko](https://www.trictrac.net/jeu-de-societe/takenoko) et d'y faire s'affronter différents bots.
 
-## État du projet
+## Progression
 Le projet commence gentiment !
 
 ## Building
