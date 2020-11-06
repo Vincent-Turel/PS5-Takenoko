@@ -18,4 +18,5 @@ class MainTest {
     void helloTest() {
         assertEquals(varToBeInitInSetup, Main.hello());
     }
+
 }
