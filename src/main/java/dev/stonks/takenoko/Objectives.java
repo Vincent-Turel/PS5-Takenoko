@@ -11,9 +11,9 @@ public class Objectives {
     Objectives(int objId,int objType,int objPt, int objNb){ //1 for type panda      |what you have  |number of      |number of something
         this.objList = new ArrayList<Integer>();            //2 for type gardener   |to do          |points give    |to complete obj
         this.objList.add(0,objId);                    //3 for type parcel     |               |when success   |
-        this.objList.add(1,objId);
-        this.objList.add(2,objId);
-        this.objList.add(3,objId);
+        this.objList.add(1,objType);
+        this.objList.add(2,objPt);
+        this.objList.add(3,objNb);
         this.objStatus = true;
     }
 
