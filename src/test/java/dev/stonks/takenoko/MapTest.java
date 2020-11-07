@@ -6,20 +6,20 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class MapTest {
     @Test
-    void MapNeighborOf() {
-        Map m = new Map();
+    void MapNeighborOf() throws IllegalTilePlacementException {
+        Map m = new Map(27);
         Tile initial = m.initialTile();
         Tile bottom = m.addNeighborOf(initial.withDirection(Direction.North));
 
-        assertTrue(initial.getNeighbor(Direction.South).get().equals(bottom));
-        assertTrue(bottom.getNeighbor(Direction.North).get().equals(initial));
+        assertTrue(m.getNeighborOf(initial, Direction.South).get().equals(bottom));
+        assertTrue(m.getNeighborOf(bottom, Direction.North).get().equals(initial));
 
-        assertTrue(initial.getNeighbor(Direction.SouthEast).isEmpty());
-        assertTrue(initial.getNeighbor(Direction.SouthOuest).isEmpty());
-        assertTrue(initial.getNeighbor(Direction.NorthEast).isEmpty());
+        assertTrue(m.getNeighborOf(initial, Direction.SouthEast).isEmpty());
+        assertTrue(m.getNeighborOf(initial, Direction.SouthOuest).isEmpty());
+        assertTrue(m.getNeighborOf(initial, Direction.NorthEast).isEmpty());
 
-        assertTrue(bottom.getNeighbor(Direction.SouthEast).isEmpty());
-        assertTrue(bottom.getNeighbor(Direction.SouthOuest).isEmpty());
-        assertTrue(bottom.getNeighbor(Direction.NorthEast).isEmpty());
+        assertTrue(m.getNeighborOf(bottom, Direction.SouthEast).isEmpty());
+        assertTrue(m.getNeighborOf(bottom, Direction.SouthOuest).isEmpty());
+        assertTrue(m.getNeighborOf(bottom, Direction.NorthEast).isEmpty());
     }
 }
