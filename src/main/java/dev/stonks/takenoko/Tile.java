@@ -1,5 +1,6 @@
 package dev.stonks.takenoko;
 
+import java.util.Arrays;
 import java.util.Optional;
 
 /**
@@ -8,21 +9,22 @@ import java.util.Optional;
  * @author the StonksDev team
  */
 public class Tile {
-    private Optional<Tile> neighbors[];
+    private final Coordinate coord;
+    private boolean isInitial;
 
-    private Tile() {
-        neighbors = new Optional[6];
-
-        for (int i = 0; i < 6; i++) {
-            neighbors[i] = Optional.empty();
-        }
+    // Note: this constructor leaves isInitial as undefined. It is the caller
+    // responsibility to set it.
+    private Tile(Coordinate c) {
+        coord = c;
     }
 
     /**
      * Creates the initial tile.
      */
-    static Tile initialTile() {
-        return new Tile();
+    static Tile initialTile(Coordinate c) {
+        Tile t = new Tile(c);
+        t.isInitial = true;
+        return t;
     }
 
     /**
@@ -46,27 +48,44 @@ public class Tile {
      * @param neighbors The neighbors of the tile.
      * @return The newly created tile
      */
-    static Tile neighborOf(DirectionnedTile... neighbors) {
-        Tile t = new Tile();
-
-        for (DirectionnedTile neighbor: neighbors) {
-            t.setNeighbor(neighbor.direction(), neighbor.tile());
-            neighbor.tile().setNeighbor(neighbor.direction().reverse(), t);
-        }
-
+    static Tile neighborOf(DirectionnedTile... neighbors) throws IllegalTilePlacementException {
+        Coordinate tileCoord = coordinateFromNeighbors(neighbors);
+        Tile t = new Tile(tileCoord);
+        t.isInitial = false;
         return t;
     }
 
     /**
-     * Affects a given tile as neighbor of the current tile.
-     *
-     * The tile passed as argument is left unchanged. It must be changed in
-     * order to keep the map consistent.
-     * @param d the direction at which the tile <code>t</code> is.
-     * @param t the tile which is marked as neighbor.
+     * Returns, given a group of neighbors, the position of the corresponding
+     * tile.
+     * @param neighbors the tile neighbors
+     * @return the tile direction
+     * @throws IllegalTilePlacementException thrown when the provided direction
+     *                                       and tile coordinates does not
+     *                                       match each other.
      */
-    private void setNeighbor(Direction d, Tile t) {
-        neighbors[d.index()] = Optional.of(t);
+    private static Coordinate coordinateFromNeighbors(DirectionnedTile... neighbors) throws IllegalTilePlacementException {
+        Coordinate tileCoord = null;
+
+        for (DirectionnedTile neighbor: neighbors) {
+            Direction d = neighbor.direction();
+            Coordinate c = neighbor.tile().getCoordinate();
+
+            if (tileCoord == null) {
+                tileCoord = c.moveWith(d.reverse());
+            } else if (tileCoord.moveWith(d) != c) {
+                throw new IllegalTilePlacementException("Tiles can not be neighbor");
+            }
+        }
+
+        boolean neighborOfInitial = Arrays.stream(neighbors).anyMatch(dt -> dt.tile().isInitial());
+        boolean hasTwoNeighbors = neighbors.length >= 2;
+
+        if (!neighborOfInitial && !hasTwoNeighbors) {
+            throw new IllegalTilePlacementException("Tile don't have required neighbors");
+        }
+
+        return tileCoord;
     }
 
     /**
@@ -80,15 +99,16 @@ public class Tile {
     }
 
     /**
-     * Returns a given neighbor.
-     * @param d the requested direction
-     * @return the neighbor, if it exists
+     * Returns the tile's coordinates.
      */
-    Optional<Tile> getNeighbor(Direction d) {
-        return neighbors[d.index()];
+    public Coordinate getCoordinate() {
+        return coord;
     }
 
-    public boolean equals(Tile rhs) {
-        return neighbors.equals(rhs.neighbors);
+    /**
+     * Returns whether if the tile is the initial tile or not.
+     */
+    public boolean isInitial() {
+        return isInitial;
     }
 }

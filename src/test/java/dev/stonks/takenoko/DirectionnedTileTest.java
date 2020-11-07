@@ -6,7 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class DirectionnedTileTest {
     @Test
     void directionnedTileTile() {
-        Tile t = Tile.initialTile();
+        Tile t = Tile.initialTile(null);
         DirectionnedTile dt = t.withDirection(Direction.North);
 
         assertEquals(dt.tile(), t);
@@ -14,7 +14,7 @@ public class DirectionnedTileTest {
 
     @Test
     void directionnedTileDirection() {
-        Tile t = Tile.initialTile();
+        Tile t = Tile.initialTile(null);
         DirectionnedTile dt = t.withDirection(Direction.NorthEast);
 
         assertEquals(dt.direction(), Direction.NorthEast);
