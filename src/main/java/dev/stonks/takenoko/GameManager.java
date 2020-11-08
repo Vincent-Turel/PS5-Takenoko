@@ -1,6 +1,7 @@
 package dev.stonks.takenoko;
 
 import java.util.ArrayList;
+import java.util.UnknownFormatConversionException;
 
 /**
  * Represents the game manager. It is responsible to create a game
@@ -10,16 +11,20 @@ import java.util.ArrayList;
  * @author the StonksDev team
  */
 public class GameManager {
+    int[] nbIa;
     Game game;
-    ArrayList<int[]> stats;
+    int[][] stats;
 
     /**
      * Initialise a game with different ia level.
-     * Here, it's 1 DumbPlayer and 1 DumbPlayer.
+     * Here, [1,1], it's 1 RandomPlayer and 1 DumbPlayer.
+     * <code> new int[]{1,1}</code>
      *
      */
-    public GameManager() {
-        game = new Game(new int[]{1,1});
+    public GameManager(int[] numberOfIa) {
+        nbIa = numberOfIa;
+        game = new Game(nbIa);
+        stats = new int[nbIa.length][3];
     }
 
     /**
@@ -40,10 +45,47 @@ public class GameManager {
     /**
      * Add the statistics of the game in the stats.
      *stats = [bot1[nbWinGame,nbLoseGame,nbDrawGame],...,botN[]]
+     * stats[0] contains the statistics of the first player, stats[n]  contains the statistics of the player number n
      * @param game
      */
     private void changeStats(Game game) {
-        stats[0]+=;
+        int[] results = game.getResults();
+        boolean draw = checkDraw(results);
+        for(int i = 0;i < stats.length; i++) {
+            if(draw){
+                if(results[i]==1){
+                    stats[i][2]+=1;
+                }
+                else{
+                    stats[i][1]+=1;
+                }
+            }
+            else{
+                if(results[i]==1){
+                    stats[i][0]+=1;
+                }
+                else{
+                    stats[i][1]+=1;
+                }
+            }
+        }
+    }
+
+    private boolean checkDraw(int[] results) {
+        boolean foundOneTime = false;
+        for(int i = 0;i < results.length; i++) {
+            if (!foundOneTime){
+                if (results[i]==1){
+                    foundOneTime = true;
+                }
+            }
+            else if (foundOneTime){
+                if (results[i]==1){
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     /**
@@ -52,9 +94,8 @@ public class GameManager {
      * The display must include the number and percentage of games won/lost/null,
      * and the average score of each bot.
      *
-     * @param stats
      */
-    private void displayStats() {
+    private void displayStats() throws UnsupportedOperationException {
         System.out.println("Score final :");
         for (Player player: game.players) {
             displayHisStats(player);
