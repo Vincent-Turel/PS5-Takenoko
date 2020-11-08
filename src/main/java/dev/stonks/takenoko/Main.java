@@ -13,11 +13,11 @@ public class Main {
 
         ObjectivesMaker test = new ObjectivesMaker();
 
-        Objectives a1 = test.addAnObjectivies(1,2,5);
-        Objectives a2 = test.addAnObjectivies(1,8,7);
-        Objectives a3 = test.addAnObjectivies(2,8,7);
+        test.addAnObjectives(1,2,5);
+        test.addAnObjectives(1,8,7);
+        test.addAnObjectives(2,8,7);
 
-        System.out.println(a3);}
+        }
 
 
 }
