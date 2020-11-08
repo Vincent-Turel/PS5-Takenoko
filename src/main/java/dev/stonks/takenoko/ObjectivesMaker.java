@@ -5,24 +5,24 @@ import java.util.List;
 
 public class ObjectivesMaker {
 
-    private List<Objectives> listObjectves;
+    private List<Objective> listObjectves;
 
     ObjectivesMaker(){
         listObjectves = new ArrayList<>();
     }
 
-    Objectives addAnObjectives(int objID, int nbTuille, int nbPT) {
-        for (Objectives value : this.listObjectves) {
+    Objective addAnObjectives(int objID, int nbTuille, int nbPT) {
+        for (Objective value : this.listObjectves) {
             if (value.getObjID() == objID) {
                 return null;
             }
         }
-        Objectives newObjectives = new Objectives(objID, nbTuille, nbPT);
+        Objective newObjectives = new Objective(objID, nbTuille, nbPT);
         this.listObjectves.add(newObjectives);
         return newObjectives;
     }
 
-    public List<Objectives> getDeck(){
+    public List<Objective> getDeck(){
         return this.listObjectves;
     }
 

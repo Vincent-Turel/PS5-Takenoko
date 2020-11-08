@@ -3,13 +3,13 @@ package dev.stonks.takenoko;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Objectives {
+public class Objective {
 
     private int objID;
     private int nbTuille;
     private int nbPt;
 
-    protected Objectives(int objID, int nbTuille, int nbPT){
+    protected Objective(int objID, int nbTuille, int nbPT){
         this.objID = objID;
         this.nbTuille = nbTuille;
         this.nbPt = nbPT;
