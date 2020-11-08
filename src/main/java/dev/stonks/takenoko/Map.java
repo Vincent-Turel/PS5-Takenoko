@@ -23,12 +23,33 @@ public class Map {
         sideLen = tileNumber * 2 + 1;
         int size = sideLen * sideLen;
         delta = tileNumber + 1;
+
         tiles = new Optional[size];
-        for (int i = 0; i < size; i++) {
+
+        unsetAllTiles();
+        setInitialTile();
+    }
+
+    /**
+     * Resets the map.
+     *
+     * This method removes every tile from the map and puts a fresh initial
+     * tile it its center.
+     */
+    void reset() {
+        unsetAllTiles();
+        setInitialTile();
+    }
+
+    private void unsetAllTiles() {
+        for (int i = 0; i < tiles.length; i++) {
             tiles[i] = Optional.empty();
         }
+    }
 
+    private void setInitialTile() {
         Coordinate initialTileCoord = new Coordinate(delta, delta, sideLen);
+
         try {
             setTile(initialTileCoord, Tile.initialTile(initialTileCoord));
         } catch (IllegalTilePlacementException e) {
