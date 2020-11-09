@@ -1,8 +1,5 @@
 package dev.stonks.takenoko;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class Objective {
 
     private int objID;
