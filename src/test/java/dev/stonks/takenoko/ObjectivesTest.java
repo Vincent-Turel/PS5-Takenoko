@@ -31,8 +31,11 @@ class ObjectivesTest {
         assertEquals(testMake.addAnObjectives(2,3,6),null);
         deck = testMake.getDeck();
         assertEquals(n, deck.size());
-        Objective newObj;
-        assertEquals(newObj = testMake.addAnObjectives(4,7,8),newObj);
+        Objective newObj = new Objective(4,7,8);
+        Objective newFacto = testMake.addAnObjectives(4,7,8);
+        assertEquals(newFacto.getObjID(),newObj.getObjID());
+        assertEquals(newFacto.getNbPt(),newObj.getNbPt());
+        assertEquals(newFacto.getNbTuille(),newObj.getNbTuille());
         assertEquals(n+1, deck.size());
     }
 

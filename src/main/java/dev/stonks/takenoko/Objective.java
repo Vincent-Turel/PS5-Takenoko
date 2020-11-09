@@ -6,7 +6,7 @@ public class Objective {
     private int nbTuille; //n° of tuille to success
     private int nbPt; //n° point given when success
 
-    protected Objective(int objID, int nbTuille, int nbPT){
+    Objective(int objID, int nbTuille, int nbPT){
         this.objID = objID;
         this.nbTuille = nbTuille;
         this.nbPt = nbPT;
