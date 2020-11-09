@@ -11,9 +11,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class ObjectivesTest {
 
     ObjectivesMaker testMake;
-    Objective OB01_2_5; //01->ID;2->nb tuille;5->nb point;
-    Objective OB02_3_6;
-    Objective OB03_4_7;
     Objective doubleObj;
     List<Objective> deck;
     int n = 3; //nb of objectives;
