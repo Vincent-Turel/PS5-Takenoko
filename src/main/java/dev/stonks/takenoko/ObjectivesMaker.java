@@ -9,21 +9,31 @@ public class ObjectivesMaker {
 
     ObjectivesMaker(){
         listObjectves = new ArrayList<>();
-    } //objectives factory object
+    }
 
-    Objective addAnObjectives(int objID, int nbTuille, int nbPT) { //objID = n° of objectives, nbTuille is the number of tuille to validate objective, nbPT is the number of points give when success
+    /**
+     * addAnObjectives it's the factory to make new objective
+     *
+     * @param objID n° of objectives
+     * @param nbTuille nbTuille is the number of tuille to validate objective
+     * @param nbPT nbPT is the number of points give when success
+     * @return return objective or null if the new objective already exist, it has the null value.
+     *
+     * @author the StonksDev team
+     */
+    Objective addAnObjectives(int objID, int nbTuille, int nbPT) {
         for (Objective value : this.listObjectves) {
-            if (value.getObjID() == objID) {    //if the new objective already exist, it has the null value. It's not an new objective, it's just an error when you try to create a new obj with the same id of an other.
+            if (value.getObjID() == objID) {
                 return null;
             }
         }
-        Objective newObjectives = new Objective(objID, nbTuille, nbPT); //If not, create the new objective
+        Objective newObjectives = new Objective(objID, nbTuille, nbPT);
         this.listObjectves.add(newObjectives);  //add it to the deck
-        return newObjectives;   //return it (his value is not null here)
+        return newObjectives;
     }
 
     public List<Objective> getDeck(){
         return this.listObjectves;
-    } //get the deck
+    }
 
 }
