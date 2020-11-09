@@ -2,9 +2,9 @@ package dev.stonks.takenoko;
 
 public class Objective {
 
-    private int objID;
-    private int nbTuille;
-    private int nbPt;
+    private int objID; //n° of objective
+    private int nbTuille; //n° of tuille to success
+    private int nbPt; //n° point given when success 
 
     protected Objective(int objID, int nbTuille, int nbPT){
         this.objID = objID;
