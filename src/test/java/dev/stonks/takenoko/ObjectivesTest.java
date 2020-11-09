@@ -21,9 +21,9 @@ class ObjectivesTest {
     @BeforeEach
     void setUp() {
         testMake = new ObjectivesMaker();
-        Objective OB01_2_5 = testMake.addAnObjectives(1,2,5);
-        Objective OB02_3_6 = testMake.addAnObjectives(2,3,6);
-        Objective OB03_4_7 = testMake.addAnObjectives(3,4,6);
+        testMake.addAnObjectives(1,2,5);
+        testMake.addAnObjectives(2,3,6);
+        testMake.addAnObjectives(3,4,6);
         Objective doubleObj = testMake.addAnObjectives(2,99,99);
         deck = testMake.getDeck();
     }

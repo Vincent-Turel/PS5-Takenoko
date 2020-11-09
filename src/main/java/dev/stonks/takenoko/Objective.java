@@ -4,7 +4,7 @@ public class Objective {
 
     private int objID; //n° of objective
     private int nbTuille; //n° of tuille to success
-    private int nbPt; //n° point given when success 
+    private int nbPt; //n° point given when success
 
     protected Objective(int objID, int nbTuille, int nbPT){
         this.objID = objID;
