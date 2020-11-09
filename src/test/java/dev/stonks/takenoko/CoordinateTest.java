@@ -1,8 +1,9 @@
 package dev.stonks.takenoko;
 
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
+
+import static org.junit.jupiter.api.Assertions.*;
+
 
 public class CoordinateTest {
     Coordinate initialCoord() {
@@ -149,5 +150,22 @@ public class CoordinateTest {
         Coordinate c = new Coordinate(3, 3, 0);
         Coordinate cSO = c.moveWith(Direction.NorthOuest);
         assertEquals(cSO, new Coordinate(2, 2, 0));
+    }
+
+    @Test
+    void neighbors() {
+        Coordinate c = new Coordinate(42, 42, 84);
+
+        Coordinate[] neighbors = c.neighbors();
+        Coordinate[] rightNeighbors = {
+                c.moveWith(Direction.North),
+                c.moveWith(Direction.NorthEast),
+                c.moveWith(Direction.SouthEast),
+                c.moveWith(Direction.South),
+                c.moveWith(Direction.SouthOuest),
+                c.moveWith(Direction.NorthOuest),
+        };
+
+        assertArrayEquals(neighbors, rightNeighbors);
     }
 }
