@@ -34,21 +34,24 @@ public class Coordinate {
      * @return the new direction
      */
     Coordinate moveWith(Direction d) {
+        boolean xEven = (x % 2) == 0;
+
         // Source for the offsets:
         // https://www.redblobgames.com/grids/hexagons/#coordinates
+        // This is even-q layout.
         switch (d) {
             case North:
                 return moveWith(0, -1);
             case NorthEast:
-                return moveWith(1, -1);
+                return moveWith(1, xEven ? 0 : -1);
             case SouthEast:
-                return moveWith(1, 0);
+                return moveWith(1, xEven ? 1 : 0);
             case South:
                 return moveWith(0, 1);
             case SouthOuest:
-                return moveWith(-1, 0);
+                return moveWith(-1, xEven ? 1 : 0);
             case NorthOuest:
-                return moveWith(-1, -1);
+                return moveWith(-1, xEven ? 0 : -1);
             default:
                 throw new IllegalStateException("Illegal direction found");
         }
@@ -58,7 +61,20 @@ public class Coordinate {
         return new Coordinate(x + dx, y + dy, mapSideLength);
     }
 
-    public boolean equals(Coordinate rhs) {
-        return x == rhs.x && y == rhs.y;
+    /**
+     * Tests for equality.
+     * @param o if <code>o</code> is a <code>Coordinate</code>, then the x and
+     *          y position are compared. Otherwise, <code>false</code> is
+     *          returned.
+     * @return whether if the current object equals <code>o</code>.
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (o instanceof Coordinate) {
+            Coordinate rhs = (Coordinate) o;
+            return x == rhs.x && y == rhs.y;
+        } else {
+            return false;
+        }
     }
 }
