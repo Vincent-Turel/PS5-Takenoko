@@ -2,6 +2,7 @@ package dev.stonks.takenoko;
 
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 public class CoordinateTest {
     Coordinate initialCoord() {
@@ -37,6 +38,34 @@ public class CoordinateTest {
                 .moveWith(Direction.NorthOuest);
 
         assertEquals(c, otherC);
+    }
+
+    @Test
+    void equalsDoesNotCareSideLength() {
+        Coordinate ca = new Coordinate(3, 9, 42);
+        Coordinate cb = new Coordinate(3, 9, 1000);
+        assertEquals(ca, cb);
+    }
+
+    @Test
+    void equalsCareAboutX() {
+        Coordinate ca = new Coordinate(1, 9, 42);
+        Coordinate cb = new Coordinate(3, 9, 1000);
+        assertNotEquals(ca, cb);
+    }
+
+    @Test
+    void equalsCareAboutY() {
+        Coordinate ca = new Coordinate(3, 100, 42);
+        Coordinate cb = new Coordinate(3, 9, 1000);
+        assertNotEquals(ca, cb);
+    }
+
+    @Test
+    void equalsCareAboutType() {
+        Coordinate c = new Coordinate(9, 2, 99);
+        Integer i = 42;
+        assertNotEquals(i, c);
     }
 
     // WARNING WARNING WARNING
