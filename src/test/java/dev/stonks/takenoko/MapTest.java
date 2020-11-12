@@ -1,6 +1,7 @@
 package dev.stonks.takenoko;
 
 import org.junit.jupiter.api.Test;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -21,5 +22,15 @@ public class MapTest {
         assertTrue(m.getNeighborOf(bottom, Direction.SouthEast).isEmpty());
         assertTrue(m.getNeighborOf(bottom, Direction.SouthOuest).isEmpty());
         assertTrue(m.getNeighborOf(bottom, Direction.NorthEast).isEmpty());
+    }
+
+    @Test
+    void setTileWithAbstractTile() throws IllegalTilePlacementException {
+        AbstractTile at = new AbstractTile();
+        Map m = new Map(42);
+        Coordinate c = new Coordinate(13, 12, 85);
+
+        m.setTile(c, at);
+        assertTrue(m.getTile(c).isPresent());
     }
 }
