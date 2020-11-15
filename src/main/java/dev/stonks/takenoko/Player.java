@@ -4,12 +4,14 @@ import java.util.Map;
 import java.util.Random;
 
 public abstract class Player {
+    protected int id;
     protected ArrayList<Objective> objectives;
     protected int nbObjectivesAchieved;
     protected int score;
     protected Random random;
 
-    public Player(){
+    public Player(int id){
+        this.id = id;
         this.objectives = new ArrayList<Objective>();
         this.nbObjectivesAchieved = 0;
         this.score = 0;
