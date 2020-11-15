@@ -6,20 +6,28 @@ import java.util.Random;
 public abstract class Player {
     protected ArrayList<Objective> objectives;
     protected int nbObjectivesAchieved;
-    protected Random random;
     protected int score;
+    protected Random random;
 
     public Player(){
         this.objectives = new ArrayList<Objective>();
         this.nbObjectivesAchieved = 0;
-        this.random = new Random();
         this.score = 0;
+        this.random = new Random();
     }
 
     public abstract Map.Entry<Coordinate, AbstractTile> putTile (Set<Coordinate> possiblePosition, ArrayList<AbstractTile> tiles);
 
     public ArrayList<Objective> getObjectives() {
         return this.objectives.clone();
+    }
+
+    public int getScore() {
+        return this.score;
+    }
+
+    public int getNbObjectivesAchieved() {
+        return this.nbObjectivesAchieved;
     }
 
     public boolean addObjectives(Objective objective){
