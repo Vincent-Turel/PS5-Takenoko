@@ -3,15 +3,12 @@ package dev.stonks.takenoko;
 import java.util.ArrayList;
 
 public class Main {
+    public static final int nbRandomPlayer = 1;
+    public static final int nbDumbPlayer = 2;
+    public static final int nbIntelligentPlayer = 2;
+
     public static void main(String... args) {
-        Player ramdomPlayer = new RandomPlayer(0);
-        Player dumbPlayer = new DumbPlayer(1);
-        ArrayList<Player> players = new ArrayList<>();
-        players.add(ramdomPlayer);
-        players.add(dumbPlayer);
-        for (Player player : players){
-            System.out.println(player.getClass().getName());
-        }
-        System.out.println(++ramdomPlayer.score);
+        GameManager gameManager = new GameManager(nbRandomPlayer,nbDumbPlayer);
+        gameManager.playNTime(5);
     }
 }
