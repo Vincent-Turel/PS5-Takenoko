@@ -1,7 +1,6 @@
 package dev.stonks.takenoko;
 
 import java.util.ArrayList;
-import java.util.UnknownFormatConversionException;
 
 /**
  * Represents the game manager. It is responsible to create a game
@@ -10,21 +9,43 @@ import java.util.UnknownFormatConversionException;
  *
  * @author the StonksDev team
  */
-public class GameManager {
-    int[] nbIa;
+public class GameManager() {
+    ArrayList<Player> players;
     Game game;
-    int[][] stats;
+    ArrayList<FinalResults> stats;
 
     /**
      * Initialise a game with different ia level.
      * Here, [1,1], it's 1 RandomPlayer and 1 DumbPlayer.
      * <code> new int[]{1,1}</code>
      *
+     * And here, [0,2], it's 2 DumbPlayer.
+     *
      */
-    public GameManager(int[] numberOfIa) {
-        nbIa = numberOfIa;
-        game = new Game(nbIa);
-        stats = new int[nbIa.length][3];
+    public GameManager(int nbRP, int nbDP) {
+        initialisesPlayers(nbRP,nbDP);
+        game = new Game(players);
+        initialisesStats();
+        stats = new ArrayList<FinalResults>();
+    }
+
+    private void initialisesStats() {
+        for (Player player : players) {
+            stats.add(new FinalResults(player.getId()));
+        }
+    }
+
+    private void initialisesPlayers(int nbRP, int nbDP) {
+            players = new ArrayList<Player>();
+            for(int i = 0;i<nbRP;i++) {
+                players.add(new RamdomPlayer);
+            }
+            for(int i = 0;i<nbDP;i++) {
+                players.add(new DumbPlayer);
+            }
+        /*for(int i = 0;i<nbIntelligentPlayer;i++) {
+            players.add(new IntelligentPlayer);
+        }*/
     }
 
     /**
@@ -36,20 +57,20 @@ public class GameManager {
     void playNTime(int n) {
         for (int i = 0; i < n; i++) {
             game.play();
-            changeStats(game);
+            changeStats();
             game.resetGame();
         }
-        displayStats();
+        displayStats(n);
     }
 
     /**
      * Add the statistics of the game in the stats.
-     *stats = [bot1[nbWinGame,nbLoseGame,nbDrawGame],...,botN[]]
+     *stats = [bot1[nbWinGame,nbLoseGame,nbDrawGame,summOfTheScore],...,botN[]]
      * stats[0] contains the statistics of the first player, stats[n]  contains the statistics of the player number n
-     * @param game
      */
-    private void changeStats(Game game) {
-        int[] results = game.getResults();
+    private void changeStats() {
+
+        ArrayList<GameResults> results = game.getResults();
         boolean draw = checkDraw(results);
         for(int i = 0;i < stats.length; i++) {
             if(draw){
@@ -71,6 +92,25 @@ public class GameManager {
         }
     }
 
+    private void changeStats2() {
+        ArrayList<GameResults> results = game.getResults();
+        int score = 0;
+        for (Player player : players) {
+            score = player.getScore();
+            stats.stream().filter(result -> result.getId()== player.getId()).change( gameStateOf(player.getId()),score);
+        }
+    }
+
+    public int gameStateOf(int id){
+        
+        for (Player player : players) {
+            score = player.getScore();
+            stats.stream().filter(result -> result.getId()== player.getId()).change( gameStateOf(player.getId()),score);
+        }
+        return gameState;
+    }
+
+    //players.stream().filter(player -> player.getId()==id).mapToInt(player -> player.getScore())
     private boolean checkDraw(int[] results) {
         boolean foundOneTime = false;
         for(int i = 0;i < results.length; i++) {
@@ -93,15 +133,28 @@ public class GameManager {
      *
      * The display must include the number and percentage of games won/lost/null,
      * and the average score of each bot.
+     * [bot1[nbWinGame,nbLoseGame,nbDrawGame,summOfTheScore],...,botN[]]
      *
      */
-    private void displayStats() throws UnsupportedOperationException {
+    private void displayStats(int n) throws UnsupportedOperationException {
         System.out.println("Score final :");
-        for (Player player: game.players) {
-            displayHisStats(player);
+        for (int i = 0;i<stats.length;i++) {
+            displayPlayerStats(stats[i],i,n);
         }
     }
-    private void displayHisStats(Player player){
+    private void displayPlayerStats(int[] stats,int number,int nbGames){
+        displayWhoItIs();
+        System.out.println("Win games :" + stats[0]);
+        System.out.println("Percentage of win games :" + (stats[0]/nbGames)*100 + "%");
+        System.out.println("Lost games :" + stats[1]);
+        System.out.println("Percentage of lost games :" + (stats[1]/nbGames)*100 + "%");
+        System.out.println("Draw :" + stats[2]);
+        System.out.println("Percentage of null games :" + (stats[2]/nbGames)*100 + "%");
+        int averageScore = (stats[3]/nbGames);
+        System.out.println("Average score :" + averageScore);
 
+    }
+
+    private void displayWhoItIs() {
     }
 }
