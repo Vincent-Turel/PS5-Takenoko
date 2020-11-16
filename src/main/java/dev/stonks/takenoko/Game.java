@@ -4,6 +4,15 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Optional;
+import java.util.Random;
+//Ajouter des classes
+// -abstractTile  FAIT
+// -results
+// Changer objectives
+//joueur à initialiser dans le main FAIT
+//position des cases
+//Pousse de bambou
+
 
 /**
  * Represents a game.
@@ -18,77 +27,62 @@ import java.util.Optional;
 public class Game {
     public static final int nbObjectivesToWIn = 3;
     Map map;
-    ArrayList<Tile> tileDeck;
+    ArrayList<AbstractTile> tileDeck;
     ArrayList<Player> players;
     ArrayList<Objective> objectives;
+    //TODO : à voir si on garde
     ArrayList<Objective> achievedObjectives;
-    int finalState[];
+    Random random;
+    //TODO : class result avec un resultat par joueur (joueur,classement,score)
+    ArrayList<GameResults> gamePlayersResults;
 
-    public Game(int[] nbIa) {
+    Game(ArrayList<Player> players) {
         map = new Map(28);
         initialisesDeck();
         initialisesObjectives();
-        initialisesPlayers(nbIa);
+        this.players = players;
         achievedObjectives = new ArrayList<Objective>();
-        finalState = new int[]{};
+        random = new Random();
+        gamePlayersResults = new ArrayList<GameResults>();
     }
 
     /**
      * Initialise a deck of tiles (the tiles players will draw)
      */
     private void initialisesDeck() {
-        tileDeck = new ArrayList<Tile>();
+        tileDeck = new ArrayList<AbstractTile>();
         for(int i = 0;i < 28;i++){
-            tileDeck.add(Optional.empty());
+            tileDeck.add(new AbstractTile());
         }
     }
 
     /**
      * Initialise the objectives (here, it's 10 tile objectives)
-     *
-     * @param objectives
      */
     private void initialisesObjectives() {
         ObjectivesMaker objectivesMaker = new ObjectivesMaker();
-        objectives = new ArrayList<Objective>();
         for(int i = 0;i < 5;i++){
             objectives.add(objectivesMaker.addAnObjectivies(i,2,2));
             objectives.add(objectivesMaker.addAnObjectivies(i+5,3,3));
         }
-        objectives.add(objectivesMaker.addAnObjectivies(objectives.size(),2,4));
     }
 
-    /**
-     * Initialise n players
-     *
-     * nbIa is an array of int, it contains the nb of ia
-     * for each ia level from the stupidest to the most intelligent.
-     *
-     * @param nbIa
-     */
-    private void initialisesPlayers(int[] nbIa) {
-        players = new ArrayList<Player>();
-        for(int i = 0;i<nbIa.length;i++) {
-            switch (i) {
-                case 0:
-                    for(int j = 0;i<nbIa[i];j++) {
-                        players.add(new RamdomPlayer);
-                    }
-                    break;
-                case 1:
-                    for(int j = 0;i<nbIa[i];j++) {
-                        players.add(new DumbPlayer);
-                    }
-                    break;
-            }
-        }
-    }
 
     void play() throws UnsupportedOperationException{
         boolean aPlayerWin = false;
         while(!aPlayerWin){
             for (Player player: players) {
-                player.putTile(possiblePosition,tiles);
+                //player.decide(map);
+                //player.doActions();
+                ArrayList<AbstractTile> possiblesTiles = new ArrayList<AbstractTile>(3);
+                for(int i=0; i<3; i++){
+                    int index = random.nextInt(tileDeck.size());
+                    //TODO: to find how take a object in an object array and how to remove
+                    AbstractTile aTile = tileDeck[index];
+                    possiblesTiles.add(aTile);
+                    tileDeck.remove(aTile);
+                }
+                player.putTile(map.getPlacements(),possiblesTiles);
                 checkObjectives(player);
             }
             aPlayerWin = checkIfWinner();
@@ -106,7 +100,8 @@ public class Game {
         ArrayList<Objective> playerObjectives = player.getObjectives();
         for (Objective objective: playerObjectives) {
             if(objective.isValid()){
-                player.getPoints(objective);
+                //TODO: 4 patern différents (classe et sous-classe)
+                player.getObjPt(objective);
                 achievedObjectives.add(objective);
                 playerObjectives.remove(objective);
             }
@@ -121,6 +116,7 @@ public class Game {
      * @return
      */
     private boolean checkIfWinner() {
+        //TODO: think about the emperor objectives (in checkObjectives or checkWinner)
         for (Player player : players) {
             if(player.getNbAchievedObjectives() == nbObjectivesToWIn){
                 player.getPoints(objectives[objectives.size()-1]);
@@ -138,18 +134,32 @@ public class Game {
      *
      */
     private void fillTheFinalScore() {
-
+        for (Player player : players) {
+            int id = player.getId();
+            gamePlayersResults.add(new GameResults(id,rankOf(id)));
+        }
     }
 
-    public int[] getResults() {
-        return finalState.clone();
+    private int rankOf(int id) {
+        int rank = 1;
+        int score = players.stream().filter(player -> player.getId()==id).mapToInt(player -> player.getScore());
+        for (Player player : players) {
+            if((player.getId()!=id) && (player.getScore()>score)){
+                rank ++;
+            }
+        }
+        return rank;
+    }
+
+    public ArrayList<GameResults> getResults() {
+        return gamePlayersResults;
     }
 
     void resetGame() throws UnsupportedOperationException{
         resetMap();
         resetPlayers();
         resetObjectives();
-        Arrays.fill(finalState, 0);
+        resetGameResults();
     }
 
     private void resetMap() {
@@ -165,7 +175,13 @@ public class Game {
     private void resetObjectives(){
         for (Objective objective : achievedObjectives) {
             objectives.add(objective);
-            achievedObjectives.remove(objective);
+        }
+        achievedObjectives.clear();
+    }
+
+    private void resetGameResults() {
+        for (GameResults gameResults : gamePlayersResults) {
+            gameResults.reset();
         }
     }
 
