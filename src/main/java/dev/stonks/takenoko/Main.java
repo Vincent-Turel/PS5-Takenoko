@@ -1,14 +1,15 @@
 package dev.stonks.takenoko;
 
+import java.util.ArrayList;
+
 public class Main {
-
-
-    public static String hello() {
-        return "Hello World!";
-    }
+    public static final int nbRandomPlayer = 1;
+    public static final int nbDumbPlayer = 2;
+    public static final int nbIntelligentPlayer = 2;
 
     public static void main(String... args) {
-        System.out.println(hello());
+        GameManager gameManager = new GameManager(nbRandomPlayer,nbDumbPlayer);
+        gameManager.playNTime(5);
     }
 
 }
