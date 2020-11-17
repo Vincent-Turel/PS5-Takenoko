@@ -16,20 +16,18 @@ public class GameManager() {
 
     /**
      * Initialise a game with different ia level.
-     * Here, [1,1], it's 1 RandomPlayer and 1 DumbPlayer.
-     * <code> new int[]{1,1}</code>
      *
-     * And here, [0,2], it's 2 DumbPlayer.
-     *
+     * @param nbRP is the number of random player
+     * @param nbDP is the number of dumb player
      */
     public GameManager(int nbRP, int nbDP) {
         initialisesPlayers(nbRP,nbDP);
         game = new Game(players);
         initialisesStats();
-        stats = new ArrayList<FinalResults>();
     }
 
     private void initialisesStats() {
+        stats = new ArrayList<FinalResults>();
         for (Player player : players) {
             stats.add(new FinalResults(player.getId()));
         }
@@ -65,67 +63,47 @@ public class GameManager() {
 
     /**
      * Add the statistics of the game in the stats.
-     *stats = [bot1[nbWinGame,nbLoseGame,nbDrawGame,summOfTheScore],...,botN[]]
+     * stats = [bot1[nbWinGame,nbLoseGame,nbDrawGame,summOfTheScore],...,botN[]]
      * stats[0] contains the statistics of the first player, stats[n]  contains the statistics of the player number n
      */
     private void changeStats() {
-
-        ArrayList<GameResults> results = game.getResults();
-        boolean draw = checkDraw(results);
-        for(int i = 0;i < stats.length; i++) {
-            if(draw){
-                if(results[i]==1){
-                    stats[i][2]+=1;
-                }
-                else{
-                    stats[i][1]+=1;
-                }
-            }
-            else{
-                if(results[i]==1){
-                    stats[i][0]+=1;
-                }
-                else{
-                    stats[i][1]+=1;
-                }
-            }
-        }
-    }
-
-    private void changeStats2() {
         ArrayList<GameResults> results = game.getResults();
         int score = 0;
         for (Player player : players) {
             score = player.getScore();
-            stats.stream().filter(result -> result.getId()== player.getId()).change( gameStateOf(player.getId()),score);
+            stats.stream().filter(result -> result.getId()== player.getId()).change(gameStateOf(player.getId(),results),score);
         }
     }
 
-    public int gameStateOf(int id){
-        
-        for (Player player : players) {
-            score = player.getScore();
-            stats.stream().filter(result -> result.getId()== player.getId()).change( gameStateOf(player.getId()),score);
+    /**
+     *
+     * @param id
+     * @param id
+     * @return the state of the game for one player :
+     * it can be a victory, a loose, or a draw
+     *
+     */
+    public int gameStateOf(int id, ArrayList<GameResults> results){
+        int gameState = 0;
+        boolean isDraw = false;
+        int actualRank = 0;
+        for (GameResults result: results) {
+            if(result.getId()==id){
+                actualRank = result.getRank();
+            }
+        }
+        if(actualRank==1) {
+            for (GameResults result : results) {
+                if ((result.getId() != id) && (actualRank == result.getRank())) {
+                    gameState = 22;//here, the draw is everything else than 0 or 1 (loose or win)
+                    isDraw = true;
+                }
+            }
+            if(!isDraw){
+                gameState=1;
+            }
         }
         return gameState;
-    }
-
-    //players.stream().filter(player -> player.getId()==id).mapToInt(player -> player.getScore())
-    private boolean checkDraw(int[] results) {
-        boolean foundOneTime = false;
-        for(int i = 0;i < results.length; i++) {
-            if (!foundOneTime){
-                if (results[i]==1){
-                    foundOneTime = true;
-                }
-            }
-            else if (foundOneTime){
-                if (results[i]==1){
-                    return true;
-                }
-            }
-        }
-        return false;
     }
 
     /**
@@ -138,23 +116,35 @@ public class GameManager() {
      */
     private void displayStats(int n) throws UnsupportedOperationException {
         System.out.println("Score final :");
-        for (int i = 0;i<stats.length;i++) {
-            displayPlayerStats(stats[i],i,n);
+        for (FinalResults result : stats) {
+            displayPlayerStats(result,n);
         }
     }
-    private void displayPlayerStats(int[] stats,int number,int nbGames){
-        displayWhoItIs();
-        System.out.println("Win games :" + stats[0]);
-        System.out.println("Percentage of win games :" + (stats[0]/nbGames)*100 + "%");
-        System.out.println("Lost games :" + stats[1]);
-        System.out.println("Percentage of lost games :" + (stats[1]/nbGames)*100 + "%");
-        System.out.println("Draw :" + stats[2]);
-        System.out.println("Percentage of null games :" + (stats[2]/nbGames)*100 + "%");
-        int averageScore = (stats[3]/nbGames);
-        System.out.println("Average score :" + averageScore);
+
+    /**
+     * Display all stats of one player
+     *
+     * @param result
+     * @param nbGames
+     */
+    private void displayPlayerStats(FinalResults result ,int nbGames){
+        displayWhoItIs(result.getId());
+        System.out.println("Win games :" + result.getNbWin());
+        System.out.println("Percentage of win games :" + (result.getNbWin()/nbGames)*100 + "%");
+        System.out.println("Lost games :" + result.getNbLoose());
+        System.out.println("Percentage of lost games :" + (result.getNbLoose()/nbGames)*100 + "%");
+        System.out.println("Draw :" + result.getNbDraw());
+        System.out.println("Percentage of null games :" + (result.getNbDraw()/nbGames)*100 + "%");
+        System.out.println("Average score :" + result.getFinalScore()/nbGames);
 
     }
 
-    private void displayWhoItIs() {
+    /**
+     * Display what player it is
+     * @param id
+     */
+    private void displayWhoItIs(int id) {
+        //TODO:display of the ia level ?
+        System.out.println("Bot n°"+ id + ", ia level : ");
     }
 }
