@@ -24,6 +24,8 @@ public abstract class Player {
         return this.objectives.clone();
     }
 
+    public int getId() { return id; }
+
     public int getScore() {
         return this.score;
     }
