@@ -30,7 +30,8 @@ public class Game {
     ArrayList<AbstractTile> tileDeck;
     ArrayList<Player> players;
     ArrayList<Objective> objectives;
-    //TODO : à voir si on garde
+    Objective emperor;
+    //TODO : soit on réinitialises avec objectivesMaker, soit on fait achievedObjectives
     ArrayList<Objective> achievedObjectives;
     Random random;
     //TODO : class result avec un resultat par joueur (joueur,classement,score)
@@ -65,29 +66,43 @@ public class Game {
             objectives.add(objectivesMaker.addAnObjectivies(i,2,2));
             objectives.add(objectivesMaker.addAnObjectivies(i+5,3,3));
         }
+        emperor = objectivesMaker.addAnObjectivies(objectives.size(),0,2);
     }
 
 
     void play() throws UnsupportedOperationException{
         boolean aPlayerWin = false;
+        objectivesDistribution();
         while(!aPlayerWin){
             for (Player player: players) {
                 //player.decide(map);
                 //player.doActions();
                 ArrayList<AbstractTile> possiblesTiles = new ArrayList<AbstractTile>(3);
+                int index = 0;
                 for(int i=0; i<3; i++){
-                    int index = random.nextInt(tileDeck.size());
-                    //TODO: to find how take a object in an object array and how to remove
-                    AbstractTile aTile = tileDeck[index];
+                    index = random.nextInt(tileDeck.size());
+                    AbstractTile aTile = tileDeck.get(index);
                     possiblesTiles.add(aTile);
-                    tileDeck.remove(aTile);
+                    tileDeck.remove(index);
                 }
-                player.putTile(map.getPlacements(),possiblesTiles);
+                Map.Entry<Coordinate, AbstractTile> couple = player.putTile(map.getPlacements(),possiblesTiles);
+                map.setTile(couple.getKey(), couple.getValue());
                 checkObjectives(player);
             }
             aPlayerWin = checkIfWinner();
         }
         fillTheFinalScore();
+    }
+
+    private void objectivesDistribution() {
+        int index = 0;
+        for (Player player: players) {
+            for(int i = 0;i<3;i++) {
+                index = random.nextInt(objectives.size());
+                player.addObjectives(objectives.get(index));
+                objectives.remove(index);
+            }
+        }
     }
 
     /**
@@ -99,13 +114,20 @@ public class Game {
     private void checkObjectives(Player player) {
         ArrayList<Objective> playerObjectives = player.getObjectives();
         for (Objective objective: playerObjectives) {
-            if(objective.isValid()){
+            if(isValid(objective)){
                 //TODO: 4 patern différents (classe et sous-classe)
-                player.getObjPt(objective);
+                player.newObjectivesAchieved(objective);
                 achievedObjectives.add(objective);
-                playerObjectives.remove(objective);
             }
         }
+    }
+
+    private boolean isValid(Objective objective) {
+        boolean isValid = false;
+        if(objective.getNbTuille()<=map.placedTiles.size()){
+            isValid = true;
+        }
+        return isValid;
     }
 
     /**
@@ -118,10 +140,9 @@ public class Game {
     private boolean checkIfWinner() {
         //TODO: think about the emperor objectives (in checkObjectives or checkWinner)
         for (Player player : players) {
-            if(player.getNbAchievedObjectives() == nbObjectivesToWIn){
-                player.getPoints(objectives[objectives.size()-1]);
-                achievedObjectives.add(objectives[objectives.size()-1]);
-                objectives.remove(objectives[objectives.size()-1]);
+            if(player.getNbAchievedObjectives() >= nbObjectivesToWIn){
+                player.addObjectives(emperor);
+                player.newObjectivesAchieved(emperor);
                 return true;
             }
         }
@@ -134,8 +155,9 @@ public class Game {
      *
      */
     private void fillTheFinalScore() {
+        int id = 0;
         for (Player player : players) {
-            int id = player.getId();
+            id = player.getId();
             gamePlayersResults.add(new GameResults(id,rankOf(id)));
         }
     }
