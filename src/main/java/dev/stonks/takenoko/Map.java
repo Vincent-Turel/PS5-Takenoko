@@ -250,6 +250,12 @@ public class Map {
         return count;
     }
 
+    /**
+     * Increase the size of all bamboo in all tiles
+     * If the bamboo size > 5, nothing to do
+     * If the tile is not present, nothing to do
+     */
+
     public void growBambooInMap(){
         for(int i=0;i<tiles.length;i++){
             if(tiles[i].isPresent()){

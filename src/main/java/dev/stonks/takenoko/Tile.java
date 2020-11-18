@@ -115,6 +115,10 @@ public class Tile {
         return isInitial;
     }
 
+    /**
+     * Increase the size of the bamboo
+     * Maximal size : 5
+     */
     public void growBamboo(){
         if (bambooSize>5){
             bambooSize=5;
