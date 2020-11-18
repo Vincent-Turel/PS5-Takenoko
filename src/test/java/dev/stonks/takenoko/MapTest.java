@@ -84,4 +84,13 @@ public class MapTest {
         // Check that there is no other available cell:
         assertEquals(avalaiblePositions.size(), 5);
     }
+
+    void setTileWithAbstractTile() throws IllegalTilePlacementException {
+        AbstractTile at = new AbstractTile();
+        Map m = new Map(42);
+        Coordinate c = new Coordinate(13, 12, 85);
+
+        m.setTile(c, at);
+        assertTrue(m.getTile(c).isPresent());
+    }
 }

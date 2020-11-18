@@ -12,10 +12,11 @@ public class Tile {
     private final Coordinate coord;
     private boolean isInitial;
 
-    // Note: this constructor leaves isInitial as undefined. It is the caller
-    // responsibility to set it.
-    private Tile(Coordinate c) {
+    // Note: this constructor defines isInitial as false. It is the caller
+    // responsibility to switch it to true.
+    Tile(Coordinate c) {
         coord = c;
+        isInitial = false;
     }
 
     /**

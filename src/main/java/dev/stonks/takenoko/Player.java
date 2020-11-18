@@ -1,7 +1,9 @@
 package dev.stonks.takenoko;
 
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.Random;
+import java.util.Set;
 
 /**
  * This class is the mother class of every types of player.
@@ -27,10 +29,10 @@ public abstract class Player {
      * @param tiles A liste of tiles
      * @return The coordinate and the tile the player has chosen
      */
-    public abstract Map.Entry<Coordinate, AbstractTile> putTile (Set<Coordinate> possiblePosition, ArrayList<AbstractTile> tiles);
+    public abstract Tile putTile (ArrayList<Coordinate> avalaiblePositions, ArrayList<AbstractTile> tiles);
 
     public ArrayList<Objective> getObjectives() {
-        return this.objectives.clone();
+        return (ArrayList<Objective>) this.objectives.clone();
     }
 
     /**
@@ -61,7 +63,7 @@ public abstract class Player {
      * @return true if the objectif has corectly been added. False otherwise
      */
     public boolean addObjectives(Objective objective){
-        if (this.objective.size() < 5){
+        if (this.objectives.size() < 5){
             this.objectives.add(objective);
             return true;
         }
@@ -76,7 +78,7 @@ public abstract class Player {
     public void newObjectivesAchieved(Objective objective){
         this.objectives.remove(objective);
         this.nbObjectivesAchieved++;
-        this.score += objective.getObjPt();
+        this.score += objective.getNbPt();
     }
 
     /**

@@ -9,9 +9,12 @@ import java.util.Map;
  * @see dev.stonks.takenoko.Player
  */
 public class DumbPlayer extends Player {
+    public DumbPlayer(int id) {
+        super(id);
+    }
 
     @Override
-    public Map.Entry<Coordinate, AbstractTile> putTile(Set<Coordinate> possiblePosition, ArrayList<AbstractTile> tiles) {
+    public Tile putTile(ArrayList<Coordinate> avalaiblePositions, ArrayList<AbstractTile> tiles) {
         return null;
     }
 }
