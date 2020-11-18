@@ -232,4 +232,21 @@ public class Map {
                     return concernedTile.isPresent() && ((Tile) concernedTile.get()).isInitial();
                 });
     }
+
+    /**
+     * Returns the number of tiles that are on the board.
+     * The initial tile is not counted.
+     */
+    int getPlacedTileNumber() {
+        // This is guaranteed to be higher than or equal to 0 since we have at
+        // least the initial tile.
+        int count = -1;
+        for (Optional<Tile> t: tiles) {
+            if (t.isPresent()) {
+                count += 1;
+            }
+        }
+
+        return count;
+    }
 }
