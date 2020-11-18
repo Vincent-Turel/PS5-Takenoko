@@ -11,6 +11,7 @@ import java.util.Set;
  * @see dev.stonks.takenoko.Player
  */
 public class RandomPlayer extends Player{
+
     RandomPlayer(int id) {
         super(id);
     }
@@ -19,8 +20,8 @@ public class RandomPlayer extends Player{
     public Tile putTile(ArrayList<Coordinate> possiblePosition, ArrayList<AbstractTile> tiles) {
         AbstractTile chosenAbstractTile = tiles.get(random.nextInt(tiles.size()));
         Coordinate chosenLocation = possiblePosition.get(random.nextInt(possiblePosition.size()));
-        Tile chosenTile = chosenAbstractTile.withCoordinate(chosenLocation);
+        tiles.remove(chosenAbstractTile);
 
-        return chosenTile;
+        return chosenAbstractTile.withCoordinate(chosenLocation);
     }
 }
