@@ -1,5 +1,7 @@
 package dev.stonks.takenoko;
 
+import java.lang.reflect.Array;
+
 /**
  * Represents a (x;y) coordinate.
  */
@@ -76,5 +78,27 @@ public class Coordinate {
         } else {
             return false;
         }
+    }
+
+    @Override
+    public int hashCode() {
+        return x * y;
+    }
+
+    /**
+     * Returns a list of the possible current position neighbors. It can be
+     * assumed that this array contains six elements.
+     */
+    Coordinate[] neighbors() {
+        Coordinate[] neighbors = {
+            moveWith(Direction.North),
+            moveWith(Direction.NorthEast),
+            moveWith(Direction.SouthEast),
+            moveWith(Direction.South),
+            moveWith(Direction.SouthOuest),
+            moveWith(Direction.NorthOuest)
+        };
+
+        return neighbors;
     }
 }
