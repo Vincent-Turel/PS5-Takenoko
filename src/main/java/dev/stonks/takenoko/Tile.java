@@ -120,10 +120,7 @@ public class Tile {
      * Maximal size : 5
      */
     public void growBamboo(){
-        if (bambooSize>5){
-            bambooSize=5;
-        }
-        else {
+        if (bambooSize<5){
             bambooSize+=1;
         }
     }
