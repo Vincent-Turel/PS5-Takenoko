@@ -38,12 +38,12 @@ public class GameManager {
             for(int i = 0;i<nbRP;i++) {
                 players.add(new RandomPlayer(i));
             }
-            for(int i = 0;i<nbDP;i++) {
+            /*for(int i = 0;i<nbDP;i++) {
                 players.add(new DumbPlayer(i+nbRP));
             }
-        /*for(int i = 0;i<nbIntelligentPlayer;i++) {
+            for(int i = 0;i<nbIntelligentPlayer;i++) {
             players.add(new IntelligentPlayer);
-        }*/
+            }*/
     }
 
     /**
@@ -52,7 +52,7 @@ public class GameManager {
      *
      * @param n
      */
-    void playNTime(int n) {
+    void playNTime(int n) throws IllegalTilePlacementException {
         for (int i = 0; i < n; i++) {
             game.play();
             changeStats();
@@ -130,13 +130,13 @@ public class GameManager {
     private void displayPlayerStats(FinalResults result ,int nbGames){
         displayWhoItIs(result.getId());
         System.out.println("Win games :" + result.getNbWin());
-        System.out.println("Percentage of win games :" + (result.getNbWin()/nbGames)*100 + "%");
+        System.out.println("Percentage of win games :" + (result.getNbWin()/(float)nbGames)*100 + "%");
         System.out.println("Lost games :" + result.getNbLoose());
-        System.out.println("Percentage of lost games :" + (result.getNbLoose()/nbGames)*100 + "%");
+        System.out.println("Percentage of lost games :" + (result.getNbLoose()/(float)nbGames)*100 + "%");
         System.out.println("Draw :" + result.getNbDraw());
-        System.out.println("Percentage of null games :" + (result.getNbDraw()/nbGames)*100 + "%");
-        System.out.println("Average score :" + result.getFinalScore()/nbGames);
-
+        System.out.println("Percentage of null games :" + (result.getNbDraw()/(float)nbGames)*100 + "%");
+        System.out.println("Average score :" + result.getFinalScore()/(float)nbGames);
+        System.out.println();
     }
 
     /**
