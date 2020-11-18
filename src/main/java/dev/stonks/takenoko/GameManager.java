@@ -9,7 +9,7 @@ import java.util.ArrayList;
  *
  * @author the StonksDev team
  */
-public class GameManager() {
+public class GameManager {
     ArrayList<Player> players;
     Game game;
     ArrayList<FinalResults> stats;
@@ -36,10 +36,10 @@ public class GameManager() {
     private void initialisesPlayers(int nbRP, int nbDP) {
             players = new ArrayList<Player>();
             for(int i = 0;i<nbRP;i++) {
-                players.add(new RamdomPlayer);
+                players.add(new RandomPlayer(i));
             }
             for(int i = 0;i<nbDP;i++) {
-                players.add(new DumbPlayer);
+                players.add(new DumbPlayer(i+nbRP));
             }
         /*for(int i = 0;i<nbIntelligentPlayer;i++) {
             players.add(new IntelligentPlayer);
@@ -68,10 +68,10 @@ public class GameManager() {
      */
     private void changeStats() {
         ArrayList<GameResults> results = game.getResults();
-        int score = 0;
         for (Player player : players) {
-            score = player.getScore();
-            stats.stream().filter(result -> result.getId()== player.getId()).change(gameStateOf(player.getId(),results),score);
+            stats.stream()
+                 .filter(result -> result.getId()== player.getId())
+                 .forEach(x -> x.change(gameStateOf(player.getId(),results),player.getScore()));
         }
     }
 
