@@ -11,12 +11,14 @@ import java.util.Optional;
 public class Tile {
     private final Coordinate coord;
     private boolean isInitial;
+    private int bambooSize;
 
     // Note: this constructor defines isInitial as false. It is the caller
     // responsibility to switch it to true.
     Tile(Coordinate c) {
         coord = c;
         isInitial = false;
+        bambooSize = 0;
     }
 
     /**
@@ -111,5 +113,14 @@ public class Tile {
      */
     public boolean isInitial() {
         return isInitial;
+    }
+
+    public void growBamboo(){
+        if (bambooSize>5){
+            bambooSize=5;
+        }
+        else {
+            bambooSize+=1;
+        }
     }
 }

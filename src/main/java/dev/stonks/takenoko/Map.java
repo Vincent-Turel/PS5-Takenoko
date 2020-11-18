@@ -249,4 +249,12 @@ public class Map {
 
         return count;
     }
+
+    public void growBambooInMap(){
+        for(int i=0;i<tiles.length;i++){
+            if(tiles[i].isPresent()){
+                tiles[i].get().growBamboo();
+            }
+        }
+    }
 }
