@@ -85,6 +85,7 @@ public class MapTest {
         assertEquals(avalaiblePositions.size(), 5);
     }
 
+    @Test
     void setTileWithAbstractTile() throws IllegalTilePlacementException {
         AbstractTile at = new AbstractTile();
         Map m = new Map(42);
@@ -92,5 +93,17 @@ public class MapTest {
 
         m.setTile(c, at);
         assertTrue(m.getTile(c).isPresent());
+    }
+
+    @Test
+    void growBambooInMap() throws IllegalTilePlacementException {
+        Map m = new Map(42);
+        Tile initT = m.initialTile();
+        Tile otherT = m.addNeighborOf(initT.withDirection(Direction.North));
+
+        m.growBambooInMap();
+
+        assertEquals(initT.bambooSize(), 0);
+        assertEquals(otherT.bambooSize(), 1);
     }
 }

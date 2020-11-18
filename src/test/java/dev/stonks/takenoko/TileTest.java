@@ -39,4 +39,45 @@ public class TileTest {
                 () -> Tile.neighborOf(bot.withDirection(Direction.North))
         );
     }
+
+    @Test
+    void initialBambooSize() {
+        Coordinate initialCoord = new Coordinate(42, 42, 85);
+        Tile t = new Tile(initialCoord);
+
+        assertEquals(t.bambooSize(), 0);
+    }
+
+    @Test
+    void growBamboo() {
+        Coordinate initialCoord = new Coordinate(42, 42, 85);
+        Tile t = new Tile(initialCoord);
+        t.growBamboo();
+
+        assertEquals(t.bambooSize(), 1);
+    }
+
+    @Test
+    void growBambooMax() {
+        Coordinate initialCoord = new Coordinate(42, 42, 85);
+        Tile t = new Tile(initialCoord);
+        t.growBamboo();
+        t.growBamboo();
+        t.growBamboo();
+        t.growBamboo();
+        t.growBamboo();
+
+        assertEquals(t.bambooSize(), 4);
+    }
+
+    @Test
+    void bambooDoesNotGrowOnInitial() {
+        Coordinate initialCoord = new Coordinate(42, 42, 85);
+        Tile t = Tile.initialTile(initialCoord);
+
+        t.growBamboo();
+        t.growBamboo();
+
+        assertEquals(t.bambooSize(), 0);
+    }
 }

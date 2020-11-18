@@ -117,11 +117,18 @@ public class Tile {
 
     /**
      * Increase the size of the bamboo
-     * Maximal size : 5
+     * Maximal size : 4
      */
     public void growBamboo(){
-        if (bambooSize<5){
+        if (bambooSize<4 && !isInitial){
             bambooSize+=1;
         }
+    }
+
+    /**
+     * Returns the bamboo length of the current tile.
+     */
+    public int bambooSize() {
+        return bambooSize;
     }
 }
