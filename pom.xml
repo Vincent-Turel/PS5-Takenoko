@@ -4,7 +4,7 @@
 
     <groupId>StonksDev</groupId> <!-- CHANGE ME -->
     <artifactId>Takenoko</artifactId> <!-- CHANGE ME -->
-    <version>0.2-SNAPSHOT</version> <!-- CHANGE ME -->
+    <version>0.1.0</version> <!-- CHANGE ME -->
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding> <!-- CHANGE ME IF NEEDED, other : ISO-8859-1 -->
