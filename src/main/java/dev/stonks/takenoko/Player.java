@@ -1,14 +1,18 @@
 package dev.stonks.takenoko;
 
 import java.util.ArrayList;
-import java.util.Map;
 import java.util.Random;
-import java.util.Set;
 
+enum PlayerType{
+    RandomPlayer,
+    DumbPlayer,
+    SmartPlayer
+}
 /**
  * This class is the mother class of every types of player.
  */
 public abstract class Player {
+    protected PlayerType playerType;
     protected int id;
     protected ArrayList<Objective> objectives;
     protected int nbObjectivesAchieved;
@@ -17,7 +21,7 @@ public abstract class Player {
 
     public Player(int id){
         this.id = id;
-        this.objectives = new ArrayList<Objective>();
+        this.objectives = new ArrayList<>();
         this.nbObjectivesAchieved = 0;
         this.score = 0;
         this.random = new Random();
@@ -25,14 +29,18 @@ public abstract class Player {
 
     /**
      *
-     * @param possiblePosition A set of all emplacement where a tile can be put
+     * @param avalaiblePositions A set of all emplacement where a tile can be put
      * @param tiles A liste of tiles
      * @return The coordinate and the tile the player has chosen
      */
-    public abstract Tile putTile (ArrayList<Coordinate> avalaiblePositions, ArrayList<AbstractTile> tiles);
+    public abstract Tile putTile (ArrayList<Coordinate> avalaiblePositions, ArrayList<AbstractTile> tiles, Map map);
 
     public ArrayList<Objective> getObjectives() {
         return (ArrayList<Objective>) this.objectives.clone();
+    }
+
+    public PlayerType getPlayerType() {
+        return playerType;
     }
 
     /**

@@ -1,9 +1,6 @@
 package dev.stonks.takenoko;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * This player plays randomly every time.
@@ -14,10 +11,11 @@ public class RandomPlayer extends Player{
 
     RandomPlayer(int id) {
         super(id);
+        this.playerType = PlayerType.RandomPlayer;
     }
 
     @Override
-    public Tile putTile(ArrayList<Coordinate> possiblePosition, ArrayList<AbstractTile> tiles) {
+    public Tile putTile(ArrayList<Coordinate> possiblePosition, ArrayList<AbstractTile> tiles, Map map) {
         AbstractTile chosenAbstractTile = tiles.get(random.nextInt(tiles.size()));
         Coordinate chosenLocation = possiblePosition.get(random.nextInt(possiblePosition.size()));
         tiles.remove(chosenAbstractTile);
