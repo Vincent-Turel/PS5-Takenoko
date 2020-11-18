@@ -59,6 +59,7 @@ public class Game {
      */
     private void initialisesObjectives() {
         ObjectivesMaker objectivesMaker = new ObjectivesMaker();
+        objectives = new ArrayList<Objective>();
         for(int i = 0;i < 5;i++){
             objectives.add(objectivesMaker.addAnObjectives(i,2,2));
             objectives.add(objectivesMaker.addAnObjectives(i+5,3,3));
@@ -76,7 +77,11 @@ public class Game {
                 //player.doActions();
                 ArrayList<AbstractTile> possiblesTiles = new ArrayList<AbstractTile>(3);
                 int index = 0;
-                for(int i=0; i<3; i++){
+                int size = 3;
+                if(size>tileDeck.size()){
+                    size = tileDeck.size();
+                }
+                for(int i=0; i<size; i++){
                     index = random.nextInt(tileDeck.size());
                     AbstractTile aTile = tileDeck.get(index);
                     possiblesTiles.add(aTile);
@@ -85,6 +90,9 @@ public class Game {
                 ArrayList<Coordinate> possiblesPlacements = new ArrayList<Coordinate>();
                 possiblesPlacements.addAll(map.getPlacements());
                 Tile chosenTile = player.putTile(possiblesPlacements,possiblesTiles);
+                for(int i=0; i<size-1; i++){
+                    tileDeck.add(possiblesTiles.get(i));
+                }
                 map.setTile(chosenTile);
                 checkObjectives(player);
             }
