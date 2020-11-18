@@ -60,14 +60,14 @@ public class Game {
     private void initialisesObjectives() {
         ObjectivesMaker objectivesMaker = new ObjectivesMaker();
         for(int i = 0;i < 5;i++){
-            objectives.add(objectivesMaker.addAnObjectivies(i,2,2));
-            objectives.add(objectivesMaker.addAnObjectivies(i+5,3,3));
+            objectives.add(objectivesMaker.addAnObjectives(i,2,2));
+            objectives.add(objectivesMaker.addAnObjectives(i+5,3,3));
         }
-        emperor = objectivesMaker.addAnObjectivies(objectives.size(),0,2);
+        emperor = objectivesMaker.addAnObjectives(objectives.size(),0,2);
     }
 
 
-    void play() throws UnsupportedOperationException{
+    void play() throws IllegalTilePlacementException{
         boolean aPlayerWin = false;
         objectivesDistribution();
         while(!aPlayerWin){
@@ -123,7 +123,7 @@ public class Game {
 
     private boolean isValid(Objective objective) {
         boolean isValid = false;
-        if(objective.getNbTuille()<=map.placedTiles.size()){
+        if(objective.getNbTuille()<=map.getPlacedTileNumber()){
             isValid = true;
         }
         return isValid;
@@ -139,7 +139,7 @@ public class Game {
     private boolean checkIfWinner() {
         //TODO: think about the emperor objectives (in checkObjectives or checkWinner)
         for (Player player : players) {
-            if(player.getNbAchievedObjectives() >= nbObjectivesToWIn){
+            if(player.getNbObjectivesAchieved() >= nbObjectivesToWIn){
                 player.addObjectives(emperor);
                 player.newObjectivesAchieved(emperor);
                 return true;
@@ -163,7 +163,12 @@ public class Game {
 
     private int rankOf(int id) {
         int rank = 1;
-        int score = players.stream().filter(player -> player.getId()==id).mapToInt(player -> player.getScore());
+        int score = 0;
+        for (Player player : players) {
+            if(player.getId()==id){
+                score = player.getScore();
+            }
+        }
         for (Player player : players) {
             if((player.getId()!=id) && (player.getScore()>score)){
                 rank ++;
@@ -189,7 +194,7 @@ public class Game {
 
     private void resetPlayers(){
         for (Player player : players) {
-            player.reset();
+            player.resetPlayer();
         }
     }
 
