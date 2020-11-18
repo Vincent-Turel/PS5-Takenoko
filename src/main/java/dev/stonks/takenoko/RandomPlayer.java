@@ -3,6 +3,11 @@ package dev.stonks.takenoko;
 import java.util.ArrayList;
 import java.util.Map;
 
+/**
+ * This player plays randomly every time.
+ * He is the most basic player we can do.
+ * @see dev.stonks.takenoko.Player
+ */
 public class RamdomPlayer extends Player{
 
     @Override
