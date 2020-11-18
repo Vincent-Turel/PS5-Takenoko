@@ -101,7 +101,20 @@ public class Map {
         // TODO: once the following PR is merged, ensure that this position
         // follows the game rules.
         // https://github.com/pns-si3-projects/projet2-ps5-20-21-takenoko-2021-stonksdev/pull/15
-        setTile(co.toOffset(), t.withCoordinate(co));
+        setTile(t.withCoordinate(co));
+    }
+
+    /**
+     * Creates and writes a tile at its coordinates
+     * @param t the tile to be written
+     * @throws IllegalTilePlacementException thrown if a tile is already
+     *                                       present.
+     */
+    void setTile(Tile t) throws IllegalTilePlacementException {
+        // TODO: once the following PR is merged, ensure that this position
+        // follows the game rules.
+        // https://github.com/pns-si3-projects/projet2-ps5-20-21-takenoko-2021-stonksdev/pull/15
+        setTile(t.getCoordinate().toOffset(), t);
     }
 
     /**
