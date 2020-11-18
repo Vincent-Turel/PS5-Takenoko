@@ -1,10 +1,7 @@
 package dev.stonks.takenoko;
 
 import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Optional;
-import java.util.Random;
+import java.util.*;
 //Ajouter des classes
 // -abstractTile  FAIT
 // -results
@@ -85,8 +82,10 @@ public class Game {
                     possiblesTiles.add(aTile);
                     tileDeck.remove(index);
                 }
-                Map.Entry<Coordinate, AbstractTile> couple = player.putTile(map.getPlacements(),possiblesTiles);
-                map.setTile(couple.getKey(), couple.getValue());
+                ArrayList<Coordinate> possiblesPlacements = new ArrayList<Coordinate>();
+                possiblesPlacements.addAll(map.getPlacements());
+                Tile chosenTile = player.putTile(possiblesPlacements,possiblesTiles);
+                map.setTile(chosenTile);
                 checkObjectives(player);
             }
             aPlayerWin = checkIfWinner();
