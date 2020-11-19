@@ -1,7 +1,6 @@
 package dev.stonks.takenoko;
 
 import java.util.Arrays;
-import java.util.Optional;
 
 /**
  * Represents an hexagonal tile.
@@ -10,23 +9,20 @@ import java.util.Optional;
  */
 public class Tile {
     private final Coordinate coord;
-    private boolean isInitial;
     private int bambooSize;
+    private TileKind kind;
 
-    // Note: this constructor defines isInitial as false. It is the caller
-    // responsibility to switch it to true.
-    Tile(Coordinate c) {
+    Tile(Coordinate c, TileKind k) {
         coord = c;
-        isInitial = false;
         bambooSize = 0;
+        kind = k;
     }
 
     /**
      * Creates the initial tile.
      */
     static Tile initialTile(Coordinate c) {
-        Tile t = new Tile(c);
-        t.isInitial = true;
+        Tile t = new Tile(c, TileKind.Initial);
         return t;
     }
 
@@ -35,9 +31,6 @@ public class Tile {
      *
      * The `DirectionnedTile` class is used here because it allows to group
      * both a tile and a direction together.
-     *
-     * This function updates the tiles passed as argument in order to add
-     * the correct neighbor.
      *
      * The direction is the direction relative to the newly created tile. For
      * instance, the following code : <br>
@@ -51,10 +44,9 @@ public class Tile {
      * @param neighbors The neighbors of the tile.
      * @return The newly created tile
      */
-    static Tile neighborOf(DirectionnedTile... neighbors) throws IllegalTilePlacementException {
+    static Tile neighborOf(TileKind kind, DirectionnedTile... neighbors) throws IllegalTilePlacementException {
         Coordinate tileCoord = coordinateFromNeighbors(neighbors);
-        Tile t = new Tile(tileCoord);
-        t.isInitial = false;
+        Tile t = new Tile(tileCoord, kind);
         return t;
     }
 
@@ -112,7 +104,7 @@ public class Tile {
      * Returns whether if the tile is the initial tile or not.
      */
     public boolean isInitial() {
-        return isInitial;
+        return kind == TileKind.Initial;
     }
 
     /**
@@ -120,7 +112,7 @@ public class Tile {
      * Maximal size : 4
      */
     public void growBamboo(){
-        if (bambooSize<4 && !isInitial){
+        if (bambooSize<4 && !isInitial()){
             bambooSize+=1;
         }
     }
