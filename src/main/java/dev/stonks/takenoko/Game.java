@@ -49,8 +49,20 @@ public class Game {
      */
     private void initialisesDeck() {
         tileDeck = new ArrayList<AbstractTile>();
-        for(int i = 0;i < 28;i++){
-            tileDeck.add(new AbstractTile());
+
+        // 7 pink tiles
+        for(int i = 0;i < 7;i++){
+            tileDeck.add(new AbstractTile(TileKind.Pink));
+        }
+
+        // 9 yellow tiles
+        for(int i = 0;i < 7;i++){
+            tileDeck.add(new AbstractTile(TileKind.Yellow));
+        }
+
+        // 11 green tiles
+        for(int i = 0;i < 7;i++){
+            tileDeck.add(new AbstractTile(TileKind.Green));
         }
     }
 

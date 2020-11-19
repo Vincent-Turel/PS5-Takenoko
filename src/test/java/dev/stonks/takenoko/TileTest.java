@@ -15,7 +15,7 @@ public class TileTest {
     void TileNeighborOf() throws IllegalTilePlacementException {
         Coordinate initialCoord = new Coordinate(42, 42, 85);
         Tile initial = Tile.initialTile(initialCoord);
-        Tile bottom = Tile.neighborOf(initial.withDirection(Direction.North));
+        Tile bottom = Tile.neighborOf(TileKind.Green, initial.withDirection(Direction.North));
 
         Coordinate rightCoordinate = new Coordinate(42, 43, 85);
         assertTrue(bottom.getCoordinate().equals(rightCoordinate));
@@ -33,17 +33,17 @@ public class TileTest {
     void neighborOfInvalidCases() throws IllegalTilePlacementException {
         Coordinate initialCoord = new Coordinate(42, 42, 85);
         Tile initial = Tile.initialTile(initialCoord);
-        Tile bot = Tile.neighborOf(initial.withDirection(Direction.North));
+        Tile bot = Tile.neighborOf(TileKind.Green, initial.withDirection(Direction.North));
 
         assertThrows(IllegalTilePlacementException.class,
-                () -> Tile.neighborOf(bot.withDirection(Direction.North))
+                () -> Tile.neighborOf(TileKind.Pink, bot.withDirection(Direction.North))
         );
     }
 
     @Test
     void initialBambooSize() {
         Coordinate initialCoord = new Coordinate(42, 42, 85);
-        Tile t = new Tile(initialCoord);
+        Tile t = new Tile(initialCoord, TileKind.Pink);
 
         assertEquals(t.bambooSize(), 0);
     }
@@ -51,7 +51,7 @@ public class TileTest {
     @Test
     void growBamboo() {
         Coordinate initialCoord = new Coordinate(42, 42, 85);
-        Tile t = new Tile(initialCoord);
+        Tile t = new Tile(initialCoord, TileKind.Green);
         t.growBamboo();
 
         assertEquals(t.bambooSize(), 1);
@@ -60,7 +60,7 @@ public class TileTest {
     @Test
     void growBambooMax() {
         Coordinate initialCoord = new Coordinate(42, 42, 85);
-        Tile t = new Tile(initialCoord);
+        Tile t = new Tile(initialCoord, TileKind.Pink);
         t.growBamboo();
         t.growBamboo();
         t.growBamboo();

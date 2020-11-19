@@ -164,8 +164,8 @@ public class Map {
      *
      * Will place <code>a</code> on top of <code>b</code>.
      */
-    Tile addNeighborOf(DirectionnedTile... tiles) throws IllegalTilePlacementException {
-        Tile t = Tile.neighborOf(tiles);
+    Tile addNeighborOf(TileKind kind, DirectionnedTile... tiles) throws IllegalTilePlacementException {
+        Tile t = Tile.neighborOf(kind, tiles);
         setTile(t.getCoordinate(), t);
         return t;
     }

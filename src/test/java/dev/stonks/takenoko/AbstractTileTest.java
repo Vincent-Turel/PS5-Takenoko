@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class AbstractTileTest {
     @Test
     void withCoordinates() {
-        AbstractTile at = new AbstractTile();
+        AbstractTile at = new AbstractTile(TileKind.Yellow);
         Coordinate co = new Coordinate(42, 101, 1024);
 
         Coordinate[] cs = {

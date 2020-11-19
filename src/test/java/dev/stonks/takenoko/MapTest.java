@@ -12,7 +12,7 @@ public class MapTest {
     void MapNeighborOf() throws IllegalTilePlacementException {
         Map m = new Map(27);
         Tile initial = m.initialTile();
-        Tile bottom = m.addNeighborOf(initial.withDirection(Direction.North));
+        Tile bottom = m.addNeighborOf(TileKind.Green, initial.withDirection(Direction.North));
 
         assertTrue(m.getNeighborOf(initial, Direction.South).get().equals(bottom));
         assertTrue(m.getNeighborOf(bottom, Direction.North).get().equals(initial));
@@ -29,7 +29,7 @@ public class MapTest {
     @Test
     void resetRemovesEverythingExceptInitial() throws IllegalTilePlacementException {
         Map m = new Map(27);
-        m.addNeighborOf(m.initialTile().withDirection(Direction.South));
+        m.addNeighborOf(TileKind.Green, m.initialTile().withDirection(Direction.South));
 
         m.reset();
 
@@ -40,7 +40,7 @@ public class MapTest {
     @Test
     void resetRecreatesInitialTile() throws IllegalTilePlacementException {
         Map m = new Map(27);
-        m.addNeighborOf(m.initialTile().withDirection(Direction.South));
+        m.addNeighborOf(TileKind.Pink, m.initialTile().withDirection(Direction.South));
 
         m.reset();
 
@@ -62,9 +62,9 @@ public class MapTest {
         Map m = new Map(27);
         Tile c = m.initialTile();
         // There is an other tile at {28, 27}.
-        Tile s = m.addNeighborOf(m.initialTile().withDirection(Direction.South));
+        Tile s = m.addNeighborOf(TileKind.Green, m.initialTile().withDirection(Direction.South));
         // There is an other other tile at {29, 28}.
-        Tile so = m.addNeighborOf(m.initialTile().withDirection(Direction.SouthOuest));
+        Tile so = m.addNeighborOf(TileKind.Yellow, m.initialTile().withDirection(Direction.SouthOuest));
 
         Set avalaiblePositions = m.getPlacements();
 
@@ -87,7 +87,7 @@ public class MapTest {
 
     @Test
     void setTileWithAbstractTile() throws IllegalTilePlacementException {
-        AbstractTile at = new AbstractTile();
+        AbstractTile at = new AbstractTile(TileKind.Pink);
         Map m = new Map(42);
         Coordinate c = new Coordinate(13, 12, 85);
 
@@ -99,7 +99,7 @@ public class MapTest {
     void growBambooInMap() throws IllegalTilePlacementException {
         Map m = new Map(42);
         Tile initT = m.initialTile();
-        Tile otherT = m.addNeighborOf(initT.withDirection(Direction.North));
+        Tile otherT = m.addNeighborOf(TileKind.Green, initT.withDirection(Direction.North));
 
         m.growBambooInMap();
 

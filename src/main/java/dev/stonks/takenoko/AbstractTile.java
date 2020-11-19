@@ -7,9 +7,13 @@ package dev.stonks.takenoko;
  * @author the StonksDev team
  */
 class AbstractTile {
-    AbstractTile() {}
+    TileKind kind;
+
+    AbstractTile(TileKind tk) {
+        kind = tk;
+    }
 
     Tile withCoordinate(Coordinate c) {
-        return new Tile(c);
+        return new Tile(c, kind);
     }
 }
