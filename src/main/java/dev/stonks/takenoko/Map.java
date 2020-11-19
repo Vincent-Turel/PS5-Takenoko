@@ -255,12 +255,25 @@ public class Map {
      * If the bamboo size > 5, nothing to do
      * If the tile is not present, nothing to do
      */
-
     public void growBambooInMap(){
         for(int i=0;i<tiles.length;i++){
             if(tiles[i].isPresent()){
                 tiles[i].get().growBamboo();
             }
         }
+    }
+
+    /**
+     * Returns all the coordinates at which a tile is placed in the map.
+     */
+    public Set<Coordinate> placedTilesCoordinates() {
+        Set<Coordinate> s = new HashSet();
+
+        for (Optional<Tile> ot: tiles) {
+            if (ot.isPresent()) {
+                s.add(ot.get().getCoordinate());
+            }
+        }
+        return s;
     }
 }

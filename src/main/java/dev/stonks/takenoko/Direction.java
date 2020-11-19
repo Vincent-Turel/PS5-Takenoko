@@ -63,4 +63,15 @@ public enum Direction {
         int newDir = (index + 3) % 6;
         return Direction.fromIndex(newDir);
     }
+
+    /**
+     * Adds two directions together.
+     *
+     * The addition of two directions is defined as the addition of the two
+     * angles of each direction relative to the north.
+     */
+    Direction addWith(Direction rhs) {
+        int newIndex = (index + rhs.index) % 6;
+        return Direction.fromIndex(newIndex);
+    }
 }
