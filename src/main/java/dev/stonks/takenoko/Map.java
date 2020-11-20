@@ -241,14 +241,9 @@ public class Map {
     int getPlacedTileNumber() {
         // This is guaranteed to be higher than or equal to 0 since we have at
         // least the initial tile.
-        int count = -1;
-        for (Optional<Tile> t: tiles) {
-            if (t.isPresent()) {
-                count += 1;
-            }
-        }
-
-        return count;
+        //
+        // TODO: investigate if the function can return a long instead.
+        return (int) placedTilesCoordinates().count() - 1;
     }
 
     /**
@@ -265,7 +260,8 @@ public class Map {
     }
 
     /**
-     * Returns all the coordinates at which a tile is placed in the map.
+     * Returns all the coordinates at which a tile is placed in the map. The
+     * returned stream is guaranteed to return unique values only.
      */
     public Stream<Coordinate> placedTilesCoordinates() {
         return Arrays.stream(tiles)
