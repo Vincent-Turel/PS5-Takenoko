@@ -1,14 +1,24 @@
 package dev.stonks.takenoko;
 
-import java.lang.reflect.Array;
 import java.util.*;
-import java.util.regex.MatchResult;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/**
+ * Represents a pattern.
+ *
+ * A pattern is represented as a set of constraints on one tile and its six
+ * direct neighbors. The matching system observes the following guarantees:
+ *   - If a match occurs on a group of tiles, then it must be present only
+ *   once,
+ *   - If a match can be done in more than one way, then it must be present
+ *   only once.
+ *
+ * @author the StonksDev team
+ */
 public class Pattern {
-    Optional<TileKind> current = Optional.empty();
-    Optional<TileKind>[] neighbors = new Optional[]{
+    private Optional<TileKind> current = Optional.empty();
+    private Optional<TileKind>[] neighbors = new Optional[]{
             Optional.empty(),
             Optional.empty(),
             Optional.empty(),
@@ -16,7 +26,9 @@ public class Pattern {
             Optional.empty(),
             Optional.empty(),
     };
-    Direction angle = Direction.North;
+    // This represents the angle on which the pattern is tilted, compared to
+    // its initial form.
+    private Direction angle = Direction.North;
 
     Pattern() {}
 
@@ -24,15 +36,55 @@ public class Pattern {
     public boolean equals(Object other) {
         if (other instanceof Pattern) {
             Pattern rhs = (Pattern) other;
-            return current.equals(rhs.current) && Arrays.equals(neighbors, rhs.neighbors);
+            return equalsPat(rhs);
         } else {
             return false;
         }
     }
 
+    // Note: this function performs some additional checks so that two patterns
+    // that are identical with some rotation are considered as equals.
+    private boolean equalsPat(Pattern rhs) {
+        if (!current.equals(rhs.current)) {
+            return false;
+        }
+
+        return rhs.rotations()
+                .anyMatch(rotatedRhs -> equalsNeighborsNoRotate(rotatedRhs));
+    }
+
+    private boolean equalsNeighborsNoRotate(Pattern rhs) {
+        for (Direction d: Direction.values()) {
+            Direction lhsLookupDir = angle.addWith(d);
+            Direction rhsLookupDir = rhs.angle.addWith(d);
+
+            Optional<TileKind> lhsReq = neighbor(lhsLookupDir);
+            Optional<TileKind> rhsReq = rhs.neighbor(rhsLookupDir);
+
+            if (!lhsReq.equals(rhsReq)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     @Override
     public int hashCode() {
-        return current.hashCode() * neighbors.hashCode();
+        int currHash = current.hashCode();
+        int neighHash = Arrays.stream(neighbors).map(n -> n.hashCode()).reduce(1, (a, b) -> a * b);
+
+        return neighHash;
+    }
+
+    /**
+     * Returns the expected tile for the pattern to match in a given direction.
+     *
+     * If no specific tile color is expected, then
+     * <code>Optional.empty()</code> is returned.
+     */
+    Optional<TileKind> neighbor(Direction d) {
+        return neighbors[d.index()];
     }
 
     /**
@@ -72,50 +124,58 @@ public class Pattern {
     }
 
     /**
-     * Returns all way the current pattern can match on the a given position,
-     * at a given tile.
-     * @param m the map to be checked
-     * @param c the coordinates to be used
+     * Returns the tile that is expected at the center of the pattern.
+     * If no tile is expected, then <code>Optional.empty()</code> is returned.
      */
-    Set<Pattern> matchesAt(Map m, Coordinate c) {
-        if (matchesTile(current, m.getTile(c))) {
-            return new HashSet();
-        }
-
-        return rotations().filter(r -> r.matchesAtNoRotate(m, c)).collect(Collectors.toSet());
+    Optional<TileKind> center() {
+        return current;
     }
 
+    /**
+     * Returns all the matches that occur on a specific map.
+     */
+    Set<MatchResult> getMatchesOn(Map m) {
+        return m.placedTilesCoordinates()
+                .flatMap(c -> matchesAt(m, c))
+                .collect(Collectors.toSet());
+    }
+
+    private Stream<MatchResult> matchesAt(Map m, Coordinate c) {
+        if (!matchesTile(current, m.getTile(c))) {
+            return Stream.empty();
+        }
+
+        Optional<Tile> t = m.getTile(c);
+
+        return rotations()
+                .filter(r -> r.matchesAtNoRotate(m, c))
+                .map(match -> match.withCoordinate(c));
+    }
+
+    /**
+     * Return all the rotations for a specific pattern. The returned stream is
+     * guaranteed to contain exactly six elements. It may or may not, depending
+     * on the properties of the initial pattern properties, contain duplicates.
+     */
     Stream<Pattern> rotations() {
         return Arrays.stream(Direction.values()).map(d -> rotateWith(d));
     }
 
     /**
-     * Rotates a pattern of a given angle.
-     * @param angle the rotation angle.
+     * Returns a new pattern that is rotated of a specific angle.
      */
-    Pattern rotateWith(Direction angle) {
+    private Pattern rotateWith(Direction angle) {
         Pattern p = new Pattern();
         p.angle = angle;
-
         p.current = current;
-
-        for(Direction d: Direction.values()) {
-            Optional<TileKind> expectedTile = neighbors[d.index()];
-            if (expectedTile.isPresent()) {
-                p = p.withNeighbor(angle.addWith(d), expectedTile.get());
-            }
-        }
+        p.neighbors = neighbors;
 
         return p;
     }
 
-    /**
-     * Returns whether if the current pattern neighbors match at a given
-     * position without any rotation.
-     */
-    boolean matchesAtNoRotate(Map m, Coordinate c) {
+    private boolean matchesAtNoRotate(Map m, Coordinate c) {
         return Arrays.stream(Direction.values())
-                .allMatch(d -> matchesTile(neighbors[d.index()], m.getTile(c)));
+                .allMatch(d -> matchesTile(neighbors[d.index()], m.getTile(c.moveWith(d))));
     }
 
     /**
@@ -137,6 +197,18 @@ public class Pattern {
         TileKind required = requirement.get();
         TileKind given = tile.get().kind();
 
-        return required == given;
+        boolean ret = required.equals(given);
+
+        return required.equals(given);
+    }
+
+    /**
+     * Allows to create a <code>MatchResult</code>, once we know where a
+     * pattern matched on the map.
+     * @param c the coordinate at which the pattern matched.
+     * @return a MatchResult representing a specific match.
+     */
+    MatchResult withCoordinate(Coordinate c) {
+        return new MatchResult(this, c);
     }
 }
