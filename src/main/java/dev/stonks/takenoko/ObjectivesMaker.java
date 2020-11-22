@@ -21,13 +21,13 @@ public class ObjectivesMaker {
      *
      * @author the StonksDev team
      */
-    Objective addAnObjectives(int objID, int nbTuille, int nbPT) {
+    Objective addAnObjectives(int objID, int nbTuille, int nbPT,int objType) {
         for (Objective value : this.listObjectves) {
             if (value.getObjID() == objID) {
                 return null;
             }
         }
-        Objective newObjectives = new Objective(objID, nbTuille, nbPT);
+        Objective newObjectives = new Objective(objType, objID, nbTuille, nbPT);
         this.listObjectves.add(newObjectives);  //add it to the deck
         return newObjectives;
     }

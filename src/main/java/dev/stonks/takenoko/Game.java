@@ -73,10 +73,10 @@ public class Game {
         ObjectivesMaker objectivesMaker = new ObjectivesMaker();
         objectives = new ArrayList<Objective>();
         for(int i = 0;i < 5;i++){
-            objectives.add(objectivesMaker.addAnObjectives(i,2,2));
-            objectives.add(objectivesMaker.addAnObjectives(i+5,3,3));
+            objectives.add(objectivesMaker.addAnObjectives(i,2,2,1));
+            objectives.add(objectivesMaker.addAnObjectives(i+5,3,3,1));
         }
-        emperor = objectivesMaker.addAnObjectives(objectives.size(),0,2);
+        emperor = objectivesMaker.addAnObjectives(objectives.size(),0,2,4);
     }
 
 

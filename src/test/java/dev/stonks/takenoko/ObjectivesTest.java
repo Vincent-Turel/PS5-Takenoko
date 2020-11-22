@@ -18,21 +18,21 @@ class ObjectivesTest {
     @BeforeEach
     void setUp() {
         testMake = new ObjectivesMaker();
-        testMake.addAnObjectives(1,2,5);
-        testMake.addAnObjectives(2,3,6);
-        testMake.addAnObjectives(3,4,6);
-        Objective doubleObj = testMake.addAnObjectives(2,99,99);
+        testMake.addAnObjectives(1,2,5,1);
+        testMake.addAnObjectives(2,3,6,1);
+        testMake.addAnObjectives(3,4,6,1);
+        Objective doubleObj = testMake.addAnObjectives(2,99,99,1);
         deck = testMake.getDeck();
     }
 
     @Test
     void testFactoMaker() {
         assertEquals(n, deck.size());
-        assertEquals(testMake.addAnObjectives(2,3,6),null);
+        assertEquals(testMake.addAnObjectives(2,3,6,1),null);
         deck = testMake.getDeck();
         assertEquals(n, deck.size());
-        Objective newObj = new Objective(4,7,8);
-        Objective newFacto = testMake.addAnObjectives(4,7,8);
+        Objective newObj = new Objective(4,7,8,1);
+        Objective newFacto = testMake.addAnObjectives(4,7,8,1);
         assertEquals(newFacto.getObjID(),newObj.getObjID());
         assertEquals(newFacto.getNbPt(),newObj.getNbPt());
         assertEquals(newFacto.getNbTuille(),newObj.getNbTuille());
