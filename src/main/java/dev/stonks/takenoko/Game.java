@@ -134,20 +134,12 @@ public class Game {
     private void checkObjectives(Player player) {
         ArrayList<Objective> playerObjectives = player.getObjectives();
         for (Objective objective: playerObjectives) {
-            if(isValid(objective)){
+            if(isValideObjectives.isValid(objective,map)){
                 //TODO: 4 patern différents (classe et sous-classe)
                 player.newObjectivesAchieved(objective);
                 achievedObjectives.add(objective);
             }
         }
-    }
-
-    private boolean isValid(Objective objective) {
-        boolean isValid = false;
-        if(objective.getNbTuille()<=map.getPlacedTileNumber()){
-            isValid = true;
-        }
-        return isValid;
     }
 
     /**
