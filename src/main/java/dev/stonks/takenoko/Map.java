@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Represents the game map. It is responsible to create and handle the whole
@@ -240,14 +241,9 @@ public class Map {
     int getPlacedTileNumber() {
         // This is guaranteed to be higher than or equal to 0 since we have at
         // least the initial tile.
-        int count = -1;
-        for (Optional<Tile> t: tiles) {
-            if (t.isPresent()) {
-                count += 1;
-            }
-        }
-
-        return count;
+        //
+        // TODO: investigate if the function can return a long instead.
+        return (int) placedTilesCoordinates().count() - 1;
     }
 
     /**
@@ -255,12 +251,21 @@ public class Map {
      * If the bamboo size > 5, nothing to do
      * If the tile is not present, nothing to do
      */
-
     public void growBambooInMap(){
         for(int i=0;i<tiles.length;i++){
             if(tiles[i].isPresent()){
                 tiles[i].get().growBamboo();
             }
         }
+    }
+
+    /**
+     * Returns all the coordinates at which a tile is placed in the map. The
+     * returned stream is guaranteed to return unique values only.
+     */
+    public Stream<Coordinate> placedTilesCoordinates() {
+        return Arrays.stream(tiles)
+                .filter(ot -> ot.isPresent())
+                .map(ot -> ot.get().getCoordinate());
     }
 }

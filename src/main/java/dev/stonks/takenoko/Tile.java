@@ -123,4 +123,11 @@ public class Tile {
     public int bambooSize() {
         return bambooSize;
     }
+
+    /**
+     * Returns the tile kind
+     */
+    public TileKind kind() {
+        return kind;
+    }
 }
