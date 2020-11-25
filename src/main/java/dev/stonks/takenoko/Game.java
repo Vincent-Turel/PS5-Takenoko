@@ -102,9 +102,7 @@ public class Game {
                 ArrayList<Coordinate> possiblesPlacements = new ArrayList<Coordinate>();
                 possiblesPlacements.addAll(map.getPlacements());
                 Tile chosenTile = player.putTile(possiblesPlacements,possiblesTiles);
-                for(int i=0; i<size-1; i++) {
-                    tileDeck.add(possiblesTiles.get(i));
-                }
+                tileDeck.addAll(possiblesTiles);
                 map.setTile(chosenTile);
                 checkObjectives(player);
                 map.growBambooInMap();
@@ -204,8 +202,8 @@ public class Game {
 
     void resetGame() throws UnsupportedOperationException{
         resetMap();
-        resetPlayers();
         resetObjectives();
+        resetPlayers();
         resetGameResults();
     }
 
@@ -220,6 +218,9 @@ public class Game {
     }
 
     private void resetObjectives(){
+        for(Player player:players){
+            objectives.addAll(player.getObjectives());
+        }
         for (Objective objective : achievedObjectives) {
             objectives.add(objective);
         }

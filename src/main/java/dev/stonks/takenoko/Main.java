@@ -10,7 +10,7 @@ public class Main {
     public static void main(String... args) {
         GameManager gameManager = new GameManager(nbRandomPlayer,nbDumbPlayer);
         try {
-            gameManager.playNTime(5);
+            gameManager.playNTime(50);
         }
         catch (Exception e){
             e.printStackTrace();
