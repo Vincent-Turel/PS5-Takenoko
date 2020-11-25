@@ -30,4 +30,10 @@ public class Objective {
     public Boolean getStates() {return isValid;}
 
     public void resetObj(){this.isValid=false;}
+
+    /**
+     * getter for the number of point
+     * @return the number of point
+     */
+    int getNbPt(){return nbPt;}
 }

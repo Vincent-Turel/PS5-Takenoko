@@ -26,11 +26,4 @@ public class PatternObjective extends Objective {
      * Update the states of this objective :
      */
     public void UpdtateStates(){super.isValid=true;}
-
-    /**
-     * getter for the number of point
-     * @return the number of point only if the objective is valide else return 0.
-     *         If the objective is valide, nbPt update to 0, so if objective is already use, return nbPt (set to 0)
-     */
-    int getNbPt(){return nbPt;}
 }

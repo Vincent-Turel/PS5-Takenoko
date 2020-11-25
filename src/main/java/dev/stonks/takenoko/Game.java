@@ -31,10 +31,8 @@ public class Game {
     //ArrayList<Objective> gardenerObjectives;
     Set<MatchResult> patternMatchs;
     Objective emperor;
-    //TODO : soit on réinitialises avec objectivesMaker, soit on fait achievedObjectives
     ArrayList<Objective> achievedObjectives;
     Random random;
-    //TODO : class result avec un resultat par joueur (joueur,classement,score)
     ArrayList<GameResults> gamePlayersResults;
 
     Game(ArrayList<Player> players) {
@@ -91,15 +89,16 @@ public class Game {
     void play() throws IllegalTilePlacementException{
         boolean aPlayerWin = false;
         objectivesDistribution();
+        boolean action = true;
         while(!aPlayerWin){
             for (Player player: players) {
                 //player.decide(map);
                 //player.doActions();
-                boolean action = true;
                 if(tileDeck.size()==0){
                     action = false;
                 }
                 if(action) {
+                    System.out.println("Deck NON vide.");
                     ArrayList<AbstractTile> possiblesTiles = new ArrayList<AbstractTile>(3);
                     int index = 0;
                     int size = 3;
@@ -120,12 +119,22 @@ public class Game {
                     }
                     map.setTile(chosenTile);
                 }
+                else{
+                    System.out.println("Deck vide !");
+                    fillTheFinalScoreWhenNoMoreTile();
+                    break;
+                }
                 checkObjectives(player);
                 map.growBambooInMap();
             }
             aPlayerWin = checkIfWinner();
+            if(!action){
+                aPlayerWin = true;
+            }
         }
-        fillTheFinalScore();
+        if(action){
+            fillTheFinalScore();
+        }
     }
 
     private void objectivesDistribution() {
@@ -151,8 +160,14 @@ public class Game {
         for (Objective objective: playerObjectives) {
             if(objective instanceof PatternObjective) {
                 objective = (PatternObjective) objective;
+                PatternObjective patternObjective = (PatternObjective)objective;
+                patternMatchs = isValideObjectives.isValid(objective,map,patternMatchs);
             }
-            isValideObjectives.isValid(objective,map,patternMatchs);
+            if(objective.getStates()){
+                player.newObjectivesAchieved(objective);
+                tileObjectives.remove(objective);
+                achievedObjectives.add(objective);
+            }
         }
     }
 
@@ -164,7 +179,6 @@ public class Game {
      * @return
      */
     private boolean checkIfWinner() {
-        //TODO: think about the emperor objectives (in checkObjectives or checkWinner)
         for (Player player : players) {
             if(player.getNbObjectivesAchieved() >= nbObjectivesToWIn){
                 player.addObjectives(emperor);
@@ -185,6 +199,14 @@ public class Game {
         for (Player player : players) {
             id = player.getId();
             gamePlayersResults.add(new GameResults(id,rankOf(id)));
+        }
+    }
+
+    private void fillTheFinalScoreWhenNoMoreTile() {
+        int id = 0;
+        for (Player player : players) {
+            id = player.getId();
+            gamePlayersResults.add(new GameResults(id,1));
         }
     }
 
@@ -227,7 +249,10 @@ public class Game {
 
     private void resetObjectives(){
         for (Objective objective : achievedObjectives) {
-            tileObjectives.add(objective);
+            if(objective instanceof PatternObjective) {
+                PatternObjective patternObjective = (PatternObjective)objective;
+                tileObjectives.add(patternObjective);
+            }
         }
         achievedObjectives.clear();
     }
