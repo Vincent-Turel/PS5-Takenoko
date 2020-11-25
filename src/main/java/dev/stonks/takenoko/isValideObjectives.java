@@ -1,32 +1,48 @@
 package dev.stonks.takenoko;
 
+import java.util.Set;
+
 public class isValideObjectives {
 
     /**
      *
      * @param objective -> take an objectives to controlling if it's validate or not
      * @param map -> map of the game (states of all tiles and placement)
+     * @param alreadyUsed -> all pattern already used to complete objective
      * @return true if objectives complete, else false
      */
-    public static boolean isValid(Objective objective,Map map) {
+    public static Set<MatchResult> isValid(Objective objective,Map map,Set<MatchResult> alreadyUsed) {
         int type = objective.getObjType();
         switch (type){
-            case 1 : return isPatternConstraintValide(objective,map);
-            case 2 : return isObjectivesGardenerValide();
-            case 3 : return isObjectivesPandaValide();
-            default: return false;
+            /**
+             * case 1:
+             * If objective is type pattern use fct isPatternConstraintValide
+             */
+            case 1 :
+                PatternObjective objectivePat = (PatternObjective) objective;
+                int old=alreadyUsed.size();
+                alreadyUsed=isPatternConstraintValide(objectivePat,map,alreadyUsed);
+                if(alreadyUsed.size()!=old){
+                    objectivePat.UpdtateStates();
+                }
+                return alreadyUsed;
+            default: return alreadyUsed;
         }
     }
 
     /**
      *Check if a pattern constraint objective are complete
-     * @return true if objectives complete, else false
+     * @return the new math result if objectives complete
      */
-    private static boolean isPatternConstraintValide(Objective objective,Map map){
-        if(objective.getNbTuille()<=map.getPlacedTileNumber()){
-            return true;
+    private static Set<MatchResult> isPatternConstraintValide(PatternObjective objective,Map map,Set<MatchResult> alreadyUsed){
+        Set<MatchResult> result = objective.getLocalPattern().getMatchesOn(map);
+        for(MatchResult value: result) {
+            if(!(alreadyUsed.contains(value))){
+                alreadyUsed.add(value);
+                return alreadyUsed;
+            }
         }
-        return false;
+        return alreadyUsed;
     }
 
     /**

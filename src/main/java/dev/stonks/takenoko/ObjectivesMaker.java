@@ -5,10 +5,9 @@ import java.util.List;
 
 public class ObjectivesMaker {
 
-    private List<Objective> listObjectves;
+    private List<Integer> listObjectves;
 
-    ObjectivesMaker(){
-        listObjectves = new ArrayList<>();
+    ObjectivesMaker(){listObjectves = new ArrayList<>();
     }
 
     /**
@@ -21,19 +20,21 @@ public class ObjectivesMaker {
      *
      * @author the StonksDev team
      */
-    Objective addAnObjectives(int objID, int nbTuille, int nbPT,int objType) {
-        for (Objective value : this.listObjectves) {
-            if (value.getObjID() == objID) {
+    Object addAnObjectives(int objID, int nbTuille, int nbPT,int objType, Pattern pattern) {
+        for (int value : this.listObjectves) {
+            if (value == objID) {
                 return null;
             }
         }
-        Objective newObjectives = new Objective(objType, objID, nbTuille, nbPT);
-        this.listObjectves.add(newObjectives);  //add it to the deck
-        return newObjectives;
-    }
-
-    public List<Objective> getDeck(){
-        return this.listObjectves;
+        listObjectves.add(objID);
+        switch (objType){
+            case 1:
+                PatternObjective patternObj = new PatternObjective(objType, objID, nbPT, pattern);
+                return patternObj;
+            default:
+                Objective defaultObjectives = new Objective(objType, objID, nbPT);
+                return defaultObjectives;
+        }
     }
 
 }
