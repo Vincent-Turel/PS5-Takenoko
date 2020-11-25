@@ -26,7 +26,10 @@ public class Game {
     Map map;
     ArrayList<AbstractTile> tileDeck;
     ArrayList<Player> players;
-    ArrayList<Objective> objectives;
+    ArrayList<PatternObjective> tileObjectives;
+    //ArrayList<Objective> pandaObjectives;
+    //ArrayList<Objective> gardenerObjectives;
+    Set<MatchResult> patternMatchs;
     Objective emperor;
     //TODO : soit on réinitialises avec objectivesMaker, soit on fait achievedObjectives
     ArrayList<Objective> achievedObjectives;
@@ -38,6 +41,7 @@ public class Game {
         map = new Map(28);
         initialisesDeck();
         initialisesObjectives();
+        patternMatchs = new HashSet<>();
         this.players = players;
         achievedObjectives = new ArrayList<Objective>();
         random = new Random();
@@ -70,13 +74,17 @@ public class Game {
      * Initialise the objectives (here, it's 10 tile objectives)
      */
     private void initialisesObjectives() {
+        //1=Pattern constraint, 2=Gardener, 3=Panda, 4=emperor
         ObjectivesMaker objectivesMaker = new ObjectivesMaker();
-        objectives = new ArrayList<Objective>();
-        for(int i = 0;i < 5;i++){/*
-            objectives.add(objectivesMaker.addAnObjectives(i,2,2,1));
-            objectives.add(objectivesMaker.addAnObjectives(i+5,3,3,1));*/
+        tileObjectives = new ArrayList<PatternObjective>();
+        Pattern pattern = new Pattern().withCenter(TileKind.Green)
+                .withNeighbor(Direction.North, TileKind.Green)
+                .withNeighbor(Direction.NorthEast, TileKind.Green);
+        for(int i = 0;i < 10;i++){
+            tileObjectives.add(objectivesMaker.addAnPatternObjectives(i, 4,1, pattern));
+            //tileObjectives.add(objectivesMaker.addAnObjectives(i+5,3,3,1));
         }
-        emperor = objectivesMaker.addAnObjectives(objectives.size(),0,2,4);
+        emperor = new Objective(tileObjectives.size(),2,4);
     }
 
 
@@ -87,25 +95,31 @@ public class Game {
             for (Player player: players) {
                 //player.decide(map);
                 //player.doActions();
-                ArrayList<AbstractTile> possiblesTiles = new ArrayList<AbstractTile>(3);
-                int index = 0;
-                int size = 3;
-                if(size>tileDeck.size()){
-                    size = tileDeck.size();
+                boolean action = true;
+                if(tileDeck.size()==0){
+                    action = false;
                 }
-                for(int i=0; i<size; i++){
-                    index = random.nextInt(tileDeck.size());
-                    AbstractTile aTile = tileDeck.get(index);
-                    possiblesTiles.add(aTile);
-                    tileDeck.remove(index);
+                if(action) {
+                    ArrayList<AbstractTile> possiblesTiles = new ArrayList<AbstractTile>(3);
+                    int index = 0;
+                    int size = 3;
+                    if (size > tileDeck.size()) {
+                        size = tileDeck.size();
+                    }
+                    for (int i = 0; i < size; i++) {
+                        index = random.nextInt(tileDeck.size());
+                        AbstractTile aTile = tileDeck.get(index);
+                        possiblesTiles.add(aTile);
+                        tileDeck.remove(index);
+                    }
+                    ArrayList<Coordinate> possiblesPlacements = new ArrayList<Coordinate>();
+                    possiblesPlacements.addAll(map.getPlacements());
+                    Tile chosenTile = player.putTile(possiblesPlacements, possiblesTiles);
+                    for (int i = 0; i < size - 1; i++) {
+                        tileDeck.add(possiblesTiles.get(i));
+                    }
+                    map.setTile(chosenTile);
                 }
-                ArrayList<Coordinate> possiblesPlacements = new ArrayList<Coordinate>();
-                possiblesPlacements.addAll(map.getPlacements());
-                Tile chosenTile = player.putTile(possiblesPlacements,possiblesTiles);
-                for(int i=0; i<size-1; i++) {
-                    tileDeck.add(possiblesTiles.get(i));
-                }
-                map.setTile(chosenTile);
                 checkObjectives(player);
                 map.growBambooInMap();
             }
@@ -118,9 +132,9 @@ public class Game {
         int index = 0;
         for (Player player: players) {
             for(int i = 0;i<3;i++) {
-                index = random.nextInt(objectives.size());
-                player.addObjectives(objectives.get(index));
-                objectives.remove(index);
+                index = random.nextInt(tileObjectives.size());
+                player.addObjectives(tileObjectives.get(index));
+                tileObjectives.remove(index);
             }
         }
     }
@@ -133,12 +147,12 @@ public class Game {
      */
     private void checkObjectives(Player player) {
         ArrayList<Objective> playerObjectives = player.getObjectives();
+
         for (Objective objective: playerObjectives) {
-            if(isValideObjectives.isValid(objective,map)){
-                //TODO: 4 patern différents (classe et sous-classe)
-                player.newObjectivesAchieved(objective);
-                achievedObjectives.add(objective);
+            if(objective instanceof PatternObjective) {
+                objective = (PatternObjective) objective;
             }
+            isValideObjectives.isValid(objective,map,patternMatchs);
         }
     }
 
@@ -213,7 +227,7 @@ public class Game {
 
     private void resetObjectives(){
         for (Objective objective : achievedObjectives) {
-            objectives.add(objective);
+            tileObjectives.add(objective);
         }
         achievedObjectives.clear();
     }
