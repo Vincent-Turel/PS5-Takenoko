@@ -76,7 +76,7 @@ public class Game {
             objectives.add(objectivesMaker.addAnObjectives(i,2,2,1));
             objectives.add(objectivesMaker.addAnObjectives(i+5,3,3,1));*/
         }
-        emperor = objectivesMaker.addAnObjectives(objectives.size(),0,2,4);*/
+        emperor = objectivesMaker.addAnObjectives(objectives.size(),0,2,4);
     }
 
 
