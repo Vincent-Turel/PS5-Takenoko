@@ -58,12 +58,12 @@ public class Game {
         }
 
         // 9 yellow tiles
-        for(int i = 0;i < 7;i++){
+        for(int i = 0;i < 9;i++){
             tileDeck.add(new AbstractTile(TileKind.Yellow));
         }
 
         // 11 green tiles
-        for(int i = 0;i < 7;i++){
+        for(int i = 0;i < 11;i++){
             tileDeck.add(new AbstractTile(TileKind.Green));
         }
     }
@@ -98,7 +98,6 @@ public class Game {
                     action = false;
                 }
                 if(action) {
-                    System.out.println("Deck NON vide.");
                     ArrayList<AbstractTile> possiblesTiles = new ArrayList<AbstractTile>(3);
                     int index = 0;
                     int size = 3;
@@ -120,7 +119,6 @@ public class Game {
                     map.setTile(chosenTile);
                 }
                 else{
-                    System.out.println("Deck vide !");
                     fillTheFinalScoreWhenNoMoreTile();
                     break;
                 }
