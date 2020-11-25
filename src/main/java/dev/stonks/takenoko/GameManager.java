@@ -38,12 +38,12 @@ public class GameManager {
             for(int i = 0;i<nbRP;i++) {
                 players.add(new RandomPlayer(i));
             }
-            /*for(int i = 0;i<nbDP;i++) {
+            for(int i = 0;i<nbDP;i++) {
                 players.add(new DumbPlayer(i+nbRP));
             }
             for(int i = 0;i<nbIntelligentPlayer;i++) {
             players.add(new IntelligentPlayer);
-            }*/
+            }
     }
 
     /**

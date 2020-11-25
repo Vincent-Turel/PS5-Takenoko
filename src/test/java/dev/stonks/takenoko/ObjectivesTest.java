@@ -11,43 +11,55 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class ObjectivesTest {
 
     ObjectivesMaker testMake;
-    Objective doubleObj;
-    List<Objective> deck;
-    int n = 3; //nb of objectives;
+    PatternObjective doubleObj;
+    List<Integer> deck;
 
     @BeforeEach
     void setUp() {
+        Pattern pattern = new Pattern()
+                .withCenter(TileKind.Green)
+                .withNeighbor(Direction.North,TileKind.Yellow)
+                .withNeighbor(Direction.South,TileKind.Pink);
         testMake = new ObjectivesMaker();
-        testMake.addAnObjectives(1,2,5,1);
-        testMake.addAnObjectives(2,3,6,1);
-        testMake.addAnObjectives(3,4,6,1);
-        Objective doubleObj = testMake.addAnObjectives(2,99,99,1);
-        deck = testMake.getDeck();
+        PatternObjective obj3 = testMake.addAnPatternObjectives(2,6,1,pattern);
+        deck = testMake.getlistObjectves();
     }
 
     @Test
     void testFactoMaker() {
-        assertEquals(n, deck.size());
-        assertEquals(testMake.addAnObjectives(2,3,6,1),null);
-        deck = testMake.getDeck();
-        assertEquals(n, deck.size());
-        Objective newObj = new Objective(4,7,8,1);
-        Objective newFacto = testMake.addAnObjectives(4,7,8,1);
+        Pattern pattern = new Pattern()
+                .withCenter(TileKind.Green)
+                .withNeighbor(Direction.North,TileKind.Yellow)
+                .withNeighbor(Direction.South,TileKind.Pink);
+        assertEquals(2, deck.size());
+        assertEquals(testMake.addAnPatternObjectives(2,3,6,pattern),null);
+        deck = testMake.getlistObjectves();
+        assertEquals(2, deck.size());
+        PatternObjective newObj = new PatternObjective(4,4,7, pattern);
+        PatternObjective newFacto = testMake.addAnPatternObjectives(4,7,1,pattern);
         assertEquals(newFacto.getObjID(),newObj.getObjID());
         assertEquals(newFacto.getNbPt(),newObj.getNbPt());
-        assertEquals(newFacto.getNbTuille(),newObj.getNbTuille());
-        assertEquals(n+1, deck.size());
+        assertEquals(3, deck.size());
     }
 
     @Test
     void testObjectives(){
-        assertEquals(doubleObj,null);
-        assertEquals(deck.get(0).getNbPt(),5);
-        assertEquals(deck.get(0).getNbTuille(), 2);
-        assertEquals(deck.get(0).getObjID(),1);
-        assertEquals(deck.get(2).getNbPt(),6);
-        assertEquals(deck.get(2).getNbTuille(), 4);
-        assertEquals(deck.get(2).getObjID(),3);
+
+        Pattern pattern = new Pattern()
+                .withCenter(TileKind.Green)
+                .withNeighbor(Direction.North,TileKind.Yellow)
+                .withNeighbor(Direction.South,TileKind.Pink);
+        assertEquals(1, deck.size());
+
+        PatternObjective obj1 = testMake.addAnPatternObjectives(1,5,1,pattern);
+        PatternObjective obj2 = testMake.addAnPatternObjectives(5,6,1,pattern);
+
+        assertEquals(3, deck.size());
+
+        assertEquals(obj1.getNbPt(),5);
+        assertEquals(obj1.getObjID(),1);
+        assertEquals(obj2.getNbPt(),6);
+        assertEquals(obj2.getObjID(),5);
     }
 
 }
