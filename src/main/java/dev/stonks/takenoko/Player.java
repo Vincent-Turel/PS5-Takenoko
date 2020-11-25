@@ -3,15 +3,16 @@ package dev.stonks.takenoko;
 import java.util.ArrayList;
 import java.util.Random;
 
-enum PlayerType{
-    RandomPlayer,
-    DumbPlayer,
-    SmartPlayer
-}
+
 /**
  * This class is the mother class of every types of player.
  */
 public abstract class Player {
+    enum PlayerType{
+    RandomPlayer,
+    DumbPlayer,
+    SmartPlayer
+}
     protected PlayerType playerType;
     protected int id;
     protected ArrayList<Objective> objectives;
@@ -70,13 +71,12 @@ public abstract class Player {
      * @param objective the objective that the player has got.
      * @return true if the objectif has corectly been added. False otherwise
      */
-    public boolean addObjectives(Objective objective){
+    public void addObjectives(Objective objective){
         if (this.objectives.size() < 5){
             this.objectives.add(objective);
-            return true;
         }
         else
-            return false;
+            throw new IllegalCallerException("This should not be possible");
     }
 
     /**
