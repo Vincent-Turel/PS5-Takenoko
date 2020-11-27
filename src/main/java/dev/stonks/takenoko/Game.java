@@ -201,7 +201,7 @@ public class Game {
         for (Player player : players) {
             id = player.getId();
             gamePlayersResults.add(new GameResults(id,rankOf(id)));
-            LOG.severe("Bot n°" + player.getId() + " a réalisé  un score de " + player.getScore() +  " avec "+ player.getNbObjectivesAchieved() + " objectif(s) accompli(s)");
+            LOG.info("Bot n°" + player.getId() + " a réalisé  un score de " + player.getScore() +  " avec "+ player.getNbObjectivesAchieved() + " objectif(s) accompli(s)");
         }
     }
 
@@ -212,7 +212,7 @@ public class Game {
             gamePlayersResults.add(new GameResults(id,1));
             if(player.getNbObjectivesAchieved() > 3)
                 LOG.severe("IMPOSSIBLE");
-            LOG.severe("Bot n°" + player.getId() + " a réalisé un score de " + player.getScore() +  " avec "+ player.getNbObjectivesAchieved() + " objectif(s) accompli(s)");
+            LOG.info("Bot n°" + player.getId() + " a réalisé un score de " + player.getScore() +  " avec "+ player.getNbObjectivesAchieved() + " objectif(s) accompli(s)");
         }
     }
 
@@ -269,6 +269,7 @@ public class Game {
                 tileObjectives.add(patternObjective);
             }
         }
+        tileObjectives.forEach(Objective::resetObj);
         achievedObjectives.clear();
     }
 

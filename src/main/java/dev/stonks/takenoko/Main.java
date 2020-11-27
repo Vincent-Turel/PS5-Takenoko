@@ -17,7 +17,7 @@ public class Main {
         GameManager gameManager = new GameManager(nbRandomPlayer,nbDumbPlayer);
         LOG.info("Starting program...");
         try {
-            gameManager.playNTime(1000);
+            gameManager.playNTime(10_000);
         }
         catch (Exception e){
             e.printStackTrace();
