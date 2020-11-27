@@ -3,28 +3,37 @@ package dev.stonks.takenoko;
 public class Objective {
 
     private int objID;
-    private int nbTuille;
-    private int nbPt;
+    protected int nbPt;
+    private int objType;
+    protected Boolean isValid;
 
     /**
      * Constucteur for 1 objective
      *
      * @param objID n°objective
-     * @param nbTuille n° of tuille
      * @param nbPT n° of point
+     * @param objType -> 1=Pattern constraint, 2=Gardener, 3=Panda, 4=emperor
      *
      * @author the StonksDev team
      */
-    Objective(int objID, int nbTuille, int nbPT){
+    Objective(int objType,int objID, int nbPT){
         this.objID = objID;
-        this.nbTuille = nbTuille;
         this.nbPt = nbPT;
+        this.objType=objType;
+        this.isValid=false;
     }
 
     int getObjID(){return this.objID;}
 
-    int getNbTuille(){return this.nbTuille;}
+    public int getObjType() {return objType;}
 
-    int getNbPt(){return this.nbPt;}
+    public Boolean getStates() {return isValid;}
 
+    public void resetObj(){this.isValid=false;}
+
+    /**
+     * getter for the number of point
+     * @return the number of point
+     */
+    int getNbPt(){return nbPt;}
 }
