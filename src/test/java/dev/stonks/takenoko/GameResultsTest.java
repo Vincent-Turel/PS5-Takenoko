@@ -23,6 +23,12 @@ public class GameResultsTest {
     }
 
     @Test
+    public void testId(){
+        assertTrue(res1.getId()!=res2.getId());
+        assertFalse(res2.getId()==0);
+    }
+
+    @Test
     public void testResetRes(){
         res1.reset();
         assertTrue(res1.getRank()==0);
