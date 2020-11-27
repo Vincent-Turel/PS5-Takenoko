@@ -33,11 +33,13 @@ public class Game {
     Random random;
     //TODO : class result avec un resultat par joueur (joueur,classement,score)
     ArrayList<GameResults> gamePlayersResults;
+    ArrayList<Pattern> patterns;
 
     Game(ArrayList<Player> players) {
         map = new Map(28);
         initialisesDeck();
         initialisesObjectives();
+        initialisesPattern();
         this.players = players;
         achievedObjectives = new ArrayList<Objective>();
         random = new Random();
@@ -77,6 +79,13 @@ public class Game {
             objectives.add(objectivesMaker.addAnObjectives(i+5,3,3));
         }
         emperor = objectivesMaker.addAnObjectives(objectives.size(),0,2);
+    }
+
+    /**
+     * Initialises the pattern list with default patterns.
+     */
+    private void initialisesPattern() {
+        patterns = PatternFactory.createLegalPatterns();
     }
 
 
