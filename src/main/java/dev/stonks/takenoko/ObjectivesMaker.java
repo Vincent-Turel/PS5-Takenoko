@@ -5,35 +5,30 @@ import java.util.List;
 
 public class ObjectivesMaker {
 
-    private List<Objective> listObjectves;
+    private List<Integer> listObjectves;
 
-    ObjectivesMaker(){
-        listObjectves = new ArrayList<>();
+    ObjectivesMaker(){listObjectves = new ArrayList<>();
     }
-
     /**
      * addAnObjectives it's the factory to make new objective
      *
      * @param objID n° of objectives
-     * @param nbTuille nbTuille is the number of tuille to validate objective
      * @param nbPT nbPT is the number of points give when success
      * @return return objective or null if the new objective already exist, it has the null value.
      *
      * @author the StonksDev team
      */
-    Objective addAnObjectives(int objID, int nbTuille, int nbPT) {
-        for (Objective value : this.listObjectves) {
-            if (value.getObjID() == objID) {
+    PatternObjective addAnPatternObjectives(int objID, int nbPT,int objType, Pattern pattern) {
+        for (int value : this.listObjectves) {
+            if (value == objID) {
                 return null;
             }
         }
-        Objective newObjectives = new Objective(objID, nbTuille, nbPT);
-        this.listObjectves.add(newObjectives);  //add it to the deck
-        return newObjectives;
-    }
+        listObjectves.add(objID);
+        PatternObjective patternObj = new PatternObjective(objType, objID, nbPT, pattern);
+        return patternObj;
+        }
 
-    public List<Objective> getDeck(){
-        return this.listObjectves;
-    }
+    public List<Integer> getlistObjectves(){return listObjectves;}
 
 }

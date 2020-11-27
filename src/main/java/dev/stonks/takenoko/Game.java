@@ -2,14 +2,6 @@ package dev.stonks.takenoko;
 
 import java.lang.reflect.Array;
 import java.util.*;
-//Ajouter des classes
-// -abstractTile  FAIT
-// -results
-// Changer objectives
-//joueur à initialiser dans le main FAIT
-//position des cases
-//Pousse de bambou
-
 
 /**
  * Represents a game.
@@ -26,20 +18,22 @@ public class Game {
     Map map;
     ArrayList<AbstractTile> tileDeck;
     ArrayList<Player> players;
-    ArrayList<Objective> objectives;
+    ArrayList<PatternObjective> tileObjectives;
+    //ArrayList<Objective> pandaObjectives;
+    //ArrayList<Objective> gardenerObjectives;
+    Set<MatchResult> patternMatchs;
     Objective emperor;
-    //TODO : soit on réinitialises avec objectivesMaker, soit on fait achievedObjectives
     ArrayList<Objective> achievedObjectives;
     Random random;
-    //TODO : class result avec un resultat par joueur (joueur,classement,score)
     ArrayList<GameResults> gamePlayersResults;
     ArrayList<Pattern> patterns;
 
     Game(ArrayList<Player> players) {
         map = new Map(28);
         initialisesDeck();
-        initialisesObjectives();
         initialisesPattern();
+        initialisesObjectives();
+        patternMatchs = new HashSet<>();
         this.players = players;
         achievedObjectives = new ArrayList<Objective>();
         random = new Random();
@@ -58,12 +52,12 @@ public class Game {
         }
 
         // 9 yellow tiles
-        for(int i = 0;i < 7;i++){
+        for(int i = 0;i < 9;i++){
             tileDeck.add(new AbstractTile(TileKind.Yellow));
         }
 
         // 11 green tiles
-        for(int i = 0;i < 7;i++){
+        for(int i = 0;i < 11;i++){
             tileDeck.add(new AbstractTile(TileKind.Green));
         }
     }
@@ -72,13 +66,18 @@ public class Game {
      * Initialise the objectives (here, it's 10 tile objectives)
      */
     private void initialisesObjectives() {
+        //1=Pattern constraint, 2=Gardener, 3=Panda, 4=emperor
         ObjectivesMaker objectivesMaker = new ObjectivesMaker();
-        objectives = new ArrayList<Objective>();
-        for(int i = 0;i < 5;i++){
-            objectives.add(objectivesMaker.addAnObjectives(i,2,2));
-            objectives.add(objectivesMaker.addAnObjectives(i+5,3,3));
+        tileObjectives = new ArrayList<PatternObjective>();
+        /*Pattern pattern = new Pattern().withCenter(TileKind.Green)
+                .withNeighbor(Direction.North, TileKind.Green)
+                .withNeighbor(Direction.NorthEast, TileKind.Green);*/
+        int i = 0;
+        for (Pattern pattern: patterns) {
+            tileObjectives.add(objectivesMaker.addAnPatternObjectives(i, 4,1, pattern));
+            i++;
         }
-        emperor = objectivesMaker.addAnObjectives(objectives.size(),0,2);
+        emperor = new Objective(tileObjectives.size(),2,4);
     }
 
     /**
@@ -92,42 +91,59 @@ public class Game {
     void play() throws IllegalTilePlacementException{
         boolean aPlayerWin = false;
         objectivesDistribution();
+        boolean action = true;
         while(!aPlayerWin){
             for (Player player: players) {
                 //player.decide(map);
                 //player.doActions();
-                ArrayList<AbstractTile> possiblesTiles = new ArrayList<AbstractTile>(3);
-                int index = 0;
-                int size = 3;
-                if(size>tileDeck.size()){
-                    size = tileDeck.size();
+                if(tileDeck.size()==0){
+                    action = false;
                 }
-                for(int i=0; i<size; i++){
-                    index = random.nextInt(tileDeck.size());
-                    AbstractTile aTile = tileDeck.get(index);
-                    possiblesTiles.add(aTile);
-                    tileDeck.remove(index);
+                if(action) {
+                    ArrayList<AbstractTile> possiblesTiles = new ArrayList<AbstractTile>(3);
+                    int index = 0;
+                    int size = 3;
+                    if (size > tileDeck.size()) {
+                        size = tileDeck.size();
+                    }
+                    for (int i = 0; i < size; i++) {
+                        index = random.nextInt(tileDeck.size());
+                        AbstractTile aTile = tileDeck.get(index);
+                        possiblesTiles.add(aTile);
+                        tileDeck.remove(index);
+                    }
+                    ArrayList<Coordinate> possiblesPlacements = new ArrayList<Coordinate>();
+                    possiblesPlacements.addAll(map.getPlacements());
+                    Tile chosenTile = player.putTile(possiblesPlacements, possiblesTiles);
+                    for (int i = 0; i < size - 1; i++) {
+                        tileDeck.add(possiblesTiles.get(i));
+                    }
+                    map.setTile(chosenTile);
                 }
-                ArrayList<Coordinate> possiblesPlacements = new ArrayList<Coordinate>();
-                possiblesPlacements.addAll(map.getPlacements());
-                Tile chosenTile = player.putTile(possiblesPlacements,possiblesTiles);
-                tileDeck.addAll(possiblesTiles);
-                map.setTile(chosenTile);
+                else{
+                    fillTheFinalScoreWhenNoMoreTile();
+                    break;
+                }
                 checkObjectives(player);
                 map.growBambooInMap();
             }
             aPlayerWin = checkIfWinner();
+            if(!action){
+                aPlayerWin = true;
+            }
         }
-        fillTheFinalScore();
+        if(action){
+            fillTheFinalScore();
+        }
     }
 
     private void objectivesDistribution() {
         int index = 0;
         for (Player player: players) {
             for(int i = 0;i<3;i++) {
-                index = random.nextInt(objectives.size());
-                player.addObjectives(objectives.get(index));
-                objectives.remove(index);
+                index = random.nextInt(tileObjectives.size());
+                player.addObjectives(tileObjectives.get(index));
+                tileObjectives.remove(index);
             }
         }
     }
@@ -140,21 +156,19 @@ public class Game {
      */
     private void checkObjectives(Player player) {
         ArrayList<Objective> playerObjectives = player.getObjectives();
+
         for (Objective objective: playerObjectives) {
-            if(isValid(objective)){
-                //TODO: 4 patern différents (classe et sous-classe)
+            if(objective instanceof PatternObjective) {
+                objective = (PatternObjective) objective;
+                PatternObjective patternObjective = (PatternObjective)objective;
+                patternMatchs = isValideObjectives.isValid(objective,map,patternMatchs);
+            }
+            if(objective.getStates()){
                 player.newObjectivesAchieved(objective);
+                tileObjectives.remove(objective);
                 achievedObjectives.add(objective);
             }
         }
-    }
-
-    private boolean isValid(Objective objective) {
-        boolean isValid = false;
-        if(objective.getNbTuille()<=map.getPlacedTileNumber()){
-            isValid = true;
-        }
-        return isValid;
     }
 
     /**
@@ -165,7 +179,6 @@ public class Game {
      * @return
      */
     private boolean checkIfWinner() {
-        //TODO: think about the emperor objectives (in checkObjectives or checkWinner)
         for (Player player : players) {
             if(player.getNbObjectivesAchieved() >= nbObjectivesToWIn){
                 player.addObjectives(emperor);
@@ -186,6 +199,14 @@ public class Game {
         for (Player player : players) {
             id = player.getId();
             gamePlayersResults.add(new GameResults(id,rankOf(id)));
+        }
+    }
+
+    private void fillTheFinalScoreWhenNoMoreTile() {
+        int id = 0;
+        for (Player player : players) {
+            id = player.getId();
+            gamePlayersResults.add(new GameResults(id,1));
         }
     }
 
@@ -228,10 +249,13 @@ public class Game {
 
     private void resetObjectives(){
         for(Player player:players){
-            objectives.addAll(player.getObjectives());
+            player.getObjectives().forEach(objective -> tileObjectives.add((PatternObjective)objective));
         }
         for (Objective objective : achievedObjectives) {
-            objectives.add(objective);
+            if(objective instanceof PatternObjective) {
+                PatternObjective patternObjective = (PatternObjective)objective;
+                tileObjectives.add(patternObjective);
+            }
         }
         achievedObjectives.clear();
     }
