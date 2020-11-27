@@ -14,10 +14,26 @@ public class RandomPlayer extends Player{
         this.playerType = PlayerType.RandomPlayer;
     }
 
+    /**
+     *
+     * @param map the game's map
+     * @return the action the player has decided to do
+     */
     @Override
-    public Tile putTile(ArrayList<Coordinate> possiblePosition, ArrayList<AbstractTile> tiles, Map map) {
+    public Action decide(ArrayList<Action> possibleAction, Map map) {
+        if (possibleAction.size() < 1)
+            throw new IllegalStateException("There should always have possible actions");
+        currentMapState = map;
+        return possibleAction.get(random.nextInt(possibleAction.size()));
+    }
+
+    @Override
+    public Tile putTile(ArrayList<AbstractTile> tiles) {
+        if (tiles.size() < 1)
+            throw new IllegalStateException("This action shouldn't be possible if there is no tiles remaining");
         AbstractTile chosenAbstractTile = tiles.get(random.nextInt(tiles.size()));
-        Coordinate chosenLocation = possiblePosition.get(random.nextInt(possiblePosition.size()));
+        ArrayList<Coordinate> possiblePlacemnts = new ArrayList<>(this.currentMapState.getPlacements());
+        Coordinate chosenLocation = possiblePlacemnts.get(random.nextInt(possiblePlacemnts.size()));
         tiles.remove(chosenAbstractTile);
 
         return chosenAbstractTile.withCoordinate(chosenLocation);

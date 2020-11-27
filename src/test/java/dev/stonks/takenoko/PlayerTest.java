@@ -1,36 +1,50 @@
 package dev.stonks.takenoko;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
+import java.util.*;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class PlayerTest {
 
+    RandomPlayer randomPlayer;
+    DumbPlayer dumbPlayer;
+
+    @BeforeEach
+    public void setup(){
+        randomPlayer = new RandomPlayer(1);
+        dumbPlayer = new DumbPlayer(2);
+    }
+
+    @Test
+    public void decideTest(){
+        Map map = new Map(1);
+        ArrayList<Action> possibleActions = new ArrayList<>(Arrays.asList(Action.values()));
+        assertTrue(possibleActions.contains(randomPlayer.decide(possibleActions, map)));
+        assertEquals(randomPlayer.getCurrentMapState(), map);
+        possibleActions.clear();
+        assertThrows(IllegalStateException.class, () -> randomPlayer.decide(possibleActions, map));
+    }
+
     @Test
     public void putTileTest(){
-        RandomPlayer randomPlayer = new RandomPlayer(1);
-        Map map = new Map(1);
-        AbstractTile abstractTile1 = new AbstractTile();
-        AbstractTile abstractTile2 = new AbstractTile();
-        Coordinate coordinate1 = new Coordinate(1,1,1);
-        Coordinate coordinate2 = new Coordinate(2,2,2);
-        ArrayList<Coordinate> possiblePosition = new ArrayList<>();
-        possiblePosition.add(coordinate1);
-        possiblePosition.add(coordinate2);
-        ArrayList<AbstractTile> tiles = new ArrayList<>();
-        tiles.add(abstractTile1);
-        tiles.add(abstractTile2);
-        Tile tile1 = abstractTile1.withCoordinate(coordinate1);
-        Tile tile2 = abstractTile1.withCoordinate(coordinate2);
-        Tile tile3 = abstractTile2.withCoordinate(coordinate1);
-        Tile tile4 = abstractTile2.withCoordinate(coordinate2);
-        ArrayList<Tile> res = new ArrayList<>();
-        res.add(tile1);
-        res.add(tile2);
-        res.add(tile3);
-        res.add(tile4);
-        assertTrue(res.contains(randomPlayer.putTile(possiblePosition,tiles,map)));
+        Set<Coordinate> placements = new HashSet<>(Arrays.asList(new Coordinate(1,1,1),new Coordinate(2,2,2)));
+        List<Coordinate> placementsList = new ArrayList<>(placements);
+        Map map = mock(Map.class);
+        when(map.getPlacements()).thenReturn(new HashSet<>(placements));
+        ArrayList<AbstractTile> tiles = new ArrayList<>(Arrays.asList(new AbstractTile(TileKind.Green),new AbstractTile(TileKind.Pink)));
+        ArrayList<Tile> res = new ArrayList<>(Arrays.asList(
+                tiles.get(0).withCoordinate(placementsList.get(0)),
+                tiles.get(0).withCoordinate(placementsList.get(1)),
+                tiles.get(1).withCoordinate(placementsList.get(0)),
+                tiles.get(1).withCoordinate(placementsList.get(1))));
+        randomPlayer.setCurrentMapState(map);
+        assertTrue(res.contains(randomPlayer.putTile(tiles)));
+        tiles.clear();
+        assertThrows(IllegalStateException.class, () -> randomPlayer.putTile(tiles));
     }
 }

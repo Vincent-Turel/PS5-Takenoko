@@ -14,9 +14,19 @@ public class DumbPlayer extends Player {
         this.playerType = PlayerType.DumbPlayer;
     }
 
+    /**
+     *
+     * @param map the game's map
+     * @return the action the player has decided to do
+     */
     @Override
-    public Tile putTile(ArrayList<Coordinate> avalaiblePositions, ArrayList<AbstractTile> tiles, Map map) {
-        var x = getObjectives();
+    public Action decide(ArrayList<Action> possibleAction, Map map) {
+        this.currentMapState = map;
+        return Action.PutTile;
+    }
+
+    @Override
+    public Tile putTile(ArrayList<AbstractTile> tiles) {
         throw new IllegalCallerException("Cette méthode n'est pas encore faite !");
     }
 }
