@@ -15,9 +15,10 @@ import java.util.logging.Logger;
  */
 public class Game {
     private final static Logger LOG = Logger.getLogger(Game.class.getSimpleName());
-    public static final int nbObjectivesToWIn = 3;
+    public static final int nbObjectivesToWIn = 4;
     Map map;
     ArrayList<AbstractTile> tileDeck;
+    ArrayList<AbstractTile> placedTileDeck = new ArrayList<>();
     ArrayList<Player> players;
     ArrayList<PatternObjective> tileObjectives;
     //ArrayList<Objective> pandaObjectives;
@@ -69,7 +70,7 @@ public class Game {
     private void initialisesObjectives() {
         //1=Pattern constraint, 2=Gardener, 3=Panda, 4=emperor
         ObjectivesMaker objectivesMaker = new ObjectivesMaker();
-        tileObjectives = new ArrayList<PatternObjective>();
+        tileObjectives = new ArrayList<>();
         /*Pattern pattern = new Pattern().withCenter(TileKind.Green)
                 .withNeighbor(Direction.North, TileKind.Green)
                 .withNeighbor(Direction.NorthEast, TileKind.Green);*/
@@ -90,7 +91,6 @@ public class Game {
 
     public ArrayList<Action> findPossibleActions(Player player){
         ArrayList<Action> possibleAction = new ArrayList<>();
-        LOG.info("Taille du deck : " + tileDeck.size());
         if(map.getPlacements().size() > 0 && tileDeck.size() > 0)
             possibleAction.add(Action.PutTile);
         return possibleAction;
@@ -125,10 +125,10 @@ public class Game {
                                 possiblesTiles.add(aTile);
                                 tileDeck.remove(index);
                             }
+                            placedTileDeck.addAll(possiblesTiles);
                             Tile chosenTile = player.putTile(possiblesTiles);
-                            for (int i = 0; i < size - 1; i++) {
-                                tileDeck.add(possiblesTiles.get(i));
-                            }
+                            tileDeck.addAll(possiblesTiles);
+                            placedTileDeck.removeAll(possiblesTiles);
                             map.setTile(chosenTile);
                     }
                 }
@@ -162,9 +162,8 @@ public class Game {
 
         for (Objective objective: playerObjectives) {
             if(objective instanceof PatternObjective) {
-                objective = (PatternObjective) objective;
                 PatternObjective patternObjective = (PatternObjective)objective;
-                patternMatchs = isValideObjectives.isValid(objective,map,patternMatchs);
+                patternMatchs = isValideObjectives.isValid(patternObjective,map,patternMatchs);
             }
             if(objective.getStates()){
                 player.newObjectivesAchieved(objective);
@@ -202,16 +201,18 @@ public class Game {
         for (Player player : players) {
             id = player.getId();
             gamePlayersResults.add(new GameResults(id,rankOf(id)));
-            LOG.info("Bot n°" + player.getId() + " a réalisé  un score de " + player.getScore() +  " avec "+ player.getNbObjectivesAchieved() + " objectif accompli");
+            LOG.severe("Bot n°" + player.getId() + " a réalisé  un score de " + player.getScore() +  " avec "+ player.getNbObjectivesAchieved() + " objectif(s) accompli(s)");
         }
     }
 
     private void fillTheFinalScoreWhenNoMoreTile() {
-        int id = 0;
+        int id;
         for (Player player : players) {
             id = player.getId();
             gamePlayersResults.add(new GameResults(id,1));
-            LOG.info("Bot n°" + player.getId() + " a réalisé un score de " + player.getScore() +  " avec "+ player.getNbObjectivesAchieved() + " objectif(s) accompli(s)");
+            if(player.getNbObjectivesAchieved() > 3)
+                LOG.severe("IMPOSSIBLE");
+            LOG.severe("Bot n°" + player.getId() + " a réalisé un score de " + player.getScore() +  " avec "+ player.getNbObjectivesAchieved() + " objectif(s) accompli(s)");
         }
     }
 
@@ -238,8 +239,14 @@ public class Game {
     void resetGame() throws UnsupportedOperationException{
         resetMap();
         resetObjectives();
+        resetDecks();
         resetPlayers();
         resetGameResults();
+    }
+
+    private void resetDecks() {
+        tileDeck.addAll(placedTileDeck);
+        placedTileDeck.clear();
     }
 
     private void resetMap() {

@@ -56,7 +56,7 @@ public class GameManager {
      */
     void playNTime(int n) throws IllegalTilePlacementException {
         for (int i = 1; i <= n; i++) {
-            LOG.warning("Starting game n°" + i);
+            LOG.info("Starting game n°" + i);
             game.play();
             changeStats();
             game.resetGame();
