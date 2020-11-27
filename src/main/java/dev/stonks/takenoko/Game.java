@@ -2,14 +2,6 @@ package dev.stonks.takenoko;
 
 import java.lang.reflect.Array;
 import java.util.*;
-//Ajouter des classes
-// -abstractTile  FAIT
-// -results
-// Changer objectives
-//joueur à initialiser dans le main FAIT
-//position des cases
-//Pousse de bambou
-
 
 /**
  * Represents a game.
@@ -80,7 +72,6 @@ public class Game {
                 .withNeighbor(Direction.NorthEast, TileKind.Green);
         for(int i = 0;i < 10;i++){
             tileObjectives.add(objectivesMaker.addAnPatternObjectives(i, 4,1, pattern));
-            //tileObjectives.add(objectivesMaker.addAnObjectives(i+5,3,3,1));
         }
         emperor = new Objective(tileObjectives.size(),2,4);
     }
