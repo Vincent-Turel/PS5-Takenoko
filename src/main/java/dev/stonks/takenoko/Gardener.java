@@ -14,12 +14,17 @@ public class Gardener extends Pawn {
     }
 
     /**
-     * Move and make the bamboo an
+     * Move and make the bamboo grow on the tile,  and its neigbors if :
+     * - the neighbor is present
+     * - the neighbor's kind is the same as the tile
+     * - the neighbor is irrigated
      * @param tile the tile where he is supposed to go.
      */
     @Override
     public void moveToAndAct(Tile tile, Map map) {
         super.moveToAndAct(tile, map);
+        if(tile.isIrrigated())
+            tile.growBamboo();
         Arrays.stream(Direction.values())
                 .map(d -> map.getNeighborOf(tile, d))
                 .filter(Optional::isPresent)

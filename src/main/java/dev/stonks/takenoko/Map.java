@@ -51,19 +51,32 @@ public class Map {
         }
     }
 
+    /**
+     * Get the panda
+     * @return panda
+     */
     public Pawn getPanda() {
         return panda;
     }
 
+    /**
+     * Get the gardener
+     * @return gardener
+     */
     public Pawn getGardener() {
         return gardener;
     }
 
+    /**
+     * Get all the tiles where a pawn can go according to his current position on the map
+     * @param pawn (panda or gardener)
+     * @return a set of all the tiles where the pawn can go
+     */
     public Set<Tile> getPossiblePawnPlacements(Pawn pawn){
         Set<Tile> allPossiblePionPlacements = new HashSet<>();
-        Tile curentPionTile = getTile(pawn.getCurrentCoordinate()).get();
+        Tile currentPawnTile = getTile(pawn.getCurrentCoordinate()).get();
         for (Direction direction : Direction.values()){
-            Tile possiblePlacements = curentPionTile;
+            Tile possiblePlacements = currentPawnTile;
             while(getNeighborOf(possiblePlacements, direction).isPresent()){
                 possiblePlacements = getNeighborOf(possiblePlacements, direction).get();
                 allPossiblePionPlacements.add(possiblePlacements);

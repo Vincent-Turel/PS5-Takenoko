@@ -121,6 +121,10 @@ public class Tile {
         return kind == TileKind.Initial;
     }
 
+    public Bamboo getBamboo() {
+        return bamboo;
+    }
+
     /**
      * Increase the size of the bamboo
      * Maximal size : 4

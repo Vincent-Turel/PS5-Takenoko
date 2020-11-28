@@ -6,5 +6,5 @@ public enum Action {
     PutTile,
     //PutIrrigation,
     //DrawObjective,
-    //DrawIrrigation,
+    DrawIrrigation,
 }

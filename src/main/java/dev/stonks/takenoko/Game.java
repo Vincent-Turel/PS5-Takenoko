@@ -19,6 +19,8 @@ public class Game {
     Map map;
     ArrayList<AbstractTile> tileDeck;
     ArrayList<AbstractTile> placedTileDeck = new ArrayList<>();
+    Stack<AbstractIrrigation> irrigationDeck;
+    Stack<AbstractIrrigation> placedIrrigationsDeck = new Stack<>();
     ArrayList<Player> players;
     ArrayList<PatternObjective> tileObjectives;
     //ArrayList<Objective> pandaObjectives;
@@ -33,6 +35,7 @@ public class Game {
     Game(ArrayList<Player> players) {
         map = new Map(28);
         initialiseTileDeck();
+        initialiseIrrigationDeck();
         initialisesPattern();
         initialisesObjectives();
         patternMatchs = new HashSet<>();
@@ -40,6 +43,16 @@ public class Game {
         achievedObjectives = new ArrayList<>();
         random = new Random();
         gamePlayersResults = new ArrayList<>();
+    }
+
+    /**
+     * Initialise a deck of irrigations (the irrigations players will draw)
+     */
+    private void initialiseIrrigationDeck() {
+        irrigationDeck = new Stack<>();
+        for (int i = 0;i < 20; i++){
+            irrigationDeck.add(new AbstractIrrigation());
+        }
     }
 
     /**
@@ -97,6 +110,8 @@ public class Game {
             possibleAction.add(Action.MovePanda);
         if(map.getPlacements().size() > 0 && tileDeck.size() > 0)
             possibleAction.add(Action.PutTile);
+        if (irrigationDeck.size() > 0)
+            possibleAction.add(Action.DrawIrrigation);
         return possibleAction;
     }
 
@@ -111,12 +126,12 @@ public class Game {
                 LOG.info(possibleActions.toString());
                 for (int j = 0; j < 2; j++) {
                     Action chosenAction = player.decide(possibleActions, map);
-                    //possibleActions.remove(chosenAction);
                     LOG.info("Player n°" + player.getId() + " has chosen this action : " + chosenAction.toString());
                     if (possibleActions.size() == 0 || tileDeck.size() == 0) {
                         fillTheFinalScoreWhenNoMoreTile();
                         return;
                     }
+                    possibleActions.remove(chosenAction);
                     switch (chosenAction) {
                         case PutTile:
                             ArrayList<AbstractTile> possiblesTiles = new ArrayList<>(3);
@@ -136,13 +151,22 @@ public class Game {
                             tileDeck.addAll(possiblesTiles);
                             placedTileDeck.removeAll(possiblesTiles);
                             map.setTile(chosenTile);
+                            break;
                         case MoveGardener:
                             Pawn gardener = map.getGardener();
                             gardener.moveToAndAct(player.choseWherePawnShouldGo(gardener), map);
+                            break;
                         case MovePanda:
                             Pawn panda = map.getPanda();
-                            panda.moveToAndAct(player.choseWherePawnShouldGo(panda), map);
-
+                            var tile = player.choseWherePawnShouldGo(panda);
+                            panda.moveToAndAct(tile, map);
+                            player.addCollectedBamboo(tile.getBamboo());
+                            break;
+                        case DrawIrrigation:
+                            AbstractIrrigation drawnIrrigation = irrigationDeck.pop();
+                            placedIrrigationsDeck.add(drawnIrrigation);
+                            player.addIrrigation(drawnIrrigation);
+                            break;
                     }
                 }
                 checkObjectives(player);
@@ -261,6 +285,8 @@ public class Game {
     private void resetDecks() {
         tileDeck.addAll(placedTileDeck);
         placedTileDeck.clear();
+        irrigationDeck.addAll(placedIrrigationsDeck);
+        placedIrrigationsDeck.clear();
     }
 
     private void resetMap() {
