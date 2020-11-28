@@ -49,23 +49,23 @@ public class ObjectivesMaker {
     ArrayList<PatternObjective> validPatternObjectives() {
         ArrayList<PatternObjective> ps = new ArrayList();
 
-        ps.add(addAnPatternObjectives( 2, 1, PatternFactory.createTriangle(TileKind.Green)));
-        ps.add(addAnPatternObjectives( 3, 1, PatternFactory.createDiamond(TileKind.Green)));
-        ps.add(addAnPatternObjectives( 5, 1, PatternFactory.createDiamond(TileKind.Yellow, TileKind.Pink)));
-        ps.add(addAnPatternObjectives( 4, 1, PatternFactory.createDiamond(TileKind.Pink, TileKind.Green)));
-        ps.add(addAnPatternObjectives( 3, 1, PatternFactory.createDiamond(TileKind.Yellow, TileKind.Green)));
+        ps.add(addAnPatternObjectives( 2, 1, Pattern.triangleShaped(TileKind.Green)));
+        ps.add(addAnPatternObjectives( 3, 1, Pattern.diamondShaped(TileKind.Green)));
+        ps.add(addAnPatternObjectives( 5, 1, Pattern.diamondShaped(TileKind.Yellow, TileKind.Pink)));
+        ps.add(addAnPatternObjectives( 4, 1, Pattern.diamondShaped(TileKind.Pink, TileKind.Green)));
+        ps.add(addAnPatternObjectives( 3, 1, Pattern.diamondShaped(TileKind.Yellow, TileKind.Green)));
 
-        ps.add(addAnPatternObjectives( 3, 1, PatternFactory.createI(TileKind.Yellow)));
-        ps.add(addAnPatternObjectives( 4, 1, PatternFactory.createDiamond(TileKind.Yellow)));
-        ps.add(addAnPatternObjectives( 3, 1, PatternFactory.createC(TileKind.Yellow)));
-        ps.add(addAnPatternObjectives( 2, 1, PatternFactory.createI(TileKind.Green)));
-        ps.add(addAnPatternObjectives( 2, 1, PatternFactory.createC(TileKind.Green)));
+        ps.add(addAnPatternObjectives( 3, 1, Pattern.iShaped(TileKind.Yellow)));
+        ps.add(addAnPatternObjectives( 4, 1, Pattern.diamondShaped(TileKind.Yellow)));
+        ps.add(addAnPatternObjectives( 3, 1, Pattern.cShaped(TileKind.Yellow)));
+        ps.add(addAnPatternObjectives( 2, 1, Pattern.iShaped(TileKind.Green)));
+        ps.add(addAnPatternObjectives( 2, 1, Pattern.cShaped(TileKind.Green)));
 
-        ps.add(addAnPatternObjectives(4, 1, PatternFactory.createC(TileKind.Pink)));
-        ps.add(addAnPatternObjectives(4, 1, PatternFactory.createTriangle(TileKind.Pink)));
-        ps.add(addAnPatternObjectives(5, 1, PatternFactory.createDiamond(TileKind.Pink)));
-        ps.add(addAnPatternObjectives(4, 1, PatternFactory.createI(TileKind.Pink)));
-        ps.add(addAnPatternObjectives(3, 1, PatternFactory.createTriangle(TileKind.Yellow)));
+        ps.add(addAnPatternObjectives(4, 1, Pattern.cShaped(TileKind.Pink)));
+        ps.add(addAnPatternObjectives(4, 1, Pattern.triangleShaped(TileKind.Pink)));
+        ps.add(addAnPatternObjectives(5, 1, Pattern.diamondShaped(TileKind.Pink)));
+        ps.add(addAnPatternObjectives(4, 1, Pattern.iShaped(TileKind.Pink)));
+        ps.add(addAnPatternObjectives(3, 1, Pattern.triangleShaped(TileKind.Yellow)));
 
         return ps;
     }
