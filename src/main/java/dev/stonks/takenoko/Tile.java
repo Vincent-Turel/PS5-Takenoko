@@ -1,6 +1,7 @@
 package dev.stonks.takenoko;
 
 import java.util.Arrays;
+import java.util.Objects;
 
 /**
  * Represents an hexagonal tile.
@@ -9,13 +10,13 @@ import java.util.Arrays;
  */
 public class Tile {
     private final Coordinate coord;
-    private int bambooSize;
+    private Bamboo bamboo;
     private TileKind kind;
 
     Tile(Coordinate c, TileKind k) {
         coord = c;
-        bambooSize = 0;
         kind = k;
+        bamboo = new Bamboo(this.kind);
     }
 
     /**
@@ -112,8 +113,8 @@ public class Tile {
      * Maximal size : 4
      */
     public void growBamboo(){
-        if (bambooSize<4 && !isInitial()){
-            bambooSize+=1;
+        if (bamboo.getSize()<4 && !isInitial()){
+            bamboo.grow();
         }
     }
 
@@ -121,7 +122,7 @@ public class Tile {
      * Returns the bamboo length of the current tile.
      */
     public int bambooSize() {
-        return bambooSize;
+        return bamboo.getSize();
     }
 
     /**
@@ -129,5 +130,20 @@ public class Tile {
      */
     public TileKind kind() {
         return kind;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Tile)) return false;
+        Tile tile = (Tile) o;
+        return coord.equals(tile.coord) &&
+                bamboo.equals(tile.bamboo) &&
+                kind == tile.kind;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(coord, bamboo, kind);
     }
 }

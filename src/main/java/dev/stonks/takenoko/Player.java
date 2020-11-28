@@ -1,38 +1,77 @@
 package dev.stonks.takenoko;
 
 import java.util.ArrayList;
-import java.util.Map;
 import java.util.Random;
-import java.util.Set;
 
 /**
  * This class is the mother class of every types of player.
  */
 public abstract class Player {
+    enum PlayerType{
+    RandomPlayer,
+    DumbPlayer,
+    SmartPlayer
+}
+
+    protected PlayerType playerType;
     protected int id;
     protected ArrayList<Objective> objectives;
+    protected ArrayList<Bamboo> collectedBamboo;
     protected int nbObjectivesAchieved;
+    protected Map currentMapState;
     protected int score;
     protected Random random;
 
     public Player(int id){
         this.id = id;
-        this.objectives = new ArrayList<Objective>();
+        this.objectives = new ArrayList<>();
         this.nbObjectivesAchieved = 0;
+        this.collectedBamboo = new ArrayList<>();
         this.score = 0;
         this.random = new Random();
     }
 
     /**
+     * This method return the action he has chosen to do among all possible ones
+     * @param map the current map state. Needed to do an intelligent choice
+     * @return the action the player has chosen
+     */
+    public abstract Action decide(ArrayList<Action> possibleAction, Map map);
+
+    /**
      *
-     * @param possiblePosition A set of all emplacement where a tile can be put
      * @param tiles A liste of tiles
      * @return The coordinate and the tile the player has chosen
      */
-    public abstract Tile putTile (ArrayList<Coordinate> avalaiblePositions, ArrayList<AbstractTile> tiles);
+    public abstract Tile putTile (ArrayList<AbstractTile> tiles);
 
+    /**
+     * Add an objective to the player's objective list
+     * @param objective the objective that the player has drawn.
+     */
+    public void addObjectives(Objective objective){
+        if (this.objectives.size() < 5){
+            this.objectives.add(objective);
+        }
+        else
+            throw new IllegalCallerException("This should not be possible");
+    }
+
+    /**
+     * Get a list of all objectives the player curently has
+     * @return objectives
+     */
     public ArrayList<Objective> getObjectives() {
         return (ArrayList<Objective>) this.objectives.clone();
+    }
+
+    /**
+     * Get the type of the player
+     * @see PlayerType
+     * @return playerType
+     */
+    public PlayerType getPlayerType() {
+        return playerType;
     }
 
     /**
@@ -58,17 +97,19 @@ public abstract class Player {
     }
 
     /**
-     *
-     * @param objective the objective that the player has got.
-     * @return true if the objectif has corectly been added. False otherwise
+     * Get a list of all bamboo the player has collected with the panda
+     * @return collectedBamboo
      */
-    public boolean addObjectives(Objective objective){
-        if (this.objectives.size() < 5){
-            this.objectives.add(objective);
-            return true;
-        }
-        else
-            return false;
+    public ArrayList<Bamboo> getCollectedBamboo() {
+        return collectedBamboo;
+    }
+
+    /**
+     * Add a bamboo to a list of collected bamboo
+     * @param bamboo the bambo that has been collected thanks to the panda
+     */
+    public void addCollectedBamboo(Bamboo bamboo){
+        this.collectedBamboo.add(bamboo);
     }
 
     /**
@@ -82,11 +123,29 @@ public abstract class Player {
     }
 
     /**
+     * Get the current map state of the game
+     * Only for test
+     * @return currentMapState
+     */
+    public Map getCurrentMapState() {
+        return currentMapState;
+    }
+
+    /**
+     * Set the current map state of the game
+     * @param currentMapState the current map state
+     */
+    public void setCurrentMapState(Map currentMapState) {
+        this.currentMapState = currentMapState;
+    }
+
+    /**
      * Reset a player so he can start a game again.
      */
     public void resetPlayer(){
         this.score = 0;
         this.nbObjectivesAchieved = 0;
         this.objectives.clear();
+        this.collectedBamboo.clear();
     }
 }

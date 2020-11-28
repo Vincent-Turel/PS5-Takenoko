@@ -1,9 +1,6 @@
 package dev.stonks.takenoko;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -183,7 +180,7 @@ public class Map {
      */
     Set<Coordinate> getPlacements() {
         // First step: getting all neighbors of all set tiles.
-        Set<Coordinate> candidates = new HashSet();
+        Set<Coordinate> candidates = new HashSet<>();
 
         for (Optional<Tile> maybeTile: tiles) {
             if (maybeTile.isPresent()) {
