@@ -35,7 +35,7 @@ class ObjectivesTest {
         assertEquals(testMake.addAnPatternObjectives(2,3,6,pattern),null);
         deck = testMake.getlistObjectves();
         assertEquals(1, deck.size());
-        PatternObjective newObj = new PatternObjective(4,4,7, pattern);
+        PatternObjective newObj = new PatternObjective(4,7, pattern);
         PatternObjective newFacto = testMake.addAnPatternObjectives(4,7,1,pattern);
         assertEquals(newFacto.getObjID(),newObj.getObjID());
         assertEquals(newFacto.getNbPt(),newObj.getNbPt());

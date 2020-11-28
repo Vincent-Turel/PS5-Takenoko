@@ -2,6 +2,8 @@ package dev.stonks.takenoko;
 
 import java.util.ArrayList;
 
+// TODO: move most of this code in `Pattern`.
+
 /**
  * Allows to create the default patterns for the game. The goal is to generate
  * patterns that are listed at the following URL:
