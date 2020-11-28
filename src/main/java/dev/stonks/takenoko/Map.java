@@ -59,7 +59,7 @@ public class Map {
         return gardener;
     }
 
-    public Set<Tile> getPossiblePionPlacements(Pawn pawn){
+    public Set<Tile> getPossiblePawnPlacements(Pawn pawn){
         Set<Tile> allPossiblePionPlacements = new HashSet<>();
         Tile curentPionTile = getTile(pawn.getCurrentCoordinate()).get();
         for (Direction direction : Direction.values()){

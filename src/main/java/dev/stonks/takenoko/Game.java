@@ -91,9 +91,9 @@ public class Game {
 
     public ArrayList<Action> findPossibleActions(Player player){
         ArrayList<Action> possibleAction = new ArrayList<>();
-        if (map.getPossiblePionPlacements(map.getGardener()).size() > 0)
+        if (map.getPossiblePawnPlacements(map.getGardener()).size() > 0)
             possibleAction.add(Action.MoveGardener);
-        if (map.getPossiblePionPlacements(map.getPanda()).size() > 0)
+        if (map.getPossiblePawnPlacements(map.getPanda()).size() > 0)
             possibleAction.add(Action.MovePanda);
         if(map.getPlacements().size() > 0 && tileDeck.size() > 0)
             possibleAction.add(Action.PutTile);
@@ -136,6 +136,13 @@ public class Game {
                             tileDeck.addAll(possiblesTiles);
                             placedTileDeck.removeAll(possiblesTiles);
                             map.setTile(chosenTile);
+                        case MoveGardener:
+                            Pawn gardener = map.getGardener();
+                            gardener.moveToAndAct(player.choseWherePawnShouldGo(gardener), map);
+                        case MovePanda:
+                            Pawn panda = map.getPanda();
+                            panda.moveToAndAct(player.choseWherePawnShouldGo(panda), map);
+
                     }
                 }
                 checkObjectives(player);

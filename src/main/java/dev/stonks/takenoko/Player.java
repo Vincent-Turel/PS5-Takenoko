@@ -39,11 +39,17 @@ public abstract class Player {
     public abstract Action decide(ArrayList<Action> possibleAction, Map map);
 
     /**
-     *
      * @param tiles A liste of tiles
      * @return The coordinate and the tile the player has chosen
      */
     public abstract Tile putTile (ArrayList<AbstractTile> tiles);
+
+    /**
+     * This method return the tile where the player want to move the pawn (Panda or Gardener)
+     * @param pawn the pawn that has to be moved
+     * @return Tile the tile that the player has chosen
+     */
+    public abstract Tile choseWherePawnShouldGo(Pawn pawn);
 
     /**
      * Add an objective to the player's objective list

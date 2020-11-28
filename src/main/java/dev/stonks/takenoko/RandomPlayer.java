@@ -1,6 +1,8 @@
 package dev.stonks.takenoko;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * This player plays randomly every time.
@@ -37,5 +39,11 @@ public class RandomPlayer extends Player{
         tiles.remove(chosenAbstractTile);
 
         return chosenAbstractTile.withCoordinate(chosenLocation);
+    }
+
+    @Override
+    public Tile choseWherePawnShouldGo(Pawn pawn) {
+        var possiblePawnPlacements = currentMapState.getPossiblePawnPlacements(pawn);
+        return List.copyOf(possiblePawnPlacements).get(random.nextInt(possiblePawnPlacements.size()));
     }
 }

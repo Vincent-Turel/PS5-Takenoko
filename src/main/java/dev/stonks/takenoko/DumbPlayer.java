@@ -29,4 +29,9 @@ public class DumbPlayer extends Player {
     public Tile putTile(ArrayList<AbstractTile> tiles) {
         throw new IllegalCallerException("Cette méthode n'est pas encore faite !");
     }
+
+    @Override
+    public Tile choseWherePawnShouldGo(Pawn pawn) {
+        throw new IllegalCallerException("Cette méthode n'est pas encore faite !");
+    }
 }
