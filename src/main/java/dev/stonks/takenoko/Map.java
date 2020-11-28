@@ -14,6 +14,8 @@ public class Map {
     Optional<Tile>[] tiles;
     int delta;
     int sideLen;
+    Pawn panda;
+    Pawn gardener;
 
     /**
      * Creates an initial map. It contains the single initial tile.
@@ -49,6 +51,27 @@ public class Map {
         }
     }
 
+    public Pawn getPanda() {
+        return panda;
+    }
+
+    public Pawn getGardener() {
+        return gardener;
+    }
+
+    public Set<Tile> getPossiblePionPlacements(Pawn pawn){
+        Set<Tile> allPossiblePionPlacements = new HashSet<>();
+        Tile curentPionTile = getTile(pawn.getCurrentCoordinate()).get();
+        for (Direction direction : Direction.values()){
+            Tile possiblePlacements = curentPionTile;
+            while(getNeighborOf(possiblePlacements, direction).isPresent()){
+                possiblePlacements = getNeighborOf(possiblePlacements, direction).get();
+                allPossiblePionPlacements.add(possiblePlacements);
+            }
+        }
+        return allPossiblePionPlacements;
+    }
+
     private void setInitialTile() {
         Coordinate initialTileCoord = new Coordinate(delta, delta, sideLen);
 
@@ -57,6 +80,8 @@ public class Map {
         } catch (IllegalTilePlacementException e) {
             throw new RuntimeException("Initial tile placement should not fail");
         }
+        panda = new Panda(initialTileCoord);
+        gardener = new Gardener(initialTileCoord);
     }
 
     /**
@@ -115,6 +140,9 @@ public class Map {
         setTile(t.getCoordinate().toOffset(), t);
     }
 
+    public void updateIrrigations(){
+        Arrays.stream(tiles).filter(Optional::isPresent).map(Optional::get).filter(t -> isNeighborOfInitial(t.getCoordinate())).forEach(Tile::irrigate);
+    }
     /**
      * Returns the tile at given coordinate.
      * @param coord the coordinate of the said tile.
@@ -245,7 +273,7 @@ public class Map {
 
     /**
      * Increase the size of all bamboo in all tiles
-     * If the bamboo size > 5, nothing to do
+     * If the bamboo size > 3, nothing to do
      * If the tile is not present, nothing to do
      */
     public void growBambooInMap(){

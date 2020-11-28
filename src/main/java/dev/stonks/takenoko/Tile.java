@@ -10,6 +10,7 @@ import java.util.Objects;
  */
 public class Tile {
     private final Coordinate coord;
+    private boolean irrigated;
     private Bamboo bamboo;
     private TileKind kind;
 
@@ -17,6 +18,7 @@ public class Tile {
         coord = c;
         kind = k;
         bamboo = new Bamboo(this.kind);
+        irrigated = false;
     }
 
     /**
@@ -102,6 +104,17 @@ public class Tile {
     }
 
     /**
+     * @return true if the tile is irrigated. False otherwise
+     */
+    public boolean isIrrigated() {
+        return irrigated;
+    }
+
+    public void irrigate() {
+        this.irrigated = true;
+    }
+
+    /**
      * Returns whether if the tile is the initial tile or not.
      */
     public boolean isInitial() {
@@ -113,9 +126,14 @@ public class Tile {
      * Maximal size : 4
      */
     public void growBamboo(){
-        if (bamboo.getSize()<4 && !isInitial()){
+        if (!isInitial()){
             bamboo.grow();
         }
+    }
+
+    public void cutBamboo(){
+        if (!isInitial())
+            bamboo.cut();
     }
 
     /**

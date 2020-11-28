@@ -91,6 +91,10 @@ public class Game {
 
     public ArrayList<Action> findPossibleActions(Player player){
         ArrayList<Action> possibleAction = new ArrayList<>();
+        if (map.getPossiblePionPlacements(map.getGardener()).size() > 0)
+            possibleAction.add(Action.MoveGardener);
+        if (map.getPossiblePionPlacements(map.getPanda()).size() > 0)
+            possibleAction.add(Action.MovePanda);
         if(map.getPlacements().size() > 0 && tileDeck.size() > 0)
             possibleAction.add(Action.PutTile);
         return possibleAction;
@@ -103,6 +107,8 @@ public class Game {
         while(!aPlayerWin) {
             for (Player player : players) {
                 var possibleActions = findPossibleActions(player);
+                LOG.info("Actions possibles : ");
+                LOG.info(possibleActions.toString());
                 for (int j = 0; j < 2; j++) {
                     Action chosenAction = player.decide(possibleActions, map);
                     //possibleActions.remove(chosenAction);
@@ -133,6 +139,7 @@ public class Game {
                     }
                 }
                 checkObjectives(player);
+                map.updateIrrigations();
                 map.growBambooInMap();
                 aPlayerWin = checkIfWinner();
             }
