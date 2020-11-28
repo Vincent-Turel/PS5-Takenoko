@@ -12,6 +12,9 @@ Le projet commence gentiment !
 ## Running
 `mvn exec:java`
 
+## Testing
+`mvn test`
+
 ## Authors
 * [Di Grande Thomas](https://github.com/DigrandeArduino)
 * [Nakache Dan](https://github.com/danlux18)

@@ -1,6 +1,7 @@
 package dev.stonks.takenoko;
 
 import java.util.ArrayList;
+import java.util.logging.Logger;
 
 /**
  * Represents the game manager. It is responsible to create a game
@@ -10,6 +11,7 @@ import java.util.ArrayList;
  * @author the StonksDev team
  */
 public class GameManager {
+    private final static Logger LOG = Logger.getLogger(GameManager.class.getSimpleName());
     ArrayList<Player> players;
     Game game;
     ArrayList<FinalResults> stats;
@@ -50,10 +52,11 @@ public class GameManager {
      * Play n time the same game with the same bot,
      * and display statistics at the end.
      *
-     * @param n
+     * @param n the numnber of games that are going to be played
      */
     void playNTime(int n) throws IllegalTilePlacementException {
-        for (int i = 0; i < n; i++) {
+        for (int i = 1; i <= n; i++) {
+            LOG.severe("Starting game n°" + i);
             game.play();
             changeStats();
             game.resetGame();
@@ -78,7 +81,7 @@ public class GameManager {
     /**
      *
      * @param id
-     * @param id
+     * @param results
      * @return the state of the game for one player :
      * it can be a victory, a loose, or a draw
      *
