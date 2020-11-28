@@ -33,9 +33,10 @@ public class PlayerTest {
     @Test
     public void putTileTest(){
         Set<Coordinate> placements = new HashSet<>(Arrays.asList(new Coordinate(1,1,1),new Coordinate(2,2,2)));
+        Set<Coordinate> placements2 = new HashSet<>();
         List<Coordinate> placementsList = new ArrayList<>(placements);
         Map map = mock(Map.class);
-        when(map.getPlacements()).thenReturn(new HashSet<>(placements));
+        when(map.getPlacements()).thenReturn(placements).thenReturn(placements2).thenReturn(placements);
         ArrayList<AbstractTile> tiles = new ArrayList<>(Arrays.asList(new AbstractTile(TileKind.Green),new AbstractTile(TileKind.Pink)));
         ArrayList<Tile> res = new ArrayList<>(Arrays.asList(
                 tiles.get(0).withCoordinate(placementsList.get(0)),
@@ -44,7 +45,23 @@ public class PlayerTest {
                 tiles.get(1).withCoordinate(placementsList.get(1))));
         randomPlayer.setCurrentMapState(map);
         assertTrue(res.contains(randomPlayer.putTile(tiles)));
+        assertThrows(IllegalStateException.class, () -> randomPlayer.putTile(tiles));
         tiles.clear();
         assertThrows(IllegalStateException.class, () -> randomPlayer.putTile(tiles));
+    }
+
+    @Test
+    public void choseWherePawnShouldGoTest(){
+        Set<Tile> placements = new HashSet<>(Arrays.asList(
+                new Tile(new Coordinate(1,1,1), TileKind.Pink),
+                new Tile(new Coordinate(2,2,2), TileKind.Green)));
+        Set<Tile> placements2 = new HashSet<>();
+        Map map = mock(Map.class);
+        Panda panda = new Panda(new Coordinate(1,1,1));
+        when(map.getPossiblePawnPlacements(panda)).thenReturn(placements).thenReturn(placements2);
+        randomPlayer.setCurrentMapState(map);
+        assertTrue(placements.contains(randomPlayer.choseWherePawnShouldGo(panda)));
+        placements.clear();
+        assertThrows(IllegalStateException.class, () -> randomPlayer.choseWherePawnShouldGo(panda));
     }
 }

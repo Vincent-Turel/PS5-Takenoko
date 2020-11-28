@@ -71,6 +71,32 @@ public class TileTest {
     }
 
     @Test
+    void cutBamboo() {
+        Coordinate initialCoord = new Coordinate(42, 42, 85);
+        Tile t = new Tile(initialCoord, TileKind.Green);
+        t.growBamboo();
+        t.growBamboo();
+        t.growBamboo();
+        assertEquals(t.bambooSize(), 3);
+        t.cutBamboo();
+        assertEquals(t.bambooSize(), 2);
+    }
+
+    @Test
+    void cutBambooMin() {
+        Coordinate initialCoord = new Coordinate(42, 42, 85);
+        Tile t = new Tile(initialCoord, TileKind.Pink);
+        t.growBamboo();
+        t.growBamboo();
+        t.cutBamboo();
+        t.cutBamboo();
+        t.cutBamboo();
+        t.cutBamboo();
+        t.cutBamboo();
+        assertEquals(t.bambooSize(), 0);
+    }
+
+    @Test
     void bambooDoesNotGrowOnInitial() {
         Coordinate initialCoord = new Coordinate(42, 42, 85);
         Tile t = Tile.initialTile(initialCoord);
@@ -79,5 +105,16 @@ public class TileTest {
         t.growBamboo();
 
         assertEquals(t.bambooSize(), 0);
+    }
+
+    @Test
+    void equalsTest() {
+        Tile t1 = new Tile(new Coordinate(25,25,68), TileKind.Pink);
+        Tile t2 = new Tile(new Coordinate(25,25,68), TileKind.Pink);
+        Tile t3 = new Tile(new Coordinate(25,25,68), TileKind.Green);
+        Tile t4 = new Tile(new Coordinate(25,21,68), TileKind.Pink);
+        assertEquals(t1,t2);
+        assertNotEquals(t1,t3);
+        assertNotEquals(t1,t4);
     }
 }

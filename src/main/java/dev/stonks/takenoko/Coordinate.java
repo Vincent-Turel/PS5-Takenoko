@@ -1,6 +1,7 @@
 package dev.stonks.takenoko;
 
 import java.lang.reflect.Array;
+import java.util.Objects;
 
 /**
  * Represents a (x;y) coordinate.
@@ -82,7 +83,7 @@ public class Coordinate {
 
     @Override
     public int hashCode() {
-        return x * y;
+        return Objects.hash(x, y);
     }
 
     /**

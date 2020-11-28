@@ -159,8 +159,9 @@ public class Game {
                         case MovePanda:
                             Pawn panda = map.getPanda();
                             var tile = player.choseWherePawnShouldGo(panda);
+                            if (tile.getBamboo().getSize() > 0)
+                                player.addCollectedBamboo(tile.getBamboo());
                             panda.moveToAndAct(tile, map);
-                            player.addCollectedBamboo(tile.getBamboo());
                             break;
                         case DrawIrrigation:
                             AbstractIrrigation drawnIrrigation = irrigationDeck.pop();

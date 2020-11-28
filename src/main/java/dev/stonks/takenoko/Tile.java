@@ -110,6 +110,9 @@ public class Tile {
         return irrigated;
     }
 
+    /**
+     * Irrigate the tile, meaning (isIrrigated == true)
+     */
     public void irrigate() {
         this.irrigated = true;
     }
@@ -121,6 +124,10 @@ public class Tile {
         return kind == TileKind.Initial;
     }
 
+    /**
+     * Get the bamboo which is on the tile
+     * @return bamboo
+     */
     public Bamboo getBamboo() {
         return bamboo;
     }
@@ -135,6 +142,10 @@ public class Tile {
         }
     }
 
+    /**
+     * Decrease the size of the bamboo
+     * Minimal size : 0
+     */
     public void cutBamboo(){
         if (!isInitial())
             bamboo.cut();

@@ -73,16 +73,15 @@ public class Map {
      * @return a set of all the tiles where the pawn can go
      */
     public Set<Tile> getPossiblePawnPlacements(Pawn pawn){
-        Set<Tile> allPossiblePionPlacements = new HashSet<>();
+        Set<Tile> allPossiblePawnPlacements = new HashSet<>();
         Tile currentPawnTile = getTile(pawn.getCurrentCoordinate()).get();
         for (Direction direction : Direction.values()){
-            Tile possiblePlacements = currentPawnTile;
-            while(getNeighborOf(possiblePlacements, direction).isPresent()){
-                possiblePlacements = getNeighborOf(possiblePlacements, direction).get();
-                allPossiblePionPlacements.add(possiblePlacements);
+            Optional<Tile> tileOptional = Optional.of(currentPawnTile);
+            while((tileOptional = getNeighborOf(tileOptional.get(), direction)).isPresent()){
+                allPossiblePawnPlacements.add(tileOptional.get());
             }
         }
-        return allPossiblePionPlacements;
+        return allPossiblePawnPlacements;
     }
 
     private void setInitialTile() {
@@ -153,9 +152,19 @@ public class Map {
         setTile(t.getCoordinate().toOffset(), t);
     }
 
+    /**
+     * Check if somes tiles are now irrigated.
+     * Only by the InitialTile for now.
+     * NEED IMPROVEMENT LATER
+     */
     public void updateIrrigations(){
-        Arrays.stream(tiles).filter(Optional::isPresent).map(Optional::get).filter(t -> isNeighborOfInitial(t.getCoordinate())).forEach(Tile::irrigate);
+        Arrays.stream(tiles)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .filter(t -> isNeighborOfInitial(t.getCoordinate()))
+                .forEach(Tile::irrigate);
     }
+
     /**
      * Returns the tile at given coordinate.
      * @param coord the coordinate of the said tile.

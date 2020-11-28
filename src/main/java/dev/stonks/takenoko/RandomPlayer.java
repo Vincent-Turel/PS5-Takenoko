@@ -34,6 +34,8 @@ public class RandomPlayer extends Player{
             throw new IllegalStateException("This action shouldn't be possible if there is no tiles remaining");
         AbstractTile chosenAbstractTile = tiles.get(random.nextInt(tiles.size()));
         ArrayList<Coordinate> possiblePlacemnts = new ArrayList<>(this.currentMapState.getPlacements());
+        if (possiblePlacemnts.size() < 1)
+            throw new IllegalStateException("There should always have a place for a new tile");
         Coordinate chosenLocation = possiblePlacemnts.get(random.nextInt(possiblePlacemnts.size()));
         tiles.remove(chosenAbstractTile);
 
@@ -43,6 +45,8 @@ public class RandomPlayer extends Player{
     @Override
     public Tile choseWherePawnShouldGo(Pawn pawn) {
         var possiblePawnPlacements = currentMapState.getPossiblePawnPlacements(pawn);
+        if (possiblePawnPlacements.size() < 1)
+            throw new IllegalStateException("This action shouldn't be possible if there the panda can't move anywhere");
         return List.copyOf(possiblePawnPlacements).get(random.nextInt(possiblePawnPlacements.size()));
     }
 }

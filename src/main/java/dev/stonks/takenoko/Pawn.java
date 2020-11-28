@@ -19,7 +19,7 @@ public abstract class Pawn {
      * Move the pawn and do the action he is supposed to.
      * @param tile the tile where he is supposed to go.
      */
-    void moveToAndAct(Tile tile, Map map){
+    public void moveToAndAct(Tile tile, Map map){
         currentCoordinate = tile.getCoordinate();
     }
 
