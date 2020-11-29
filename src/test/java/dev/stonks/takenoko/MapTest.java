@@ -67,7 +67,7 @@ public class MapTest {
         // There is an other other tile at {29, 28}.
         Tile so = m.addNeighborOf(TileKind.Yellow, m.initialTile().withDirection(Direction.SouthOuest));
 
-        Set avalaiblePositions = m.getPlacements();
+        Set<? extends Coordinate> avalaiblePositions = m.getPlacements();
 
         Coordinate cCoord = c.getCoordinate();
         Coordinate soCoord = so.getCoordinate();
@@ -177,7 +177,7 @@ public class MapTest {
     }
 
     @Test
-    void updateIrrigationsTest() {
+    void updateIrrigationsTest() throws IllegalTilePlacementException{
         Map map = new Map(20);
         var initialTileCoordinate = map.placedTilesCoordinates().collect(Collectors.toList());
         assertEquals(initialTileCoordinate.size(), 1);
@@ -191,13 +191,9 @@ public class MapTest {
         }
         var allTiles = (ArrayList<Tile>) neighborTiles.clone();
         allTiles.addAll((ArrayList<Tile>)randomTiles.clone());
-        allTiles.forEach(x -> {
-            try {
-                map.setTile(x);
-            } catch (IllegalTilePlacementException e) {
-                e.printStackTrace();
-            }
-        });
+        for (Tile tile : allTiles){
+            map.setTile(tile);
+        }
         map.updateIrrigations();
 
         assertTrue(neighborTiles.stream().allMatch(Tile::isIrrigated));
