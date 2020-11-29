@@ -50,7 +50,7 @@ public class Map {
     }
 
     private void setInitialTile() {
-        Coordinate initialTileCoord = new Coordinate(delta, delta, sideLen);
+        Coordinate initialTileCoord = new Coordinate(delta, delta);
 
         try {
             setTile(initialTileCoord, Tile.initialTile(initialTileCoord));
@@ -70,7 +70,7 @@ public class Map {
         // TODO: once the following PR is merged, ensure that this position
         // follows the game rules.
         // https://github.com/pns-si3-projects/projet2-ps5-20-21-takenoko-2021-stonksdev/pull/15
-        setTile(coord.toOffset(), t);
+        setTile(coord.toOffset(sideLen), t);
     }
 
     /**
@@ -112,7 +112,7 @@ public class Map {
         // TODO: once the following PR is merged, ensure that this position
         // follows the game rules.
         // https://github.com/pns-si3-projects/projet2-ps5-20-21-takenoko-2021-stonksdev/pull/15
-        setTile(t.getCoordinate().toOffset(), t);
+        setTile(t.getCoordinate().toOffset(sideLen), t);
     }
 
     /**
@@ -121,7 +121,7 @@ public class Map {
      * @return the tile, if it exists.
      */
     Optional<Tile> getTile(Coordinate coord) {
-        return getTile(coord.toOffset());
+        return getTile(coord.toOffset(sideLen));
     }
 
     /**
@@ -138,7 +138,7 @@ public class Map {
      * Returns the initial tile of the map.
      */
     Tile initialTile() {
-        Coordinate c = new Coordinate(delta, delta, sideLen);
+        Coordinate c = new Coordinate(delta, delta);
         // This call to getTile is guaranteed to succeed because we placed a
         // tile at the center in the constructor.
         return getTile(c).get();
@@ -207,7 +207,7 @@ public class Map {
     }
 
     private boolean tileAt(Coordinate c) {
-        return tiles[c.toOffset()].isPresent();
+        return tiles[c.toOffset(sideLen)].isPresent();
     }
 
     private int amountOfNeighborsAt(Coordinate c) {

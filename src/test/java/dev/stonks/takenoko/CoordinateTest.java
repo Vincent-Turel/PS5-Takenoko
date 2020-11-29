@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class CoordinateTest {
     Coordinate initialCoord() {
-        return new Coordinate(27, 27, 42);
+        return new Coordinate(27, 27);
     }
 
     @Test
@@ -42,29 +42,22 @@ public class CoordinateTest {
     }
 
     @Test
-    void equalsDoesNotCareSideLength() {
-        Coordinate ca = new Coordinate(3, 9, 42);
-        Coordinate cb = new Coordinate(3, 9, 1000);
-        assertEquals(ca, cb);
-    }
-
-    @Test
     void equalsCareAboutX() {
-        Coordinate ca = new Coordinate(1, 9, 42);
-        Coordinate cb = new Coordinate(3, 9, 1000);
+        Coordinate ca = new Coordinate(1, 9);
+        Coordinate cb = new Coordinate(3, 9);
         assertNotEquals(ca, cb);
     }
 
     @Test
     void equalsCareAboutY() {
-        Coordinate ca = new Coordinate(3, 100, 42);
-        Coordinate cb = new Coordinate(3, 9, 1000);
+        Coordinate ca = new Coordinate(3, 100);
+        Coordinate cb = new Coordinate(3, 9);
         assertNotEquals(ca, cb);
     }
 
     @Test
     void equalsCareAboutType() {
-        Coordinate c = new Coordinate(9, 2, 99);
+        Coordinate c = new Coordinate(9, 2);
         Integer i = 42;
         assertNotEquals(i, c);
     }
@@ -76,85 +69,85 @@ public class CoordinateTest {
     // https://www.redblobgames.com/grids/hexagons/#coordinates
     @Test
     void north() {
-        Coordinate c = new Coordinate(2, 2, 42);
+        Coordinate c = new Coordinate(2, 2);
         Coordinate cN = c.moveWith(Direction.North);
-        assertEquals(cN, new Coordinate(2, 1, 0));
+        assertEquals(cN, new Coordinate(2, 1));
 
-        Coordinate c2 = new Coordinate(9, 3, 42);
+        Coordinate c2 = new Coordinate(9, 3);
         Coordinate c2N = c2.moveWith(Direction.North);
-        assertEquals(c2N, new Coordinate(9, 2, 0));
+        assertEquals(c2N, new Coordinate(9, 2));
     }
 
     @Test
     void northEastEvenX() {
-        Coordinate c = new Coordinate(2, 2, 0);
+        Coordinate c = new Coordinate(2, 2);
         Coordinate cNO = c.moveWith(Direction.NorthEast);
-        assertEquals(cNO, new Coordinate(3, 2, 0));
+        assertEquals(cNO, new Coordinate(3, 2));
     }
 
     @Test
     void northEastOddX() {
-        Coordinate c = new Coordinate(3, 3, 0);
+        Coordinate c = new Coordinate(3, 3);
         Coordinate cNO = c.moveWith(Direction.NorthEast);
-        assertEquals(cNO, new Coordinate(4, 2, 0));
+        assertEquals(cNO, new Coordinate(4, 2));
     }
 
     @Test
     void southEastEvenX() {
-        Coordinate c = new Coordinate(2, 2, 0);
+        Coordinate c = new Coordinate(2, 2);
         Coordinate cSE = c.moveWith(Direction.SouthEast);
-        assertEquals(cSE, new Coordinate(3, 3, 0));
+        assertEquals(cSE, new Coordinate(3, 3));
     }
 
     @Test
     void southEastOddX() {
-        Coordinate c = new Coordinate(3, 3, 0);
+        Coordinate c = new Coordinate(3, 3);
         Coordinate cSE = c.moveWith(Direction.SouthEast);
-        assertEquals(cSE, new Coordinate(4, 3, 0));
+        assertEquals(cSE, new Coordinate(4, 3));
     }
 
     @Test
     void south() {
-        Coordinate c = new Coordinate(2, 2, 42);
+        Coordinate c = new Coordinate(2, 2);
         Coordinate cN = c.moveWith(Direction.South);
-        assertEquals(cN, new Coordinate(2, 3, 0));
+        assertEquals(cN, new Coordinate(2, 3));
 
-        Coordinate c2 = new Coordinate(9, 3, 42);
+        Coordinate c2 = new Coordinate(9, 3);
         Coordinate c2N = c2.moveWith(Direction.South);
-        assertEquals(c2N, new Coordinate(9, 4, 0));
+        assertEquals(c2N, new Coordinate(9, 4));
     }
 
     @Test
     void southOuestEvenX() {
-        Coordinate c = new Coordinate(2, 2, 0);
+        Coordinate c = new Coordinate(2, 2);
         Coordinate cSO = c.moveWith(Direction.SouthOuest);
-        assertEquals(cSO, new Coordinate(1, 3, 0));
+        assertEquals(cSO, new Coordinate(1, 3));
     }
 
     @Test
     void southOuestOddX() {
-        Coordinate c = new Coordinate(3, 3, 0);
+        Coordinate c = new Coordinate(3, 3);
         Coordinate cSO = c.moveWith(Direction.SouthOuest);
-        assertEquals(cSO, new Coordinate(2, 3, 0));
+        assertEquals(cSO, new Coordinate(2, 3));
     }
 
     @Test
     void northOuestEvenX() {
-        Coordinate c = new Coordinate(2, 2, 0);
+        Coordinate c = new Coordinate(2, 2);
         Coordinate cSO = c.moveWith(Direction.NorthOuest);
-        assertEquals(cSO, new Coordinate(1, 2, 0));
+        assertEquals(cSO, new Coordinate(1, 2));
     }
 
     @Test
     void northOuestOddX() {
-        Coordinate c = new Coordinate(3, 3, 0);
+        Coordinate c = new Coordinate(3, 3);
         Coordinate cSO = c.moveWith(Direction.NorthOuest);
-        assertEquals(cSO, new Coordinate(2, 2, 0));
+        assertEquals(cSO, new Coordinate(2, 2));
     }
 
     @Test
     void neighbors() {
-        Coordinate c = new Coordinate(42, 42, 84);
+        Coordinate c = new Coordinate(42, 42);
 
         Coordinate[] neighbors = c.neighbors();
         Coordinate[] rightNeighbors = {

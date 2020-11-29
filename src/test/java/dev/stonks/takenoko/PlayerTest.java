@@ -32,7 +32,7 @@ public class PlayerTest {
 
     @Test
     public void putTileTest(){
-        Set<Coordinate> placements = new HashSet<>(Arrays.asList(new Coordinate(1,1,1),new Coordinate(2,2,2)));
+        Set<Coordinate> placements = new HashSet<>(Arrays.asList(new Coordinate(1,1),new Coordinate(2,2)));
         List<Coordinate> placementsList = new ArrayList<>(placements);
         Map map = mock(Map.class);
         when(map.getPlacements()).thenReturn(new HashSet<>(placements));

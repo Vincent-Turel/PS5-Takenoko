@@ -8,24 +8,22 @@ import java.lang.reflect.Array;
 public class Coordinate {
     private int x;
     private int y;
-    private int mapSideLength;
 
     /**
      * Creates a new coordinate.
      * @param x the x position
      * @param y the y position
-     * @param length the length of the map (assuming it is a square)
      */
-    Coordinate(int x, int y, int length) {
+    Coordinate(int x, int y) {
         this.x = x;
         this.y = y;
-        mapSideLength = length;
     }
 
     /**
      * Returns the integer offset corresponding to the coordinate.
+     * @param mapSideLength how much tiles at maximum the map has on each side
      */
-    int toOffset() {
+    int toOffset(int mapSideLength) {
         return x * mapSideLength + y;
     }
 
@@ -60,7 +58,7 @@ public class Coordinate {
     }
 
     private Coordinate moveWith(int dx, int dy) {
-        return new Coordinate(x + dx, y + dy, mapSideLength);
+        return new Coordinate(x + dx, y + dy);
     }
 
     /**
