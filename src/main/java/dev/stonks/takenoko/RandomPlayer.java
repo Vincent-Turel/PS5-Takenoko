@@ -47,6 +47,6 @@ public class RandomPlayer extends Player{
         var possiblePawnPlacements = currentMapState.getPossiblePawnPlacements(pawn);
         if (possiblePawnPlacements.size() < 1)
             throw new IllegalStateException("This action shouldn't be possible if there the panda can't move anywhere");
-        return List.copyOf(possiblePawnPlacements).get(random.nextInt(possiblePawnPlacements.size()));
+        return new ArrayList<>(possiblePawnPlacements).get(random.nextInt(possiblePawnPlacements.size()));
     }
 }
