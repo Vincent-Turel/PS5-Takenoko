@@ -12,13 +12,13 @@ public class isValideObjectives {
      * @return true if objectives complete, else false
      */
     public static Set<MatchResult> isValid(Objective objective,Map map,Set<MatchResult> alreadyUsed) {
-        int type = objective.getObjType();
+        ObjectiveKind type = objective.getObjType();
         switch (type){
             /**
              * case 1:
              * If objective is type pattern use fct isPatternConstraintValide
              */
-            case 1 :
+            case Pattern:
                 PatternObjective objectivePat = (PatternObjective) objective;
                 int old=alreadyUsed.size();
                 alreadyUsed=isPatternConstraintValide(objectivePat,map,alreadyUsed);

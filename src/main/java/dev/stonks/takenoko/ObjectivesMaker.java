@@ -5,30 +5,36 @@ import java.util.List;
 
 public class ObjectivesMaker {
 
-    private List<Integer> listObjectves;
-
-    ObjectivesMaker(){listObjectves = new ArrayList<>();
-    }
     /**
-     * addAnObjectives it's the factory to make new objective
+     * newObjectives : it's the function to make new objective
      *
-     * @param objID n° of objectives
      * @param nbPT nbPT is the number of points give when success
      * @return return objective or null if the new objective already exist, it has the null value.
      *
      * @author the StonksDev team
+     *
+     * objType -> Pattern, Gardener, Panda, Emperor
      */
-    PatternObjective addAnPatternObjectives(int objID, int nbPT,int objType, Pattern pattern) {
-        for (int value : this.listObjectves) {
-            if (value == objID) {
-                return null;
-            }
-        }
-        listObjectves.add(objID);
-        PatternObjective patternObj = new PatternObjective(objType, objID, nbPT, pattern);
-        return patternObj;
+    public static PatternObjective newObjectives(int nbPT, Pattern pattern) {
+        PatternObjective newObj = new PatternObjective(ObjectiveKind.Pattern, nbPT, pattern);
+        return newObj;
         }
 
-    public List<Integer> getlistObjectves(){return listObjectves;}
+        /*
+    public static PandaObjective newObjectives(int nbPT,int objType, Pattern pattern) {
+        PatternObjective patternObj = new PatternObjective(objType, nbPT, pattern);
+        return patternObj;
+    }
+*/
+    /*
+    public static GardenerObjective newObjectives(int nbPT, BambooPatern bamboo) {
+        GardenerObjective newObj = new GardenerObjective(2, nbPT, pattern);
+        return patternObj;
+    }
+
+    public static GardenerObjective newObjectives(int nbPT, BambooPatern bamboo, int upgrade) {
+        PatternObjective newObj = new PatternObjective(2, nbPT, pattern);
+        return newObj;
+    }*/
 
 }

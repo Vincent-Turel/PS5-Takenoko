@@ -6,14 +6,13 @@ public class PatternObjective extends Objective {
 
     /**
      *
-     * @param objType n°objective
-     * @param objID n° of point
+     * @param objType Pattern
      * @param nbPT n° of point
      * @param localPattern pattern for the objective
      */
 
-    public PatternObjective(int objType,int objID, int nbPT, Pattern localPattern){
-        super(objType,objID,nbPT);
+    public PatternObjective(ObjectiveKind objType, int nbPT, Pattern localPattern){
+        super(objType,nbPT);
         this.localPattern=localPattern;
     }
 
@@ -21,9 +20,4 @@ public class PatternObjective extends Objective {
      * @return local pattern for the classe isValideObjectives
      */
     public Pattern getLocalPattern(){return localPattern;}
-
-    /**
-     * Update the states of this objective :
-     */
-    public void UpdtateStates(){super.isValid=true;}
 }

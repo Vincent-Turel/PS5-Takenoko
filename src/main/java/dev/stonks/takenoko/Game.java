@@ -76,10 +76,10 @@ public class Game {
                 .withNeighbor(Direction.NorthEast, TileKind.Green);*/
         int i = 0;
         for (Pattern pattern: patterns) {
-            tileObjectives.add(objectivesMaker.addAnPatternObjectives(i, 4,1, pattern));
+            tileObjectives.add(ObjectivesMaker.newObjectives(4,pattern));
             i++;
         }
-        emperor = new Objective(tileObjectives.size(),2,4);
+        emperor = new Objective(ObjectiveKind.Emperor,2);
     }
 
     /**
