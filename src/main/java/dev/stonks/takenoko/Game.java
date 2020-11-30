@@ -34,9 +34,7 @@ public class Game {
     Game(ArrayList<Player> players) {
         map = new Map(28);
         initialiseTileDeck();
-
         initialiseIrrigationDeck();
-        initialisesPattern();
         initialisesObjectives();
         patternMatchs = new HashSet<>();
         this.players = players;
