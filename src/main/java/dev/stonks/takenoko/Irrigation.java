@@ -5,6 +5,13 @@ import java.util.stream.Stream;
 
 /**
  * Represents an irrigation, which has been placed on the map.
+ *
+ * Internally, irrigations are represented as a combinaison of a coordinate
+ * and a direction, such that { coord, coord.moveWith(dir) } is the set of
+ * the two tiles that are irrigated.
+ *
+ * Privileging one of the two coordinates allows us to determine, for each
+ * irrigation, where is has to be stored on the map.
  */
 public class Irrigation {
     // Note: coord represents the south-ouest-most coordinate of the two
