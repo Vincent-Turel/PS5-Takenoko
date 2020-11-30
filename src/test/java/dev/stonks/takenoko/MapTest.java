@@ -111,22 +111,21 @@ public class MapTest {
     @Test
     void getPossiblePawnPlacementsTest(){
         Map map = spy(new Map(50));
-        Coordinate c = new Coordinate(1,1,1);
+        Coordinate c = new Coordinate(1,1);
         Panda panda = new Panda(c);
 
-        Tile t1 = new Tile(new Coordinate(2,13,2), TileKind.Green);
-        Tile t2 = new Tile(new Coordinate(3,12,2), TileKind.Pink);
-        Tile t3 = new Tile(new Coordinate(4,11,2), TileKind.Green);
-        Tile t4 = new Tile(new Coordinate(5,10,2), TileKind.Pink);
-        Tile t5 = new Tile(new Coordinate(6,9,2), TileKind.Yellow);
-        Tile t6 = new Tile(new Coordinate(7,8,2), TileKind.Pink);
-        Tile t7 = new Tile(new Coordinate(8,7,2), TileKind.Green);
-        Tile t8 = new Tile(new Coordinate(9,6,2), TileKind.Yellow);
-        Tile t9 = new Tile(new Coordinate(10,5,2), TileKind.Green);
-        Tile t10 = new Tile(new Coordinate(11,4,2), TileKind.Green);
-        Tile t11 = new Tile(new Coordinate(12,3,2), TileKind.Green);
-        Tile t12 = new Tile(new Coordinate(13,2,2), TileKind.Pink);
-        Tile t13 = new Tile(new Coordinate(13,14,2), TileKind.Pink);
+        Tile t1 = new Tile(new Coordinate(2,13), TileKind.Green);
+        Tile t2 = new Tile(new Coordinate(3,12), TileKind.Pink);
+        Tile t3 = new Tile(new Coordinate(4,11), TileKind.Green);
+        Tile t4 = new Tile(new Coordinate(5,10), TileKind.Pink);
+        Tile t5 = new Tile(new Coordinate(6,9), TileKind.Yellow);
+        Tile t6 = new Tile(new Coordinate(7,8), TileKind.Pink);
+        Tile t7 = new Tile(new Coordinate(8,7), TileKind.Green);
+        Tile t8 = new Tile(new Coordinate(9,6), TileKind.Yellow);
+        Tile t9 = new Tile(new Coordinate(10,5), TileKind.Green);
+        Tile t10 = new Tile(new Coordinate(11,4), TileKind.Green);
+        Tile t11 = new Tile(new Coordinate(12,3), TileKind.Green);
+        Tile t12 = new Tile(new Coordinate(13,2), TileKind.Pink);
 
         when(map.getTile(panda.getCurrentCoordinate())).thenReturn(Optional.of(new Tile(c, TileKind.Green)));
 
@@ -187,7 +186,7 @@ public class MapTest {
         }
         var randomTiles = new ArrayList<Tile>();
         for(int i = 1; i< 10;i++){
-            randomTiles.add(new Tile(new Coordinate(i,i,i), TileKind.Pink));
+            randomTiles.add(new Tile(new Coordinate(i,i), TileKind.Pink));
         }
         var allTiles = (ArrayList<Tile>) neighborTiles.clone();
         allTiles.addAll((ArrayList<Tile>)randomTiles.clone());

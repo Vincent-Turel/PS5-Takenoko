@@ -32,7 +32,7 @@ public class PlayerTest {
 
     @Test
     public void putTileTest(){
-        Set<Coordinate> placements = new HashSet<>(Arrays.asList(new Coordinate(1,1,1),new Coordinate(2,2,2)));
+        Set<Coordinate> placements = new HashSet<>(Arrays.asList(new Coordinate(1,1),new Coordinate(2,2)));
         Set<Coordinate> placements2 = new HashSet<>();
         List<Coordinate> placementsList = new ArrayList<>(placements);
         Map map = mock(Map.class);
@@ -53,11 +53,11 @@ public class PlayerTest {
     @Test
     public void choseWherePawnShouldGoTest(){
         Set<Tile> placements = new HashSet<>(Arrays.asList(
-                new Tile(new Coordinate(1,1,1), TileKind.Pink),
-                new Tile(new Coordinate(2,2,2), TileKind.Green)));
+                new Tile(new Coordinate(1,1), TileKind.Pink),
+                new Tile(new Coordinate(2,2), TileKind.Green)));
         Set<Tile> placements2 = new HashSet<>();
         Map map = mock(Map.class);
-        Panda panda = new Panda(new Coordinate(1,1,1));
+        Panda panda = new Panda(new Coordinate(1,1));
         when(map.getPossiblePawnPlacements(panda)).thenReturn(placements).thenReturn(placements2);
         randomPlayer.setCurrentMapState(map);
         assertTrue(placements.contains(randomPlayer.choseWherePawnShouldGo(panda)));

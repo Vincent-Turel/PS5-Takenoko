@@ -72,7 +72,7 @@ public class TileTest {
 
     @Test
     void cutBamboo() {
-        Coordinate initialCoord = new Coordinate(42, 42, 85);
+        Coordinate initialCoord = new Coordinate(42, 42);
         Tile t = new Tile(initialCoord, TileKind.Green);
         t.growBamboo();
         t.growBamboo();
@@ -84,7 +84,7 @@ public class TileTest {
 
     @Test
     void cutBambooMin() {
-        Coordinate initialCoord = new Coordinate(42, 42, 85);
+        Coordinate initialCoord = new Coordinate(42, 42);
         Tile t = new Tile(initialCoord, TileKind.Pink);
         t.growBamboo();
         t.growBamboo();
@@ -109,10 +109,10 @@ public class TileTest {
 
     @Test
     void equalsTest() {
-        Tile t1 = new Tile(new Coordinate(25,25,68), TileKind.Pink);
-        Tile t2 = new Tile(new Coordinate(25,25,68), TileKind.Pink);
-        Tile t3 = new Tile(new Coordinate(25,25,68), TileKind.Green);
-        Tile t4 = new Tile(new Coordinate(25,21,68), TileKind.Pink);
+        Tile t1 = new Tile(new Coordinate(25,25), TileKind.Pink);
+        Tile t2 = new Tile(new Coordinate(25,25), TileKind.Pink);
+        Tile t3 = new Tile(new Coordinate(25,25), TileKind.Green);
+        Tile t4 = new Tile(new Coordinate(25,21), TileKind.Pink);
         assertEquals(t1,t2);
         assertNotEquals(t1,t3);
         assertNotEquals(t1,t4);
