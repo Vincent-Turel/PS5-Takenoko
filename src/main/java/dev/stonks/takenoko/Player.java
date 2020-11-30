@@ -2,6 +2,7 @@ package dev.stonks.takenoko;
 
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.Stack;
 
 /**
  * This class is the mother class of every types of player.
@@ -17,6 +18,7 @@ public abstract class Player {
     protected int id;
     protected ArrayList<Objective> objectives;
     protected ArrayList<Bamboo> collectedBamboo;
+    protected Stack<AbstractIrrigation> irrigations;
     protected int nbObjectivesAchieved;
     protected Map currentMapState;
     protected int score;
@@ -27,6 +29,7 @@ public abstract class Player {
         this.objectives = new ArrayList<>();
         this.nbObjectivesAchieved = 0;
         this.collectedBamboo = new ArrayList<>();
+        this.irrigations = new Stack<>();
         this.score = 0;
         this.random = new Random();
     }
@@ -39,11 +42,17 @@ public abstract class Player {
     public abstract Action decide(ArrayList<Action> possibleAction, Map map);
 
     /**
-     *
      * @param tiles A liste of tiles
      * @return The coordinate and the tile the player has chosen
      */
     public abstract Tile putTile (ArrayList<AbstractTile> tiles);
+
+    /**
+     * This method return the tile where the player want to move the pawn (Panda or Gardener)
+     * @param pawn the pawn that has to be moved
+     * @return Tile the tile that the player has chosen
+     */
+    public abstract Tile choseWherePawnShouldGo(Pawn pawn);
 
     /**
      * Add an objective to the player's objective list
@@ -63,6 +72,22 @@ public abstract class Player {
      */
     public ArrayList<Objective> getObjectives() {
         return (ArrayList<Objective>) this.objectives.clone();
+    }
+
+    /**
+     * Add an irrigation into the the player's irrigation stack
+     * @param irrigation the irrigation to add
+     */
+    public void addIrrigation(AbstractIrrigation irrigation){
+        irrigations.push(irrigation);
+    }
+    
+    /**
+     *  Get a stack of all irrigations the player curently has
+     * @return irrigations
+     */
+    public Stack<AbstractIrrigation> getIrrigations() {
+        return irrigations;
     }
 
     /**
@@ -147,5 +172,6 @@ public abstract class Player {
         this.nbObjectivesAchieved = 0;
         this.objectives.clear();
         this.collectedBamboo.clear();
+        this.irrigations.clear();
     }
 }

@@ -14,6 +14,8 @@ public class Map {
     Optional<Tile>[] tiles;
     int delta;
     int sideLen;
+    Panda panda;
+    Gardener gardener;
 
     /**
      * Creates an initial map. It contains the single initial tile.
@@ -49,6 +51,39 @@ public class Map {
         }
     }
 
+    /**
+     * Get the panda
+     * @return panda
+     */
+    public Panda getPanda() {
+        return panda;
+    }
+
+    /**
+     * Get the gardener
+     * @return gardener
+     */
+    public Gardener getGardener() {
+        return gardener;
+    }
+
+    /**
+     * Get all the tiles where a pawn can go according to his current position on the map
+     * @param pawn (panda or gardener)
+     * @return a set of all the tiles where the pawn can go
+     */
+    public Set<Tile> getPossiblePawnPlacements(Pawn pawn){
+        Set<Tile> allPossiblePawnPlacements = new HashSet<>();
+        Tile currentPawnTile = getTile(pawn.getCurrentCoordinate()).get();
+        for (Direction direction : Direction.values()){
+            Optional<Tile> tileOptional = Optional.of(currentPawnTile);
+            while((tileOptional = getNeighborOf(tileOptional.get(), direction)).isPresent()){
+                allPossiblePawnPlacements.add(tileOptional.get());
+            }
+        }
+        return allPossiblePawnPlacements;
+    }
+
     private void setInitialTile() {
         Coordinate initialTileCoord = new Coordinate(delta, delta);
 
@@ -57,6 +92,8 @@ public class Map {
         } catch (IllegalTilePlacementException e) {
             throw new RuntimeException("Initial tile placement should not fail");
         }
+        panda = new Panda(initialTileCoord);
+        gardener = new Gardener(initialTileCoord);
     }
 
     /**
@@ -113,6 +150,19 @@ public class Map {
         // follows the game rules.
         // https://github.com/pns-si3-projects/projet2-ps5-20-21-takenoko-2021-stonksdev/pull/15
         setTile(t.getCoordinate().toOffset(sideLen), t);
+    }
+
+    /**
+     * Check if somes tiles are now irrigated.
+     * Only by the InitialTile for now.
+     * NEED IMPROVEMENT LATER
+     */
+    public void updateIrrigations(){
+        Arrays.stream(tiles)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .filter(t -> isNeighborOfInitial(t.getCoordinate()))
+                .forEach(Tile::irrigate);
     }
 
     /**
@@ -245,7 +295,7 @@ public class Map {
 
     /**
      * Increase the size of all bamboo in all tiles
-     * If the bamboo size > 5, nothing to do
+     * If the bamboo size > 3, nothing to do
      * If the tile is not present, nothing to do
      */
     public void growBambooInMap(){
