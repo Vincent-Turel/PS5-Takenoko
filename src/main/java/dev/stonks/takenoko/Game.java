@@ -28,12 +28,10 @@ public class Game {
     ArrayList<Objective> achievedObjectives;
     Random random;
     ArrayList<GameResults> gamePlayersResults;
-    ArrayList<Pattern> patterns;
 
     Game(ArrayList<Player> players) {
         map = new Map(28);
         initialiseTileDeck();
-        initialisesPattern();
         initialisesObjectives();
         patternMatchs = new HashSet<>();
         this.players = players;
@@ -71,22 +69,9 @@ public class Game {
         //1=Pattern constraint, 2=Gardener, 3=Panda, 4=emperor
         ObjectivesMaker objectivesMaker = new ObjectivesMaker();
         tileObjectives = new ArrayList<>();
-        /*Pattern pattern = new Pattern().withCenter(TileKind.Green)
-                .withNeighbor(Direction.North, TileKind.Green)
-                .withNeighbor(Direction.NorthEast, TileKind.Green);*/
-        int i = 0;
-        for (Pattern pattern: patterns) {
-            tileObjectives.add(objectivesMaker.addAnPatternObjectives(i, 4,1, pattern));
-            i++;
-        }
-        emperor = new Objective(tileObjectives.size(),2,4);
-    }
 
-    /**
-     * Initialises the pattern list with default patterns.
-     */
-    private void initialisesPattern() {
-        patterns = PatternFactory.createLegalPatterns();
+        tileObjectives.addAll(objectivesMaker.validPatternObjectives());
+        emperor = new Objective(tileObjectives.size(),2,4);
     }
 
     public ArrayList<Action> findPossibleActions(Player player){
