@@ -1,18 +1,18 @@
 package dev.stonks.takenoko;
 
-public class BambooPatern {
+public class BambooPattern {
 
     private TileKind color;
     private int height;
     private int nbBamboo;
 
-    public BambooPatern(TileKind color, int height){
+    public BambooPattern(TileKind color, int height){
         this.color=color;
         this.height=height;
         this.nbBamboo=1;
     }
 
-    public BambooPatern(TileKind color, int height, int nbBamboo){
+    public BambooPattern(TileKind color, int height, int nbBamboo){
         this.color=color;
         this.height=height;
         this.nbBamboo=nbBamboo;

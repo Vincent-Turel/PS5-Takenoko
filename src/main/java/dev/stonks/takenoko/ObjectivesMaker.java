@@ -1,8 +1,5 @@
 package dev.stonks.takenoko;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class ObjectivesMaker {
 
     /**
@@ -15,26 +12,20 @@ public class ObjectivesMaker {
      *
      * objType -> Pattern, Gardener, Panda, Emperor
      */
-    public static PatternObjective newObjectives(int nbPT, Pattern pattern) {
+    public static PatternObjective newObjectives(int nbPT,Pattern pattern) {
         PatternObjective newObj = new PatternObjective(ObjectiveKind.Pattern, nbPT, pattern);
         return newObj;
         }
 
-        /*
-    public static PandaObjective newObjectives(int nbPT,int objType, Pattern pattern) {
-        PatternObjective patternObj = new PatternObjective(objType, nbPT, pattern);
-        return patternObj;
-    }
-*/
-    /*
-    public static GardenerObjective newObjectives(int nbPT, BambooPatern bamboo) {
-        GardenerObjective newObj = new GardenerObjective(2, nbPT, pattern);
-        return patternObj;
+
+    public static PandaObjective newPandaObjectives(int nbPT,BambooPattern bamboo) {
+        PandaObjective newObj = new PandaObjective(ObjectiveKind.Panda, nbPT, bamboo);
+        return newObj;
     }
 
-    public static GardenerObjective newObjectives(int nbPT, BambooPatern bamboo, int upgrade) {
-        PatternObjective newObj = new PatternObjective(2, nbPT, pattern);
+    public static GardenerObjective newGardenerObjectives(int nbPT,BambooPattern bamboo) {
+        GardenerObjective newObj = new GardenerObjective(ObjectiveKind.Gardener, nbPT, bamboo);
         return newObj;
-    }*/
+    }
 
 }

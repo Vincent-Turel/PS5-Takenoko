@@ -2,18 +2,23 @@ package dev.stonks.takenoko;
 
 public class PandaObjective extends Objective{
 
-    private BambooPatern bambooPatern;
+    private BambooPattern bambooPattern;
     /**
      *
      * @param objType Panda
      * @param nbPT n° of point
-     * @param bambooPatern pattern for the objective
+     * @param bambooPattern pattern for the objective
      */
 
-    public PandaObjective(ObjectiveKind objType, int nbPT, BambooPatern bambooPatern){
+    public PandaObjective(ObjectiveKind objType, int nbPT, BambooPattern bambooPattern){
         super(objType,nbPT);
-        this.bambooPatern=bambooPatern;
+        this.bambooPattern=bambooPattern;
     }
 
-
+    /**
+     * @return local bamboo pattern
+     */
+    public BambooPattern getBambooPattern() {
+        return this.bambooPattern;
+    }
 }
