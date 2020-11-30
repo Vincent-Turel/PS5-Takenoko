@@ -14,8 +14,8 @@ public class Map {
     Optional<Tile>[] tiles;
     int delta;
     int sideLen;
-    Pawn panda;
-    Pawn gardener;
+    Panda panda;
+    Gardener gardener;
 
     /**
      * Creates an initial map. It contains the single initial tile.
@@ -55,7 +55,7 @@ public class Map {
      * Get the panda
      * @return panda
      */
-    public Pawn getPanda() {
+    public Panda getPanda() {
         return panda;
     }
 
@@ -63,7 +63,7 @@ public class Map {
      * Get the gardener
      * @return gardener
      */
-    public Pawn getGardener() {
+    public Gardener getGardener() {
         return gardener;
     }
 

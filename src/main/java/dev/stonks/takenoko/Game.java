@@ -153,15 +153,13 @@ public class Game {
                             map.setTile(chosenTile);
                             break;
                         case MoveGardener:
-                            Pawn gardener = map.getGardener();
+                            Gardener gardener = map.getGardener();
                             gardener.moveToAndAct(player.choseWherePawnShouldGo(gardener), map);
                             break;
                         case MovePanda:
-                            Pawn panda = map.getPanda();
-                            var tile = player.choseWherePawnShouldGo(panda);
-                            if (tile.getBamboo().getSize() > 0)
-                                player.addCollectedBamboo(tile.getBamboo());
-                            panda.moveToAndAct(tile, map);
+                            Panda panda = map.getPanda();
+                            Optional<Bamboo> bamboo = panda.moveToAndAct(player.choseWherePawnShouldGo(panda));
+                            bamboo.ifPresent(player::addCollectedBamboo);
                             break;
                         case DrawIrrigation:
                             AbstractIrrigation drawnIrrigation = irrigationDeck.pop();

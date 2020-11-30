@@ -20,9 +20,8 @@ public class Gardener extends Pawn {
      * - the neighbor is irrigated
      * @param tile the tile where he is supposed to go.
      */
-    @Override
     public void moveToAndAct(Tile tile, Map map) {
-        super.moveToAndAct(tile, map);
+        super.moveTo(tile);
         if(tile.isIrrigated())
             tile.growBamboo();
         Arrays.stream(Direction.values())
