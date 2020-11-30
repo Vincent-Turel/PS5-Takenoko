@@ -1,7 +1,7 @@
 package dev.stonks.takenoko;
 
-import java.lang.reflect.Array;
 import java.util.Objects;
+import java.util.Arrays;
 
 /**
  * Represents a (x;y) coordinate.
@@ -99,5 +99,14 @@ public class Coordinate {
         };
 
         return neighbors;
+    }
+
+    /**
+     * Returns whether the current Coordinate is neighbor of c or not.
+     */
+    boolean isNeighborOr(Coordinate c) {
+        return Arrays.stream(Direction
+                .values())
+                .anyMatch(d -> moveWith(d).equals(c));
     }
 }

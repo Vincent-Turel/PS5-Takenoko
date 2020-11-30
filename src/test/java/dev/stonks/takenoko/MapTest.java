@@ -10,7 +10,7 @@ import static org.mockito.Mockito.*;
 
 public class MapTest {
     @Test
-    void MapNeighborOf() throws IllegalTilePlacementException {
+    void MapNeighborOf() throws IllegalPlacementException {
         Map m = new Map(27);
         Tile initial = m.initialTile();
         Tile bottom = m.addNeighborOf(TileKind.Green, initial.withDirection(Direction.North));
@@ -28,7 +28,7 @@ public class MapTest {
     }
 
     @Test
-    void resetRemovesEverythingExceptInitial() throws IllegalTilePlacementException {
+    void resetRemovesEverythingExceptInitial() throws IllegalPlacementException {
         Map m = new Map(27);
         m.addNeighborOf(TileKind.Green, m.initialTile().withDirection(Direction.South));
 
@@ -39,7 +39,7 @@ public class MapTest {
     }
 
     @Test
-    void resetRecreatesInitialTile() throws IllegalTilePlacementException {
+    void resetRecreatesInitialTile() throws IllegalPlacementException {
         Map m = new Map(27);
         m.addNeighborOf(TileKind.Pink, m.initialTile().withDirection(Direction.South));
 
@@ -51,7 +51,7 @@ public class MapTest {
     }
 
     @Test
-    void getPlacements() throws IllegalTilePlacementException {
+    void getPlacements() throws IllegalPlacementException {
         // This test tests nearly every placement rule:
         //   - some tiles have less than two neighbors, they must not be
         // placeable,
@@ -87,7 +87,7 @@ public class MapTest {
     }
 
     @Test
-    void setTileWithAbstractTile() throws IllegalTilePlacementException {
+    void setTileWithAbstractTile() throws IllegalPlacementException {
         AbstractTile at = new AbstractTile(TileKind.Pink);
         Map m = new Map(42);
         Coordinate c = new Coordinate(13, 12);
@@ -97,7 +97,7 @@ public class MapTest {
     }
 
     @Test
-    void growBambooInMap() throws IllegalTilePlacementException {
+    void growBambooInMap() throws IllegalPlacementException {
         Map m = new Map(42);
         Tile initT = m.initialTile();
         Tile otherT = m.addNeighborOf(TileKind.Green, initT.withDirection(Direction.North));
@@ -176,7 +176,7 @@ public class MapTest {
     }
 
     @Test
-    void updateIrrigationsTest() throws IllegalTilePlacementException{
+    void updateIrrigationsTest() throws IllegalPlacementException {
         Map map = new Map(20);
         var initialTileCoordinate = map.placedTilesCoordinates().collect(Collectors.toList());
         assertEquals(initialTileCoordinate.size(), 1);

@@ -47,7 +47,7 @@ public class Tile {
      * @param neighbors The neighbors of the tile.
      * @return The newly created tile
      */
-    static Tile neighborOf(TileKind kind, DirectionnedTile... neighbors) throws IllegalTilePlacementException {
+    static Tile neighborOf(TileKind kind, DirectionnedTile... neighbors) throws IllegalPlacementException {
         Coordinate tileCoord = coordinateFromNeighbors(neighbors);
         Tile t = new Tile(tileCoord, kind);
         return t;
@@ -58,11 +58,11 @@ public class Tile {
      * tile.
      * @param neighbors the tile neighbors
      * @return the tile direction
-     * @throws IllegalTilePlacementException thrown when the provided direction
+     * @throws IllegalPlacementException thrown when the provided direction
      *                                       and tile coordinates does not
      *                                       match each other.
      */
-    private static Coordinate coordinateFromNeighbors(DirectionnedTile... neighbors) throws IllegalTilePlacementException {
+    private static Coordinate coordinateFromNeighbors(DirectionnedTile... neighbors) throws IllegalPlacementException {
         Coordinate tileCoord = null;
 
         for (DirectionnedTile neighbor: neighbors) {
@@ -72,7 +72,7 @@ public class Tile {
             if (tileCoord == null) {
                 tileCoord = c.moveWith(d.reverse());
             } else if (tileCoord.moveWith(d) != c) {
-                throw new IllegalTilePlacementException("Tiles can not be neighbor");
+                throw new IllegalPlacementException("Tiles can not be neighbor");
             }
         }
 
@@ -80,7 +80,7 @@ public class Tile {
         boolean hasTwoNeighbors = neighbors.length >= 2;
 
         if (!neighborOfInitial && !hasTwoNeighbors) {
-            throw new IllegalTilePlacementException("Tile don't have required neighbors");
+            throw new IllegalPlacementException("Tile don't have required neighbors");
         }
 
         return tileCoord;

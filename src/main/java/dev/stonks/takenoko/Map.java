@@ -89,7 +89,7 @@ public class Map {
 
         try {
             setTile(initialTileCoord, Tile.initialTile(initialTileCoord));
-        } catch (IllegalTilePlacementException e) {
+        } catch (IllegalPlacementException e) {
             throw new RuntimeException("Initial tile placement should not fail");
         }
         panda = new Panda(initialTileCoord);
@@ -100,10 +100,10 @@ public class Map {
      * Writes a tile at given coordinate.
      * @param coord the coordinate at which the tile must be written
      * @param t the tile to be written
-     * @throws IllegalTilePlacementException thrown if a tile is already
+     * @throws IllegalPlacementException thrown if a tile is already
      *                                       present.
      */
-    void setTile(Coordinate coord, Tile t) throws IllegalTilePlacementException {
+    void setTile(Coordinate coord, Tile t) throws IllegalPlacementException {
         // TODO: once the following PR is merged, ensure that this position
         // follows the game rules.
         // https://github.com/pns-si3-projects/projet2-ps5-20-21-takenoko-2021-stonksdev/pull/15
@@ -114,12 +114,12 @@ public class Map {
      * Writes a tile at given offset. The offset must be a valid tile index.
      * @param offset the offset at which the tile must be written
      * @param t the tile to be written
-     * @throws IllegalTilePlacementException thrown if a tile is already
+     * @throws IllegalPlacementException thrown if a tile is already
      *                                       present.
      */
-    private void setTile(int offset, Tile t) throws IllegalTilePlacementException {
+    private void setTile(int offset, Tile t) throws IllegalPlacementException {
         if (tiles[offset].isPresent()) {
-            throw new IllegalTilePlacementException("Attempt to replace a tile");
+            throw new IllegalPlacementException("Attempt to replace a tile");
         }
 
         tiles[offset] = Optional.of(t);
@@ -129,10 +129,10 @@ public class Map {
      * Creates and writes a tile at given coordinates.
      * @param co the coordinate at which the tile must be written
      * @param t the tile to be written
-     * @throws IllegalTilePlacementException thrown if a tile is already
+     * @throws IllegalPlacementException thrown if a tile is already
      *                                       present.
      */
-    void setTile(Coordinate co, AbstractTile t) throws IllegalTilePlacementException {
+    void setTile(Coordinate co, AbstractTile t) throws IllegalPlacementException {
         // TODO: once the following PR is merged, ensure that this position
         // follows the game rules.
         // https://github.com/pns-si3-projects/projet2-ps5-20-21-takenoko-2021-stonksdev/pull/15
@@ -142,10 +142,10 @@ public class Map {
     /**
      * Creates and writes a tile at its coordinates
      * @param t the tile to be written
-     * @throws IllegalTilePlacementException thrown if a tile is already
+     * @throws IllegalPlacementException thrown if a tile is already
      *                                       present.
      */
-    void setTile(Tile t) throws IllegalTilePlacementException {
+    void setTile(Tile t) throws IllegalPlacementException {
         // TODO: once the following PR is merged, ensure that this position
         // follows the game rules.
         // https://github.com/pns-si3-projects/projet2-ps5-20-21-takenoko-2021-stonksdev/pull/15
@@ -212,7 +212,7 @@ public class Map {
      *
      * Will place <code>a</code> on top of <code>b</code>.
      */
-    Tile addNeighborOf(TileKind kind, DirectionnedTile... tiles) throws IllegalTilePlacementException {
+    Tile addNeighborOf(TileKind kind, DirectionnedTile... tiles) throws IllegalPlacementException {
         Tile t = Tile.neighborOf(kind, tiles);
         setTile(t.getCoordinate(), t);
         return t;

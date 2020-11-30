@@ -12,7 +12,7 @@ public class TileTest {
     }
 
     @Test
-    void TileNeighborOf() throws IllegalTilePlacementException {
+    void TileNeighborOf() throws IllegalPlacementException {
         Coordinate initialCoord = new Coordinate(42, 42);
         Tile initial = Tile.initialTile(initialCoord);
         Tile bottom = Tile.neighborOf(TileKind.Green, initial.withDirection(Direction.North));
@@ -30,12 +30,12 @@ public class TileTest {
     }
 
     @Test
-    void neighborOfInvalidCases() throws IllegalTilePlacementException {
+    void neighborOfInvalidCases() throws IllegalPlacementException {
         Coordinate initialCoord = new Coordinate(42, 42);
         Tile initial = Tile.initialTile(initialCoord);
         Tile bot = Tile.neighborOf(TileKind.Green, initial.withDirection(Direction.North));
 
-        assertThrows(IllegalTilePlacementException.class,
+        assertThrows(IllegalPlacementException.class,
                 () -> Tile.neighborOf(TileKind.Pink, bot.withDirection(Direction.North))
         );
     }

@@ -8,7 +8,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class PatternTest {
     @Test
-    void patternUniqueGreen() throws IllegalTilePlacementException {
+    void patternUniqueGreen() throws IllegalPlacementException {
         Pattern p = new Pattern().withCenter(TileKind.Green);
 
         Map m = new Map(42);

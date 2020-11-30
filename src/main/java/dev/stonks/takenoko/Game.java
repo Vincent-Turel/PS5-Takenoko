@@ -101,7 +101,7 @@ public class Game {
     }
 
 
-    void play() throws IllegalTilePlacementException{
+    void play() throws IllegalPlacementException {
         boolean aPlayerWin = false;
         objectivesDistribution();
         while(!aPlayerWin) {
