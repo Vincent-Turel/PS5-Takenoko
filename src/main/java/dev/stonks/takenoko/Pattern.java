@@ -211,4 +211,65 @@ public class Pattern {
     MatchResult withCoordinate(Coordinate c) {
         return new MatchResult(this, c);
     }
+
+    /**
+     * Creates a triangular-shaped pattern with the specified color.
+     * @param c the color used for the pattern
+     * @return a triangular pattern with the correct color.
+     */
+    static Pattern triangleShaped(TileKind c) {
+        return new Pattern()
+                .withCenter(c)
+                .withNeighbor(Direction.North, c)
+                .withNeighbor(Direction.NorthEast, c);
+    }
+
+    /**
+     * Creates a diamond-shaped pattern with the following color. Adjacent
+     * tiles have the same color.
+     * @param c the first color to be used.
+     * @return a pattern with the correct requirements.
+     */
+    static Pattern diamondShaped(TileKind c) {
+        return diamondShaped(c, c);
+    }
+
+    /**
+     * Creates a diamond-shaped pattern with the following two colors. Adjacent
+     * tiles have the same color.
+     * @param c1 the first color to be used.
+     * @param c2 the second color to be used.
+     * @return a pattern with the correct requirements.
+     */
+    static Pattern diamondShaped(TileKind c1, TileKind c2) {
+        return new Pattern()
+                .withCenter(c1)
+                .withNeighbor(Direction.North, c1)
+                .withNeighbor(Direction.NorthEast, c2)
+                .withNeighbor(Direction.SouthEast, c2);
+    }
+
+    /**
+     * Creates an I-shaped pattern with a single color.
+     * @param c the expected tile kind.
+     * @return the correct pattern.
+     */
+    static Pattern iShaped(TileKind c) {
+        return new Pattern()
+                .withCenter(c)
+                .withNeighbor(Direction.North, c)
+                .withNeighbor(Direction.South, c);
+    }
+
+    /**
+     * Creates an C-shaped pattern with a single color.
+     * @param c the expected tile kind.
+     * @return the correct pattern.
+     */
+    static Pattern cShaped(TileKind c) {
+        return new Pattern()
+                .withCenter(c)
+                .withNeighbor(Direction.North, c)
+                .withNeighbor(Direction.SouthEast, c);
+    }
 }
