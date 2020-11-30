@@ -90,7 +90,7 @@ public class MapTest {
     void setTileWithAbstractTile() throws IllegalTilePlacementException {
         AbstractTile at = new AbstractTile(TileKind.Pink);
         Map m = new Map(42);
-        Coordinate c = new Coordinate(13, 12, 85);
+        Coordinate c = new Coordinate(13, 12);
 
         m.setTile(c, at);
         assertTrue(m.getTile(c).isPresent());

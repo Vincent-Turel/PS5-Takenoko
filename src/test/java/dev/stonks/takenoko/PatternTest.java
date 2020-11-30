@@ -36,7 +36,7 @@ public class PatternTest {
 
     @Test
     void matchesTileOfOf() {
-        Coordinate c = new Coordinate(42, 42, 101);
+        Coordinate c = new Coordinate(42, 42);
         Tile t = new AbstractTile(TileKind.Green).withCoordinate(c);
         assertTrue(Pattern.matchesTile(Optional.of(TileKind.Green), Optional.of(t)));
 
@@ -45,7 +45,7 @@ public class PatternTest {
 
     @Test
     void matchesTileEmptyOf() {
-        Coordinate c = new Coordinate(42, 42, 101);
+        Coordinate c = new Coordinate(42, 42);
         Tile t = new AbstractTile(TileKind.Green).withCoordinate(c);
         assertTrue(Pattern.matchesTile(Optional.empty(), Optional.of(t)));
     }
