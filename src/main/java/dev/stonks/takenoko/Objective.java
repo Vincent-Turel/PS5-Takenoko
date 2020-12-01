@@ -2,30 +2,25 @@ package dev.stonks.takenoko;
 
 public class Objective {
 
-    private int objID;
     protected int nbPt;
-    private int objType;
+    private ObjectiveKind objType;
     protected Boolean isValid;
 
     /**
      * Constucteur for 1 objective
      *
-     * @param objID n°objective
      * @param nbPT n° of point
-     * @param objType -> 1=Pattern constraint, 2=Gardener, 3=Panda, 4=emperor
+     * @param objType -> Pattern, Gardener, Panda, Emperor
      *
      * @author the StonksDev team
      */
-    Objective(int objType,int objID, int nbPT){
-        this.objID = objID;
+    Objective(ObjectiveKind objType, int nbPT){
         this.nbPt = nbPT;
         this.objType=objType;
         this.isValid=false;
     }
 
-    int getObjID(){return this.objID;}
-
-    public int getObjType() {return objType;}
+    public ObjectiveKind getObjType() {return objType;}
 
     public Boolean getStates() {return isValid;}
 
@@ -36,4 +31,9 @@ public class Objective {
      * @return the number of point
      */
     int getNbPt(){return nbPt;}
+
+    /**
+     * Update the states of this objective :
+     */
+    public void UpdtateStates(){isValid=true;}
 }

@@ -23,8 +23,8 @@ public class Game {
     Stack<AbstractIrrigation> placedIrrigationsDeck = new Stack<>();
     ArrayList<Player> players;
     ArrayList<PatternObjective> tileObjectives;
-    //ArrayList<Objective> pandaObjectives;
-    //ArrayList<Objective> gardenerObjectives;
+    ArrayList<PandaObjective> pandaObjectives;
+    ArrayList<GardenerObjective> gardenerObjectives;
     Set<MatchResult> patternMatchs;
     Objective emperor;
     ArrayList<Objective> achievedObjectives;
@@ -79,12 +79,11 @@ public class Game {
      * Initialise the objectives (here, it's 10 tile objectives)
      */
     private void initialisesObjectives() {
-        //1=Pattern constraint, 2=Gardener, 3=Panda, 4=emperor
-        ObjectivesMaker objectivesMaker = new ObjectivesMaker();
-        tileObjectives = new ArrayList<>();
-
-        tileObjectives.addAll(objectivesMaker.validPatternObjectives());
-        emperor = new Objective(tileObjectives.size(),2,4);
+        //ObjectiveKind : Pattern, Gardener, Panda, Emperor
+        tileObjectives = PatternObjectiveFactory.validPatternObjectives();
+        gardenerObjectives = ObjectivesBambooFactory.gardenerObjectiveList();
+        pandaObjectives = ObjectivesBambooFactory.pandaObjectiveList();
+        emperor = new Objective(ObjectiveKind.Emperor,2);
     }
 
     public ArrayList<Action> findPossibleActions(Player player){
@@ -184,13 +183,22 @@ public class Game {
 
         for (Objective objective: playerObjectives) {
             if(objective instanceof PatternObjective) {
-                PatternObjective patternObjective = (PatternObjective)objective;
-                patternMatchs = isValideObjectives.isValid(patternObjective,map,patternMatchs);
+                PatternObjective patternObjective = (PatternObjective) objective;
+                patternMatchs = isValidObjectives.isValidPatternObjective(patternObjective, map, patternMatchs);
+
+                if (objective.getStates()) {
+                    player.newObjectivesAchieved(objective);
+                    tileObjectives.remove(objective);
+                    achievedObjectives.add(objective);
+                }
             }
-            if(objective.getStates()){
-                player.newObjectivesAchieved(objective);
-                tileObjectives.remove(objective);
-                achievedObjectives.add(objective);
+            else if(objective instanceof PandaObjective) {
+                player.upDateInventory(isValidObjectives.isObjectivesPandaValid((PandaObjective) objective,player));
+                if (objective.getStates()) {
+                    player.newObjectivesAchieved(objective);
+                    pandaObjectives.remove(objective);
+                    achievedObjectives.add(objective);
+                }
             }
         }
     }

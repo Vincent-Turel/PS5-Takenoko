@@ -17,7 +17,7 @@ public abstract class Player {
     protected PlayerType playerType;
     protected int id;
     protected ArrayList<Objective> objectives;
-    protected ArrayList<Bamboo> collectedBamboo;
+    protected int[] collectedBamboo;
     protected Stack<AbstractIrrigation> irrigations;
     protected int nbObjectivesAchieved;
     protected Map currentMapState;
@@ -28,7 +28,7 @@ public abstract class Player {
         this.id = id;
         this.objectives = new ArrayList<>();
         this.nbObjectivesAchieved = 0;
-        this.collectedBamboo = new ArrayList<>();
+        this.collectedBamboo = new int[]{0, 0, 0}; //[green,yellow,pink]
         this.irrigations = new Stack<>();
         this.score = 0;
         this.random = new Random();
@@ -125,7 +125,7 @@ public abstract class Player {
      * Get a list of all bamboo the player has collected with the panda
      * @return collectedBamboo
      */
-    public ArrayList<Bamboo> getCollectedBamboo() {
+    public int[] getCollectedBamboo() {
         return collectedBamboo;
     }
 
@@ -134,7 +134,19 @@ public abstract class Player {
      * @param bamboo the bambo that has been collected thanks to the panda
      */
     public void addCollectedBamboo(Bamboo bamboo){
-        this.collectedBamboo.add(bamboo);
+        switch (bamboo.getColor()){
+            case Green:collectedBamboo[0]++;break;
+            case Yellow:collectedBamboo[1]++;break;
+            case Pink:collectedBamboo[2]++;break;
+        }
+    }
+
+    /**
+     * Update the player inventory with the new stock of bamboo
+     * @param newInventory
+     */
+    public void upDateInventory(int[] newInventory){
+        this.collectedBamboo=newInventory;
     }
 
     /**
@@ -171,7 +183,7 @@ public abstract class Player {
         this.score = 0;
         this.nbObjectivesAchieved = 0;
         this.objectives.clear();
-        this.collectedBamboo.clear();
+        this.collectedBamboo=new int[]{0, 0, 0};
         this.irrigations.clear();
     }
 }
