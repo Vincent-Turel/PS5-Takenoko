@@ -17,6 +17,8 @@ public class BambooPattern {
         this.color=color;
         this.height=height;
         this.nbBamboo=1;
+        this.optionalColor1=null;
+        this.optionalColor2=null;
     }
 
     /**
@@ -29,6 +31,8 @@ public class BambooPattern {
         this.color=color;
         this.height=height;
         this.nbBamboo=nbBamboo;
+        this.optionalColor1=null;
+        this.optionalColor2=null;
     }
 
     public BambooPattern(TileKind color, TileKind optionalColor1,TileKind optionalColor2, int height,int nbBamboo){

@@ -5,7 +5,7 @@ import java.util.List;
 public class ObjectivesBambooFactory {
 
     /**
-     * The function to make all panda objectives ;
+     * The function to make all panda objectives;
      * @return the list of the objectives (refer to the game doc for detail)
      */
     public static List<PandaObjective> pandaObjectiveList(){
@@ -27,6 +27,10 @@ public class ObjectivesBambooFactory {
         return newList;
     }
 
+    /**
+     * The function to make all gardener objectives;
+     * @return the list of the objectives (refer to game doc for detail)
+     */
     public static List<GardenerObjective> gardenerObjectiveList(){
         List <GardenerObjective> newList = null;
         BambooPattern greenPattern = new BambooPattern(TileKind.Green,4,1);

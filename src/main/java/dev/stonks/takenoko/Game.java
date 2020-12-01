@@ -161,13 +161,22 @@ public class Game {
 
         for (Objective objective: playerObjectives) {
             if(objective instanceof PatternObjective) {
-                PatternObjective patternObjective = (PatternObjective)objective;
-                patternMatchs = isValideObjectives.isValid(patternObjective,map,patternMatchs);
+                PatternObjective patternObjective = (PatternObjective) objective;
+                patternMatchs = isValideObjectives.isValidPatternObjective(patternObjective, map, patternMatchs);
+
+                if (objective.getStates()) {
+                    player.newObjectivesAchieved(objective);
+                    tileObjectives.remove(objective);
+                    achievedObjectives.add(objective);
+                }
             }
-            if(objective.getStates()){
-                player.newObjectivesAchieved(objective);
-                tileObjectives.remove(objective);
-                achievedObjectives.add(objective);
+            else if(objective instanceof PandaObjective) {
+                player.upDateInventory(isValideObjectives.isObjectivesPandaValide((PandaObjective) objective,player));
+                if (objective.getStates()) {
+                    player.newObjectivesAchieved(objective);
+                    pandaObjectives.remove(objective);
+                    achievedObjectives.add(objective);
+                }
             }
         }
     }
