@@ -3,6 +3,8 @@ package dev.stonks.takenoko;
 import java.util.Objects;
 import java.util.Arrays;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Represents a (x;y) coordinate.
@@ -139,5 +141,15 @@ public class Coordinate {
         Direction displacement = ca.displacementFor(cb).get();
 
         return displacement.index() < 3 ? cb : ca;
+    }
+
+    /**
+     * Returns the neighbors common to this and rhs.
+     */
+    Set<Coordinate> commonNeighborsWith(Coordinate rhs) {
+        Set<Coordinate> tmp = Arrays.stream(neighbors()).collect(Collectors.toSet());
+        tmp.retainAll(Arrays.asList(rhs.neighbors()));
+
+        return tmp;
     }
 }

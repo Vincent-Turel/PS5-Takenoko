@@ -11,7 +11,13 @@ import java.util.stream.Stream;
  * @author the StonksDev team
  */
 public class Map {
+    // Tiles are stored in the tiles attribute. Each coordinate is mapped to a
+    // unique offset.
     Optional<Tile>[] tiles;
+    // Irrigations are stored in the irrigations attribute. Each tile slot can
+    // hold up to three irrigations, which correspond to the north, north-east
+    // and south-east sides.
+    Optional<Irrigation>[] irrigations;
     int delta;
     int sideLen;
     Panda panda;
@@ -25,12 +31,14 @@ public class Map {
      */
     Map(int tileNumber) {
         sideLen = tileNumber * 2 + 1;
-        int size = sideLen * sideLen;
+        int tileSize = sideLen * sideLen;
         delta = tileNumber + 1;
 
-        tiles = new Optional[size];
+        tiles = new Optional[tileSize];
+        irrigations = new Optional[tileSize * 3];
 
         unsetAllTiles();
+        unsetAllIrrigations();
         setInitialTile();
     }
 
@@ -42,6 +50,7 @@ public class Map {
      */
     void reset() {
         unsetAllTiles();
+        unsetAllIrrigations();
         setInitialTile();
     }
 
@@ -51,8 +60,15 @@ public class Map {
         }
     }
 
+    private void unsetAllIrrigations() {
+        for (int i = 0; i < irrigations.length; i++) {
+            irrigations[i] = Optional.empty();
+        }
+    }
+
     /**
      * Get the panda
+     *
      * @return panda
      */
     public Panda getPanda() {
@@ -153,11 +169,90 @@ public class Map {
     }
 
     /**
+     * Places an irrigation in the map.
+     *
+     * @param i the irrigation to be placed
+     * @throws IllegalPlacementException if the irrigation has no neighbor or
+     *                                   if an irrigation is already placed at such coordinates.
+     */
+    void setIrrigation(Irrigation i) throws IllegalPlacementException {
+        boolean isLegalPlacement = isLegalIrrigationPlacement(i);
+
+        if (!isLegalPlacement) {
+            throw new IllegalPlacementException("Attempt to place an irrigation in a non-legal position");
+        }
+
+        int offset = i.toOffset(sideLen);
+
+        if (irrigations[offset].isPresent()) {
+            throw new IllegalPlacementException("Attempt to replace an irrigation");
+        }
+
+        irrigations[offset] = Optional.of(i);
+    }
+
+    /**
+     * Returns an irrigation, if it exists. If a and b are not neighbors, then
+     * returns Optional.empty.
+     */
+    Optional<Irrigation> getIrrigationBetween(Coordinate a, Coordinate b) {
+        try {
+            // We cheat: we temporarily create an irrigation at the specified
+            // coordinates, so that we can compute the offset.
+            Irrigation tmp = new Irrigation(a, b);
+
+            int offset = tmp.toOffset(sideLen);
+            return irrigations[offset];
+        } catch (IllegalPlacementException e) {
+            return Optional.empty();
+        }
+    }
+
+    /**
+     * Returns an irrigation, if it exists. If a and b are not neighbors, then
+     * returns Optional.empty.
+     */
+    Optional<Irrigation> getIrrigationAgainst(Coordinate a, Coordinate b) {
+        // This cast is safe because commonNeighborsWith returns a set of
+        // Coordinates.
+        Coordinate[] trueCoordinates = (Coordinate[]) a.commonNeighborsWith(b).toArray();
+        if (trueCoordinates.length != 2) {
+            return Optional.empty();
+        }
+
+        return getIrrigationBetween(trueCoordinates[0], trueCoordinates[1]);
+    }
+
+    /**
+     * Returns whether if placing an irrigation at its coordinate is legal or
+     * not.
+     *
+     * If the irrigation is placed against the initial tile, then it is
+     * automatically legal.
+     *
+     * Otherwise, placing an irrigation somewhere is legal if the irrigation is
+     * linked with at least one other irrigation and if no irrigation is already
+     * present.
+     */
+    boolean isLegalIrrigationPlacement(Irrigation i) {
+        Set<Coordinate> coordinatesAgainstIrrigation = i.getCoordinatesOfPointedTiles();
+        for (Coordinate c: coordinatesAgainstIrrigation) {
+            Optional<Tile> t = getTile(c);
+
+            if (t.isPresent() && t.get().isInitial()) {
+                return true;
+            }
+        }
+
+        return i.neighbors(sideLen).stream().anyMatch(offset -> irrigations[offset].isPresent());
+    }
+
+    /**
      * Check if somes tiles are now irrigated.
      * Only by the InitialTile for now.
      * NEED IMPROVEMENT LATER
      */
-    public void updateIrrigations(){
+    public void updateIrrigations() {
         Arrays.stream(tiles)
                 .filter(Optional::isPresent)
                 .map(Optional::get)

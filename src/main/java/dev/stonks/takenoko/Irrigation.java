@@ -1,6 +1,10 @@
 package dev.stonks.takenoko;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -105,5 +109,66 @@ public class Irrigation {
         }
 
         return o;
+    }
+
+    /**
+     * Returns the offset associated to the irrigation. Each irrigation, at
+     * each position, has a different offset.
+     *
+     * @param sideLen the length of the sides of the map
+     * @return the unique irrigation offset.
+     */
+    public int toOffset(int sideLen) {
+        return coord.toOffset(sideLen) * 3 + getStorageOffset();
+    }
+
+    /**
+     * Returns the offset associated to the neighbor irrigations.
+     * An irrigation is the neighbor of another irrigation if they share one
+     * end.
+     * The result is guaranteed to contain exactly four elements.
+     */
+    public Set<Integer> neighbors(int sideLen) {
+        Coordinate ca = coord;
+        Coordinate cb = otherCoord();
+        Set<Coordinate> commonNeighbors = ca.commonNeighborsWith(cb);
+
+
+        // At this point, commonNeighbors should contain only two elements.
+        // Let's enforce it.
+        if (commonNeighbors.size() != 2) {
+            throw new IllegalStateException("Two neighbor tiles should have exactly two common neighbors");
+        }
+
+        // Here we cheat a bit: we create irrigations that we use only in
+        // order to compute the offset.
+        return commonNeighbors.stream()
+                .flatMap(neighbor -> {
+                            try {
+                                return Stream.of(
+                                        new Irrigation(neighbor, ca),
+                                        new Irrigation(neighbor, cb)
+                                );
+                            } catch (IllegalPlacementException e) {
+                                throw new IllegalStateException("Non-neighbors were created with moveWith");
+                            }
+                        }
+                )
+                .map(irrigation -> irrigation.toOffset(sideLen))
+                .collect(Collectors.toSet());
+    }
+
+    /**
+     * Returns the coordinates of the tiles that are irrigated.
+     */
+    Set<Coordinate> getIrrigatedCoordinates() {
+        return Set.of(coord, coord.moveWith(dir));
+    }
+
+    /**
+     * Returns the coordinates of the tiles that are against the irrigation.
+     */
+    Set<Coordinate> getCoordinatesOfPointedTiles() {
+        return coord.commonNeighborsWith(coord.moveWith(dir));
     }
 }
