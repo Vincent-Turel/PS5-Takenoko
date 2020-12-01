@@ -86,7 +86,7 @@ public class GameManager {
      * it can be a victory, a loose, or a draw
      *
      */
-    public int gameStateOf(int id, ArrayList<GameResults> results){
+    private int gameStateOf(int id, ArrayList<GameResults> results){
         int gameState = 0;
         boolean isDraw = false;
         int actualRank = 0;
