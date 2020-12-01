@@ -6,12 +6,11 @@ public class GardenerObjective extends Objective {
 
     /**
      *Make a gardener objective
-     * @param objType Gardener
      * @param nbPT n° of point
      * @param bambooPattern pattern for the objective
      */
-    public GardenerObjective(ObjectiveKind objType, int nbPT, BambooPattern bambooPattern){
-        super(objType,nbPT);
+    public GardenerObjective(int nbPT, BambooPattern bambooPattern){
+        super(ObjectiveKind.Gardener,nbPT);
         this.bambooPattern=bambooPattern;
     }
 

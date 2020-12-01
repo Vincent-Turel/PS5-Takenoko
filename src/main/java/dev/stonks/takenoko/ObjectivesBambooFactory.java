@@ -16,13 +16,13 @@ public class ObjectivesBambooFactory {
         BambooPattern pinkPattern = new BambooPattern(TileKind.Pink,1,2);
         BambooPattern multiColorPatern = new BambooPattern(TileKind.Green,TileKind.Yellow,TileKind.Pink,1,1);
         for(int i=0;i<5;i++){
-            newList.add(new PandaObjective(ObjectiveKind.Panda,3,greenPattern));
+            newList.add(new PandaObjective(3,greenPattern));
             if(i>0){
-                newList.add(new PandaObjective(ObjectiveKind.Panda,4,yellowPattern));
+                newList.add(new PandaObjective(4,yellowPattern));
             }
             if(i>1) {
-                newList.add(new PandaObjective(ObjectiveKind.Panda, 5, pinkPattern));
-                newList.add(new PandaObjective(ObjectiveKind.Panda,6,multiColorPatern));
+                newList.add(new PandaObjective( 5, pinkPattern));
+                newList.add(new PandaObjective(6,multiColorPatern));
             }
         }
         return newList;
@@ -41,23 +41,23 @@ public class ObjectivesBambooFactory {
         BambooPattern pinkPattern = new BambooPattern(TileKind.Pink,4,1);
         BambooPattern maxPinkPattern = new BambooPattern(TileKind.Pink,4,2);
 
-        newList.add(new GardenerObjective(ObjectiveKind.Gardener,3,greenPattern));
-        newList.add(new GardenerObjective(ObjectiveKind.Gardener,4,greenPattern));
-        newList.add(new GardenerObjective(ObjectiveKind.Gardener,4,greenPattern));
-        newList.add(new GardenerObjective(ObjectiveKind.Gardener,5,greenPattern));
-        newList.add(new GardenerObjective(ObjectiveKind.Gardener,8,maxGreenPattern));
+        newList.add(new GardenerObjective(3,greenPattern));
+        newList.add(new GardenerObjective(4,greenPattern));
+        newList.add(new GardenerObjective(4,greenPattern));
+        newList.add(new GardenerObjective(5,greenPattern));
+        newList.add(new GardenerObjective(8,maxGreenPattern));
 
-        newList.add(new GardenerObjective(ObjectiveKind.Gardener,4,yellowPattern));
-        newList.add(new GardenerObjective(ObjectiveKind.Gardener,5,yellowPattern));
-        newList.add(new GardenerObjective(ObjectiveKind.Gardener,5,yellowPattern));
-        newList.add(new GardenerObjective(ObjectiveKind.Gardener,6,yellowPattern));
-        newList.add(new GardenerObjective(ObjectiveKind.Gardener,7,maxYellowPattern));
+        newList.add(new GardenerObjective(4,yellowPattern));
+        newList.add(new GardenerObjective(5,yellowPattern));
+        newList.add(new GardenerObjective(5,yellowPattern));
+        newList.add(new GardenerObjective(6,yellowPattern));
+        newList.add(new GardenerObjective(7,maxYellowPattern));
 
-        newList.add(new GardenerObjective(ObjectiveKind.Gardener,5,pinkPattern));
-        newList.add(new GardenerObjective(ObjectiveKind.Gardener,6,pinkPattern));
-        newList.add(new GardenerObjective(ObjectiveKind.Gardener,6,pinkPattern));
-        newList.add(new GardenerObjective(ObjectiveKind.Gardener,7,pinkPattern));
-        newList.add(new GardenerObjective(ObjectiveKind.Gardener,6,maxPinkPattern));
+        newList.add(new GardenerObjective(5,pinkPattern));
+        newList.add(new GardenerObjective(6,pinkPattern));
+        newList.add(new GardenerObjective(6,pinkPattern));
+        newList.add(new GardenerObjective(7,pinkPattern));
+        newList.add(new GardenerObjective(6,maxPinkPattern));
 
         return newList;
     }

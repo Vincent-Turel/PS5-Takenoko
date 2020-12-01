@@ -6,13 +6,12 @@ public class PatternObjective extends Objective {
 
     /**
      *
-     * @param objType Pattern
      * @param nbPT n° of point
      * @param localPattern pattern for the objective
      */
 
-    public PatternObjective(ObjectiveKind objType, int nbPT, Pattern localPattern){
-        super(objType,nbPT);
+    public PatternObjective(int nbPT, Pattern localPattern){
+        super(ObjectiveKind.Pattern,nbPT);
         this.localPattern=localPattern;
     }
 

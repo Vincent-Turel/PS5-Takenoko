@@ -19,7 +19,7 @@ class ObjectivesTest {
         assertEquals(ObjectiveKind.Pattern,pattern.getObjType());
         assertEquals(ObjectiveKind.Gardener,gardener.getObjType());
         assertEquals(ObjectiveKind.Panda,panda.getObjType());
-        //objectif value test :
+        //objective value test :
         assertEquals(false,pattern.getStates());
         assertEquals(false,gardener.getStates());
         assertEquals(false,panda.getStates());
@@ -43,9 +43,9 @@ class ObjectivesTest {
     void objectiveCreationTest(){
         Pattern aPattern = mock(Pattern.class);
         BambooPattern aBambooPattern = mock(BambooPattern.class);
-        PatternObjective pattern = ObjectivesMaker.newPatternObjectives(5,aPattern);
-        GardenerObjective gardener = ObjectivesMaker.newGardenerObjectives(6, aBambooPattern);
-        PandaObjective panda = ObjectivesMaker.newPandaObjectives(7, aBambooPattern);
+        PatternObjective pattern = new PatternObjective(5,aPattern);
+        GardenerObjective gardener = new GardenerObjective(6, aBambooPattern);
+        PandaObjective panda = new PandaObjective(7, aBambooPattern);
 
         //test nbPt :
         assertEquals(5,pattern.getNbPt());

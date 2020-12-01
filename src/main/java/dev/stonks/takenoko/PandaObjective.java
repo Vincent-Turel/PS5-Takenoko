@@ -6,12 +6,11 @@ public class PandaObjective extends Objective{
 
     /**
      *Make a panda objective
-     * @param objType Panda
      * @param nbPT n° of point
      * @param bambooPattern pattern for the objective
      */
-    public PandaObjective(ObjectiveKind objType, int nbPT, BambooPattern bambooPattern){
-        super(objType,nbPT);
+    public PandaObjective(int nbPT, BambooPattern bambooPattern){
+        super(ObjectiveKind.Panda,nbPT);
         this.bambooPattern=bambooPattern;
     }
 

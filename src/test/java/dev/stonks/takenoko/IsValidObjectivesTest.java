@@ -16,11 +16,11 @@ public class IsValidObjectivesTest {
 
         //Objective simple green
         BambooPattern greenPattern = new BambooPattern(TileKind.Green,4,1);
-        PandaObjective objective = new PandaObjective(ObjectiveKind.Panda,5,greenPattern);
+        PandaObjective objective = new PandaObjective(5,greenPattern);
 
         //Objective multicolor :
         BambooPattern multicolor = new BambooPattern(TileKind.Green,TileKind.Yellow,TileKind.Pink,2,1);
-        PandaObjective objMultiColor = new PandaObjective(ObjectiveKind.Panda,5,multicolor);
+        PandaObjective objMultiColor = new PandaObjective(5,multicolor);
 
         //Test isValid Objective simple green
         isValidObjectives.isObjectivesPandaValid(objective,winPlayer);
@@ -46,11 +46,11 @@ public class IsValidObjectivesTest {
 
         //Objective simple green
         BambooPattern greenPattern = new BambooPattern(TileKind.Green,4,1);
-        PandaObjective objective = new PandaObjective(ObjectiveKind.Panda,5,greenPattern);
+        PandaObjective objective = new PandaObjective(5,greenPattern);
 
         //Objective multicolor :
         BambooPattern multicolor = new BambooPattern(TileKind.Green,TileKind.Yellow,TileKind.Pink,2,3);
-        PandaObjective objMultiColor = new PandaObjective(ObjectiveKind.Panda,5,multicolor);
+        PandaObjective objMultiColor = new PandaObjective(5,multicolor);
 
         //Test isValid Objective simple green
         isValidObjectives.isObjectivesPandaValid(objective,losePlayer);
@@ -74,7 +74,7 @@ public class IsValidObjectivesTest {
         when(winPlayer.getCollectedBamboo()).thenReturn(new int[]{3, 9, 5});
 
         BambooPattern yellowPattern = new BambooPattern(TileKind.Yellow,4,2);
-        PandaObjective objective = new PandaObjective(ObjectiveKind.Panda,5,yellowPattern);
+        PandaObjective objective = new PandaObjective(5,yellowPattern);
 
         //Test isValid Objective simple yellow
         isValidObjectives.isObjectivesPandaValid(objective,winPlayer);
@@ -91,7 +91,7 @@ public class IsValidObjectivesTest {
         when(winPlayer.getCollectedBamboo()).thenReturn(new int[]{3, 6, 6});
 
         BambooPattern pinkPattern = new BambooPattern(TileKind.Pink,3,2);
-        PandaObjective objective = new PandaObjective(ObjectiveKind.Panda,5,pinkPattern);
+        PandaObjective objective = new PandaObjective(5,pinkPattern);
 
         //Test isValid Objective simple yellow
         isValidObjectives.isObjectivesPandaValid(objective,winPlayer);
