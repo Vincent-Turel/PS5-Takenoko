@@ -80,13 +80,7 @@ public class Game {
      */
     private void initialisesObjectives() {
         //ObjectiveKind : Pattern, Gardener, Panda, Emperor
-        tileObjectives = new ArrayList<>();
-
-        int i = 0;
-        for (Pattern pattern: patterns) {
-            tileObjectives.add(ObjectivesMaker.newPatternObjectives(4,pattern));
-            i++;
-        }
+        tileObjectives = PatternObjectiveFactory.validPatternObjectives();
         gardenerObjectives = ObjectivesBambooFactory.gardenerObjectiveList();
         pandaObjectives = ObjectivesBambooFactory.pandaObjectiveList();
         emperor = new Objective(ObjectiveKind.Emperor,2);
