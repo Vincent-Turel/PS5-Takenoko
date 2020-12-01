@@ -150,6 +150,35 @@ public class Game {
                             placedIrrigationsDeck.add(drawnIrrigation);
                             player.addIrrigation(drawnIrrigation);
                             break;
+                        case DrawObjective:
+                            ArrayList<ObjectiveKind> listPossibleKind = new ArrayList<>();
+                            if(tileObjectives.size()>0){
+                                listPossibleKind.add(ObjectiveKind.Pattern);
+                            }
+                            if(pandaObjectives.size()>0){
+                                listPossibleKind.add(ObjectiveKind.Panda);
+                            }
+                            if(gardenerObjectives.size()>0){
+                                listPossibleKind.add(ObjectiveKind.Gardener);
+                            }
+                            ObjectiveKind objectiveKind = player.chooseObjectiveKind(listPossibleKind);
+                            int num;
+                            if((objectiveKind==ObjectiveKind.Pattern) && (tileObjectives.size()>0)){
+                                num = random.nextInt(tileObjectives.size());
+                                player.addObjectives(tileObjectives.get(num));
+                                tileObjectives.remove(num);
+                            }
+                            if((objectiveKind==ObjectiveKind.Panda) && (pandaObjectives.size()>0)){
+                                num = random.nextInt(pandaObjectives.size());
+                                player.addObjectives(pandaObjectives.get(num));
+                                pandaObjectives.remove(num);
+                            }
+                            if((objectiveKind==ObjectiveKind.Gardener) && (gardenerObjectives.size()>0)){
+                                num = random.nextInt(gardenerObjectives.size());
+                                player.addObjectives(gardenerObjectives.get(num));
+                                gardenerObjectives.remove(num);
+                            }
+                            break;
                     }
                 }
                 checkObjectives(player);
