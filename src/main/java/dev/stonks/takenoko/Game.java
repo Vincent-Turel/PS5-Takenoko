@@ -162,7 +162,7 @@ public class Game {
         for (Objective objective: playerObjectives) {
             if(objective instanceof PatternObjective) {
                 PatternObjective patternObjective = (PatternObjective) objective;
-                patternMatchs = isValideObjectives.isValidPatternObjective(patternObjective, map, patternMatchs);
+                patternMatchs = isValidObjectives.isValidPatternObjective(patternObjective, map, patternMatchs);
 
                 if (objective.getStates()) {
                     player.newObjectivesAchieved(objective);
@@ -171,7 +171,7 @@ public class Game {
                 }
             }
             else if(objective instanceof PandaObjective) {
-                player.upDateInventory(isValideObjectives.isObjectivesPandaValide((PandaObjective) objective,player));
+                player.upDateInventory(isValidObjectives.isObjectivesPandaValid((PandaObjective) objective,player));
                 if (objective.getStates()) {
                     player.newObjectivesAchieved(objective);
                     pandaObjectives.remove(objective);

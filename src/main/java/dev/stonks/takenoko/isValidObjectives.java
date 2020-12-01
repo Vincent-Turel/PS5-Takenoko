@@ -1,9 +1,8 @@
 package dev.stonks.takenoko;
 
-import java.util.ArrayList;
 import java.util.Set;
 
-public class isValideObjectives {
+public class isValidObjectives {
 
     /**
      *
@@ -16,7 +15,7 @@ public class isValideObjectives {
         ObjectiveKind type = objective.getObjType();
         PatternObjective objectivePat = (PatternObjective) objective;
         int old=alreadyUsed.size();
-        alreadyUsed=isPatternConstraintValide(objectivePat,map,alreadyUsed);
+        alreadyUsed= isPatternConstraintValid(objectivePat,map,alreadyUsed);
         if(alreadyUsed.size()!=old){
             objectivePat.UpdtateStates();
         }
@@ -27,7 +26,7 @@ public class isValideObjectives {
      *Check if a pattern constraint objective are complete
      * @return the new math result if objectives complete
      */
-    private static Set<MatchResult> isPatternConstraintValide(PatternObjective objective,Map map,Set<MatchResult> alreadyUsed){
+    private static Set<MatchResult> isPatternConstraintValid(PatternObjective objective, Map map, Set<MatchResult> alreadyUsed){
         Set<MatchResult> result = objective.getLocalPattern().getMatchesOn(map);
         for(MatchResult value: result) {
             if(!(alreadyUsed.contains(value))){
@@ -42,35 +41,35 @@ public class isValideObjectives {
      *Check if a panda objective are complete
      * @return the update of the inventory if objectives complete, else juste the old inventory
      */
-    public static int[] isObjectivesPandaValide(PandaObjective objective,Player player){
+    public static int[] isObjectivesPandaValid(PandaObjective objective, Player player){
         int[] bambooStock = player.getCollectedBamboo();
         BambooPattern localPattern = objective.getBambooPattern();
         if(localPattern.getOptionalColor1()!=null){
             if(bambooStock[0]>=localPattern.getHeight() && bambooStock[1]>=localPattern.getHeight() && bambooStock[2]>=localPattern.getHeight()){
                 objective.UpdtateStates();
-                bambooStock[0]--;
-                bambooStock[1]--;
-                bambooStock[2]--;
+                bambooStock[0]-=localPattern.getHeight()*localPattern.getNbBamboo();
+                bambooStock[1]-=localPattern.getHeight()*localPattern.getNbBamboo();
+                bambooStock[2]-=localPattern.getHeight()*localPattern.getNbBamboo();
             }
         }
         else{
             switch (localPattern.getColor()){
                 case Pink:
-                    if(bambooStock[2]>=localPattern.getHeight()){
+                    if(bambooStock[2]>=localPattern.getHeight()*localPattern.getNbBamboo()){
                         objective.UpdtateStates();
-                        bambooStock[2]-=2;
+                        bambooStock[2]-=localPattern.getHeight()*localPattern.getNbBamboo();
                     }
                     break;
                 case Yellow:
-                    if(bambooStock[1]>=localPattern.getHeight()){
+                    if(bambooStock[1]>=localPattern.getHeight()*localPattern.getNbBamboo()){
                         objective.UpdtateStates();
-                        bambooStock[1]-=2;
+                        bambooStock[1]-=localPattern.getHeight()*localPattern.getNbBamboo();
                     }
                     break;
                 case Green:
-                    if(bambooStock[0]>=localPattern.getHeight()){
+                    if(bambooStock[0]>=localPattern.getHeight()*localPattern.getNbBamboo()){
                         objective.UpdtateStates();
-                        bambooStock[0]-=2;
+                        bambooStock[0]-=localPattern.getHeight()*localPattern.getNbBamboo();
                     }
                     break;
             }
@@ -78,11 +77,12 @@ public class isValideObjectives {
         return bambooStock;
     }
 
+
     /**
      *Check if a gardener objective are complete
      * @return true if objectives complete, else false
-     */
-    private static boolean isObjectivesGardenerValide(){
+    */
+    public static boolean isObjectivesGardenerValid(){
         return true;
     }
 

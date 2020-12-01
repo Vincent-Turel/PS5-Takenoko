@@ -14,7 +14,7 @@ public class ObjectivesBambooFactory {
         BambooPattern greenPattern = new BambooPattern(TileKind.Green,1,2);
         BambooPattern yellowPattern = new BambooPattern(TileKind.Yellow,1,2);
         BambooPattern pinkPattern = new BambooPattern(TileKind.Pink,1,2);
-        BambooPattern multiColorPatern = new BambooPattern(TileKind.Green,TileKind.Yellow,TileKind.Pink,1,3);
+        BambooPattern multiColorPatern = new BambooPattern(TileKind.Green,TileKind.Yellow,TileKind.Pink,1,1);
         for(int i=0;i<5;i++){
             newList.add(new PandaObjective(ObjectiveKind.Panda,3,greenPattern));
             if(i>0){
