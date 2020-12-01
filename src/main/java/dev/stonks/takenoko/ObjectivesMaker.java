@@ -1,5 +1,7 @@
 package dev.stonks.takenoko;
 
+import java.util.*;
+
 public class ObjectivesMaker {
 
     /**
@@ -46,4 +48,41 @@ public class ObjectivesMaker {
         return newObj;
     }
 
+    /**
+     * Returns the next available objective ID
+     */
+    int nextObjectiveId() {
+        return listObjectves
+                .stream()
+                .max(Comparator.naturalOrder())
+                .map(x -> x + 1)
+                .orElse(0);
+    }
+
+    /**
+     * Returns every valid pattern objective available in the game.
+     */
+    ArrayList<PatternObjective> validPatternObjectives() {
+        ArrayList<PatternObjective> ps = new ArrayList();
+
+        ps.add(addAnPatternObjectives( 2, 1, Pattern.triangleShaped(TileKind.Green)));
+        ps.add(addAnPatternObjectives( 3, 1, Pattern.diamondShaped(TileKind.Green)));
+        ps.add(addAnPatternObjectives( 5, 1, Pattern.diamondShaped(TileKind.Yellow, TileKind.Pink)));
+        ps.add(addAnPatternObjectives( 4, 1, Pattern.diamondShaped(TileKind.Pink, TileKind.Green)));
+        ps.add(addAnPatternObjectives( 3, 1, Pattern.diamondShaped(TileKind.Yellow, TileKind.Green)));
+
+        ps.add(addAnPatternObjectives( 3, 1, Pattern.iShaped(TileKind.Yellow)));
+        ps.add(addAnPatternObjectives( 4, 1, Pattern.diamondShaped(TileKind.Yellow)));
+        ps.add(addAnPatternObjectives( 3, 1, Pattern.cShaped(TileKind.Yellow)));
+        ps.add(addAnPatternObjectives( 2, 1, Pattern.iShaped(TileKind.Green)));
+        ps.add(addAnPatternObjectives( 2, 1, Pattern.cShaped(TileKind.Green)));
+
+        ps.add(addAnPatternObjectives(4, 1, Pattern.cShaped(TileKind.Pink)));
+        ps.add(addAnPatternObjectives(4, 1, Pattern.triangleShaped(TileKind.Pink)));
+        ps.add(addAnPatternObjectives(5, 1, Pattern.diamondShaped(TileKind.Pink)));
+        ps.add(addAnPatternObjectives(4, 1, Pattern.iShaped(TileKind.Pink)));
+        ps.add(addAnPatternObjectives(3, 1, Pattern.triangleShaped(TileKind.Yellow)));
+
+        return ps;
+    }
 }

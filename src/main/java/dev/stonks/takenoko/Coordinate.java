@@ -1,6 +1,8 @@
 package dev.stonks.takenoko;
 
-import java.lang.reflect.Array;
+import java.util.Objects;
+import java.util.Arrays;
+import java.util.Optional;
 
 /**
  * Represents a (x;y) coordinate.
@@ -8,24 +10,22 @@ import java.lang.reflect.Array;
 public class Coordinate {
     private int x;
     private int y;
-    private int mapSideLength;
 
     /**
      * Creates a new coordinate.
      * @param x the x position
      * @param y the y position
-     * @param length the length of the map (assuming it is a square)
      */
-    Coordinate(int x, int y, int length) {
+    Coordinate(int x, int y) {
         this.x = x;
         this.y = y;
-        mapSideLength = length;
     }
 
     /**
      * Returns the integer offset corresponding to the coordinate.
+     * @param mapSideLength how much tiles at maximum the map has on each side
      */
-    int toOffset() {
+    int toOffset(int mapSideLength) {
         return x * mapSideLength + y;
     }
 
@@ -60,7 +60,7 @@ public class Coordinate {
     }
 
     private Coordinate moveWith(int dx, int dy) {
-        return new Coordinate(x + dx, y + dy, mapSideLength);
+        return new Coordinate(x + dx, y + dy);
     }
 
     /**
@@ -82,7 +82,7 @@ public class Coordinate {
 
     @Override
     public int hashCode() {
-        return x * y;
+        return Objects.hash(x, y);
     }
 
     /**
@@ -100,5 +100,44 @@ public class Coordinate {
         };
 
         return neighbors;
+    }
+
+    /**
+     * Returns, if it exists, the direction such that:
+     * this.moveWith(d).equals(rhs).
+     */
+    Optional<Direction> displacementFor(Coordinate rhs) {
+        return Arrays.stream(Direction.values())
+                .filter(d -> {
+                    Coordinate tmp = moveWith(d);
+                    return tmp.equals(rhs);
+                })
+                .findFirst();
+    }
+
+    /**
+     * Returns which Coordinate is suited for irrigation storage.
+     *
+     * The suited irrigation storage is defined as the south-west-most
+     * coordinate.
+     *
+     * @throws java.util.NoSuchElementException if ca and cb are not neighbors.
+     */
+    static Coordinate getIrrigationStorage(Coordinate ca, Coordinate cb) {
+        Direction displacement = ca.displacementFor(cb).get();
+
+        return displacement.index() < 3 ? ca : cb;
+    }
+
+    /**
+     * Returns the secondary Coordinate is suited for irrigation storage.
+     *
+     * This coordinate is defined as: the inverse of what getIrrigationStorage
+     * gives.
+     */
+    static Coordinate getSecondaryIrrigationStorage(Coordinate ca, Coordinate cb) {
+        Direction displacement = ca.displacementFor(cb).get();
+
+        return displacement.index() < 3 ? cb : ca;
     }
 }

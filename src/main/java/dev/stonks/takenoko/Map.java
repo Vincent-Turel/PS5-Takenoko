@@ -14,6 +14,8 @@ public class Map {
     Optional<Tile>[] tiles;
     int delta;
     int sideLen;
+    Panda panda;
+    Gardener gardener;
 
     /**
      * Creates an initial map. It contains the single initial tile.
@@ -49,40 +51,75 @@ public class Map {
         }
     }
 
+    /**
+     * Get the panda
+     * @return panda
+     */
+    public Panda getPanda() {
+        return panda;
+    }
+
+    /**
+     * Get the gardener
+     * @return gardener
+     */
+    public Gardener getGardener() {
+        return gardener;
+    }
+
+    /**
+     * Get all the tiles where a pawn can go according to his current position on the map
+     * @param pawn (panda or gardener)
+     * @return a set of all the tiles where the pawn can go
+     */
+    public Set<Tile> getPossiblePawnPlacements(Pawn pawn){
+        Set<Tile> allPossiblePawnPlacements = new HashSet<>();
+        Tile currentPawnTile = getTile(pawn.getCurrentCoordinate()).get();
+        for (Direction direction : Direction.values()){
+            Optional<Tile> tileOptional = Optional.of(currentPawnTile);
+            while((tileOptional = getNeighborOf(tileOptional.get(), direction)).isPresent()){
+                allPossiblePawnPlacements.add(tileOptional.get());
+            }
+        }
+        return allPossiblePawnPlacements;
+    }
+
     private void setInitialTile() {
-        Coordinate initialTileCoord = new Coordinate(delta, delta, sideLen);
+        Coordinate initialTileCoord = new Coordinate(delta, delta);
 
         try {
             setTile(initialTileCoord, Tile.initialTile(initialTileCoord));
-        } catch (IllegalTilePlacementException e) {
+        } catch (IllegalPlacementException e) {
             throw new RuntimeException("Initial tile placement should not fail");
         }
+        panda = new Panda(initialTileCoord);
+        gardener = new Gardener(initialTileCoord);
     }
 
     /**
      * Writes a tile at given coordinate.
      * @param coord the coordinate at which the tile must be written
      * @param t the tile to be written
-     * @throws IllegalTilePlacementException thrown if a tile is already
+     * @throws IllegalPlacementException thrown if a tile is already
      *                                       present.
      */
-    void setTile(Coordinate coord, Tile t) throws IllegalTilePlacementException {
+    void setTile(Coordinate coord, Tile t) throws IllegalPlacementException {
         // TODO: once the following PR is merged, ensure that this position
         // follows the game rules.
         // https://github.com/pns-si3-projects/projet2-ps5-20-21-takenoko-2021-stonksdev/pull/15
-        setTile(coord.toOffset(), t);
+        setTile(coord.toOffset(sideLen), t);
     }
 
     /**
      * Writes a tile at given offset. The offset must be a valid tile index.
      * @param offset the offset at which the tile must be written
      * @param t the tile to be written
-     * @throws IllegalTilePlacementException thrown if a tile is already
+     * @throws IllegalPlacementException thrown if a tile is already
      *                                       present.
      */
-    private void setTile(int offset, Tile t) throws IllegalTilePlacementException {
+    private void setTile(int offset, Tile t) throws IllegalPlacementException {
         if (tiles[offset].isPresent()) {
-            throw new IllegalTilePlacementException("Attempt to replace a tile");
+            throw new IllegalPlacementException("Attempt to replace a tile");
         }
 
         tiles[offset] = Optional.of(t);
@@ -92,10 +129,10 @@ public class Map {
      * Creates and writes a tile at given coordinates.
      * @param co the coordinate at which the tile must be written
      * @param t the tile to be written
-     * @throws IllegalTilePlacementException thrown if a tile is already
+     * @throws IllegalPlacementException thrown if a tile is already
      *                                       present.
      */
-    void setTile(Coordinate co, AbstractTile t) throws IllegalTilePlacementException {
+    void setTile(Coordinate co, AbstractTile t) throws IllegalPlacementException {
         // TODO: once the following PR is merged, ensure that this position
         // follows the game rules.
         // https://github.com/pns-si3-projects/projet2-ps5-20-21-takenoko-2021-stonksdev/pull/15
@@ -105,14 +142,27 @@ public class Map {
     /**
      * Creates and writes a tile at its coordinates
      * @param t the tile to be written
-     * @throws IllegalTilePlacementException thrown if a tile is already
+     * @throws IllegalPlacementException thrown if a tile is already
      *                                       present.
      */
-    void setTile(Tile t) throws IllegalTilePlacementException {
+    void setTile(Tile t) throws IllegalPlacementException {
         // TODO: once the following PR is merged, ensure that this position
         // follows the game rules.
         // https://github.com/pns-si3-projects/projet2-ps5-20-21-takenoko-2021-stonksdev/pull/15
-        setTile(t.getCoordinate().toOffset(), t);
+        setTile(t.getCoordinate().toOffset(sideLen), t);
+    }
+
+    /**
+     * Check if somes tiles are now irrigated.
+     * Only by the InitialTile for now.
+     * NEED IMPROVEMENT LATER
+     */
+    public void updateIrrigations(){
+        Arrays.stream(tiles)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .filter(t -> isNeighborOfInitial(t.getCoordinate()))
+                .forEach(Tile::irrigate);
     }
 
     /**
@@ -121,7 +171,7 @@ public class Map {
      * @return the tile, if it exists.
      */
     Optional<Tile> getTile(Coordinate coord) {
-        return getTile(coord.toOffset());
+        return getTile(coord.toOffset(sideLen));
     }
 
     /**
@@ -138,7 +188,7 @@ public class Map {
      * Returns the initial tile of the map.
      */
     Tile initialTile() {
-        Coordinate c = new Coordinate(delta, delta, sideLen);
+        Coordinate c = new Coordinate(delta, delta);
         // This call to getTile is guaranteed to succeed because we placed a
         // tile at the center in the constructor.
         return getTile(c).get();
@@ -162,7 +212,7 @@ public class Map {
      *
      * Will place <code>a</code> on top of <code>b</code>.
      */
-    Tile addNeighborOf(TileKind kind, DirectionnedTile... tiles) throws IllegalTilePlacementException {
+    Tile addNeighborOf(TileKind kind, DirectionnedTile... tiles) throws IllegalPlacementException {
         Tile t = Tile.neighborOf(kind, tiles);
         setTile(t.getCoordinate(), t);
         return t;
@@ -207,7 +257,7 @@ public class Map {
     }
 
     private boolean tileAt(Coordinate c) {
-        return tiles[c.toOffset()].isPresent();
+        return tiles[c.toOffset(sideLen)].isPresent();
     }
 
     private int amountOfNeighborsAt(Coordinate c) {
@@ -245,7 +295,7 @@ public class Map {
 
     /**
      * Increase the size of all bamboo in all tiles
-     * If the bamboo size > 5, nothing to do
+     * If the bamboo size > 3, nothing to do
      * If the tile is not present, nothing to do
      */
     public void growBambooInMap(){

@@ -8,12 +8,12 @@ public class AbstractTileTest {
     @Test
     void withCoordinates() {
         AbstractTile at = new AbstractTile(TileKind.Yellow);
-        Coordinate co = new Coordinate(42, 101, 1024);
+        Coordinate co = new Coordinate(42, 101);
 
         Coordinate[] cs = {
-                new Coordinate(42, 101, 1024),
-                new Coordinate(99, 33, 101),
-                new Coordinate(3, 2, 32)
+                new Coordinate(42, 101),
+                new Coordinate(99, 33),
+                new Coordinate(3, 2)
         };
 
         for(Coordinate c: cs) {

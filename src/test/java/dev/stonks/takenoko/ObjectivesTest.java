@@ -5,7 +5,7 @@ import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class ObjectivesTest {
-
+  
     @Test
     void objectiveClassTest(){
         Objective pattern = new Objective(ObjectiveKind.Pattern, 5);
@@ -61,6 +61,7 @@ class ObjectivesTest {
         assertEquals(aBambooPattern,panda.getBambooPattern());
         assertEquals(aBambooPattern,gardener.getBambooPattern());
         assertEquals(aPattern,pattern.getLocalPattern());
+
     }
 
 }

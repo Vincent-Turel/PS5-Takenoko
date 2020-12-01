@@ -10,6 +10,7 @@ import java.util.Objects;
  */
 public class Tile {
     private final Coordinate coord;
+    private boolean irrigated;
     private Bamboo bamboo;
     private TileKind kind;
 
@@ -17,6 +18,7 @@ public class Tile {
         coord = c;
         kind = k;
         bamboo = new Bamboo(this.kind);
+        irrigated = false;
     }
 
     /**
@@ -45,7 +47,7 @@ public class Tile {
      * @param neighbors The neighbors of the tile.
      * @return The newly created tile
      */
-    static Tile neighborOf(TileKind kind, DirectionnedTile... neighbors) throws IllegalTilePlacementException {
+    static Tile neighborOf(TileKind kind, DirectionnedTile... neighbors) throws IllegalPlacementException {
         Coordinate tileCoord = coordinateFromNeighbors(neighbors);
         Tile t = new Tile(tileCoord, kind);
         return t;
@@ -56,11 +58,11 @@ public class Tile {
      * tile.
      * @param neighbors the tile neighbors
      * @return the tile direction
-     * @throws IllegalTilePlacementException thrown when the provided direction
+     * @throws IllegalPlacementException thrown when the provided direction
      *                                       and tile coordinates does not
      *                                       match each other.
      */
-    private static Coordinate coordinateFromNeighbors(DirectionnedTile... neighbors) throws IllegalTilePlacementException {
+    private static Coordinate coordinateFromNeighbors(DirectionnedTile... neighbors) throws IllegalPlacementException {
         Coordinate tileCoord = null;
 
         for (DirectionnedTile neighbor: neighbors) {
@@ -70,7 +72,7 @@ public class Tile {
             if (tileCoord == null) {
                 tileCoord = c.moveWith(d.reverse());
             } else if (tileCoord.moveWith(d) != c) {
-                throw new IllegalTilePlacementException("Tiles can not be neighbor");
+                throw new IllegalPlacementException("Tiles can not be neighbor");
             }
         }
 
@@ -78,7 +80,7 @@ public class Tile {
         boolean hasTwoNeighbors = neighbors.length >= 2;
 
         if (!neighborOfInitial && !hasTwoNeighbors) {
-            throw new IllegalTilePlacementException("Tile don't have required neighbors");
+            throw new IllegalPlacementException("Tile don't have required neighbors");
         }
 
         return tileCoord;
@@ -102,6 +104,20 @@ public class Tile {
     }
 
     /**
+     * @return true if the tile is irrigated. False otherwise
+     */
+    public boolean isIrrigated() {
+        return irrigated;
+    }
+
+    /**
+     * Irrigate the tile, meaning (isIrrigated == true)
+     */
+    public void irrigate() {
+        this.irrigated = true;
+    }
+
+    /**
      * Returns whether if the tile is the initial tile or not.
      */
     public boolean isInitial() {
@@ -109,13 +125,30 @@ public class Tile {
     }
 
     /**
+     * Get the bamboo which is on the tile
+     * @return bamboo
+     */
+    public Bamboo getBamboo() {
+        return bamboo;
+    }
+
+    /**
      * Increase the size of the bamboo
      * Maximal size : 4
      */
     public void growBamboo(){
-        if (bamboo.getSize()<4 && !isInitial()){
+        if (!isInitial()){
             bamboo.grow();
         }
+    }
+
+    /**
+     * Decrease the size of the bamboo
+     * Minimal size : 0
+     */
+    public void cutBamboo(){
+        if (!isInitial())
+            bamboo.cut();
     }
 
     /**
