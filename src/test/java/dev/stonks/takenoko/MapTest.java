@@ -199,4 +199,67 @@ public class MapTest {
         assertFalse(randomTiles.stream().anyMatch(Tile::isIrrigated));
     }
 
+    @Test
+    void irrigationPlacementLegalPlacement() throws IllegalPlacementException {
+        Map map = new Map(42);
+        Coordinate northNeighbor = map.initialTile().getCoordinate().moveWith(Direction.North);
+        Coordinate northEastNeighbor = map.initialTile().getCoordinate().moveWith(Direction.NorthEast);
+        Coordinate southEastNeighbor = map.initialTile().getCoordinate().moveWith(Direction.SouthEast);
+        Coordinate southNeighbor = map.initialTile().getCoordinate().moveWith(Direction.South);
+        Coordinate southWestNeighbor = map.initialTile().getCoordinate().moveWith(Direction.SouthOuest);
+        Coordinate northWestNeighbor = map.initialTile().getCoordinate().moveWith(Direction.NorthOuest);
+
+        // Let's place some irrigations, so that it makes an initial-tile-centered star!
+        Irrigation i1 = new Irrigation(northNeighbor, northEastNeighbor);
+        Irrigation i2 = new Irrigation(southEastNeighbor, northEastNeighbor);
+        Irrigation i3 = new Irrigation(southEastNeighbor, southNeighbor);
+        Irrigation i4 = new Irrigation(southNeighbor, southWestNeighbor);
+        Irrigation i5 = new Irrigation(southWestNeighbor, northWestNeighbor);
+        Irrigation i6 = new Irrigation(northWestNeighbor, northNeighbor);
+
+        map.setIrrigation(i1);
+        map.setIrrigation(i2);
+        map.setIrrigation(i3);
+        map.setIrrigation(i4);
+        map.setIrrigation(i5);
+        map.setIrrigation(i6);
+
+        // Let's check that our irrigations are still there.
+        assertTrue(map.getIrrigationBetween(northNeighbor, northEastNeighbor).isPresent());
+        assertTrue(map.getIrrigationBetween(northEastNeighbor, southEastNeighbor).isPresent());
+        assertTrue(map.getIrrigationBetween(southEastNeighbor, southNeighbor).isPresent());
+        assertTrue(map.getIrrigationBetween(southNeighbor, southWestNeighbor).isPresent());
+        assertTrue(map.getIrrigationBetween(southWestNeighbor, northWestNeighbor).isPresent());
+        assertTrue(map.getIrrigationBetween(northWestNeighbor, northNeighbor).isPresent());
+
+        // Let's try placing irrigations that are linked to other irrigations.
+        Irrigation i7 = new Irrigation(northNeighbor, northNeighbor.moveWith(Direction.NorthEast));
+        Irrigation i8 = new Irrigation(southNeighbor, southNeighbor.moveWith(Direction.SouthEast));
+        Irrigation i9 = new Irrigation(southWestNeighbor, southWestNeighbor.moveWith(Direction.NorthOuest));
+
+        map.setIrrigation(i7);
+        map.setIrrigation(i8);
+        map.setIrrigation(i9);
+
+        assertTrue(map.getIrrigationBetween(northNeighbor, northNeighbor.moveWith(Direction.NorthEast)).isPresent());
+        assertTrue(map.getIrrigationBetween(southNeighbor, southNeighbor.moveWith(Direction.SouthEast)).isPresent());
+        assertTrue(map.getIrrigationBetween(southWestNeighbor, southWestNeighbor.moveWith(Direction.NorthOuest)).isPresent());
+    }
+
+    @Test
+    void irrigationPlacementIllegalPlacement() throws IllegalPlacementException {
+        Map map = new Map(42);
+
+        Coordinate c1 = new Coordinate(23, 90);
+        Coordinate c2 = c1.moveWith(Direction.North);
+        Irrigation i1 = new Irrigation(c1, c2);
+
+        assertThrows(IllegalPlacementException.class, () -> map.setIrrigation(i1));
+
+        Coordinate c3 = new Coordinate(22, 13);
+        Coordinate c4 = c3.moveWith(Direction.SouthEast);
+        Irrigation i2 = new Irrigation(c3, c4);
+
+        assertThrows(IllegalPlacementException.class, () -> map.setIrrigation(i2));
+    }
 }

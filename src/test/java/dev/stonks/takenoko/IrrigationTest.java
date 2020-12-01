@@ -149,4 +149,36 @@ public class IrrigationTest {
         assertEquals(i3, i4);
         assertEquals(i3.hashCode(), i4.hashCode());
     }
+
+    @Test
+    void toOffset() throws IllegalPlacementException {
+        Coordinate c1 = new Coordinate(32, 24);
+        Coordinate c2 = c1.moveWith(Direction.SouthEast);
+        Irrigation i1 = new Irrigation(c1, c2);
+
+        assertEquals(i1.toOffset(99), (99 * 32 + 24) * 3 + 2);
+
+        Coordinate c3 = new Coordinate(111, 4);
+        Coordinate c4 = c3.moveWith(Direction.North);
+        Irrigation i2 = new Irrigation(c3, c4);
+
+        assertEquals(i2.toOffset(202), (111 * 202 + 4) * 3 + 0);
+    }
+
+    @Test
+    void neighborIrrigationsOffset() throws IllegalPlacementException {
+        Coordinate c1 = new Coordinate(30, 11);
+        Coordinate c2 = c1.moveWith(Direction.South);
+        Irrigation i = new Irrigation(c1, c2);
+
+        Set<Integer> neighborOffsets = i.neighbors(101);
+
+        assertEquals(neighborOffsets.size(), 4);
+
+        assertTrue(neighborOffsets.contains(c1.toOffset(101) * 3 + 2));
+        assertTrue(neighborOffsets.contains(c2.toOffset(101) * 3 + 1));
+        assertTrue(neighborOffsets.contains(c1.moveWith(Direction.SouthOuest).toOffset(101) * 3 + 2));
+        assertTrue(neighborOffsets.contains(c1.moveWith(Direction.SouthOuest).toOffset(101) * 3 + 1));
+
+    }
 }
