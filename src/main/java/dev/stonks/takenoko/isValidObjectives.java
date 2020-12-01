@@ -5,7 +5,6 @@ import java.util.Set;
 public class isValidObjectives {
 
     /**
-     *
      * @param objective -> take an objectives to controlling if it's validate or not
      * @param map -> map of the game (states of all tiles and placement)
      * @param alreadyUsed -> all pattern already used to complete objective
