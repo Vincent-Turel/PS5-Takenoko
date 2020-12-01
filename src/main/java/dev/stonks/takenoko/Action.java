@@ -5,6 +5,6 @@ public enum Action {
     MoveGardener,
     PutTile,
     //PutIrrigation,
-    //DrawObjective,
+    DrawObjective,
     DrawIrrigation,
 }
