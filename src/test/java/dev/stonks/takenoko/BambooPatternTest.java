@@ -19,8 +19,8 @@ public class BambooPatternTest {
         assertEquals(TileKind.Green,oneBamboo.getColor());
         assertEquals(TileKind.Pink,threeBamboo.getColor());
         assertEquals(TileKind.Green,multiColorBamboo.getColor());
-        assertEquals(TileKind.Yellow,multiColorBamboo.getOptionalColor1());
-        assertEquals(TileKind.Pink,multiColorBamboo.getOptionalColor2());
+        assertEquals(TileKind.Yellow,multiColorBamboo.getOptionalColor1().get());
+        assertEquals(TileKind.Pink,multiColorBamboo.getOptionalColor2().get());
         //test the nb of bamboo required :
         assertEquals(2,threeBamboo.getNbBamboo());
         assertEquals(3,multiColorBamboo.getNbBamboo());

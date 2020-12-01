@@ -43,7 +43,7 @@ public class isValidObjectives {
     public static int[] isObjectivesPandaValid(PandaObjective objective, Player player){
         int[] bambooStock = player.getCollectedBamboo();
         BambooPattern localPattern = objective.getBambooPattern();
-        if(localPattern.getOptionalColor1()!=null){
+        if(localPattern.getOptionalColor1().isPresent()){
             if(bambooStock[0]>=localPattern.getHeight() && bambooStock[1]>=localPattern.getHeight() && bambooStock[2]>=localPattern.getHeight()){
                 objective.UpdtateStates();
                 bambooStock[0]-=localPattern.getHeight()*localPattern.getNbBamboo();

@@ -1,10 +1,12 @@
 package dev.stonks.takenoko;
 
+import java.util.Optional;
+
 public class BambooPattern {
 
     private TileKind color;
-    private TileKind optionalColor1;
-    private TileKind optionalColor2;
+    private Optional<TileKind> optionalColor1;
+    private Optional<TileKind> optionalColor2;
     private int height;
     private int nbBamboo;
 
@@ -17,8 +19,8 @@ public class BambooPattern {
         this.color=color;
         this.height=height;
         this.nbBamboo=1;
-        this.optionalColor1=null;
-        this.optionalColor2=null;
+        this.optionalColor1=Optional.empty();
+        this.optionalColor2=Optional.empty();
     }
 
     /**
@@ -31,14 +33,14 @@ public class BambooPattern {
         this.color=color;
         this.height=height;
         this.nbBamboo=nbBamboo;
-        this.optionalColor1=null;
-        this.optionalColor2=null;
+        this.optionalColor1=Optional.empty();
+        this.optionalColor2=Optional.empty();
     }
 
     public BambooPattern(TileKind color, TileKind optionalColor1,TileKind optionalColor2, int height,int nbBamboo){
         this.color=color;
-        this.optionalColor1=optionalColor1;
-        this.optionalColor2=optionalColor2;
+        this.optionalColor1= Optional.of(optionalColor1);
+        this.optionalColor2= Optional.of(optionalColor2);
         this.height=height;
         this.nbBamboo=nbBamboo;
     }
@@ -59,11 +61,11 @@ public class BambooPattern {
         return color;
     }
 
-    public TileKind getOptionalColor1() {
+    public Optional<TileKind> getOptionalColor1() {
         return optionalColor1;
     }
 
-    public TileKind getOptionalColor2() {
+    public Optional<TileKind> getOptionalColor2() {
         return optionalColor2;
     }
 }
