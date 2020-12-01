@@ -25,4 +25,11 @@ public class GameResults {
         rank = 0;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof GameResults)) return false;
+        GameResults gameResults = (GameResults) o;
+        return  this.getId()==gameResults.getId() && this.getRank()==gameResults.getRank();
+    }
 }
