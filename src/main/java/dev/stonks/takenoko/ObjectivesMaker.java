@@ -12,7 +12,7 @@ public class ObjectivesMaker {
      *
      * objType -> Pattern, Gardener, Panda, Emperor
      */
-    public static PatternObjective newObjectives(int nbPT,Pattern pattern) {
+    public static PatternObjective newPatternObjectives(int nbPT,Pattern pattern) {
         PatternObjective newObj = new PatternObjective(ObjectiveKind.Pattern, nbPT, pattern);
         return newObj;
         }

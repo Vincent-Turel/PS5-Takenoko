@@ -21,8 +21,8 @@ public class Game {
     ArrayList<AbstractTile> placedTileDeck = new ArrayList<>();
     ArrayList<Player> players;
     ArrayList<PatternObjective> tileObjectives;
-    List<PandaObjective> pandaObjectives;
-    List<GardenerObjective> gardenerObjectives;
+    ArrayList<PandaObjective> pandaObjectives;
+    ArrayList<GardenerObjective> gardenerObjectives;
     Set<MatchResult> patternMatchs;
     Objective emperor;
     ArrayList<Objective> achievedObjectives;
@@ -73,7 +73,7 @@ public class Game {
 
         int i = 0;
         for (Pattern pattern: patterns) {
-            tileObjectives.add(ObjectivesMaker.newObjectives(4,pattern));
+            tileObjectives.add(ObjectivesMaker.newPatternObjectives(4,pattern));
             i++;
         }
         gardenerObjectives = ObjectivesBambooFactory.gardenerObjectiveList();

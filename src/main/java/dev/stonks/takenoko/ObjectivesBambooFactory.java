@@ -1,5 +1,6 @@
 package dev.stonks.takenoko;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ObjectivesBambooFactory {
@@ -8,8 +9,8 @@ public class ObjectivesBambooFactory {
      * The function to make all panda objectives;
      * @return the list of the objectives (refer to the game doc for detail)
      */
-    public static List<PandaObjective> pandaObjectiveList(){
-        List<PandaObjective> newList = null;
+    public static ArrayList<PandaObjective> pandaObjectiveList(){
+        ArrayList<PandaObjective> newList = new ArrayList <PandaObjective>();
         BambooPattern greenPattern = new BambooPattern(TileKind.Green,1,2);
         BambooPattern yellowPattern = new BambooPattern(TileKind.Yellow,1,2);
         BambooPattern pinkPattern = new BambooPattern(TileKind.Pink,1,2);
@@ -31,8 +32,8 @@ public class ObjectivesBambooFactory {
      * The function to make all gardener objectives;
      * @return the list of the objectives (refer to game doc for detail)
      */
-    public static List<GardenerObjective> gardenerObjectiveList(){
-        List <GardenerObjective> newList = null;
+    public static ArrayList<GardenerObjective> gardenerObjectiveList(){
+        ArrayList <GardenerObjective> newList = new ArrayList<GardenerObjective>();
         BambooPattern greenPattern = new BambooPattern(TileKind.Green,4,1);
         BambooPattern maxGreenPattern = new BambooPattern(TileKind.Green,4,4);
         BambooPattern yellowPattern = new BambooPattern(TileKind.Yellow,4,1);

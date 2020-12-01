@@ -46,7 +46,7 @@ public class isValideObjectives {
         int[] bambooStock = player.getCollectedBamboo();
         BambooPattern localPattern = objective.getBambooPattern();
         if(localPattern.getOptionalColor1()!=null){
-            if(bambooStock[0]!=0 && bambooStock[1]!=0 && bambooStock[2]!=0){
+            if(bambooStock[0]>=localPattern.getHeight() && bambooStock[1]>=localPattern.getHeight() && bambooStock[2]>=localPattern.getHeight()){
                 objective.UpdtateStates();
                 bambooStock[0]--;
                 bambooStock[1]--;
@@ -56,19 +56,19 @@ public class isValideObjectives {
         else{
             switch (localPattern.getColor()){
                 case Pink:
-                    if(bambooStock[2]>=2){
+                    if(bambooStock[2]>=localPattern.getHeight()){
                         objective.UpdtateStates();
                         bambooStock[2]-=2;
                     }
                     break;
                 case Yellow:
-                    if(bambooStock[1]>=2){
+                    if(bambooStock[1]>=localPattern.getHeight()){
                         objective.UpdtateStates();
                         bambooStock[1]-=2;
                     }
                     break;
                 case Green:
-                    if(bambooStock[0]>=2){
+                    if(bambooStock[0]>=localPattern.getHeight()){
                         objective.UpdtateStates();
                         bambooStock[0]-=2;
                     }
