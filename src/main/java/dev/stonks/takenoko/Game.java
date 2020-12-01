@@ -92,7 +92,7 @@ public class Game {
             possibleAction.add(Action.MoveGardener);
         if (map.getPossiblePawnPlacements(map.getPanda()).size() > 0)
             possibleAction.add(Action.MovePanda);
-        if(map.getPlacements().size() > 0 && tileDeck.size() > 0)
+        if(map.getTilePlacements().size() > 0 && tileDeck.size() > 0)
             possibleAction.add(Action.PutTile);
         if (irrigationDeck.size() > 0)
             possibleAction.add(Action.DrawIrrigation);

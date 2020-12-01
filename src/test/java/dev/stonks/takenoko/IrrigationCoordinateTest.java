@@ -7,7 +7,7 @@ import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class IrrigationTest {
+public class IrrigationCoordinateTest {
     @Test
     void constructorDoesNotThrowOnNeighborEvenX() throws IllegalPlacementException {
         Coordinate a = new Coordinate(42, 42);
@@ -15,8 +15,8 @@ public class IrrigationTest {
         for (Direction d: Direction.values()) {
             Coordinate b = a.moveWith(d);
 
-            Irrigation i1 = new Irrigation(a, b);
-            Irrigation i2 = new Irrigation(b, a);
+            IrrigationCoordinate i1 = new IrrigationCoordinate(a, b);
+            IrrigationCoordinate i2 = new IrrigationCoordinate(b, a);
         }
     }
 
@@ -25,15 +25,15 @@ public class IrrigationTest {
         Coordinate a = new Coordinate(43, 42);
 
         for (Coordinate b: a.neighbors()) {
-            Irrigation i1 = new Irrigation(a, b);
-            Irrigation i2 = new Irrigation(b, a);
+            IrrigationCoordinate i1 = new IrrigationCoordinate(a, b);
+            IrrigationCoordinate i2 = new IrrigationCoordinate(b, a);
         }
     }
 
     @Test
     void constructorThrowsOnSame() {
         Coordinate a = new Coordinate(42, 42);
-        assertThrows(IllegalPlacementException.class, () -> new Irrigation(a, a));
+        assertThrows(IllegalPlacementException.class, () -> new IrrigationCoordinate(a, a));
     }
 
     @Test
@@ -43,23 +43,23 @@ public class IrrigationTest {
         Coordinate c = new Coordinate(42, 101);
         Coordinate d = new Coordinate(101, 101);
 
-        assertThrows(IllegalPlacementException.class, () -> new Irrigation(a, b));
-        assertThrows(IllegalPlacementException.class, () -> new Irrigation(b, a));
+        assertThrows(IllegalPlacementException.class, () -> new IrrigationCoordinate(a, b));
+        assertThrows(IllegalPlacementException.class, () -> new IrrigationCoordinate(b, a));
 
-        assertThrows(IllegalPlacementException.class, () -> new Irrigation(a, c));
-        assertThrows(IllegalPlacementException.class, () -> new Irrigation(c, a));
+        assertThrows(IllegalPlacementException.class, () -> new IrrigationCoordinate(a, c));
+        assertThrows(IllegalPlacementException.class, () -> new IrrigationCoordinate(c, a));
 
-        assertThrows(IllegalPlacementException.class, () -> new Irrigation(a, d));
-        assertThrows(IllegalPlacementException.class, () -> new Irrigation(d, a));
+        assertThrows(IllegalPlacementException.class, () -> new IrrigationCoordinate(a, d));
+        assertThrows(IllegalPlacementException.class, () -> new IrrigationCoordinate(d, a));
 
-        assertThrows(IllegalPlacementException.class, () -> new Irrigation(b, c));
-        assertThrows(IllegalPlacementException.class, () -> new Irrigation(c, b));
+        assertThrows(IllegalPlacementException.class, () -> new IrrigationCoordinate(b, c));
+        assertThrows(IllegalPlacementException.class, () -> new IrrigationCoordinate(c, b));
 
-        assertThrows(IllegalPlacementException.class, () -> new Irrigation(b, d));
-        assertThrows(IllegalPlacementException.class, () -> new Irrigation(d, b));
+        assertThrows(IllegalPlacementException.class, () -> new IrrigationCoordinate(b, d));
+        assertThrows(IllegalPlacementException.class, () -> new IrrigationCoordinate(d, b));
 
-        assertThrows(IllegalPlacementException.class, () -> new Irrigation(c, d));
-        assertThrows(IllegalPlacementException.class, () -> new Irrigation(d, c));
+        assertThrows(IllegalPlacementException.class, () -> new IrrigationCoordinate(c, d));
+        assertThrows(IllegalPlacementException.class, () -> new IrrigationCoordinate(d, c));
     }
 
     @Test
@@ -75,7 +75,7 @@ public class IrrigationTest {
     void directlyIrrigatedMatchesProvided() throws IllegalPlacementException {
         Coordinate a = new Coordinate(42, 41);
         for (Coordinate b: a.neighbors()) {
-            Irrigation i = new Irrigation(a, b);
+            IrrigationCoordinate i = new IrrigationCoordinate(a, b);
 
             Set<Coordinate> cs = i.getDirectlyIrrigatedCoordinates().collect(Collectors.toSet());
             assert(cs.contains(a));
@@ -84,7 +84,7 @@ public class IrrigationTest {
 
         Coordinate c = new Coordinate(101, 69);
         for (Coordinate d: c.neighbors()) {
-            Irrigation i = new Irrigation(c, d);
+            IrrigationCoordinate i = new IrrigationCoordinate(c, d);
 
             Set<Coordinate> cs = i.getDirectlyIrrigatedCoordinates().collect(Collectors.toSet());
             assert(cs.contains(c));
@@ -97,18 +97,18 @@ public class IrrigationTest {
         Coordinate a = new Coordinate(42, 42);
         Coordinate b = a.moveWith(Direction.NorthEast);
 
-        Irrigation i1 = new Irrigation(a, b);
+        IrrigationCoordinate i1 = new IrrigationCoordinate(a, b);
         assertEquals(i1.getStorageCoordinate(), a);
 
-        Irrigation i2 = new Irrigation(b, a);
+        IrrigationCoordinate i2 = new IrrigationCoordinate(b, a);
         assertEquals(i2.getStorageCoordinate(), a);
 
         Coordinate c = a.moveWith(Direction.NorthOuest);
 
-        Irrigation i3 = new Irrigation(a, c);
+        IrrigationCoordinate i3 = new IrrigationCoordinate(a, c);
         assertEquals(i3.getStorageCoordinate(), c);
 
-        Irrigation i4 = new Irrigation(c, a);
+        IrrigationCoordinate i4 = new IrrigationCoordinate(c, a);
         assertEquals(i4.getStorageCoordinate(), c);
     }
 
@@ -117,18 +117,18 @@ public class IrrigationTest {
         Coordinate a = new Coordinate(42, 42);
         Coordinate b = a.moveWith(Direction.NorthEast);
 
-        Irrigation i1 = new Irrigation(a, b);
+        IrrigationCoordinate i1 = new IrrigationCoordinate(a, b);
         assertEquals(i1.getStorageOffset(), 1);
 
-        Irrigation i2 = new Irrigation(b, a);
+        IrrigationCoordinate i2 = new IrrigationCoordinate(b, a);
         assertEquals(i2.getStorageOffset(), 1);
 
         Coordinate c = a.moveWith(Direction.NorthOuest);
 
-        Irrigation i3 = new Irrigation(a, c);
+        IrrigationCoordinate i3 = new IrrigationCoordinate(a, c);
         assertEquals(i3.getStorageOffset(), 2);
 
-        Irrigation i4 = new Irrigation(c, a);
+        IrrigationCoordinate i4 = new IrrigationCoordinate(c, a);
         assertEquals(i4.getStorageOffset(), 2);
     }
 
@@ -160,13 +160,13 @@ public class IrrigationTest {
     void toOffset() throws IllegalPlacementException {
         Coordinate c1 = new Coordinate(32, 24);
         Coordinate c2 = c1.moveWith(Direction.SouthEast);
-        Irrigation i1 = new Irrigation(c1, c2);
+        IrrigationCoordinate i1 = new IrrigationCoordinate(c1, c2);
 
         assertEquals(i1.toOffset(99), (99 * 32 + 24) * 3 + 2);
 
         Coordinate c3 = new Coordinate(111, 4);
         Coordinate c4 = c3.moveWith(Direction.North);
-        Irrigation i2 = new Irrigation(c3, c4);
+        IrrigationCoordinate i2 = new IrrigationCoordinate(c3, c4);
 
         assertEquals(i2.toOffset(202), (111 * 202 + 4) * 3 + 0);
     }
@@ -175,16 +175,16 @@ public class IrrigationTest {
     void neighborIrrigationsOffset() throws IllegalPlacementException {
         Coordinate c1 = new Coordinate(30, 11);
         Coordinate c2 = c1.moveWith(Direction.South);
-        Irrigation i = new Irrigation(c1, c2);
+        IrrigationCoordinate i = new IrrigationCoordinate(c1, c2);
 
-        Set<Integer> neighborOffsets = i.neighbors(101);
+        Set<IrrigationCoordinate> neighborOffsets = i.neighbors();
 
         assertEquals(neighborOffsets.size(), 4);
 
-        assertTrue(neighborOffsets.contains(c1.toOffset(101) * 3 + 2));
-        assertTrue(neighborOffsets.contains(c2.toOffset(101) * 3 + 1));
-        assertTrue(neighborOffsets.contains(c1.moveWith(Direction.SouthOuest).toOffset(101) * 3 + 2));
-        assertTrue(neighborOffsets.contains(c1.moveWith(Direction.SouthOuest).toOffset(101) * 3 + 1));
+        assertTrue(neighborOffsets.contains(new IrrigationCoordinate(c1, c1.moveWith(Direction.SouthOuest))));
+        assertTrue(neighborOffsets.contains(new IrrigationCoordinate(c1, c1.moveWith(Direction.SouthEast))));
+        assertTrue(neighborOffsets.contains(new IrrigationCoordinate(c2, c2.moveWith(Direction.NorthEast))));
+        assertTrue(neighborOffsets.contains(new IrrigationCoordinate(c2, c2.moveWith(Direction.NorthOuest))));
 
     }
 }

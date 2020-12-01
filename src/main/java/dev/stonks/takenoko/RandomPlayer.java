@@ -1,7 +1,6 @@
 package dev.stonks.takenoko;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * This player plays randomly every time.
@@ -41,7 +40,7 @@ public class RandomPlayer extends Player{
         if (tiles.size() < 1)
             throw new IllegalStateException("This action shouldn't be possible if there is no tiles remaining");
         AbstractTile chosenAbstractTile = tiles.get(random.nextInt(tiles.size()));
-        ArrayList<Coordinate> possiblePlacemnts = new ArrayList<>(this.currentMapState.getPlacements());
+        ArrayList<Coordinate> possiblePlacemnts = new ArrayList<>(this.currentMapState.getTilePlacements());
         if (possiblePlacemnts.size() < 1)
             throw new IllegalStateException("There should always have a place for a new tile");
         Coordinate chosenLocation = possiblePlacemnts.get(random.nextInt(possiblePlacemnts.size()));

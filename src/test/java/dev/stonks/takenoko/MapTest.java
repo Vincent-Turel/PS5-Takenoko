@@ -67,7 +67,7 @@ public class MapTest {
         // There is an other other tile at {29, 28}.
         Tile so = m.addNeighborOf(TileKind.Yellow, m.initialTile().withDirection(Direction.SouthOuest));
 
-        Set<? extends Coordinate> avalaiblePositions = m.getPlacements();
+        Set<? extends Coordinate> avalaiblePositions = m.getTilePlacements();
 
         Coordinate cCoord = c.getCoordinate();
         Coordinate soCoord = so.getCoordinate();

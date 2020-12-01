@@ -182,7 +182,7 @@ public class Map {
             throw new IllegalPlacementException("Attempt to place an irrigation in a non-legal position");
         }
 
-        int offset = i.toOffset(sideLen);
+        int offset = i.getCoordinate().toOffset(sideLen);
 
         if (irrigations[offset].isPresent()) {
             throw new IllegalPlacementException("Attempt to replace an irrigation");
@@ -201,7 +201,7 @@ public class Map {
             // coordinates, so that we can compute the offset.
             Irrigation tmp = new Irrigation(a, b);
 
-            int offset = tmp.toOffset(sideLen);
+            int offset = tmp.getCoordinate().toOffset(sideLen);
             return irrigations[offset];
         } catch (IllegalPlacementException e) {
             return Optional.empty();
@@ -235,7 +235,7 @@ public class Map {
      * present.
      */
     boolean isLegalIrrigationPlacement(Irrigation i) {
-        Set<Coordinate> coordinatesAgainstIrrigation = i.getCoordinatesOfPointedTiles();
+        Set<Coordinate> coordinatesAgainstIrrigation = i.getCoordinate().getCoordinatesOfPointedTiles();
         for (Coordinate c: coordinatesAgainstIrrigation) {
             Optional<Tile> t = getTile(c);
 
@@ -244,7 +244,12 @@ public class Map {
             }
         }
 
-        return i.neighbors(sideLen).stream().anyMatch(offset -> irrigations[offset].isPresent());
+        return i
+                .getCoordinate()
+                .neighbors()
+                .stream()
+                .map(coord -> coord.toOffset(sideLen))
+                .anyMatch(offset -> irrigations[offset].isPresent());
     }
 
     /**
@@ -323,7 +328,7 @@ public class Map {
      * positions are guaranteed to be allowed by the game rules.
      * @return every available position.
      */
-    Set<Coordinate> getPlacements() {
+    Set<Coordinate> getTilePlacements() {
         // First step: getting all neighbors of all set tiles.
         Set<Coordinate> candidates = new HashSet<>();
 

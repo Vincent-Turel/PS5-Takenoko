@@ -45,7 +45,7 @@ public class PlayerTest {
         Set<Coordinate> placements2 = new HashSet<>();
         List<Coordinate> placementsList = new ArrayList<>(placements);
         Map map = mock(Map.class);
-        when(map.getPlacements()).thenReturn(placements).thenReturn(placements2).thenReturn(placements);
+        when(map.getTilePlacements()).thenReturn(placements).thenReturn(placements2).thenReturn(placements);
         ArrayList<AbstractTile> tiles = new ArrayList<>(Arrays.asList(new AbstractTile(TileKind.Green),new AbstractTile(TileKind.Pink)));
         ArrayList<Tile> res = new ArrayList<>(Arrays.asList(
                 tiles.get(0).withCoordinate(placementsList.get(0)),
