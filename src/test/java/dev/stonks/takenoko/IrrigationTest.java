@@ -62,6 +62,7 @@ public class IrrigationTest {
         assertThrows(IllegalPlacementException.class, () -> new Irrigation(d, c));
     }
 
+    @Test
     void equalityCaresAboutType() throws IllegalPlacementException {
         Coordinate a = new Coordinate(101, 41);
         Coordinate b = a.moveWith(Direction.NorthEast);
@@ -142,12 +143,17 @@ public class IrrigationTest {
         assertEquals(i1.hashCode(), i2.hashCode());
 
         Coordinate c = new Coordinate(101, 43);
-        Coordinate d = a.moveWith(Direction.SouthEast);
+        Coordinate d = c.moveWith(Direction.SouthEast);
 
         Irrigation i3 = new Irrigation(a, b);
         Irrigation i4 = new Irrigation(b, a);
         assertEquals(i3, i4);
         assertEquals(i3.hashCode(), i4.hashCode());
+
+        Irrigation i5 = new Irrigation(c, d);
+        Irrigation i6 = new Irrigation(d, c);
+        assertEquals(i5, i6);
+        assertEquals(i5.hashCode(), i6.hashCode());
     }
 
     @Test
