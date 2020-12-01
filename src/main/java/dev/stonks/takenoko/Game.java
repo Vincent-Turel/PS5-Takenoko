@@ -164,11 +164,17 @@ public class Game {
     private void objectivesDistribution() {
         int index;
         for (Player player: players) {
-            for(int i = 0;i<3;i++) {
-                index = random.nextInt(tileObjectives.size());
-                player.addObjectives(tileObjectives.get(index));
-                tileObjectives.remove(index);
-            }
+            index = random.nextInt(tileObjectives.size());
+            player.addObjectives(tileObjectives.get(index));
+            tileObjectives.remove(index);
+            //TODO:changer la méthode du bot pour ajouter un objectif
+            index = random.nextInt(pandaObjectives.size());
+            player.addObjectives(pandaObjectives.get(index));
+            pandaObjectives.remove(index);
+            //index = random.nextInt(gardenerObjectives.size());
+            //player.addObjectives(gardenerObjectives.get(index));
+            //gardenerObjectives.remove(index);
+
         }
     }
 
@@ -185,7 +191,6 @@ public class Game {
             if(objective instanceof PatternObjective) {
                 PatternObjective patternObjective = (PatternObjective) objective;
                 patternMatchs = isValidObjectives.isValidPatternObjective(patternObjective, map, patternMatchs);
-
                 if (objective.getStates()) {
                     player.newObjectivesAchieved(objective);
                     tileObjectives.remove(objective);
@@ -200,6 +205,15 @@ public class Game {
                     achievedObjectives.add(objective);
                 }
             }
+            /*
+            else if(objective instanceof GardenerObjective) {
+                player.upDateInventory(isValidObjectives.isObjectivesGardenerValid((GardenerObjective) objective,player));
+                if (objective.getStates()) {
+                    player.newObjectivesAchieved(objective);
+                    gardenerObjectives.remove(objective);
+                    achievedObjectives.add(objective);
+                }
+            }*/
         }
     }
 
@@ -231,7 +245,7 @@ public class Game {
         for (Player player : players) {
             id = player.getId();
             gamePlayersResults.add(new GameResults(id,rankOf(id)));
-            LOG.info("Bot n°" + player.getId() + " a réalisé  un score de " + player.getScore() +  " avec "+ player.getNbObjectivesAchieved() + " objectif(s) accompli(s)");
+            LOG.info("Bot n°" + player.getId() + " a réalisé  un score de " + player.getScore() +  " avec "+ player.getNbObjectivesAchieved() + " objectif(s) accompli(s)\n");
         }
     }
 
@@ -240,8 +254,6 @@ public class Game {
         for (Player player : players) {
             id = player.getId();
             gamePlayersResults.add(new GameResults(id,1));
-            if(player.getNbObjectivesAchieved() > 3)
-                LOG.severe("IMPOSSIBLE");
             LOG.info("Bot n°" + player.getId() + " a réalisé un score de " + player.getScore() +  " avec "+ player.getNbObjectivesAchieved() + " objectif(s) accompli(s)");
         }
     }
@@ -293,15 +305,37 @@ public class Game {
 
     private void resetObjectives(){
         for(Player player:players){
-            player.getObjectives().forEach(objective -> tileObjectives.add((PatternObjective)objective));
+            for (Objective objective: player.getObjectives()) {
+                if (objective instanceof PatternObjective) {
+                    PatternObjective patternObjective = (PatternObjective) objective;
+                    tileObjectives.add(patternObjective);
+                } else if (objective instanceof PandaObjective) {
+                    PandaObjective pandaObjective = (PandaObjective) objective;
+                    pandaObjectives.add(pandaObjective);
+                }
+                /*else if(objective instanceof GardenerObjective) {
+                    GardenerObjective gardenerObjective = (GardenerObjective)objective;
+                    gardenerObjectives.add(gardenerObjective);
+                }*/
+            }
         }
         for (Objective objective : achievedObjectives) {
             if(objective instanceof PatternObjective) {
                 PatternObjective patternObjective = (PatternObjective)objective;
                 tileObjectives.add(patternObjective);
             }
+            else if(objective instanceof PandaObjective) {
+                PandaObjective pandaObjective = (PandaObjective)objective;
+                pandaObjectives.add(pandaObjective);
+            }
+            /*else if(objective instanceof GardenerObjective) {
+                GardenerObjective gardenerObjective = (GardenerObjective)objective;
+                gardenerObjectives.add(gardenerObjective);
+            }*/
         }
         tileObjectives.forEach(Objective::resetObj);
+        pandaObjectives.forEach(Objective::resetObj);
+        //gardenerObjectives.forEach(Objective::resetObj);
         achievedObjectives.clear();
     }
 
