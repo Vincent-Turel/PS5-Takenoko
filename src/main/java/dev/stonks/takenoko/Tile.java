@@ -2,6 +2,7 @@ package dev.stonks.takenoko;
 
 import java.util.Arrays;
 import java.util.Objects;
+import java.util.Set;
 
 /**
  * Represents an hexagonal tile.
@@ -178,5 +179,12 @@ public class Tile {
     @Override
     public int hashCode() {
         return Objects.hash(coord, bamboo, kind);
+    }
+
+    /**
+     * Returns all the IrrigationPosition that are around the tile.
+     */
+    Set<IrrigationCoordinate> getConvergingIrrigationCoordinate() {
+        return coord.getConvertingIrrigationCoordinate();
     }
 }

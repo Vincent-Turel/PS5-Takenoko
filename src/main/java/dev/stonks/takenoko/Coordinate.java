@@ -1,9 +1,6 @@
 package dev.stonks.takenoko;
 
-import java.util.Objects;
-import java.util.Arrays;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -151,5 +148,28 @@ public class Coordinate {
         tmp.retainAll(Arrays.asList(rhs.neighbors()));
 
         return tmp;
+    }
+
+    /**
+     * Returns a set containing all the irrigation coordinates that are
+     * converging to the current coordinate.
+     */
+    Set<IrrigationCoordinate> getConvertingIrrigationCoordinate() {
+        Set<IrrigationCoordinate> cs = new HashSet<IrrigationCoordinate>();
+
+        Coordinate[] neighbors = neighbors();
+
+        try {
+            for (int i = 1; i < 6; i++) {
+                IrrigationCoordinate c = new IrrigationCoordinate(neighbors[i], neighbors[i - 1]);
+                cs.add(c);
+            }
+            IrrigationCoordinate last = new IrrigationCoordinate(neighbors[0], neighbors[5]);
+            cs.add(last);
+
+            return cs;
+        } catch (IllegalPlacementException e) {
+            throw new IllegalStateException("Neighbors should only generate neighbors");
+        }
     }
 }

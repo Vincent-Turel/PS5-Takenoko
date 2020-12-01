@@ -176,7 +176,7 @@ public class Map {
      *                                   if an irrigation is already placed at such coordinates.
      */
     void setIrrigation(Irrigation i) throws IllegalPlacementException {
-        boolean isLegalPlacement = isLegalIrrigationPlacement(i);
+        boolean isLegalPlacement = isLegalIrrigationPlacement(i.getCoordinate());
 
         if (!isLegalPlacement) {
             throw new IllegalPlacementException("Attempt to place an irrigation in a non-legal position");
@@ -234,8 +234,8 @@ public class Map {
      * linked with at least one other irrigation and if no irrigation is already
      * present.
      */
-    boolean isLegalIrrigationPlacement(Irrigation i) {
-        Set<Coordinate> coordinatesAgainstIrrigation = i.getCoordinate().getCoordinatesOfPointedTiles();
+    boolean isLegalIrrigationPlacement(IrrigationCoordinate i) {
+        Set<Coordinate> coordinatesAgainstIrrigation = i.getCoordinatesOfPointedTiles();
         for (Coordinate c: coordinatesAgainstIrrigation) {
             Optional<Tile> t = getTile(c);
 
@@ -245,11 +245,28 @@ public class Map {
         }
 
         return i
-                .getCoordinate()
                 .neighbors()
                 .stream()
                 .map(coord -> coord.toOffset(sideLen))
                 .anyMatch(offset -> irrigations[offset].isPresent());
+    }
+
+    /**
+     * Returns a set of every avalaible irrigation placement position.
+     */
+    Set<IrrigationCoordinate> getIrrigationPlacements() {
+        Stream<IrrigationCoordinate> neighborOfInitial = initialTile()
+                .getConvergingIrrigationCoordinate()
+                .stream();
+
+        Stream<IrrigationCoordinate> neighborsOfAll = Arrays.stream(irrigations)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .flatMap(irrigation -> irrigation.getCoordinate().neighbors().stream());
+
+        return Stream.concat(neighborOfInitial, neighborsOfAll)
+                .filter(coord -> isLegalIrrigationPlacement(coord))
+                .collect(Collectors.toSet());
     }
 
     /**
