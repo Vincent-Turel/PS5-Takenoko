@@ -26,6 +26,11 @@ public class DumbPlayer extends Player {
     }
 
     @Override
+    public ObjectiveKind chooseObjectiveKind(ArrayList<ObjectiveKind> listPossibleKind) {
+        throw new IllegalCallerException("Cette méthode n'est pas encore faite !");
+    }
+
+    @Override
     public Tile putTile(ArrayList<AbstractTile> tiles) {
         throw new IllegalCallerException("Cette méthode n'est pas encore faite !");
     }

@@ -8,6 +8,7 @@ import java.util.Stack;
  * This class is the mother class of every types of player.
  */
 public abstract class Player {
+
     enum PlayerType{
     RandomPlayer,
     DumbPlayer,
@@ -40,6 +41,13 @@ public abstract class Player {
      * @return the action the player has chosen
      */
     public abstract Action decide(ArrayList<Action> possibleAction, Map map);
+
+    /**
+     * This method return the kind of objective the player wants to draw
+     * @param listPossibleKind
+     * @return
+     */
+    public abstract ObjectiveKind chooseObjectiveKind(ArrayList<ObjectiveKind> listPossibleKind);
 
     /**
      * @param tiles A liste of tiles

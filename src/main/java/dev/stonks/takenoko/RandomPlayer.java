@@ -29,6 +29,14 @@ public class RandomPlayer extends Player{
     }
 
     @Override
+    public ObjectiveKind chooseObjectiveKind(ArrayList<ObjectiveKind> listPossibleKind) {
+        if(listPossibleKind.size()<1){
+            throw new IllegalStateException("There is no more objectives");
+        }
+        return listPossibleKind.get(random.nextInt(listPossibleKind.size()));
+    }
+
+    @Override
     public Tile putTile(ArrayList<AbstractTile> tiles) {
         if (tiles.size() < 1)
             throw new IllegalStateException("This action shouldn't be possible if there is no tiles remaining");
