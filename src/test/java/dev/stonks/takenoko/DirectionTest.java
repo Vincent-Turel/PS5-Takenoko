@@ -16,11 +16,11 @@ public class DirectionTest {
     @Test
     void directionReverse() {
         assertEquals(Direction.North.reverse(), Direction.South);
-        assertEquals(Direction.NorthEast.reverse(), Direction.SouthOuest);
-        assertEquals(Direction.SouthEast.reverse(), Direction.NorthOuest);
+        assertEquals(Direction.NorthEast.reverse(), Direction.SouthWest);
+        assertEquals(Direction.SouthEast.reverse(), Direction.NorthWest);
         assertEquals(Direction.South.reverse(), Direction.North);
-        assertEquals(Direction.SouthOuest.reverse(), Direction.NorthEast);
-        assertEquals(Direction.NorthOuest.reverse(), Direction.SouthEast);
+        assertEquals(Direction.SouthWest.reverse(), Direction.NorthEast);
+        assertEquals(Direction.NorthWest.reverse(), Direction.SouthEast);
     }
 
     @Test

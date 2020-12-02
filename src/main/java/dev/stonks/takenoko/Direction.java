@@ -1,7 +1,5 @@
 package dev.stonks.takenoko;
 
-import java.util.concurrent.ExecutionException;
-
 /**
  * Represents a direction in the map. <br>
  *
@@ -25,8 +23,8 @@ public enum Direction {
     NorthEast(1),
     SouthEast(2),
     South(3),
-    SouthOuest(4),
-    NorthOuest(5);
+    SouthWest(4),
+    NorthWest(5);
 
     private int index;
 
@@ -40,8 +38,8 @@ public enum Direction {
             case 1: return Direction.NorthEast;
             case 2: return Direction.SouthEast;
             case 3: return Direction.South;
-            case 4: return Direction.SouthOuest;
-            case 5: return Direction.NorthOuest;
+            case 4: return Direction.SouthWest;
+            case 5: return Direction.NorthWest;
             default: throw new RuntimeException("New direction should be bigger than 0 and smaller than 5");
         }
     }

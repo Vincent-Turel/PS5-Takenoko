@@ -49,9 +49,9 @@ public class Coordinate {
                 return moveWith(1, xEven ? 1 : 0);
             case South:
                 return moveWith(0, 1);
-            case SouthOuest:
+            case SouthWest:
                 return moveWith(-1, xEven ? 1 : 0);
-            case NorthOuest:
+            case NorthWest:
                 return moveWith(-1, xEven ? 0 : -1);
             default:
                 throw new IllegalStateException("Illegal direction found");
@@ -94,8 +94,8 @@ public class Coordinate {
             moveWith(Direction.NorthEast),
             moveWith(Direction.SouthEast),
             moveWith(Direction.South),
-            moveWith(Direction.SouthOuest),
-            moveWith(Direction.NorthOuest)
+            moveWith(Direction.SouthWest),
+            moveWith(Direction.NorthWest)
         };
 
         return neighbors;

@@ -20,11 +20,11 @@ public class MapTest {
         assertTrue(m.getNeighborOf(bottom, Direction.North).get().equals(initial));
 
         assertTrue(m.getNeighborOf(initial, Direction.SouthEast).isEmpty());
-        assertTrue(m.getNeighborOf(initial, Direction.SouthOuest).isEmpty());
+        assertTrue(m.getNeighborOf(initial, Direction.SouthWest).isEmpty());
         assertTrue(m.getNeighborOf(initial, Direction.NorthEast).isEmpty());
 
         assertTrue(m.getNeighborOf(bottom, Direction.SouthEast).isEmpty());
-        assertTrue(m.getNeighborOf(bottom, Direction.SouthOuest).isEmpty());
+        assertTrue(m.getNeighborOf(bottom, Direction.SouthWest).isEmpty());
         assertTrue(m.getNeighborOf(bottom, Direction.NorthEast).isEmpty());
     }
 
@@ -66,7 +66,7 @@ public class MapTest {
         // There is an other tile at {28, 27}.
         Tile s = m.addNeighborOf(TileKind.Green, m.initialTile().withDirection(Direction.South));
         // There is an other other tile at {29, 28}.
-        Tile so = m.addNeighborOf(TileKind.Yellow, m.initialTile().withDirection(Direction.SouthOuest));
+        Tile so = m.addNeighborOf(TileKind.Yellow, m.initialTile().withDirection(Direction.SouthWest));
 
         Set<? extends Coordinate> avalaiblePositions = m.getTilePlacements();
 
@@ -76,8 +76,8 @@ public class MapTest {
         // Tiles that are placeables because they are neighbors of the initial
         // tile.
         assertTrue(avalaiblePositions.contains(cCoord.moveWith(Direction.South)));
-        assertTrue(avalaiblePositions.contains(cCoord.moveWith(Direction.SouthOuest)));
-        assertTrue(avalaiblePositions.contains(cCoord.moveWith(Direction.NorthOuest)));
+        assertTrue(avalaiblePositions.contains(cCoord.moveWith(Direction.SouthWest)));
+        assertTrue(avalaiblePositions.contains(cCoord.moveWith(Direction.NorthWest)));
         assertTrue(avalaiblePositions.contains(cCoord.moveWith(Direction.SouthEast)));
 
         // Tile that is placeable because it has two neighbors
@@ -140,11 +140,11 @@ public class MapTest {
                 .thenReturn(Optional.of(t3));
         when(map.getNeighborOf(t3, Direction.NorthEast))
                 .thenReturn(Optional.empty());
-        when(map.getNeighborOf(map.getTile(c).get(), Direction.NorthOuest))
+        when(map.getNeighborOf(map.getTile(c).get(), Direction.NorthWest))
                 .thenReturn(Optional.of(t4));
-        when(map.getNeighborOf(t4, Direction.NorthOuest))
+        when(map.getNeighborOf(t4, Direction.NorthWest))
                 .thenReturn(Optional.of(t5));
-        when(map.getNeighborOf(t5, Direction.NorthOuest))
+        when(map.getNeighborOf(t5, Direction.NorthWest))
                 .thenReturn(Optional.empty());
         when(map.getNeighborOf(map.getTile(c).get(), Direction.South))
                 .thenReturn(Optional.of(t6));
@@ -158,13 +158,13 @@ public class MapTest {
                 .thenReturn(Optional.of(t9));
         when(map.getNeighborOf(t9, Direction.SouthEast))
                 .thenReturn(Optional.empty());
-        when(map.getNeighborOf(map.getTile(c).get(), Direction.SouthOuest))
+        when(map.getNeighborOf(map.getTile(c).get(), Direction.SouthWest))
                 .thenReturn(Optional.of(t10));
-        when(map.getNeighborOf(t10, Direction.SouthOuest))
+        when(map.getNeighborOf(t10, Direction.SouthWest))
                 .thenReturn(Optional.of(t11));
-        when(map.getNeighborOf(t11, Direction.SouthOuest))
+        when(map.getNeighborOf(t11, Direction.SouthWest))
                 .thenReturn(Optional.of(t12));
-        when(map.getNeighborOf(t12, Direction.SouthOuest))
+        when(map.getNeighborOf(t12, Direction.SouthWest))
                 .thenReturn(Optional.empty());
 
         Set<Tile> res = new HashSet<>();
@@ -207,8 +207,8 @@ public class MapTest {
         Coordinate northEastNeighbor = map.initialTile().getCoordinate().moveWith(Direction.NorthEast);
         Coordinate southEastNeighbor = map.initialTile().getCoordinate().moveWith(Direction.SouthEast);
         Coordinate southNeighbor = map.initialTile().getCoordinate().moveWith(Direction.South);
-        Coordinate southWestNeighbor = map.initialTile().getCoordinate().moveWith(Direction.SouthOuest);
-        Coordinate northWestNeighbor = map.initialTile().getCoordinate().moveWith(Direction.NorthOuest);
+        Coordinate southWestNeighbor = map.initialTile().getCoordinate().moveWith(Direction.SouthWest);
+        Coordinate northWestNeighbor = map.initialTile().getCoordinate().moveWith(Direction.NorthWest);
 
         // Let's place some irrigations, so that it makes an initial-tile-centered star!
         Irrigation i1 = new Irrigation(northNeighbor, northEastNeighbor);
@@ -236,7 +236,7 @@ public class MapTest {
         // Let's try placing irrigations that are linked to other irrigations.
         Irrigation i7 = new Irrigation(northNeighbor, northNeighbor.moveWith(Direction.NorthEast));
         Irrigation i8 = new Irrigation(southNeighbor, southNeighbor.moveWith(Direction.SouthEast));
-        Irrigation i9 = new Irrigation(southWestNeighbor, southWestNeighbor.moveWith(Direction.NorthOuest));
+        Irrigation i9 = new Irrigation(southWestNeighbor, southWestNeighbor.moveWith(Direction.NorthWest));
 
         map.setIrrigation(i7);
         map.setIrrigation(i8);
@@ -244,7 +244,7 @@ public class MapTest {
 
         assertTrue(map.getIrrigationBetween(northNeighbor, northNeighbor.moveWith(Direction.NorthEast)).isPresent());
         assertTrue(map.getIrrigationBetween(southNeighbor, southNeighbor.moveWith(Direction.SouthEast)).isPresent());
-        assertTrue(map.getIrrigationBetween(southWestNeighbor, southWestNeighbor.moveWith(Direction.NorthOuest)).isPresent());
+        assertTrue(map.getIrrigationBetween(southWestNeighbor, southWestNeighbor.moveWith(Direction.NorthWest)).isPresent());
     }
 
     @Test

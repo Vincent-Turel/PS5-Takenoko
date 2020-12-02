@@ -114,7 +114,7 @@ public class PatternTest {
 
         Pattern pc = new Pattern().withCenter(TileKind.Pink)
                 .withNeighbor(Direction.North, TileKind.Yellow)
-                .withNeighbor(Direction.SouthOuest, TileKind.Pink);
+                .withNeighbor(Direction.SouthWest, TileKind.Pink);
 
         pc.rotations().forEach(rotated -> assertNotEquals(pa, rotated));
     }
@@ -130,8 +130,8 @@ public class PatternTest {
         Pattern pb = new Pattern()
                 .withCenter(TileKind.Green)
                 .withNeighbor(Direction.North, TileKind.Green)
-                .withNeighbor(Direction.NorthOuest, TileKind.Green)
-                .withNeighbor(Direction.SouthOuest, TileKind.Green);
+                .withNeighbor(Direction.NorthWest, TileKind.Green)
+                .withNeighbor(Direction.SouthWest, TileKind.Green);
 
         pb.rotations().forEach(p -> {
             assertEquals(pa, p);

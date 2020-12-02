@@ -25,7 +25,7 @@ public class CoordinateTest {
         Coordinate otherC = c
                 .moveWith(Direction.North)
                 .moveWith(Direction.SouthEast)
-                .moveWith(Direction.SouthOuest);
+                .moveWith(Direction.SouthWest);
 
         assertEquals(c, otherC);
     }
@@ -36,7 +36,7 @@ public class CoordinateTest {
         Coordinate otherC = c
                 .moveWith(Direction.NorthEast)
                 .moveWith(Direction.South)
-                .moveWith(Direction.NorthOuest);
+                .moveWith(Direction.NorthWest);
 
         assertEquals(c, otherC);
     }
@@ -120,28 +120,28 @@ public class CoordinateTest {
     @Test
     void southOuestEvenX() {
         Coordinate c = new Coordinate(2, 2);
-        Coordinate cSO = c.moveWith(Direction.SouthOuest);
+        Coordinate cSO = c.moveWith(Direction.SouthWest);
         assertEquals(cSO, new Coordinate(1, 3));
     }
 
     @Test
     void southOuestOddX() {
         Coordinate c = new Coordinate(3, 3);
-        Coordinate cSO = c.moveWith(Direction.SouthOuest);
+        Coordinate cSO = c.moveWith(Direction.SouthWest);
         assertEquals(cSO, new Coordinate(2, 3));
     }
 
     @Test
     void northOuestEvenX() {
         Coordinate c = new Coordinate(2, 2);
-        Coordinate cSO = c.moveWith(Direction.NorthOuest);
+        Coordinate cSO = c.moveWith(Direction.NorthWest);
         assertEquals(cSO, new Coordinate(1, 2));
     }
 
     @Test
     void northOuestOddX() {
         Coordinate c = new Coordinate(3, 3);
-        Coordinate cSO = c.moveWith(Direction.NorthOuest);
+        Coordinate cSO = c.moveWith(Direction.NorthWest);
         assertEquals(cSO, new Coordinate(2, 2));
     }
 
@@ -155,8 +155,8 @@ public class CoordinateTest {
                 c.moveWith(Direction.NorthEast),
                 c.moveWith(Direction.SouthEast),
                 c.moveWith(Direction.South),
-                c.moveWith(Direction.SouthOuest),
-                c.moveWith(Direction.NorthOuest),
+                c.moveWith(Direction.SouthWest),
+                c.moveWith(Direction.NorthWest),
         };
 
         assertArrayEquals(neighbors, rightNeighbors);
