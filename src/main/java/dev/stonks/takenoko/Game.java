@@ -279,4 +279,53 @@ public class Game {
         }
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Game game = (Game) o;
+        return Objects.equals(map, game.map) &&
+                Objects.equals(tileDeck, game.tileDeck) &&
+                Objects.equals(placedTileDeck, game.placedTileDeck) &&
+                Objects.equals(players, game.players) &&
+                Objects.equals(tileObjectives, game.tileObjectives) &&
+                Objects.equals(patternMatchs, game.patternMatchs) &&
+                Objects.equals(emperor, game.emperor) &&
+                Objects.equals(achievedObjectives, game.achievedObjectives) &&
+                Objects.equals(random, game.random) &&
+                Objects.equals(gamePlayersResults, game.gamePlayersResults) &&
+                Objects.equals(patterns, game.patterns);
+    }
+
+
+    /*@Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Game)) return false;
+        Game game = (Game) o;
+        return  this.map.
+                equals(game.map) &&
+                this.tileDeck.equals(game.tileDeck) &&
+                this.players.equals(game.players) &&
+                this.tileObjectives.equals(game.tileObjectives) &&
+                this.patternMatchs.equals(game.patternMatchs) &&
+                this.emperor.equals(game.emperor) &&
+                this.achievedObjectives.equals(game.achievedObjectives) &&
+                this.random.equals(game.random) &&
+                this.gamePlayersResults.equals(game.gamePlayersResults) &&
+                this.patterns.equals(game.patterns);
+    }*/
+    //Map map;
+    //    ArrayList<AbstractTile> tileDeck;
+    //    ArrayList<AbstractTile> placedTileDeck = new ArrayList<>();
+    //    ArrayList<Player> players;
+    //    ArrayList<PatternObjective> tileObjectives;
+    //    //ArrayList<Objective> pandaObjectives;
+    //    //ArrayList<Objective> gardenerObjectives;
+    //    Set<MatchResult> patternMatchs;
+    //    Objective emperor;
+    //    ArrayList<Objective> achievedObjectives;
+    //    Random random;
+    //    ArrayList<GameResults> gamePlayersResults;
+    //    ArrayList<Pattern> patterns;
 }
