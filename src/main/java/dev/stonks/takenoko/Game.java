@@ -107,14 +107,14 @@ public class Game {
         int moreThan500OnlyPawnActions = 0;
         boolean aPlayerWin = false;
         boolean remainingLastTurn = true;
-        int idWinner = -1;
+        Optional<Integer> idWinner = Optional.empty();
         objectivesDistribution();
         while(!aPlayerWin || remainingLastTurn) {
-            if(idWinner!=-1){
+            if(idWinner.isPresent()){
                 remainingLastTurn = false;
             }
             for (Player player : players) {
-                if (player.getId() != idWinner) {
+                if (idWinner.isEmpty() || player.getId() != idWinner.get()) {
                     var possibleActions = findPossibleActions(player);
                     LOG.info("Actions possibles : ");
                     LOG.info(possibleActions.toString());
@@ -123,7 +123,7 @@ public class Game {
                     }
                     for (int j = 0; j < 2; j++) {
                         if (moreThan500OnlyPawnActions > 500) {
-                            LOG.info("Party ended due to player playing more than 500 only pawn actions");
+                            LOG.info("Party ended due to player playing more than 500 only pawn actions\n");
                             fillTheFinalScore();
                             return;
                         }
@@ -202,7 +202,7 @@ public class Game {
                         aPlayerWin = checkIfWinner();
                     }
                     if (aPlayerWin && remainingLastTurn) {
-                        idWinner = player.getId();
+                        idWinner = Optional.of(player.getId());
                         break;
                     }
                 }
@@ -300,7 +300,7 @@ public class Game {
         for (Player player : players) {
             id = player.getId();
             gamePlayersResults.add(new GameResults(id,rankOf(id)));
-            LOG.info("Bot n°" + player.getId() + " a réalisé  un score de " + player.getScore() +  " avec "+ player.getNbObjectivesAchieved() + " objectif(s) accompli(s)\n");
+            LOG.info("Bot n°" + player.getId() + " a réalisé  un score de " + player.getScore() +  " avec "+ player.getNbObjectivesAchieved() + " objectif(s) accompli(s)");
         }
     }
 
