@@ -140,9 +140,8 @@ public class Game {
                                 }
                                 for (int i = 0; i < size; i++) {
                                     index = random.nextInt(tileDeck.size());
-                                    AbstractTile aTile = tileDeck.get(index);
+                                    AbstractTile aTile = tileDeck.remove(index);
                                     possiblesTiles.add(aTile);
-                                    tileDeck.remove(index);
                                 }
                                 placedTileDeck.addAll(possiblesTiles);
                                 Tile chosenTile = player.putTile(possiblesTiles);
@@ -215,16 +214,12 @@ public class Game {
         int index;
         for (Player player: players) {
             index = random.nextInt(tileObjectives.size());
-            player.addObjectives(tileObjectives.get(index));
-            tileObjectives.remove(index);
+            player.addObjectives(tileObjectives.remove(index));
             //TODO:changer la méthode du bot pour ajouter un objectif
             index = random.nextInt(pandaObjectives.size());
-            player.addObjectives(pandaObjectives.get(index));
-            pandaObjectives.remove(index);
+            player.addObjectives(pandaObjectives.remove(index));
             //index = random.nextInt(gardenerObjectives.size());
-            //player.addObjectives(gardenerObjectives.get(index));
-            //gardenerObjectives.remove(index);
-
+            //player.addObjectives(gardenerObjectives.remove(index));
         }
     }
 
@@ -301,15 +296,6 @@ public class Game {
             id = player.getId();
             gamePlayersResults.add(new GameResults(id,rankOf(id)));
             LOG.info("Bot n°" + player.getId() + " a réalisé  un score de " + player.getScore() +  " avec "+ player.getNbObjectivesAchieved() + " objectif(s) accompli(s)");
-        }
-    }
-
-    private void fillTheFinalScoreWhenToMuchThan500OnlyPawnAction() {
-        int id;
-        for (Player player : players) {
-            id = player.getId();
-            gamePlayersResults.add(new GameResults(id,1));
-            LOG.info("Bot n°" + player.getId() + " a réalisé un score de " + player.getScore() +  " avec "+ player.getNbObjectivesAchieved() + " objectif(s) accompli(s)");
         }
     }
 
