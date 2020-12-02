@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -261,5 +262,44 @@ public class MapTest {
         Irrigation i2 = new Irrigation(c3, c4);
 
         assertThrows(IllegalPlacementException.class, () -> map.setIrrigation(i2));
+    }
+
+    @Test
+    void getIrrigationPlacements() throws IllegalPlacementException {
+        Map map = new Map(42);
+        Coordinate initialCoord = map.initialTile().getCoordinate();
+
+        // At the beginning, the only available irrigations are the ones that
+        // are pointing the initial tile.
+        Set<IrrigationCoordinate> initialAvailableIrrigations = map.getIrrigationPlacements();
+        Set<IrrigationCoordinate> expectedAvailableIrrigations = map.initialTile().getConvergingIrrigationCoordinate();
+        assertEquals(initialAvailableIrrigations, expectedAvailableIrrigations);
+
+        Coordinate northNeighbor = initialCoord.moveWith(Direction.North);
+        Coordinate northEastNeighbor = initialCoord.moveWith(Direction.NorthEast);
+
+        // Then we add an irrigation between the north and the north-east
+        // neighbor. We expect seven available coordinates this time.
+        Irrigation i1 = new Irrigation(northNeighbor, northEastNeighbor);
+        // Now that the irrigation is placed, it is not expected anymore.
+
+        assertTrue(initialAvailableIrrigations.contains(i1.getCoordinate()));
+        expectedAvailableIrrigations.remove(i1.getCoordinate());
+
+        map.setIrrigation(i1);
+
+        // Let's add the newly available coordinates.
+        // Note: we could have used northEastNeighbor either.
+        Coordinate lastNeighbor = northNeighbor.moveWith(Direction.NorthEast);
+
+        IrrigationCoordinate iC1 = new IrrigationCoordinate(lastNeighbor, northNeighbor);
+        IrrigationCoordinate iC2 = new IrrigationCoordinate(lastNeighbor, northEastNeighbor);
+        expectedAvailableIrrigations.addAll(List.of(iC1, iC2));
+
+        Set<IrrigationCoordinate> availableCoordinates = map.getIrrigationPlacements();
+        assertEquals(7, availableCoordinates.size());
+        assertEquals(7, expectedAvailableIrrigations.size());
+
+        assertEquals(availableCoordinates, expectedAvailableIrrigations);
     }
 }

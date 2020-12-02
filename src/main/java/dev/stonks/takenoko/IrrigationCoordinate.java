@@ -56,8 +56,8 @@ public class IrrigationCoordinate {
      * Returns a stream containing the coordinates of the tiles that are
      * directly irrigated by the current irrigation.
      */
-    Stream<Coordinate> getDirectlyIrrigatedCoordinates() {
-        return Stream.of(coord, otherCoord());
+    Set<Coordinate> getDirectlyIrrigatedCoordinates() {
+        return Set.of(coord, otherCoord());
     }
 
     /**
@@ -74,7 +74,7 @@ public class IrrigationCoordinate {
         }
         IrrigationCoordinate rhs = (IrrigationCoordinate) o;
 
-        return coord.equals(rhs.coord) && dir == rhs.dir;
+        return coord.equals(rhs.coord) && dir.equals(rhs.dir);
     }
 
     /**
@@ -156,13 +156,6 @@ public class IrrigationCoordinate {
                         }
                 )
                 .collect(Collectors.toSet());
-    }
-
-    /**
-     * Returns the coordinates of the tiles that are irrigated.
-     */
-    Set<Coordinate> getIrrigatedCoordinates() {
-        return Set.of(coord, coord.moveWith(dir));
     }
 
     /**

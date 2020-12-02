@@ -224,19 +224,41 @@ public class Map {
     }
 
     /**
+     * Returns an irrigation, if it exists.
+     */
+    Optional<Irrigation> getIrrigation(IrrigationCoordinate i) {
+        int offset = i.toOffset(sideLen);
+        return irrigations[offset];
+    }
+
+    /**
      * Returns whether if placing an irrigation at its coordinate is legal or
      * not.
      *
-     * If the irrigation is placed against the initial tile, then it is
-     * automatically legal.
+     * If the irrigation points to the initial tile, then it is automatically
+     * legal. Similarly, if it is placed against the initial tile, then it is
+     * automatically illegal.
      *
      * Otherwise, placing an irrigation somewhere is legal if the irrigation is
      * linked with at least one other irrigation and if no irrigation is already
      * present.
      */
     boolean isLegalIrrigationPlacement(IrrigationCoordinate i) {
-        Set<Coordinate> coordinatesAgainstIrrigation = i.getCoordinatesOfPointedTiles();
-        for (Coordinate c: coordinatesAgainstIrrigation) {
+        if (getIrrigation(i).isPresent()) {
+            return false;
+        }
+
+        Set<Coordinate> irrigatedCoordinates = i.getDirectlyIrrigatedCoordinates();
+        for (Coordinate c: irrigatedCoordinates) {
+            Optional<Tile> t = getTile(c);
+
+            if (t.isPresent() && t.get().isInitial()) {
+                return false;
+            }
+        }
+
+        Set<Coordinate> pointedCoordinates = i.getCoordinatesOfPointedTiles();
+        for (Coordinate c: pointedCoordinates) {
             Optional<Tile> t = getTile(c);
 
             if (t.isPresent() && t.get().isInitial()) {
@@ -264,9 +286,11 @@ public class Map {
                 .map(Optional::get)
                 .flatMap(irrigation -> irrigation.getCoordinate().neighbors().stream());
 
-        return Stream.concat(neighborOfInitial, neighborsOfAll)
+        Set<IrrigationCoordinate> tmp = Stream.concat(neighborOfInitial, neighborsOfAll)
                 .filter(coord -> isLegalIrrigationPlacement(coord))
                 .collect(Collectors.toSet());
+
+        return tmp;
     }
 
     /**

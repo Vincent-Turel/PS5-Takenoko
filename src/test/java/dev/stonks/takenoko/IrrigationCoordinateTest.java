@@ -77,7 +77,7 @@ public class IrrigationCoordinateTest {
         for (Coordinate b: a.neighbors()) {
             IrrigationCoordinate i = new IrrigationCoordinate(a, b);
 
-            Set<Coordinate> cs = i.getDirectlyIrrigatedCoordinates().collect(Collectors.toSet());
+            Set<Coordinate> cs = i.getDirectlyIrrigatedCoordinates();
             assert(cs.contains(a));
             assert(cs.contains(b));
         }
@@ -86,7 +86,7 @@ public class IrrigationCoordinateTest {
         for (Coordinate d: c.neighbors()) {
             IrrigationCoordinate i = new IrrigationCoordinate(c, d);
 
-            Set<Coordinate> cs = i.getDirectlyIrrigatedCoordinates().collect(Collectors.toSet());
+            Set<Coordinate> cs = i.getDirectlyIrrigatedCoordinates();
             assert(cs.contains(c));
             assert(cs.contains(d));
         }
