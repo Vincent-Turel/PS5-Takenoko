@@ -2,13 +2,11 @@ package dev.stonks.takenoko;
 
 import org.junit.jupiter.api.Test;
 
-import java.util.Set;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class MatchResultTest {
     @Test
-    void equalityWithDifferentRotation() throws IllegalTilePlacementException {
+    void equalityWithDifferentRotation() throws IllegalPlacementException {
         Pattern pa = new Pattern()
                 .withCenter(TileKind.Green)
                 .withNeighbor(Direction.South, TileKind.Pink);
@@ -17,8 +15,8 @@ public class MatchResultTest {
                 .withCenter(TileKind.Pink)
                 .withNeighbor(Direction.North, TileKind.Green);
 
-        Coordinate ca = new Coordinate(42, 42, 202);
-        Coordinate cb = new Coordinate(42, 43, 202);
+        Coordinate ca = new Coordinate(42, 42);
+        Coordinate cb = new Coordinate(42, 43);
 
         MatchResult ra = new MatchResult(pa, ca);
         MatchResult rb = new MatchResult(pb, cb);

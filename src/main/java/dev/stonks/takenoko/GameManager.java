@@ -54,7 +54,7 @@ public class GameManager {
      *
      * @param n the numnber of games that are going to be played
      */
-    void playNTime(int n) throws IllegalTilePlacementException {
+    void playNTime(int n) throws IllegalPlacementException {
         for (int i = 1; i <= n; i++) {
             LOG.severe("Starting game n°" + i);
             game.play();

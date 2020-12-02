@@ -1,10 +1,10 @@
 package dev.stonks.takenoko;
 
 public enum Action {
-    //MovePanda,
-    //MoveGardener,
+    MovePanda,
+    MoveGardener,
     PutTile,
     //PutIrrigation,
-    //DrawObjective,
-    //DrawIrrigation,
+    DrawObjective,
+    DrawIrrigation,
 }

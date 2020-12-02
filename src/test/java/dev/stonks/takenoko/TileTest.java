@@ -12,37 +12,37 @@ public class TileTest {
     }
 
     @Test
-    void TileNeighborOf() throws IllegalTilePlacementException {
-        Coordinate initialCoord = new Coordinate(42, 42, 85);
+    void TileNeighborOf() throws IllegalPlacementException {
+        Coordinate initialCoord = new Coordinate(42, 42);
         Tile initial = Tile.initialTile(initialCoord);
         Tile bottom = Tile.neighborOf(TileKind.Green, initial.withDirection(Direction.North));
 
-        Coordinate rightCoordinate = new Coordinate(42, 43, 85);
+        Coordinate rightCoordinate = new Coordinate(42, 43);
         assertTrue(bottom.getCoordinate().equals(rightCoordinate));
     }
 
     @Test
     void initialTileEqualsItself() {
-        Coordinate initialCoord = new Coordinate(42, 42, 85);
+        Coordinate initialCoord = new Coordinate(42, 42);
 
         Tile t = Tile.initialTile(initialCoord);
         assertTrue(t.equals(t));
     }
 
     @Test
-    void neighborOfInvalidCases() throws IllegalTilePlacementException {
-        Coordinate initialCoord = new Coordinate(42, 42, 85);
+    void neighborOfInvalidCases() throws IllegalPlacementException {
+        Coordinate initialCoord = new Coordinate(42, 42);
         Tile initial = Tile.initialTile(initialCoord);
         Tile bot = Tile.neighborOf(TileKind.Green, initial.withDirection(Direction.North));
 
-        assertThrows(IllegalTilePlacementException.class,
+        assertThrows(IllegalPlacementException.class,
                 () -> Tile.neighborOf(TileKind.Pink, bot.withDirection(Direction.North))
         );
     }
 
     @Test
     void initialBambooSize() {
-        Coordinate initialCoord = new Coordinate(42, 42, 85);
+        Coordinate initialCoord = new Coordinate(42, 42);
         Tile t = new Tile(initialCoord, TileKind.Pink);
 
         assertEquals(t.bambooSize(), 0);
@@ -50,7 +50,7 @@ public class TileTest {
 
     @Test
     void growBamboo() {
-        Coordinate initialCoord = new Coordinate(42, 42, 85);
+        Coordinate initialCoord = new Coordinate(42, 42);
         Tile t = new Tile(initialCoord, TileKind.Green);
         t.growBamboo();
 
@@ -59,7 +59,7 @@ public class TileTest {
 
     @Test
     void growBambooMax() {
-        Coordinate initialCoord = new Coordinate(42, 42, 85);
+        Coordinate initialCoord = new Coordinate(42, 42);
         Tile t = new Tile(initialCoord, TileKind.Pink);
         t.growBamboo();
         t.growBamboo();
@@ -71,13 +71,50 @@ public class TileTest {
     }
 
     @Test
+    void cutBamboo() {
+        Coordinate initialCoord = new Coordinate(42, 42);
+        Tile t = new Tile(initialCoord, TileKind.Green);
+        t.growBamboo();
+        t.growBamboo();
+        t.growBamboo();
+        assertEquals(t.bambooSize(), 3);
+        t.cutBamboo();
+        assertEquals(t.bambooSize(), 2);
+    }
+
+    @Test
+    void cutBambooMin() {
+        Coordinate initialCoord = new Coordinate(42, 42);
+        Tile t = new Tile(initialCoord, TileKind.Pink);
+        t.growBamboo();
+        t.growBamboo();
+        t.cutBamboo();
+        t.cutBamboo();
+        t.cutBamboo();
+        t.cutBamboo();
+        t.cutBamboo();
+        assertEquals(t.bambooSize(), 0);
+    }
+
+    @Test
     void bambooDoesNotGrowOnInitial() {
-        Coordinate initialCoord = new Coordinate(42, 42, 85);
+        Coordinate initialCoord = new Coordinate(42, 42);
         Tile t = Tile.initialTile(initialCoord);
 
         t.growBamboo();
         t.growBamboo();
 
         assertEquals(t.bambooSize(), 0);
+    }
+
+    @Test
+    void equalsTest() {
+        Tile t1 = new Tile(new Coordinate(25,25), TileKind.Pink);
+        Tile t2 = new Tile(new Coordinate(25,25), TileKind.Pink);
+        Tile t3 = new Tile(new Coordinate(25,25), TileKind.Green);
+        Tile t4 = new Tile(new Coordinate(25,21), TileKind.Pink);
+        assertEquals(t1,t2);
+        assertNotEquals(t1,t3);
+        assertNotEquals(t1,t4);
     }
 }

@@ -1,65 +1,67 @@
 package dev.stonks.takenoko;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class ObjectivesTest {
-
-    ObjectivesMaker testMake;
-    PatternObjective doubleObj;
-    List<Integer> deck;
-
-    @BeforeEach
-    void setUp() {
-        Pattern pattern = new Pattern()
-                .withCenter(TileKind.Green)
-                .withNeighbor(Direction.North,TileKind.Yellow)
-                .withNeighbor(Direction.South,TileKind.Pink);
-        testMake = new ObjectivesMaker();
-        PatternObjective obj3 = testMake.addAnPatternObjectives(2,6,1,pattern);
-        deck = testMake.getlistObjectves();
+  
+    @Test
+    void objectiveClassTest(){
+        Objective pattern = new Objective(ObjectiveKind.Pattern, 5);
+        Objective gardener = new Objective(ObjectiveKind.Gardener, 6);
+        Objective panda = new Objective(ObjectiveKind.Panda, 7);
+        //nbPt test :
+        assertEquals(5,pattern.getNbPt());
+        assertEquals(6,gardener.getNbPt());
+        assertEquals(7,panda.getNbPt());
+        //type test :
+        assertEquals(ObjectiveKind.Pattern,pattern.getObjType());
+        assertEquals(ObjectiveKind.Gardener,gardener.getObjType());
+        assertEquals(ObjectiveKind.Panda,panda.getObjType());
+        //objective value test :
+        assertEquals(false,pattern.getStates());
+        assertEquals(false,gardener.getStates());
+        assertEquals(false,panda.getStates());
+        //updateStates test :
+        pattern.UpdtateStates();
+        gardener.UpdtateStates();
+        panda.UpdtateStates();
+        assertEquals(true,pattern.getStates());
+        assertEquals(true,gardener.getStates());
+        assertEquals(true,panda.getStates());
+        //reset test :
+        pattern.resetObj();
+        gardener.resetObj();
+        panda.resetObj();
+        assertEquals(false,pattern.getStates());
+        assertEquals(false,gardener.getStates());
+        assertEquals(false,panda.getStates());
     }
 
     @Test
-    void testFactoMaker() {
-        Pattern pattern = new Pattern()
-                .withCenter(TileKind.Green)
-                .withNeighbor(Direction.North,TileKind.Yellow)
-                .withNeighbor(Direction.South,TileKind.Pink);
-        assertEquals(1, deck.size());
-        assertEquals(testMake.addAnPatternObjectives(2,3,6,pattern),null);
-        deck = testMake.getlistObjectves();
-        assertEquals(1, deck.size());
-        PatternObjective newObj = new PatternObjective(4,4,7, pattern);
-        PatternObjective newFacto = testMake.addAnPatternObjectives(4,7,1,pattern);
-        assertEquals(newFacto.getObjID(),newObj.getObjID());
-        assertEquals(newFacto.getNbPt(),newObj.getNbPt());
-        assertEquals(2, deck.size());
-    }
+    void objectiveCreationTest(){
+        Pattern aPattern = mock(Pattern.class);
+        BambooPattern aBambooPattern = mock(BambooPattern.class);
+        PatternObjective pattern = new PatternObjective(5,aPattern);
+        GardenerObjective gardener = new GardenerObjective(6, aBambooPattern);
+        PandaObjective panda = new PandaObjective(7, aBambooPattern);
 
-    @Test
-    void testObjectives(){
+        //test nbPt :
+        assertEquals(5,pattern.getNbPt());
+        assertEquals(6,gardener.getNbPt());
+        assertEquals(7,panda.getNbPt());
 
-        Pattern pattern = new Pattern()
-                .withCenter(TileKind.Green)
-                .withNeighbor(Direction.North,TileKind.Yellow)
-                .withNeighbor(Direction.South,TileKind.Pink);
-        assertEquals(1, deck.size());
+        //test objType :
+        assertEquals(ObjectiveKind.Pattern,pattern.getObjType());
+        assertEquals(ObjectiveKind.Gardener,gardener.getObjType());
+        assertEquals(ObjectiveKind.Panda,panda.getObjType());
 
-        PatternObjective obj1 = testMake.addAnPatternObjectives(1,5,1,pattern);
-        PatternObjective obj2 = testMake.addAnPatternObjectives(5,6,1,pattern);
+        //test objPattern :
+        assertEquals(aBambooPattern,panda.getBambooPattern());
+        assertEquals(aBambooPattern,gardener.getBambooPattern());
+        assertEquals(aPattern,pattern.getLocalPattern());
 
-        assertEquals(3, deck.size());
-
-        assertEquals(obj1.getNbPt(),5);
-        assertEquals(obj1.getObjID(),1);
-        assertEquals(obj2.getNbPt(),6);
-        assertEquals(obj2.getObjID(),5);
     }
 
 }
