@@ -22,10 +22,5 @@ public class IrrigationTest {
 
         assertEquals(ic, id);
         assertEquals(ic.hashCode(), id.hashCode());
-
-        assertNotEquals(ca, cc);
-        assertNotEquals(ca, cd);
-        assertNotEquals(cb, cc);
-        assertNotEquals(cb, cd);
     }
 }

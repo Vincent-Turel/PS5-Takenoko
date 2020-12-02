@@ -103,7 +103,7 @@ public class IrrigationCoordinateTest {
         IrrigationCoordinate i2 = new IrrigationCoordinate(b, a);
         assertEquals(i2.getStorageCoordinate(), a);
 
-        Coordinate c = a.moveWith(Direction.NorthOuest);
+        Coordinate c = a.moveWith(Direction.NorthWest);
 
         IrrigationCoordinate i3 = new IrrigationCoordinate(a, c);
         assertEquals(i3.getStorageCoordinate(), c);
@@ -123,7 +123,7 @@ public class IrrigationCoordinateTest {
         IrrigationCoordinate i2 = new IrrigationCoordinate(b, a);
         assertEquals(i2.getStorageOffset(), 1);
 
-        Coordinate c = a.moveWith(Direction.NorthOuest);
+        Coordinate c = a.moveWith(Direction.NorthWest);
 
         IrrigationCoordinate i3 = new IrrigationCoordinate(a, c);
         assertEquals(i3.getStorageOffset(), 2);
@@ -181,10 +181,10 @@ public class IrrigationCoordinateTest {
 
         assertEquals(neighborOffsets.size(), 4);
 
-        assertTrue(neighborOffsets.contains(new IrrigationCoordinate(c1, c1.moveWith(Direction.SouthOuest))));
-        assertTrue(neighborOffsets.contains(new IrrigationCoordinate(c1, c1.moveWith(Direction.SouthEast))));
-        assertTrue(neighborOffsets.contains(new IrrigationCoordinate(c2, c2.moveWith(Direction.NorthEast))));
-        assertTrue(neighborOffsets.contains(new IrrigationCoordinate(c2, c2.moveWith(Direction.NorthOuest))));
+        assertTrue(neighborOffsets.contains(new IrrigationCoordinate(c1, c1.moveWith(Direction.SouthWest))));
+        assertTrue(neighborOffsets.contains(new IrrigationCoordinate(c1, c1.moveWith(Direction.SouthWest))));
+        assertTrue(neighborOffsets.contains(new IrrigationCoordinate(c2, c2.moveWith(Direction.NorthWest))));
+        assertTrue(neighborOffsets.contains(new IrrigationCoordinate(c2, c2.moveWith(Direction.NorthWest))));
 
     }
 }
