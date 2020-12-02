@@ -1,9 +1,9 @@
 package dev.stonks.takenoko;
 
+import dev.stonks.takenoko.map.*;
 import org.junit.jupiter.api.Test;
 
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 

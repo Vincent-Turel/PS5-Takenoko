@@ -1,5 +1,11 @@
 package dev.stonks.takenoko;
 
+import dev.stonks.takenoko.map.Coordinate;
+import dev.stonks.takenoko.map.Direction;
+import dev.stonks.takenoko.map.IllegalPlacementException;
+import dev.stonks.takenoko.map.TileKind;
+import dev.stonks.takenoko.pattern.MatchResult;
+import dev.stonks.takenoko.pattern.Pattern;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

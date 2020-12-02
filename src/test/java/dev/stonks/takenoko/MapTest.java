@@ -1,10 +1,13 @@
 package dev.stonks.takenoko;
 
+import dev.stonks.takenoko.map.*;
+import dev.stonks.takenoko.map.Map;
+import dev.stonks.takenoko.pawn.Panda;
+import dev.stonks.takenoko.map.IllegalPlacementException;
 import org.junit.jupiter.api.Test;
 
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -12,7 +15,7 @@ import static org.mockito.Mockito.*;
 public class MapTest {
     @Test
     void MapNeighborOf() throws IllegalPlacementException {
-        Map m = new Map(27);
+        dev.stonks.takenoko.map.Map m = new dev.stonks.takenoko.map.Map(27);
         Tile initial = m.initialTile();
         Tile bottom = m.addNeighborOf(TileKind.Green, initial.withDirection(Direction.North));
 
@@ -30,7 +33,7 @@ public class MapTest {
 
     @Test
     void resetRemovesEverythingExceptInitial() throws IllegalPlacementException {
-        Map m = new Map(27);
+        dev.stonks.takenoko.map.Map m = new dev.stonks.takenoko.map.Map(27);
         m.addNeighborOf(TileKind.Green, m.initialTile().withDirection(Direction.South));
 
         m.reset();
@@ -41,7 +44,7 @@ public class MapTest {
 
     @Test
     void resetRecreatesInitialTile() throws IllegalPlacementException {
-        Map m = new Map(27);
+        dev.stonks.takenoko.map.Map m = new dev.stonks.takenoko.map.Map(27);
         m.addNeighborOf(TileKind.Pink, m.initialTile().withDirection(Direction.South));
 
         m.reset();
@@ -61,14 +64,14 @@ public class MapTest {
         // placeable.
 
         // There is an initial tile at {28, 28}.
-        Map m = new Map(27);
+        dev.stonks.takenoko.map.Map m = new dev.stonks.takenoko.map.Map(27);
         Tile c = m.initialTile();
         // There is an other tile at {28, 27}.
         Tile s = m.addNeighborOf(TileKind.Green, m.initialTile().withDirection(Direction.South));
         // There is an other other tile at {29, 28}.
         Tile so = m.addNeighborOf(TileKind.Yellow, m.initialTile().withDirection(Direction.SouthWest));
 
-        Set<? extends Coordinate> avalaiblePositions = m.getTilePlacements();
+        Set<Coordinate> avalaiblePositions = m.getTilePlacements();
 
         Coordinate cCoord = c.getCoordinate();
         Coordinate soCoord = so.getCoordinate();
@@ -90,7 +93,7 @@ public class MapTest {
     @Test
     void setTileWithAbstractTile() throws IllegalPlacementException {
         AbstractTile at = new AbstractTile(TileKind.Pink);
-        Map m = new Map(42);
+        dev.stonks.takenoko.map.Map m = new dev.stonks.takenoko.map.Map(42);
         Coordinate c = new Coordinate(13, 12);
 
         m.setTile(c, at);
@@ -99,7 +102,7 @@ public class MapTest {
 
     @Test
     void growBambooInMap() throws IllegalPlacementException {
-        Map m = new Map(42);
+        dev.stonks.takenoko.map.Map m = new dev.stonks.takenoko.map.Map(42);
         Tile initT = m.initialTile();
         Tile otherT = m.addNeighborOf(TileKind.Green, initT.withDirection(Direction.North));
 
@@ -111,7 +114,7 @@ public class MapTest {
 
     @Test
     void getPossiblePawnPlacementsTest(){
-        Map map = spy(new Map(50));
+        dev.stonks.takenoko.map.Map map = spy(new dev.stonks.takenoko.map.Map(50));
         Coordinate c = new Coordinate(1,1);
         Panda panda = new Panda(c);
 
@@ -178,7 +181,7 @@ public class MapTest {
 
     @Test
     void updateIrrigationsTest() throws IllegalPlacementException {
-        Map map = new Map(20);
+        dev.stonks.takenoko.map.Map map = new dev.stonks.takenoko.map.Map(20);
         var initialTileCoordinate = map.placedTilesCoordinates().collect(Collectors.toList());
         assertEquals(initialTileCoordinate.size(), 1);
         var neighborTiles = new ArrayList<Tile>();
@@ -202,7 +205,7 @@ public class MapTest {
 
     @Test
     void irrigationPlacementLegalPlacement() throws IllegalPlacementException {
-        Map map = new Map(42);
+        dev.stonks.takenoko.map.Map map = new dev.stonks.takenoko.map.Map(42);
         Coordinate northNeighbor = map.initialTile().getCoordinate().moveWith(Direction.North);
         Coordinate northEastNeighbor = map.initialTile().getCoordinate().moveWith(Direction.NorthEast);
         Coordinate southEastNeighbor = map.initialTile().getCoordinate().moveWith(Direction.SouthEast);
@@ -249,7 +252,7 @@ public class MapTest {
 
     @Test
     void irrigationPlacementIllegalPlacement() throws IllegalPlacementException {
-        Map map = new Map(42);
+        dev.stonks.takenoko.map.Map map = new Map(42);
 
         Coordinate c1 = new Coordinate(23, 90);
         Coordinate c2 = c1.moveWith(Direction.North);

@@ -1,5 +1,8 @@
 package dev.stonks.takenoko;
 
+import dev.stonks.takenoko.map.Direction;
+import dev.stonks.takenoko.map.DirectionnedTile;
+import dev.stonks.takenoko.map.Tile;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

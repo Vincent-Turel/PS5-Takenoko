@@ -1,8 +1,11 @@
 package dev.stonks.takenoko;
 
+import dev.stonks.takenoko.map.Coordinate;
+import dev.stonks.takenoko.map.Direction;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
 public class CoordinateTest {
@@ -48,18 +51,14 @@ public class CoordinateTest {
         assertNotEquals(ca, cb);
     }
 
+    private void assertNotEquals(Coordinate ca, Coordinate cb) {
+    }
+
     @Test
     void equalsCareAboutY() {
         Coordinate ca = new Coordinate(3, 100);
         Coordinate cb = new Coordinate(3, 9);
         assertNotEquals(ca, cb);
-    }
-
-    @Test
-    void equalsCareAboutType() {
-        Coordinate c = new Coordinate(9, 2);
-        Integer i = 42;
-        assertNotEquals(i, c);
     }
 
     // WARNING WARNING WARNING

@@ -1,5 +1,12 @@
 package dev.stonks.takenoko;
 
+import dev.stonks.takenoko.objective.GardenerObjective;
+import dev.stonks.takenoko.objective.Objective;
+import dev.stonks.takenoko.objective.ObjectiveKind;
+import dev.stonks.takenoko.objective.PandaObjective;
+import dev.stonks.takenoko.pattern.BambooPattern;
+import dev.stonks.takenoko.pattern.Pattern;
+import dev.stonks.takenoko.pattern.PatternObjective;
 import org.junit.jupiter.api.Test;
 import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;

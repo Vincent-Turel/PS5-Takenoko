@@ -1,5 +1,8 @@
 package dev.stonks.takenoko;
 
+import dev.stonks.takenoko.map.*;
+import dev.stonks.takenoko.pattern.MatchResult;
+import dev.stonks.takenoko.pattern.Pattern;
 import org.junit.jupiter.api.Test;
 
 import java.util.Optional;

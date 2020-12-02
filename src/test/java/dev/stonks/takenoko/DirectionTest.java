@@ -1,5 +1,6 @@
 package dev.stonks.takenoko;
 
+import dev.stonks.takenoko.map.Direction;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

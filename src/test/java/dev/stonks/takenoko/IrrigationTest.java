@@ -1,5 +1,9 @@
 package dev.stonks.takenoko;
 
+import dev.stonks.takenoko.map.Coordinate;
+import dev.stonks.takenoko.map.Direction;
+import dev.stonks.takenoko.map.IllegalPlacementException;
+import dev.stonks.takenoko.map.Irrigation;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

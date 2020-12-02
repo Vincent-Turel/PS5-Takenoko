@@ -1,5 +1,10 @@
 package dev.stonks.takenoko;
 
+import dev.stonks.takenoko.bot.Player;
+import dev.stonks.takenoko.map.TileKind;
+import dev.stonks.takenoko.objective.PandaObjective;
+import dev.stonks.takenoko.objective.isValidObjectives;
+import dev.stonks.takenoko.pattern.BambooPattern;
 import org.junit.jupiter.api.Test;
 import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -19,7 +24,7 @@ public class IsValidObjectivesTest {
         PandaObjective objective = new PandaObjective(5,greenPattern);
 
         //Objective multicolor :
-        BambooPattern multicolor = new BambooPattern(TileKind.Green,TileKind.Yellow,TileKind.Pink,2,1);
+        BambooPattern multicolor = new BambooPattern(TileKind.Green, TileKind.Yellow, TileKind.Pink,2,1);
         PandaObjective objMultiColor = new PandaObjective(5,multicolor);
 
         //Test isValid Objective simple green
@@ -49,7 +54,7 @@ public class IsValidObjectivesTest {
         PandaObjective objective = new PandaObjective(5,greenPattern);
 
         //Objective multicolor :
-        BambooPattern multicolor = new BambooPattern(TileKind.Green,TileKind.Yellow,TileKind.Pink,2,3);
+        BambooPattern multicolor = new BambooPattern(TileKind.Green, TileKind.Yellow, TileKind.Pink,2,3);
         PandaObjective objMultiColor = new PandaObjective(5,multicolor);
 
         //Test isValid Objective simple green

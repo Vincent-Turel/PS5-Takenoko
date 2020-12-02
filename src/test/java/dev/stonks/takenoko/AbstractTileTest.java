@@ -1,5 +1,8 @@
 package dev.stonks.takenoko;
 
+import dev.stonks.takenoko.map.AbstractTile;
+import dev.stonks.takenoko.map.Coordinate;
+import dev.stonks.takenoko.map.TileKind;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
