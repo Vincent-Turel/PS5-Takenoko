@@ -15,7 +15,7 @@ import java.util.logging.Logger;
  */
 public class Game {
     private final static Logger LOG = Logger.getLogger(Game.class.getSimpleName());
-    public static final int nbObjectivesToWIn = 4;
+    public static final int nbObjectivesToWIn = 9;
     Map map;
     ArrayList<AbstractTile> tileDeck;
     ArrayList<AbstractTile> placedTileDeck = new ArrayList<>();
@@ -96,95 +96,116 @@ public class Game {
             possibleAction.add(Action.PutTile);
         if (irrigationDeck.size() > 0)
             possibleAction.add(Action.DrawIrrigation);
+        if((player.getObjectives().size() < 5) && (tileObjectives.size()>0 || pandaObjectives.size()>0 || gardenerObjectives.size()>0)){
+            possibleAction.add(Action.DrawObjective);
+        }
         return possibleAction;
     }
 
 
     void play() throws IllegalPlacementException {
+        int moreThan500OnlyPawnActions = 0;
         boolean aPlayerWin = false;
+        boolean remainingLastTurn = true;
+        int idWinner = -1;
         objectivesDistribution();
-        while(!aPlayerWin) {
+        while(!aPlayerWin || remainingLastTurn) {
+            if(idWinner!=-1){
+                remainingLastTurn = false;
+            }
             for (Player player : players) {
-                var possibleActions = findPossibleActions(player);
-                LOG.info("Actions possibles : ");
-                LOG.info(possibleActions.toString());
-                for (int j = 0; j < 2; j++) {
-                    Action chosenAction = player.decide(possibleActions, map);
-                    LOG.info("Player n°" + player.getId() + " has chosen this action : " + chosenAction.toString());
-                    if (possibleActions.size() == 0 || tileDeck.size() == 0) {
-                        fillTheFinalScoreWhenNoMoreTile();
-                        return;
+                if (player.getId() != idWinner) {
+                    var possibleActions = findPossibleActions(player);
+                    LOG.info("Actions possibles : ");
+                    LOG.info(possibleActions.toString());
+                    if (possibleActions.size() == 2) {
+                        moreThan500OnlyPawnActions += 2;
                     }
-                    possibleActions.remove(chosenAction);
-                    switch (chosenAction) {
-                        case PutTile:
-                            ArrayList<AbstractTile> possiblesTiles = new ArrayList<>(3);
-                            int index;
-                            int size = 3;
-                            if (size > tileDeck.size()) {
-                                size = tileDeck.size();
-                            }
-                            for (int i = 0; i < size; i++) {
-                                index = random.nextInt(tileDeck.size());
-                                AbstractTile aTile = tileDeck.get(index);
-                                possiblesTiles.add(aTile);
-                                tileDeck.remove(index);
-                            }
-                            placedTileDeck.addAll(possiblesTiles);
-                            Tile chosenTile = player.putTile(possiblesTiles);
-                            tileDeck.addAll(possiblesTiles);
-                            placedTileDeck.removeAll(possiblesTiles);
-                            map.setTile(chosenTile);
-                            break;
-                        case MoveGardener:
-                            Gardener gardener = map.getGardener();
-                            gardener.moveToAndAct(player.choseWherePawnShouldGo(gardener), map);
-                            break;
-                        case MovePanda:
-                            Panda panda = map.getPanda();
-                            Optional<Bamboo> bamboo = panda.moveToAndAct(player.choseWherePawnShouldGo(panda));
-                            bamboo.ifPresent(player::addCollectedBamboo);
-                            break;
-                        case DrawIrrigation:
-                            AbstractIrrigation drawnIrrigation = irrigationDeck.pop();
-                            placedIrrigationsDeck.add(drawnIrrigation);
-                            player.addIrrigation(drawnIrrigation);
-                            break;
-                        case DrawObjective:
-                            ArrayList<ObjectiveKind> listPossibleKind = new ArrayList<>();
-                            if(tileObjectives.size()>0){
-                                listPossibleKind.add(ObjectiveKind.Pattern);
-                            }
-                            if(pandaObjectives.size()>0){
-                                listPossibleKind.add(ObjectiveKind.Panda);
-                            }
-                            if(gardenerObjectives.size()>0){
-                                listPossibleKind.add(ObjectiveKind.Gardener);
-                            }
-                            ObjectiveKind objectiveKind = player.chooseObjectiveKind(listPossibleKind);
-                            int num;
-                            if((objectiveKind==ObjectiveKind.Pattern) && (tileObjectives.size()>0)){
-                                num = random.nextInt(tileObjectives.size());
-                                player.addObjectives(tileObjectives.get(num));
-                                tileObjectives.remove(num);
-                            }
-                            if((objectiveKind==ObjectiveKind.Panda) && (pandaObjectives.size()>0)){
-                                num = random.nextInt(pandaObjectives.size());
-                                player.addObjectives(pandaObjectives.get(num));
-                                pandaObjectives.remove(num);
-                            }
-                            if((objectiveKind==ObjectiveKind.Gardener) && (gardenerObjectives.size()>0)){
-                                num = random.nextInt(gardenerObjectives.size());
-                                player.addObjectives(gardenerObjectives.get(num));
-                                gardenerObjectives.remove(num);
-                            }
-                            break;
+                    for (int j = 0; j < 2; j++) {
+                        if (moreThan500OnlyPawnActions > 500) {
+                            LOG.info("Party ended due to player playing more than 500 only pawn actions");
+                            fillTheFinalScore();
+                            return;
+                        }
+                        Action chosenAction = player.decide(possibleActions, map);
+                        LOG.info("Player n°" + player.getId() + " has chosen this action : " + chosenAction.toString());
+                        possibleActions.remove(chosenAction);
+                        switch (chosenAction) {
+                            case PutTile:
+                                ArrayList<AbstractTile> possiblesTiles = new ArrayList<>(3);
+                                int index;
+                                int size = 3;
+                                if (size > tileDeck.size()) {
+                                    size = tileDeck.size();
+                                }
+                                for (int i = 0; i < size; i++) {
+                                    index = random.nextInt(tileDeck.size());
+                                    AbstractTile aTile = tileDeck.get(index);
+                                    possiblesTiles.add(aTile);
+                                    tileDeck.remove(index);
+                                }
+                                placedTileDeck.addAll(possiblesTiles);
+                                Tile chosenTile = player.putTile(possiblesTiles);
+                                tileDeck.addAll(possiblesTiles);
+                                placedTileDeck.removeAll(possiblesTiles);
+                                map.setTile(chosenTile);
+                                break;
+                            case MoveGardener:
+                                Gardener gardener = map.getGardener();
+                                gardener.moveToAndAct(player.choseWherePawnShouldGo(gardener), map);
+                                break;
+                            case MovePanda:
+                                Panda panda = map.getPanda();
+                                Optional<Bamboo> bamboo = panda.moveToAndAct(player.choseWherePawnShouldGo(panda));
+                                bamboo.ifPresent(player::addCollectedBamboo);
+                                break;
+                            case DrawIrrigation:
+                                AbstractIrrigation drawnIrrigation = irrigationDeck.pop();
+                                placedIrrigationsDeck.add(drawnIrrigation);
+                                player.addIrrigation(drawnIrrigation);
+                                break;
+                            case DrawObjective:
+                                ArrayList<ObjectiveKind> listPossibleKind = new ArrayList<>();
+                                if (tileObjectives.size() > 0) {
+                                    listPossibleKind.add(ObjectiveKind.Pattern);
+                                }
+                                if (pandaObjectives.size() > 0) {
+                                    listPossibleKind.add(ObjectiveKind.Panda);
+                                }
+                                if (gardenerObjectives.size() > 0) {
+                                    listPossibleKind.add(ObjectiveKind.Gardener);
+                                }
+                                ObjectiveKind objectiveKind = player.chooseObjectiveKind(listPossibleKind);
+                                int num;
+                                if ((objectiveKind == ObjectiveKind.Pattern) && (tileObjectives.size() > 0)) {
+                                    num = random.nextInt(tileObjectives.size());
+                                    player.addObjectives(tileObjectives.get(num));
+                                    tileObjectives.remove(num);
+                                }
+                                if ((objectiveKind == ObjectiveKind.Panda) && (pandaObjectives.size() > 0)) {
+                                    num = random.nextInt(pandaObjectives.size());
+                                    player.addObjectives(pandaObjectives.get(num));
+                                    pandaObjectives.remove(num);
+                                }
+                                /*if((objectiveKind==ObjectiveKind.Gardener) && (gardenerObjectives.size()>0)){
+                                    num = random.nextInt(gardenerObjectives.size());
+                                    player.addObjectives(gardenerObjectives.get(num));
+                                    gardenerObjectives.remove(num);
+                                }*/
+                                break;
+                        }
+                    }
+                    checkObjectives(player);
+                    map.updateIrrigations();
+                    map.growBambooInMap();
+                    if (!aPlayerWin) {
+                        aPlayerWin = checkIfWinner();
+                    }
+                    if (aPlayerWin && remainingLastTurn) {
+                        idWinner = player.getId();
+                        break;
                     }
                 }
-                checkObjectives(player);
-                map.updateIrrigations();
-                map.growBambooInMap();
-                aPlayerWin = checkIfWinner();
             }
         }
         fillTheFinalScore();
@@ -221,6 +242,7 @@ public class Game {
                 PatternObjective patternObjective = (PatternObjective) objective;
                 patternMatchs = isValidObjectives.isValidPatternObjective(patternObjective, map, patternMatchs);
                 if (objective.getStates()) {
+                    LOG.info("Player n°"+player.getId()+" has achieved a "+objective.getClass().getSimpleName());
                     player.newObjectivesAchieved(objective);
                     tileObjectives.remove(objective);
                     achievedObjectives.add(objective);
@@ -229,6 +251,7 @@ public class Game {
             else if(objective instanceof PandaObjective) {
                 player.upDateInventory(isValidObjectives.isObjectivesPandaValid((PandaObjective) objective,player));
                 if (objective.getStates()) {
+                    LOG.info("Player n°"+player.getId()+" has achieved a "+objective.getClass().getSimpleName());
                     player.newObjectivesAchieved(objective);
                     pandaObjectives.remove(objective);
                     achievedObjectives.add(objective);
@@ -238,6 +261,7 @@ public class Game {
             else if(objective instanceof GardenerObjective) {
                 player.upDateInventory(isValidObjectives.isObjectivesGardenerValid((GardenerObjective) objective,player));
                 if (objective.getStates()) {
+                    LOG.info("Player n°"+player.getId()+" has achieved a "+objective.getClass().getSimpleName());
                     player.newObjectivesAchieved(objective);
                     gardenerObjectives.remove(objective);
                     achievedObjectives.add(objective);
@@ -256,6 +280,8 @@ public class Game {
     private boolean checkIfWinner() {
         for (Player player : players) {
             if(player.getNbObjectivesAchieved() >= nbObjectivesToWIn){
+
+                LOG.warning("LAST TURN !");
                 player.addObjectives(emperor);
                 player.newObjectivesAchieved(emperor);
                 return true;
@@ -278,7 +304,7 @@ public class Game {
         }
     }
 
-    private void fillTheFinalScoreWhenNoMoreTile() {
+    private void fillTheFinalScoreWhenToMuchThan500OnlyPawnAction() {
         int id;
         for (Player player : players) {
             id = player.getId();
