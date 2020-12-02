@@ -31,6 +31,15 @@ public class PlayerTest {
     }
 
     @Test
+    public void chooseObjectiveKindTest(){
+        ArrayList<ObjectiveKind> possibleObjectiveKinds = new ArrayList<>(Arrays.asList(ObjectiveKind.values()));
+        possibleObjectiveKinds.remove(ObjectiveKind.Panda);
+        assertTrue(possibleObjectiveKinds.contains(randomPlayer.chooseObjectiveKind(possibleObjectiveKinds)));
+        possibleObjectiveKinds.clear();
+        assertThrows(IllegalStateException.class, () -> randomPlayer.chooseObjectiveKind(possibleObjectiveKinds));
+    }
+
+    @Test
     public void putTileTest(){
         Set<Coordinate> placements = new HashSet<>(Arrays.asList(new Coordinate(1,1),new Coordinate(2,2)));
         Set<Coordinate> placements2 = new HashSet<>();
