@@ -1,11 +1,17 @@
 package dev.stonks.takenoko.objective;
 
+import dev.stonks.takenoko.map.Bamboo;
+import dev.stonks.takenoko.map.Tile;
+import dev.stonks.takenoko.map.TileKind;
 import dev.stonks.takenoko.pattern.BambooPattern;
 import dev.stonks.takenoko.bot.Player;
 import dev.stonks.takenoko.map.Map;
 import dev.stonks.takenoko.pattern.MatchResult;
 import dev.stonks.takenoko.pattern.PatternObjective;
+import dev.stonks.takenoko.pawn.Gardener;
 
+import java.util.ArrayList;
+import java.util.Optional;
 import java.util.Set;
 
 public class isValidObjectives {
@@ -87,8 +93,21 @@ public class isValidObjectives {
      *Check if a gardener objective are complete
      * @return true if objectives complete, else false
     */
-    public static boolean isObjectivesGardenerValid(){
-        return true;
+    public static void isObjectivesGardenerValid(GardenerObjective objective, Map map){
+        ArrayList<Tile> allTiles = new ArrayList<>();
+        for(Optional <Tile> tile : map.getTiles()){
+            tile.ifPresent(allTiles::add);
+        }
+        int nbMath = 0;
+
+        for(Tile value : allTiles){
+            if(value.getBamboo().getColor().equals(objective.getBambooPattern().getColor())&&value.getBamboo().getSize()==objective.getBambooPattern().getHeight()){
+                nbMath++;
+            }
+        }
+        if(nbMath>=objective.getBambooPattern().getNbBamboo()){
+            objective.UpdtateStates();
+        }
     }
 
 }
