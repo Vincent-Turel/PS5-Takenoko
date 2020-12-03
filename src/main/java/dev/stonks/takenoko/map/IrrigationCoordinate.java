@@ -1,5 +1,7 @@
 package dev.stonks.takenoko.map;
 
+import dev.stonks.takenoko.IllegalEqualityExceptionGenerator;
+
 import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -67,9 +69,14 @@ public class IrrigationCoordinate {
      */
     @Override
     public boolean equals(Object o) {
-        if (!(o instanceof IrrigationCoordinate)) {
-            return false;
+        if (this == o) {
+            return true;
         }
+
+        if (!(o instanceof IrrigationCoordinate)) {
+            throw IllegalEqualityExceptionGenerator.create(IrrigationCoordinate.class, o.getClass());
+        }
+
         IrrigationCoordinate rhs = (IrrigationCoordinate) o;
 
         return coord.equals(rhs.coord) && dir.equals(rhs.dir);

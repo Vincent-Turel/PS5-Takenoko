@@ -1,5 +1,7 @@
 package dev.stonks.takenoko.map;
 
+import dev.stonks.takenoko.IllegalEqualityExceptionGenerator;
+
 import java.util.Objects;
 
 public class Bamboo {
@@ -47,7 +49,11 @@ public class Bamboo {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Bamboo)) return false;
+
+        if (!(o instanceof Bamboo)) {
+            throw IllegalEqualityExceptionGenerator.create(Bamboo.class, o.getClass());
+        }
+
         Bamboo bamboo = (Bamboo) o;
         return getSize() == bamboo.getSize() &&
                 getColor() == bamboo.getColor();
@@ -55,7 +61,11 @@ public class Bamboo {
 
     public boolean equalsWithoutSize(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Bamboo)) return false;
+
+        if (!(o instanceof Bamboo)) {
+            throw IllegalEqualityExceptionGenerator.create(Bamboo.class, o.getClass());
+        }
+
         Bamboo bamboo = (Bamboo) o;
         return getColor() == bamboo.getColor();
     }

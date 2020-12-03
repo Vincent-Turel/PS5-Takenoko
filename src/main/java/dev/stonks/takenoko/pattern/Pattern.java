@@ -1,5 +1,6 @@
 package dev.stonks.takenoko.pattern;
 
+import dev.stonks.takenoko.IllegalEqualityExceptionGenerator;
 import dev.stonks.takenoko.map.Coordinate;
 import dev.stonks.takenoko.map.Direction;
 import dev.stonks.takenoko.map.Map;
@@ -40,12 +41,16 @@ public class Pattern {
 
     @Override
     public boolean equals(Object other) {
-        if (other instanceof Pattern) {
-            Pattern rhs = (Pattern) other;
-            return equalsPat(rhs);
-        } else {
-            return false;
+        if (this == other) {
+            return true;
         }
+
+        if (!(other instanceof Pattern)) {
+            throw IllegalEqualityExceptionGenerator.create(Pattern.class, other.getClass());
+        }
+
+        Pattern rhs = (Pattern) other;
+        return equalsPat(rhs);
     }
 
     // Note: this function performs some additional checks so that two patterns

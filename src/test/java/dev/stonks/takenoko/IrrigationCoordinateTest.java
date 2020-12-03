@@ -68,7 +68,7 @@ public class IrrigationCoordinateTest {
         Coordinate b = a.moveWith(Direction.NorthEast);
         Irrigation i = new Irrigation(a, b);
 
-        assertNotEquals(i, 42);
+        assertThrows(IllegalCallerException.class, () -> i.equals(42));
     }
 
     @Test

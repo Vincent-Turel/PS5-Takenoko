@@ -1,5 +1,6 @@
 package dev.stonks.takenoko.pattern;
 
+import dev.stonks.takenoko.IllegalEqualityExceptionGenerator;
 import dev.stonks.takenoko.map.Coordinate;
 import dev.stonks.takenoko.map.Direction;
 
@@ -54,12 +55,16 @@ public class MatchResult {
      */
     @Override
     public boolean equals(Object other) {
-        if (other instanceof MatchResult) {
-            MatchResult rhs = (MatchResult) other;
-            return this.equalsMatchResult(rhs);
-        } else {
-            return false;
+        if (this == other) {
+            return true;
         }
+
+        if (!(other instanceof MatchResult)) {
+            throw IllegalEqualityExceptionGenerator.create(MatchResult.class, other.getClass());
+        }
+
+        MatchResult rhs = (MatchResult) other;
+        return this.equalsMatchResult(rhs);
     }
 
     private boolean equalsMatchResult(MatchResult rhs) {

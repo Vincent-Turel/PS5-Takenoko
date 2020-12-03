@@ -1,5 +1,7 @@
 package dev.stonks.takenoko.map;
 
+import dev.stonks.takenoko.IllegalEqualityExceptionGenerator;
+
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.Set;
@@ -168,8 +170,14 @@ public class Tile {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Tile)) return false;
+        if (this == o) {
+            return true;
+        }
+
+        if (!(o instanceof Tile)) {
+            throw IllegalEqualityExceptionGenerator.create(Tile.class, o.getClass());
+        }
+
         Tile tile = (Tile) o;
         return coord.equals(tile.coord) &&
                 bamboo.equals(tile.bamboo) &&

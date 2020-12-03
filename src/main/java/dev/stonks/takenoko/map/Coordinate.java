@@ -1,5 +1,7 @@
 package dev.stonks.takenoko.map;
 
+import dev.stonks.takenoko.IllegalEqualityExceptionGenerator;
+
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -71,12 +73,16 @@ public class Coordinate {
      */
     @Override
     public boolean equals(Object o) {
-        if (o instanceof Coordinate) {
-            Coordinate rhs = (Coordinate) o;
-            return x == rhs.x && y == rhs.y;
-        } else {
-            return false;
+        if (this == o) {
+            return true;
         }
+
+        if (!(o instanceof Coordinate)) {
+            throw IllegalEqualityExceptionGenerator.create(Coordinate.class, o.getClass());
+        }
+
+        Coordinate rhs = (Coordinate) o;
+        return x == rhs.x && y == rhs.y;
     }
 
     @Override
