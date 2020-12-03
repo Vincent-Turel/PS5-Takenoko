@@ -4,8 +4,8 @@ import dev.stonks.takenoko.bot.Player;
 import dev.stonks.takenoko.map.*;
 import dev.stonks.takenoko.map.Map;
 import dev.stonks.takenoko.pattern.MatchResult;
-import dev.stonks.takenoko.pattern.PatternObjective;
-import dev.stonks.takenoko.pattern.PatternObjectiveFactory;
+import dev.stonks.takenoko.objective.PatternObjective;
+import dev.stonks.takenoko.objective.PatternObjectiveFactory;
 import dev.stonks.takenoko.pawn.Gardener;
 import dev.stonks.takenoko.pawn.Panda;
 import dev.stonks.takenoko.objective.*;
@@ -196,11 +196,11 @@ public class Game {
                                     player.addObjectives(pandaObjectives.get(num));
                                     pandaObjectives.remove(num);
                                 }
-                                /*if((objectiveKind==ObjectiveKind.Gardener) && (gardenerObjectives.size()>0)){
+                                if((objectiveKind==ObjectiveKind.Gardener) && (gardenerObjectives.size()>0)) {
                                     num = random.nextInt(gardenerObjectives.size());
                                     player.addObjectives(gardenerObjectives.get(num));
                                     gardenerObjectives.remove(num);
-                                }*/
+                                }
                                 break;
                         }
                     }
@@ -228,8 +228,8 @@ public class Game {
             //TODO:changer la méthode du bot pour ajouter un objectif
             index = random.nextInt(pandaObjectives.size());
             player.addObjectives(pandaObjectives.remove(index));
-            //index = random.nextInt(gardenerObjectives.size());
-            //player.addObjectives(gardenerObjectives.remove(index));
+            index = random.nextInt(gardenerObjectives.size());
+            player.addObjectives(gardenerObjectives.remove(index));
         }
     }
 
@@ -262,16 +262,16 @@ public class Game {
                     achievedObjectives.add(objective);
                 }
             }
-            /*
+
             else if(objective instanceof GardenerObjective) {
-                player.upDateInventory(isValidObjectives.isObjectivesGardenerValid((GardenerObjective) objective,player));
+                isValidObjectives.isObjectivesGardenerValid((GardenerObjective) objective,map);
                 if (objective.getStates()) {
                     LOG.info("Player n°"+player.getId()+" has achieved a "+objective.getClass().getSimpleName());
                     player.newObjectivesAchieved(objective);
                     gardenerObjectives.remove(objective);
                     achievedObjectives.add(objective);
                 }
-            }*/
+            }
         }
     }
 
@@ -364,10 +364,10 @@ public class Game {
                     PandaObjective pandaObjective = (PandaObjective) objective;
                     pandaObjectives.add(pandaObjective);
                 }
-                /*else if(objective instanceof GardenerObjective) {
+                else if(objective instanceof GardenerObjective) {
                     GardenerObjective gardenerObjective = (GardenerObjective)objective;
                     gardenerObjectives.add(gardenerObjective);
-                }*/
+                }
             }
         }
         for (Objective objective : achievedObjectives) {
@@ -379,14 +379,14 @@ public class Game {
                 PandaObjective pandaObjective = (PandaObjective)objective;
                 pandaObjectives.add(pandaObjective);
             }
-            /*else if(objective instanceof GardenerObjective) {
+            else if(objective instanceof GardenerObjective) {
                 GardenerObjective gardenerObjective = (GardenerObjective)objective;
                 gardenerObjectives.add(gardenerObjective);
-            }*/
+            }
         }
         tileObjectives.forEach(Objective::resetObj);
         pandaObjectives.forEach(Objective::resetObj);
-        //gardenerObjectives.forEach(Objective::resetObj);
+        gardenerObjectives.forEach(Objective::resetObj);
         achievedObjectives.clear();
     }
 

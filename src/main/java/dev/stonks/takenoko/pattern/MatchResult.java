@@ -26,7 +26,7 @@ public class MatchResult {
     /**
      * Returns the stored pattern.
      */
-    Pattern pattern() {
+    public Pattern pattern() {
         return p;
     }
 
@@ -35,7 +35,7 @@ public class MatchResult {
      * The coordinate of the match is defined as the coordinate of the center
      * tile.
      */
-    Coordinate coordinate() {
+    public Coordinate coordinate() {
         return c;
     }
 

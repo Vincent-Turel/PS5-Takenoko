@@ -6,10 +6,15 @@ import dev.stonks.takenoko.objective.GardenerObjective;
 import dev.stonks.takenoko.objective.PandaObjective;
 import dev.stonks.takenoko.objective.isValidObjectives;
 import dev.stonks.takenoko.pattern.BambooPattern;
-import dev.stonks.takenoko.pawn.Gardener;
+import dev.stonks.takenoko.pattern.MatchResult;
+import dev.stonks.takenoko.pattern.Pattern;
+import dev.stonks.takenoko.objective.PatternObjective;
 import org.junit.jupiter.api.Test;
 
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Stream;
 
 import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;

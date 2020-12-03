@@ -1,14 +1,10 @@
 package dev.stonks.takenoko.objective;
 
-import dev.stonks.takenoko.map.Bamboo;
 import dev.stonks.takenoko.map.Tile;
-import dev.stonks.takenoko.map.TileKind;
 import dev.stonks.takenoko.pattern.BambooPattern;
 import dev.stonks.takenoko.bot.Player;
 import dev.stonks.takenoko.map.Map;
 import dev.stonks.takenoko.pattern.MatchResult;
-import dev.stonks.takenoko.pattern.PatternObjective;
-import dev.stonks.takenoko.pawn.Gardener;
 
 import java.util.ArrayList;
 import java.util.Optional;
@@ -23,12 +19,10 @@ public class isValidObjectives {
      * @return true if objectives complete, else false
      */
     public static Set<MatchResult> isValidPatternObjective(PatternObjective objective, Map map, Set<MatchResult> alreadyUsed) {
-        ObjectiveKind type = objective.getObjType();
-        PatternObjective objectivePat = (PatternObjective) objective;
         int old=alreadyUsed.size();
-        alreadyUsed= isPatternConstraintValid(objectivePat,map,alreadyUsed);
+        alreadyUsed= isPatternConstraintValid(objective,map,alreadyUsed);
         if(alreadyUsed.size()!=old){
-            objectivePat.UpdtateStates();
+            objective.UpdtateStates();
         }
         return alreadyUsed;
     }
