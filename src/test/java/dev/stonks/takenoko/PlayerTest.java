@@ -29,7 +29,7 @@ public class PlayerTest {
 
     @Test
     public void decideTest(){
-        dev.stonks.takenoko.map.Map map = new dev.stonks.takenoko.map.Map(1);
+        dev.stonks.takenoko.map.Map map = new Map(1);
         ArrayList<Action> possibleActions = new ArrayList<>(Arrays.asList(Action.values()));
         assertTrue(possibleActions.contains(randomPlayer.decide(possibleActions, map)));
         assertEquals(randomPlayer.getCurrentMapState(), map);

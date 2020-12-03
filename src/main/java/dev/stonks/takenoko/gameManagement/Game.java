@@ -205,7 +205,6 @@ public class Game {
                         }
                     }
                     checkObjectives(player);
-                    map.updateIrrigations();
                     map.growBambooInMap();
                     if (!aPlayerWin) {
                         aPlayerWin = checkIfWinner();

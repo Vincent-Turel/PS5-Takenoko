@@ -93,8 +93,8 @@ public class MapTest {
     @Test
     void setTileWithAbstractTile() throws IllegalPlacementException {
         AbstractTile at = new AbstractTile(TileKind.Pink);
-        dev.stonks.takenoko.map.Map m = new dev.stonks.takenoko.map.Map(42);
-        Coordinate c = new Coordinate(13, 12);
+        Map m = new dev.stonks.takenoko.map.Map(42);
+        Coordinate c = m.initialTile().getCoordinate().moveWith(Direction.NorthEast);
 
         m.setTile(c, at);
         assertTrue(m.getTile(c).isPresent());
@@ -177,30 +177,6 @@ public class MapTest {
         res.add(t10); res.add(t11); res.add(t12);
 
         assertEquals(res, map.getPossiblePawnPlacements(panda));
-    }
-
-    @Test
-    void updateIrrigationsTest() throws IllegalPlacementException {
-        dev.stonks.takenoko.map.Map map = new dev.stonks.takenoko.map.Map(20);
-        var initialTileCoordinate = map.placedTilesCoordinates().collect(Collectors.toList());
-        assertEquals(initialTileCoordinate.size(), 1);
-        var neighborTiles = new ArrayList<Tile>();
-        for (Coordinate coordinate : initialTileCoordinate.get(0).neighbors()){
-            neighborTiles.add(new Tile(coordinate, TileKind.Green));
-        }
-        var randomTiles = new ArrayList<Tile>();
-        for(int i = 1; i< 10;i++){
-            randomTiles.add(new Tile(new Coordinate(i,i), TileKind.Pink));
-        }
-        var allTiles = (ArrayList<Tile>) neighborTiles.clone();
-        allTiles.addAll((ArrayList<Tile>)randomTiles.clone());
-        for (Tile tile : allTiles){
-            map.setTile(tile);
-        }
-        map.updateIrrigations();
-
-        assertTrue(neighborTiles.stream().allMatch(Tile::isIrrigated));
-        assertFalse(randomTiles.stream().anyMatch(Tile::isIrrigated));
     }
 
     @Test
