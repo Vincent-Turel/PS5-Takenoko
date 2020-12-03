@@ -350,4 +350,25 @@ public class MapTest {
 
         assertEquals(availableCoordinates, expectedAvailableIrrigations);
     }
+
+    @Test
+    void placingIrrigationIrrigatesNeighbors() throws IllegalPlacementException {
+        Map map = new Map(42);
+        Coordinate center = map.initialTile().getCoordinate();
+
+        Coordinate nNeighbor = center.moveWith(Direction.North);
+        Coordinate neNeighbor = center.moveWith(Direction.NorthEast);
+
+        AbstractTile nAT = new AbstractTile(TileKind.Green);
+        AbstractTile neAT = new AbstractTile(TileKind.Pink);
+
+        map.setTile(nNeighbor, nAT);
+        map.setTile(neNeighbor, neAT);
+
+        Irrigation ai = new AbstractIrrigation().withCoordinate(nNeighbor, neNeighbor);
+        map.setIrrigation(ai);
+
+        assertTrue(map.getTile(nNeighbor).get().isIrrigated());
+        assertTrue(map.getTile(neNeighbor).get().isIrrigated());
+    }
 }

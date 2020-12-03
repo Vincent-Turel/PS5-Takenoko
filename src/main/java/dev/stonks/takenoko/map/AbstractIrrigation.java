@@ -10,7 +10,7 @@ public class AbstractIrrigation {
      * @param c the irrigation's coordinate
      * @return a brand new Irrigation
      */
-    Irrigation withCoordinate(Coordinate c, Coordinate d) throws IllegalPlacementException {
+    public Irrigation withCoordinate(Coordinate c, Coordinate d) throws IllegalPlacementException {
         return new Irrigation(c, d);
     }
 }

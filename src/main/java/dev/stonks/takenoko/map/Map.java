@@ -192,6 +192,14 @@ public class Map {
             throw new IllegalPlacementException("Attempt to replace an irrigation");
         }
 
+        i.getCoordinate().getDirectlyIrrigatedCoordinates().forEach(c -> {
+            try {
+                getTile(c).get().irrigate();
+            } catch (NoSuchElementException e) {
+                throw new IllegalStateException("Legal irrigation placement must irrigate tiles.");
+            }
+        });
+
         irrigations[offset] = Optional.of(i);
     }
 
