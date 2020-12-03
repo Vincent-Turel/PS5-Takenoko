@@ -256,7 +256,7 @@ public class Map {
         for (Coordinate c: irrigatedCoordinates) {
             Optional<Tile> t = getTile(c);
 
-            if (t.isPresent() && t.get().isInitial()) {
+            if (t.isEmpty() || t.get().isInitial()) {
                 return false;
             }
         }
