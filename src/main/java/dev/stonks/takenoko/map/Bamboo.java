@@ -13,6 +13,11 @@ public class Bamboo {
         this.color = color;
     }
 
+    public Bamboo(Bamboo bamboo) {
+        this.color = bamboo.color;
+        this.size = bamboo.size;
+    }
+
     /**
      * Increase the size of the bamboo
      * Maximal size : 4

@@ -30,6 +30,10 @@ public class Irrigation {
         coord = new IrrigationCoordinate(ca, cb);
     }
 
+    public Irrigation(Irrigation irrigation) {
+        this.coord = new IrrigationCoordinate(irrigation.coord);
+    }
+
     public IrrigationCoordinate getCoordinate() {
         return coord;
     }

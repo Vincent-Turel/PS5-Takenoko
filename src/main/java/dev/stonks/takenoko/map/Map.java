@@ -46,6 +46,28 @@ public class Map {
         setInitialTile();
     }
 
+
+    public Map(Map map) {
+        this.panda = new Panda(map.getPanda());
+        this.gardener = new Gardener(map.getGardener());
+        this.delta = map.delta;
+        this.sideLen = map.sideLen;
+        this.tiles = new Optional[map.tiles.length];
+        for (int i = 0; i<tiles.length;i++){
+            if (map.tiles[i].isPresent())
+                tiles[i] = Optional.of(new Tile(map.tiles[i].get()));
+            else
+                tiles[i] = Optional.empty();
+        }
+        this.irrigations = new Optional[map.irrigations.length];
+        for (int i = 0; i<irrigations.length;i++){
+            if (map.irrigations[i].isPresent())
+                irrigations[i] = Optional.of(new Irrigation(map.irrigations[i].get()));
+            else
+                irrigations[i] = Optional.empty();
+        }
+    }
+
     /**
      * Resets the map.
      *

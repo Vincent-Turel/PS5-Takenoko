@@ -24,6 +24,13 @@ public class Tile {
         irrigated = false;
     }
 
+    public Tile(Tile tile) {
+        this.bamboo = new Bamboo(tile.bamboo);
+        this.coord = new Coordinate(tile.coord);
+        this.irrigated = tile.irrigated;
+        this.kind = tile.kind;
+    }
+
     /**
      * Creates the initial tile.
      */
