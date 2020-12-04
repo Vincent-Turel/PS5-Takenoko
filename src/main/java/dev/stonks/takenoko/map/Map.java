@@ -460,4 +460,12 @@ public class Map {
                 .filter(ot -> ot.isPresent())
                 .map(ot -> ot.get().getCoordinate());
     }
+
+    /**
+     * Return all tiles for objective verify
+     * @return
+     */
+    public Optional<Tile>[] getTiles() {
+        return tiles;
+    }
 }

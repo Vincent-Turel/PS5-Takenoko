@@ -145,13 +145,13 @@ public class Pattern {
     /**
      * Returns all the matches that occur on a specific map.
      */
-    public Set<MatchResult> getMatchesOn(dev.stonks.takenoko.map.Map m) {
+    public Set<MatchResult> getMatchesOn(Map m) {
         return m.placedTilesCoordinates()
                 .flatMap(c -> matchesAt(m, c))
                 .collect(Collectors.toSet());
     }
 
-    private Stream<MatchResult> matchesAt(dev.stonks.takenoko.map.Map m, Coordinate c) {
+    private Stream<MatchResult> matchesAt(Map m, Coordinate c) {
         if (!matchesTile(current, m.getTile(c))) {
             return Stream.empty();
         }
@@ -228,7 +228,7 @@ public class Pattern {
      * @param c the color used for the pattern
      * @return a triangular pattern with the correct color.
      */
-    static Pattern triangleShaped(TileKind c) {
+    static public Pattern triangleShaped(TileKind c) {
         return new Pattern()
                 .withCenter(c)
                 .withNeighbor(Direction.North, c)
@@ -241,7 +241,7 @@ public class Pattern {
      * @param c the first color to be used.
      * @return a pattern with the correct requirements.
      */
-    static Pattern diamondShaped(TileKind c) {
+    static public Pattern diamondShaped(TileKind c) {
         return diamondShaped(c, c);
     }
 
@@ -252,7 +252,7 @@ public class Pattern {
      * @param c2 the second color to be used.
      * @return a pattern with the correct requirements.
      */
-    static Pattern diamondShaped(TileKind c1, TileKind c2) {
+    static public Pattern diamondShaped(TileKind c1, TileKind c2) {
         return new Pattern()
                 .withCenter(c1)
                 .withNeighbor(Direction.North, c1)
@@ -265,7 +265,7 @@ public class Pattern {
      * @param c the expected tile kind.
      * @return the correct pattern.
      */
-    static Pattern iShaped(TileKind c) {
+    static public Pattern iShaped(TileKind c) {
         return new Pattern()
                 .withCenter(c)
                 .withNeighbor(Direction.North, c)
@@ -277,7 +277,7 @@ public class Pattern {
      * @param c the expected tile kind.
      * @return the correct pattern.
      */
-    static Pattern cShaped(TileKind c) {
+    static public Pattern cShaped(TileKind c) {
         return new Pattern()
                 .withCenter(c)
                 .withNeighbor(Direction.North, c)

@@ -1,7 +1,8 @@
-package dev.stonks.takenoko.pattern;
+package dev.stonks.takenoko.objective;
 
 import dev.stonks.takenoko.objective.Objective;
 import dev.stonks.takenoko.objective.ObjectiveKind;
+import dev.stonks.takenoko.pattern.Pattern;
 
 public class PatternObjective extends Objective {
 
