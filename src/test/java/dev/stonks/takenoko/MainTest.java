@@ -1,5 +1,6 @@
 package dev.stonks.takenoko;
 
+import dev.stonks.takenoko.gameManagement.GameManager;
 import org.junit.jupiter.api.BeforeEach;
 
 public class MainTest {

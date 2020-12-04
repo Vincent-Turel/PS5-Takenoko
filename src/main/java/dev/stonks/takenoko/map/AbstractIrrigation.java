@@ -13,4 +13,9 @@ public class AbstractIrrigation {
     Irrigation withCoordinate(Coordinate c, Coordinate d) throws IllegalPlacementException {
         return new Irrigation(c, d);
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        return true;
+    }
 }

@@ -342,6 +342,7 @@ public class Game {
         placedTileDeck.clear();
         irrigationDeck.addAll(placedIrrigationsDeck);
         placedIrrigationsDeck.clear();
+        patternMatchs.clear();
     }
 
     private void resetMap() {
@@ -402,18 +403,17 @@ public class Game {
         if (o == null || getClass() != o.getClass()) return false;
         Game game = (Game) o;
         return Objects.equals(map, game.map) &&
-                Objects.equals(tileDeck, game.tileDeck) &&
-                Objects.equals(placedTileDeck, game.placedTileDeck) &&
+                tileDeck.containsAll(game.tileDeck) && game.tileDeck.containsAll(tileDeck) &&
+                placedTileDeck.containsAll(game.placedTileDeck) && game.placedTileDeck.containsAll(placedTileDeck) &&
                 Objects.equals(irrigationDeck, game.irrigationDeck) &&
                 Objects.equals(placedIrrigationsDeck, game.placedIrrigationsDeck) &&
                 Objects.equals(players, game.players) &&
-                Objects.equals(tileObjectives, game.tileObjectives) &&
-                Objects.equals(pandaObjectives, game.pandaObjectives) &&
-                Objects.equals(gardenerObjectives, game.gardenerObjectives) &&
+                tileObjectives.containsAll(game.tileObjectives) && game.tileObjectives.containsAll(tileObjectives) &&
+                pandaObjectives.containsAll(game.pandaObjectives) && game.pandaObjectives.containsAll(pandaObjectives) &&
+                gardenerObjectives.containsAll(game.gardenerObjectives) && game.gardenerObjectives.containsAll(gardenerObjectives) &&
                 Objects.equals(patternMatchs, game.patternMatchs) &&
                 Objects.equals(emperor, game.emperor) &&
-                Objects.equals(achievedObjectives, game.achievedObjectives) &&
-                Objects.equals(random, game.random) &&
+                achievedObjectives.containsAll(game.achievedObjectives) && game.achievedObjectives.containsAll(achievedObjectives) &&
                 Objects.equals(gamePlayersResults, game.gamePlayersResults);
     }
 
