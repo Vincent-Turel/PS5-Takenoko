@@ -3,6 +3,8 @@ package dev.stonks.takenoko.pawn;
 import dev.stonks.takenoko.map.Coordinate;
 import dev.stonks.takenoko.map.Tile;
 
+import java.util.Objects;
+
 /**
  * Represent a pawn.
  * It can be a gardener or a panda
@@ -32,5 +34,18 @@ public abstract class Pawn {
      */
     public Coordinate getCurrentCoordinate(){
         return currentCoordinate;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Pawn pawn = (Pawn) o;
+        return Objects.equals(currentCoordinate, pawn.currentCoordinate);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(currentCoordinate);
     }
 }

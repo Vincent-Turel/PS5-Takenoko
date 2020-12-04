@@ -39,9 +39,9 @@ public class Game {
     Objective emperor;
     ArrayList<Objective> achievedObjectives;
     Random random;
-    ArrayList<GameResults> gamePlayersResults;
+    public ArrayList<GameResults> gamePlayersResults;
 
-    Game(ArrayList<Player> players) {
+    public Game(ArrayList<Player> players) {
         map = new Map(28);
         initialiseTileDeck();
         initialiseIrrigationDeck();
@@ -113,7 +113,7 @@ public class Game {
     }
 
 
-    void play() throws IllegalPlacementException {
+    public void play() throws IllegalPlacementException {
         int moreThan500OnlyPawnActions = 0;
         boolean aPlayerWin = false;
         boolean remainingLastTurn = true;
@@ -329,7 +329,7 @@ public class Game {
         return gamePlayersResults;
     }
 
-    void resetGame() throws UnsupportedOperationException{
+    public void resetGame() throws UnsupportedOperationException{
         resetMap();
         resetObjectives();
         resetDecks();
@@ -404,45 +404,21 @@ public class Game {
         return Objects.equals(map, game.map) &&
                 Objects.equals(tileDeck, game.tileDeck) &&
                 Objects.equals(placedTileDeck, game.placedTileDeck) &&
+                Objects.equals(irrigationDeck, game.irrigationDeck) &&
+                Objects.equals(placedIrrigationsDeck, game.placedIrrigationsDeck) &&
                 Objects.equals(players, game.players) &&
                 Objects.equals(tileObjectives, game.tileObjectives) &&
+                Objects.equals(pandaObjectives, game.pandaObjectives) &&
+                Objects.equals(gardenerObjectives, game.gardenerObjectives) &&
                 Objects.equals(patternMatchs, game.patternMatchs) &&
                 Objects.equals(emperor, game.emperor) &&
                 Objects.equals(achievedObjectives, game.achievedObjectives) &&
                 Objects.equals(random, game.random) &&
-                Objects.equals(gamePlayersResults, game.gamePlayersResults) &&
-                Objects.equals(patterns, game.patterns);
+                Objects.equals(gamePlayersResults, game.gamePlayersResults);
     }
 
-
-    /*@Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Game)) return false;
-        Game game = (Game) o;
-        return  this.map.
-                equals(game.map) &&
-                this.tileDeck.equals(game.tileDeck) &&
-                this.players.equals(game.players) &&
-                this.tileObjectives.equals(game.tileObjectives) &&
-                this.patternMatchs.equals(game.patternMatchs) &&
-                this.emperor.equals(game.emperor) &&
-                this.achievedObjectives.equals(game.achievedObjectives) &&
-                this.random.equals(game.random) &&
-                this.gamePlayersResults.equals(game.gamePlayersResults) &&
-                this.patterns.equals(game.patterns);
-    }*/
-    //Map map;
-    //    ArrayList<AbstractTile> tileDeck;
-    //    ArrayList<AbstractTile> placedTileDeck = new ArrayList<>();
-    //    ArrayList<Player> players;
-    //    ArrayList<PatternObjective> tileObjectives;
-    //    //ArrayList<Objective> pandaObjectives;
-    //    //ArrayList<Objective> gardenerObjectives;
-    //    Set<MatchResult> patternMatchs;
-    //    Objective emperor;
-    //    ArrayList<Objective> achievedObjectives;
-    //    Random random;
-    //    ArrayList<GameResults> gamePlayersResults;
-    //    ArrayList<Pattern> patterns;
+    @Override
+    public int hashCode() {
+        return Objects.hash(map, tileDeck, placedTileDeck, irrigationDeck, placedIrrigationsDeck, players, tileObjectives, pandaObjectives, gardenerObjectives, patternMatchs, emperor, achievedObjectives, random, gamePlayersResults);
+    }
 }

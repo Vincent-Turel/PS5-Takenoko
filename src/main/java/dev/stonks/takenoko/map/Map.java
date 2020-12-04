@@ -468,4 +468,25 @@ public class Map {
     public Optional<Tile>[] getTiles() {
         return tiles;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Map map = (Map) o;
+        return delta == map.delta &&
+                sideLen == map.sideLen &&
+                Arrays.equals(tiles, map.tiles) &&
+                Arrays.equals(irrigations, map.irrigations) &&
+                Objects.equals(panda, map.panda) &&
+                Objects.equals(gardener, map.gardener);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = Objects.hash(delta, sideLen, panda, gardener);
+        result = 31 * result + Arrays.hashCode(tiles);
+        result = 31 * result + Arrays.hashCode(irrigations);
+        return result;
+    }
 }

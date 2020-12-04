@@ -1,5 +1,7 @@
 package dev.stonks.takenoko.gameManagement;
 
+import java.util.Objects;
+
 /**
  * Result of a game for one player, it contains
  * the player's id and his rank
@@ -28,8 +30,14 @@ public class GameResults {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof GameResults)) return false;
-        GameResults gameResults = (GameResults) o;
-        return  this.getId()==gameResults.getId() && this.getRank()==gameResults.getRank();
+        if (o == null || getClass() != o.getClass()) return false;
+        GameResults that = (GameResults) o;
+        return id == that.id &&
+                rank == that.rank;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, rank);
     }
 }
