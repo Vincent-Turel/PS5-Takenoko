@@ -1,5 +1,7 @@
 package dev.stonks.takenoko;
 
+import dev.stonks.takenoko.map.Bamboo;
+import dev.stonks.takenoko.map.TileKind;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

@@ -1,6 +1,21 @@
 package dev.stonks.takenoko;
 
+import dev.stonks.takenoko.bot.Player;
+import dev.stonks.takenoko.map.*;
+import dev.stonks.takenoko.objective.GardenerObjective;
+import dev.stonks.takenoko.objective.PandaObjective;
+import dev.stonks.takenoko.objective.isValidObjectives;
+import dev.stonks.takenoko.pattern.BambooPattern;
+import dev.stonks.takenoko.pattern.MatchResult;
+import dev.stonks.takenoko.pattern.Pattern;
+import dev.stonks.takenoko.objective.PatternObjective;
 import org.junit.jupiter.api.Test;
+
+import java.util.HashSet;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Stream;
+
 import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -19,7 +34,7 @@ public class IsValidObjectivesTest {
         PandaObjective objective = new PandaObjective(5,greenPattern);
 
         //Objective multicolor :
-        BambooPattern multicolor = new BambooPattern(TileKind.Green,TileKind.Yellow,TileKind.Pink,2,1);
+        BambooPattern multicolor = new BambooPattern(TileKind.Green, TileKind.Yellow, TileKind.Pink,2,1);
         PandaObjective objMultiColor = new PandaObjective(5,multicolor);
 
         //Test isValid Objective simple green
@@ -49,7 +64,7 @@ public class IsValidObjectivesTest {
         PandaObjective objective = new PandaObjective(5,greenPattern);
 
         //Objective multicolor :
-        BambooPattern multicolor = new BambooPattern(TileKind.Green,TileKind.Yellow,TileKind.Pink,2,3);
+        BambooPattern multicolor = new BambooPattern(TileKind.Green, TileKind.Yellow, TileKind.Pink,2,3);
         PandaObjective objMultiColor = new PandaObjective(5,multicolor);
 
         //Test isValid Objective simple green
@@ -103,8 +118,56 @@ public class IsValidObjectivesTest {
     }
 
     @Test
-    public void futurTestForGardenerObjective(){
-        assertEquals(true, isValidObjectives.isObjectivesGardenerValid());
+    public void testForGardenerObjective(){
+        //Making some bamboos :
+        Bamboo greenBamboo = mock(Bamboo.class);
+        when(greenBamboo.getSize()).thenReturn(3);
+        when(greenBamboo.getColor()).thenReturn(TileKind.Green);
+
+        Bamboo pinkBamboo = mock(Bamboo.class);
+        when(pinkBamboo.getSize()).thenReturn(4);
+        when(pinkBamboo.getColor()).thenReturn(TileKind.Pink);
+
+        //Making some tiles :
+        Tile tileGreen = mock(Tile.class);
+        when(tileGreen.getBamboo()).thenReturn(greenBamboo);
+
+        Tile tilePink1 = mock(Tile.class);
+        when(tilePink1.getBamboo()).thenReturn(pinkBamboo);
+
+        Tile tilePink2 = mock(Tile.class);
+        when(tilePink2.getBamboo()).thenReturn(pinkBamboo);
+
+        //Making the tab tiles for map :
+        Optional<Tile>[] tiles = new Optional[4];
+        Optional<Tile> convert1 = Optional.of(tileGreen);
+        Optional<Tile> convert2 = Optional.of(tilePink1);
+        Optional<Tile> convert3 = Optional.of(tilePink2);
+        tiles[0]=convert3;
+        tiles[1]=convert1;
+        tiles[2]=convert2;
+        tiles[3]=Optional.empty();
+
+        //Making the map :
+        Map map = mock(Map.class);
+        when(map.getTiles()).thenReturn(tiles);
+
+        //Create the objectives :
+        BambooPattern winPattern = new BambooPattern(TileKind.Green,3);
+        GardenerObjective objectiveWin = new GardenerObjective(5,winPattern);
+        BambooPattern losePattern = new BambooPattern(TileKind.Green,5);
+        GardenerObjective objectiveLose = new GardenerObjective(5,losePattern);
+        BambooPattern pinkPattern = new BambooPattern(TileKind.Pink,4,2);
+        GardenerObjective pinkObjective = new GardenerObjective(5,pinkPattern);
+
+        //Test function :
+        isValidObjectives.isObjectivesGardenerValid(objectiveWin,map);
+        isValidObjectives.isObjectivesGardenerValid(objectiveLose,map);
+        isValidObjectives.isObjectivesGardenerValid(pinkObjective,map);
+
+        assertEquals(true,objectiveWin.getStates());
+        assertEquals(false,objectiveLose.getStates());
+        assertEquals(true,pinkObjective.getStates());
     }
 
 }

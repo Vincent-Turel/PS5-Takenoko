@@ -1,5 +1,9 @@
 package dev.stonks.takenoko;
 
+import dev.stonks.takenoko.map.*;
+import dev.stonks.takenoko.map.Map;
+import dev.stonks.takenoko.pawn.Panda;
+import dev.stonks.takenoko.map.IllegalPlacementException;
 import org.junit.jupiter.api.Test;
 
 import java.util.*;
@@ -11,7 +15,7 @@ import static org.mockito.Mockito.*;
 public class MapTest {
     @Test
     void MapNeighborOf() throws IllegalPlacementException {
-        Map m = new Map(27);
+        dev.stonks.takenoko.map.Map m = new dev.stonks.takenoko.map.Map(27);
         Tile initial = m.initialTile();
         Tile bottom = m.addNeighborOf(TileKind.Green, initial.withDirection(Direction.North));
 
@@ -19,17 +23,17 @@ public class MapTest {
         assertTrue(m.getNeighborOf(bottom, Direction.North).get().equals(initial));
 
         assertTrue(m.getNeighborOf(initial, Direction.SouthEast).isEmpty());
-        assertTrue(m.getNeighborOf(initial, Direction.SouthOuest).isEmpty());
+        assertTrue(m.getNeighborOf(initial, Direction.SouthWest).isEmpty());
         assertTrue(m.getNeighborOf(initial, Direction.NorthEast).isEmpty());
 
         assertTrue(m.getNeighborOf(bottom, Direction.SouthEast).isEmpty());
-        assertTrue(m.getNeighborOf(bottom, Direction.SouthOuest).isEmpty());
+        assertTrue(m.getNeighborOf(bottom, Direction.SouthWest).isEmpty());
         assertTrue(m.getNeighborOf(bottom, Direction.NorthEast).isEmpty());
     }
 
     @Test
     void resetRemovesEverythingExceptInitial() throws IllegalPlacementException {
-        Map m = new Map(27);
+        dev.stonks.takenoko.map.Map m = new dev.stonks.takenoko.map.Map(27);
         m.addNeighborOf(TileKind.Green, m.initialTile().withDirection(Direction.South));
 
         m.reset();
@@ -40,7 +44,7 @@ public class MapTest {
 
     @Test
     void resetRecreatesInitialTile() throws IllegalPlacementException {
-        Map m = new Map(27);
+        dev.stonks.takenoko.map.Map m = new dev.stonks.takenoko.map.Map(27);
         m.addNeighborOf(TileKind.Pink, m.initialTile().withDirection(Direction.South));
 
         m.reset();
@@ -60,14 +64,14 @@ public class MapTest {
         // placeable.
 
         // There is an initial tile at {28, 28}.
-        Map m = new Map(27);
+        dev.stonks.takenoko.map.Map m = new dev.stonks.takenoko.map.Map(27);
         Tile c = m.initialTile();
         // There is an other tile at {28, 27}.
         Tile s = m.addNeighborOf(TileKind.Green, m.initialTile().withDirection(Direction.South));
         // There is an other other tile at {29, 28}.
-        Tile so = m.addNeighborOf(TileKind.Yellow, m.initialTile().withDirection(Direction.SouthOuest));
+        Tile so = m.addNeighborOf(TileKind.Yellow, m.initialTile().withDirection(Direction.SouthWest));
 
-        Set<? extends Coordinate> avalaiblePositions = m.getPlacements();
+        Set<Coordinate> avalaiblePositions = m.getTilePlacements();
 
         Coordinate cCoord = c.getCoordinate();
         Coordinate soCoord = so.getCoordinate();
@@ -75,8 +79,8 @@ public class MapTest {
         // Tiles that are placeables because they are neighbors of the initial
         // tile.
         assertTrue(avalaiblePositions.contains(cCoord.moveWith(Direction.South)));
-        assertTrue(avalaiblePositions.contains(cCoord.moveWith(Direction.SouthOuest)));
-        assertTrue(avalaiblePositions.contains(cCoord.moveWith(Direction.NorthOuest)));
+        assertTrue(avalaiblePositions.contains(cCoord.moveWith(Direction.SouthWest)));
+        assertTrue(avalaiblePositions.contains(cCoord.moveWith(Direction.NorthWest)));
         assertTrue(avalaiblePositions.contains(cCoord.moveWith(Direction.SouthEast)));
 
         // Tile that is placeable because it has two neighbors
@@ -89,7 +93,7 @@ public class MapTest {
     @Test
     void setTileWithAbstractTile() throws IllegalPlacementException {
         AbstractTile at = new AbstractTile(TileKind.Pink);
-        Map m = new Map(42);
+        dev.stonks.takenoko.map.Map m = new dev.stonks.takenoko.map.Map(42);
         Coordinate c = new Coordinate(13, 12);
 
         m.setTile(c, at);
@@ -98,7 +102,7 @@ public class MapTest {
 
     @Test
     void growBambooInMap() throws IllegalPlacementException {
-        Map m = new Map(42);
+        dev.stonks.takenoko.map.Map m = new dev.stonks.takenoko.map.Map(42);
         Tile initT = m.initialTile();
         Tile otherT = m.addNeighborOf(TileKind.Green, initT.withDirection(Direction.North));
 
@@ -110,7 +114,7 @@ public class MapTest {
 
     @Test
     void getPossiblePawnPlacementsTest(){
-        Map map = spy(new Map(50));
+        dev.stonks.takenoko.map.Map map = spy(new dev.stonks.takenoko.map.Map(50));
         Coordinate c = new Coordinate(1,1);
         Panda panda = new Panda(c);
 
@@ -139,11 +143,11 @@ public class MapTest {
                 .thenReturn(Optional.of(t3));
         when(map.getNeighborOf(t3, Direction.NorthEast))
                 .thenReturn(Optional.empty());
-        when(map.getNeighborOf(map.getTile(c).get(), Direction.NorthOuest))
+        when(map.getNeighborOf(map.getTile(c).get(), Direction.NorthWest))
                 .thenReturn(Optional.of(t4));
-        when(map.getNeighborOf(t4, Direction.NorthOuest))
+        when(map.getNeighborOf(t4, Direction.NorthWest))
                 .thenReturn(Optional.of(t5));
-        when(map.getNeighborOf(t5, Direction.NorthOuest))
+        when(map.getNeighborOf(t5, Direction.NorthWest))
                 .thenReturn(Optional.empty());
         when(map.getNeighborOf(map.getTile(c).get(), Direction.South))
                 .thenReturn(Optional.of(t6));
@@ -157,13 +161,13 @@ public class MapTest {
                 .thenReturn(Optional.of(t9));
         when(map.getNeighborOf(t9, Direction.SouthEast))
                 .thenReturn(Optional.empty());
-        when(map.getNeighborOf(map.getTile(c).get(), Direction.SouthOuest))
+        when(map.getNeighborOf(map.getTile(c).get(), Direction.SouthWest))
                 .thenReturn(Optional.of(t10));
-        when(map.getNeighborOf(t10, Direction.SouthOuest))
+        when(map.getNeighborOf(t10, Direction.SouthWest))
                 .thenReturn(Optional.of(t11));
-        when(map.getNeighborOf(t11, Direction.SouthOuest))
+        when(map.getNeighborOf(t11, Direction.SouthWest))
                 .thenReturn(Optional.of(t12));
-        when(map.getNeighborOf(t12, Direction.SouthOuest))
+        when(map.getNeighborOf(t12, Direction.SouthWest))
                 .thenReturn(Optional.empty());
 
         Set<Tile> res = new HashSet<>();
@@ -177,7 +181,7 @@ public class MapTest {
 
     @Test
     void updateIrrigationsTest() throws IllegalPlacementException {
-        Map map = new Map(20);
+        dev.stonks.takenoko.map.Map map = new dev.stonks.takenoko.map.Map(20);
         var initialTileCoordinate = map.placedTilesCoordinates().collect(Collectors.toList());
         assertEquals(initialTileCoordinate.size(), 1);
         var neighborTiles = new ArrayList<Tile>();
@@ -201,13 +205,13 @@ public class MapTest {
 
     @Test
     void irrigationPlacementLegalPlacement() throws IllegalPlacementException {
-        Map map = new Map(42);
+        dev.stonks.takenoko.map.Map map = new dev.stonks.takenoko.map.Map(42);
         Coordinate northNeighbor = map.initialTile().getCoordinate().moveWith(Direction.North);
         Coordinate northEastNeighbor = map.initialTile().getCoordinate().moveWith(Direction.NorthEast);
         Coordinate southEastNeighbor = map.initialTile().getCoordinate().moveWith(Direction.SouthEast);
         Coordinate southNeighbor = map.initialTile().getCoordinate().moveWith(Direction.South);
-        Coordinate southWestNeighbor = map.initialTile().getCoordinate().moveWith(Direction.SouthOuest);
-        Coordinate northWestNeighbor = map.initialTile().getCoordinate().moveWith(Direction.NorthOuest);
+        Coordinate southWestNeighbor = map.initialTile().getCoordinate().moveWith(Direction.SouthWest);
+        Coordinate northWestNeighbor = map.initialTile().getCoordinate().moveWith(Direction.NorthWest);
 
         // Let's place some irrigations, so that it makes an initial-tile-centered star!
         Irrigation i1 = new Irrigation(northNeighbor, northEastNeighbor);
@@ -235,7 +239,7 @@ public class MapTest {
         // Let's try placing irrigations that are linked to other irrigations.
         Irrigation i7 = new Irrigation(northNeighbor, northNeighbor.moveWith(Direction.NorthEast));
         Irrigation i8 = new Irrigation(southNeighbor, southNeighbor.moveWith(Direction.SouthEast));
-        Irrigation i9 = new Irrigation(southWestNeighbor, southWestNeighbor.moveWith(Direction.NorthOuest));
+        Irrigation i9 = new Irrigation(southWestNeighbor, southWestNeighbor.moveWith(Direction.NorthWest));
 
         map.setIrrigation(i7);
         map.setIrrigation(i8);
@@ -243,12 +247,12 @@ public class MapTest {
 
         assertTrue(map.getIrrigationBetween(northNeighbor, northNeighbor.moveWith(Direction.NorthEast)).isPresent());
         assertTrue(map.getIrrigationBetween(southNeighbor, southNeighbor.moveWith(Direction.SouthEast)).isPresent());
-        assertTrue(map.getIrrigationBetween(southWestNeighbor, southWestNeighbor.moveWith(Direction.NorthOuest)).isPresent());
+        assertTrue(map.getIrrigationBetween(southWestNeighbor, southWestNeighbor.moveWith(Direction.NorthWest)).isPresent());
     }
 
     @Test
     void irrigationPlacementIllegalPlacement() throws IllegalPlacementException {
-        Map map = new Map(42);
+        dev.stonks.takenoko.map.Map map = new Map(42);
 
         Coordinate c1 = new Coordinate(23, 90);
         Coordinate c2 = c1.moveWith(Direction.North);
@@ -261,5 +265,44 @@ public class MapTest {
         Irrigation i2 = new Irrigation(c3, c4);
 
         assertThrows(IllegalPlacementException.class, () -> map.setIrrigation(i2));
+    }
+
+    @Test
+    void getIrrigationPlacements() throws IllegalPlacementException {
+        Map map = new Map(42);
+        Coordinate initialCoord = map.initialTile().getCoordinate();
+
+        // At the beginning, the only available irrigations are the ones that
+        // are pointing the initial tile.
+        Set<IrrigationCoordinate> initialAvailableIrrigations = map.getIrrigationPlacements();
+        Set<IrrigationCoordinate> expectedAvailableIrrigations = map.initialTile().getConvergingIrrigationCoordinate();
+        assertEquals(initialAvailableIrrigations, expectedAvailableIrrigations);
+
+        Coordinate northNeighbor = initialCoord.moveWith(Direction.North);
+        Coordinate northEastNeighbor = initialCoord.moveWith(Direction.NorthEast);
+
+        // Then we add an irrigation between the north and the north-east
+        // neighbor. We expect seven available coordinates this time.
+        Irrigation i1 = new Irrigation(northNeighbor, northEastNeighbor);
+        // Now that the irrigation is placed, it is not expected anymore.
+
+        assertTrue(initialAvailableIrrigations.contains(i1.getCoordinate()));
+        expectedAvailableIrrigations.remove(i1.getCoordinate());
+
+        map.setIrrigation(i1);
+
+        // Let's add the newly available coordinates.
+        // Note: we could have used northEastNeighbor either.
+        Coordinate lastNeighbor = northNeighbor.moveWith(Direction.NorthEast);
+
+        IrrigationCoordinate iC1 = new IrrigationCoordinate(lastNeighbor, northNeighbor);
+        IrrigationCoordinate iC2 = new IrrigationCoordinate(lastNeighbor, northEastNeighbor);
+        expectedAvailableIrrigations.addAll(List.of(iC1, iC2));
+
+        Set<IrrigationCoordinate> availableCoordinates = map.getIrrigationPlacements();
+        assertEquals(7, availableCoordinates.size());
+        assertEquals(7, expectedAvailableIrrigations.size());
+
+        assertEquals(availableCoordinates, expectedAvailableIrrigations);
     }
 }

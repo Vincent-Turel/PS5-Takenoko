@@ -1,5 +1,7 @@
 package dev.stonks.takenoko;
 
+import dev.stonks.takenoko.map.TileKind;
+import dev.stonks.takenoko.pattern.BambooPattern;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -9,7 +11,7 @@ public class BambooPatternTest {
     void bambooPatternObj(){
         BambooPattern oneBamboo = new BambooPattern(TileKind.Green,3);
         BambooPattern threeBamboo = new BambooPattern(TileKind.Pink, 3, 2);
-        BambooPattern multiColorBamboo = new BambooPattern(TileKind.Green,TileKind.Yellow,TileKind.Pink,3,3);
+        BambooPattern multiColorBamboo = new BambooPattern(TileKind.Green, TileKind.Yellow, TileKind.Pink,3,3);
 
         //test the size of all bamboo :
         assertEquals(3,oneBamboo.getHeight());

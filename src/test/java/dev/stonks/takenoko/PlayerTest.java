@@ -1,5 +1,12 @@
 package dev.stonks.takenoko;
 
+import dev.stonks.takenoko.bot.DumbPlayer;
+import dev.stonks.takenoko.bot.RandomPlayer;
+import dev.stonks.takenoko.map.*;
+import dev.stonks.takenoko.map.Map;
+import dev.stonks.takenoko.pawn.Panda;
+import dev.stonks.takenoko.gameManagement.Action;
+import dev.stonks.takenoko.objective.ObjectiveKind;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -22,7 +29,7 @@ public class PlayerTest {
 
     @Test
     public void decideTest(){
-        Map map = new Map(1);
+        dev.stonks.takenoko.map.Map map = new dev.stonks.takenoko.map.Map(1);
         ArrayList<Action> possibleActions = new ArrayList<>(Arrays.asList(Action.values()));
         assertTrue(possibleActions.contains(randomPlayer.decide(possibleActions, map)));
         assertEquals(randomPlayer.getCurrentMapState(), map);
@@ -45,7 +52,8 @@ public class PlayerTest {
         Set<Coordinate> placements2 = new HashSet<>();
         List<Coordinate> placementsList = new ArrayList<>(placements);
         Map map = mock(Map.class);
-        when(map.getPlacements()).thenReturn(placements).thenReturn(placements2).thenReturn(placements);
+        when(map.getTilePlacements()).thenReturn(placements).thenReturn(placements2).thenReturn(placements);
+
         ArrayList<AbstractTile> tiles = new ArrayList<>(Arrays.asList(new AbstractTile(TileKind.Green),new AbstractTile(TileKind.Pink)));
         ArrayList<Tile> res = new ArrayList<>(Arrays.asList(
                 tiles.get(0).withCoordinate(placementsList.get(0)),
@@ -65,7 +73,7 @@ public class PlayerTest {
                 new Tile(new Coordinate(1,1), TileKind.Pink),
                 new Tile(new Coordinate(2,2), TileKind.Green)));
         Set<Tile> placements2 = new HashSet<>();
-        Map map = mock(Map.class);
+        dev.stonks.takenoko.map.Map map = mock(Map.class);
         Panda panda = new Panda(new Coordinate(1,1));
         when(map.getPossiblePawnPlacements(panda)).thenReturn(placements).thenReturn(placements2);
         randomPlayer.setCurrentMapState(map);
