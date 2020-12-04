@@ -12,6 +12,10 @@ public class Panda extends Pawn {
         super(initialTileCoord);
     }
 
+    public Panda(Panda panda) {
+        super(panda.getCurrentCoordinate());
+    }
+
     public Optional<Bamboo> moveToAndAct(Tile tile) {
         super.moveTo(tile);
         if (tile.getBamboo().getSize() > 0){

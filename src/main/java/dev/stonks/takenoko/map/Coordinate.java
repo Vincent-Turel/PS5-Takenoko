@@ -22,6 +22,11 @@ public class Coordinate {
         this.y = y;
     }
 
+    public Coordinate(Coordinate coord) {
+        this.x = coord.x;
+        this.y = coord.y;
+    }
+
     /**
      * Returns the integer offset corresponding to the coordinate.
      * @param mapSideLength how much tiles at maximum the map has on each side

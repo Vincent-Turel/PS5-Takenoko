@@ -44,6 +44,11 @@ public class IrrigationCoordinate {
         dir = coord.displacementFor(otherCoord).get();
     }
 
+    public IrrigationCoordinate(IrrigationCoordinate coord) {
+        this.coord = new Coordinate(coord.coord);
+        this.dir = coord.dir;
+    }
+
     /**
      * Returns the other coordinate stored internally. This coordinate is, with
      * coord, the other coordinate that is irrigated by the irrigation.

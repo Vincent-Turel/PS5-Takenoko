@@ -18,6 +18,10 @@ public class Gardener extends Pawn {
         super(initialTileCoord);
     }
 
+    public Gardener(Gardener gardener) {
+        super(gardener.getCurrentCoordinate());
+    }
+
     /**
      * Move and make the bamboo grow on the tile,  and its neigbors if :
      * - the neighbor is present
