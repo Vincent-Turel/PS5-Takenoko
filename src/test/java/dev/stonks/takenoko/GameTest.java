@@ -1,5 +1,12 @@
 package dev.stonks.takenoko;
 
+import dev.stonks.takenoko.bot.Player;
+import dev.stonks.takenoko.bot.RandomPlayer;
+import dev.stonks.takenoko.gameManagement.Action;
+import dev.stonks.takenoko.gameManagement.Game;
+import dev.stonks.takenoko.gameManagement.GameResults;
+import dev.stonks.takenoko.map.IllegalPlacementException;
+import dev.stonks.takenoko.map.Tile;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Rule;
@@ -11,6 +18,8 @@ import org.mockito.stubbing.Answer;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static org.junit.Assert.*;
@@ -35,56 +44,18 @@ public class GameTest {
     @Test
     void verificationOfThePossiblesActions(){
         Player player1 = players.get(0);
-        ArrayList<Action> expected = new ArrayList<>();
-        expected.addAll(Arrays.stream(Action.values()).collect(Collectors.toList()));
-        ArrayList<Action> result = game.findPossibleActions(player1);
+        Set<Action> expected = new HashSet<>();
+        Set<Action> result = new HashSet<>();
+        expected.addAll((Arrays.stream(Action.values()).collect(Collectors.toSet())));
+        //With one tile, the pawns can't move
+        expected.remove(Action.MoveGardener);
+        expected.remove(Action.MovePanda);
+        result.addAll(game.findPossibleActions(player1));
         assertTrue(result.equals(expected));
     }
 
-    /*@Rule
-    public ExpectedException thrownException = ExpectedException.none();
-
     @Test
-    void playShould_throw_exception() throws Exception{
-        thrownException.expect(IllegalTilePlacementException.class);
-        Player exceptionPlayer = mock(Player.class);
-        when(exceptionPlayer.getId()).thenReturn(1);
-        when(exceptionPlayer.decide(any(),any())).thenReturn(Action.PutTile);
-        when(exceptionPlayer.putTile(any())).thenThrow(IllegalTilePlacementException.class);
-        players.clear();
-        players.add(exceptionPlayer);
-        players.add(exceptionPlayer);
-        game.play();
-    }*/
-
-    @Test
-    void playShould_throw_exception(){
-        Tile mockTile = mock(Tile.class);
-        Player exceptionPlayer = mock(Player.class);
-        IllegalStateException expectedException = new IllegalStateException("This action shouldn't be possible if there is no tiles remaining");
-        when(exceptionPlayer.getId()).thenReturn(1);
-        when(exceptionPlayer.decide(any(),any())).thenReturn(Action.PutTile);
-
-        /*when(exceptionPlayer.putTile(any())).thenReturn(mockTile);
-        when(exceptionPlayer.putTile(any())).thenThrow(expectedException);
-        doThrow(expectedException).when(exceptionPlayer).putTile(any());*/
-        when(exceptionPlayer.putTile(any())).thenReturn(mockTile);
-        doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
-                throw expectedException;
-            }
-        }).when(exceptionPlayer.putTile(any()));
-
-        //when(exceptionPlayer.putTile(any())).thenThrow(IllegalTilePlacementException.class);
-        players.clear();
-        players.add(exceptionPlayer);
-        players.add(exceptionPlayer);
-        assertThrows(IllegalTilePlacementException.class,() -> game.play());
-    }
-
-    @Test
-    void getTheGoodsResults() throws IllegalTilePlacementException {
+    void getTheGoodsResults() throws IllegalPlacementException {
         Game mockGame = mock(Game.class);
         ArrayList<GameResults> mockResults = new ArrayList<>();
         mockResults.add(new GameResults(players.get(0).getId(),1));
@@ -117,13 +88,12 @@ public class GameTest {
     }
 
     @Test
-    void verificationOfReset() throws IllegalTilePlacementException {
+    void verificationOfReset() throws IllegalPlacementException {
         Game expected = new Game(players);
-        Game expected2 = new Game(players);
         //System.out.println(players);
-        assertTrue(expected.equals(expected2));
         assertTrue(expected.equals(game));
         game.play();
+        expected.gamePlayersResults.addAll(game.gamePlayersResults);
         game.resetGame();
         assertTrue(expected.equals(game));
     }
