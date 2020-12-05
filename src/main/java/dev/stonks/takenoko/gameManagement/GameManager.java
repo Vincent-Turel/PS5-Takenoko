@@ -35,7 +35,7 @@ public class GameManager {
     private void initialisesStats() {
         stats = new ArrayList<FinalResults>();
         for (Player player : players) {
-            stats.add(new FinalResults(player.getId()));
+            stats.add(new FinalResults(player.getId(),player.getPlayerType()));
         }
     }
 

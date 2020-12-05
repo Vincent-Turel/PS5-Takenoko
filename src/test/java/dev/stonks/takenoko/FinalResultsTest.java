@@ -1,5 +1,6 @@
 package dev.stonks.takenoko;
 
+import dev.stonks.takenoko.bot.Player;
 import dev.stonks.takenoko.gameManagement.FinalResults;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,14 +15,14 @@ public class FinalResultsTest {
 
     @BeforeEach
     void initialises2games(){
-        res1 = new FinalResults(1);
-        res2 = new FinalResults(2);
+        res1 = new FinalResults(1, Player.PlayerType.DumbPlayer);
+        res2 = new FinalResults(2,Player.PlayerType.DumbPlayer);
     }
 
     @Test
     public void testEqualitiesResults(){
         assertTrue(res1.equals(res1));
-        assertFalse(res2.equals(new FinalResults(2)));
+        assertFalse(res2.equals(new FinalResults(2,Player.PlayerType.DumbPlayer)));
     }
 
     @Test

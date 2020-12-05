@@ -14,7 +14,7 @@ import java.util.*;
  */
 public abstract class Player {
 
-    enum PlayerType{
+    public enum PlayerType{
     RandomPlayer,
     DumbPlayer,
     SmartPlayer
