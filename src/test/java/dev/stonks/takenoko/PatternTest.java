@@ -16,6 +16,7 @@ public class PatternTest {
 
         Map m = new Map(42);
         Tile t = m.addNeighborOf(TileKind.Green, m.initialTile().withDirection(Direction.South));
+        t.irrigate();
 
         Coordinate center = m.initialTile().getCoordinate();
 
@@ -38,10 +39,22 @@ public class PatternTest {
     }
 
     @Test
-    void matchesTileOfOf() {
+    void matchesIrrigatedTileOfOf() {
         Coordinate c = new Coordinate(42, 42);
         Tile t = new AbstractTile(TileKind.Green).withCoordinate(c);
+        t.irrigate();
+
         assertTrue(Pattern.matchesTile(Optional.of(TileKind.Green), Optional.of(t)));
+
+        assertFalse(Pattern.matchesTile(Optional.of(TileKind.Yellow), Optional.of(t)));
+    }
+
+    @Test
+    void doesNotMatchIrrigatedTileOfOf() {
+        Coordinate c = new Coordinate(42, 42);
+        Tile t = new AbstractTile(TileKind.Green).withCoordinate(c);
+
+        assertFalse(Pattern.matchesTile(Optional.of(TileKind.Green), Optional.of(t)));
 
         assertFalse(Pattern.matchesTile(Optional.of(TileKind.Yellow), Optional.of(t)));
     }

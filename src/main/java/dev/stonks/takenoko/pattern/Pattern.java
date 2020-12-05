@@ -206,11 +206,9 @@ public class Pattern {
         }
 
         TileKind required = requirement.get();
-        TileKind given = tile.get().kind();
+        Tile givenTile = tile.get();
 
-        boolean ret = required.equals(given);
-
-        return required.equals(given);
+        return required.equals(givenTile.kind()) && givenTile.isIrrigated();
     }
 
     /**
