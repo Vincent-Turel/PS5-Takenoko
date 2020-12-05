@@ -15,14 +15,20 @@ public class FinalResultsTest {
 
     @BeforeEach
     void initialises2games(){
-        res1 = new FinalResults(1, Player.PlayerType.DumbPlayer);
-        res2 = new FinalResults(2,Player.PlayerType.DumbPlayer);
+        res1 = new FinalResults(1, Player.PlayerType.RandomPlayer);
+        res2 = new FinalResults(2,Player.PlayerType.RandomPlayer);
     }
-
+    
     @Test
     public void testEqualitiesResults(){
         assertTrue(res1.equals(res1));
-        assertFalse(res2.equals(new FinalResults(2,Player.PlayerType.DumbPlayer)));
+        assertFalse(res2.equals(new FinalResults(2,Player.PlayerType.RandomPlayer)));
+    }
+
+    @Test
+    public void testPlayerType(){
+        assertTrue(res1.getPlayerType()==Player.PlayerType.RandomPlayer);
+        assertFalse(res1.getPlayerType()==Player.PlayerType.DumbPlayer);
     }
 
     @Test

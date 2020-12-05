@@ -68,4 +68,7 @@ public class FinalResults {
         return finalScore;
     }
 
+    public Player.PlayerType getPlayerType() {
+        return playerType;
+    }
 }
