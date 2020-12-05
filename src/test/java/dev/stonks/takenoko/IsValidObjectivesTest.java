@@ -16,10 +16,35 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Stream;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class IsValidObjectivesTest {
+
+    @Test
+    public void objPatternTest() throws IllegalPlacementException {
+        //Some objective :
+        Pattern pattern = new Pattern().withCenter(TileKind.Green);
+        PatternObjective objectiveWin = new PatternObjective(5,pattern);
+        PatternObjective objectiveLose = new PatternObjective(5,pattern);
+        //Making a map :
+        Map map = new Map(42);
+        Tile t = map.addNeighborOf(TileKind.Green, map.initialTile().withDirection(Direction.South));
+        t.irrigate();
+        Coordinate center = map.initialTile().getCoordinate();
+        //All pattern already use :
+        Set<MatchResult> alreadyUse = new HashSet<>();
+
+        //Test :
+        assertEquals(false,objectiveWin.getStates());
+        isValidObjectives.isValidPatternObjective(objectiveWin,map,alreadyUse);
+        assertEquals(true,objectiveWin.getStates());
+        assertEquals(false,objectiveLose.getStates());
+        isValidObjectives.isValidPatternObjective(objectiveLose,map,alreadyUse);
+        assertEquals(false,objectiveLose.getStates());
+
+    }
 
     @Test
     public void winObjectives(){
