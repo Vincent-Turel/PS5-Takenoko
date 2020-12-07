@@ -55,6 +55,18 @@ public class GameTest {
     }
 
     @Test
+    void testThePlayMethod(){
+        Game emptyGame = new Game(players);
+        try {
+            game.play();
+            assertFalse(game.equals(emptyGame));
+        } catch (Exception e) {
+            e.printStackTrace();
+            assertTrue(e.getClass()==IllegalPlacementException.class);
+        }
+    }
+
+    @Test
     void getTheGoodsResults() throws IllegalPlacementException {
         Game mockGame = mock(Game.class);
         ArrayList<GameResults> mockResults = new ArrayList<>();
