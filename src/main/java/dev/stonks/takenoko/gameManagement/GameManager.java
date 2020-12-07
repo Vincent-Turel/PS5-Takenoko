@@ -17,7 +17,7 @@ import java.util.logging.Logger;
 public class GameManager {
     private final static Logger LOG = Logger.getLogger(GameManager.class.getSimpleName());
     ArrayList<Player> players;
-    Game game;
+    public Game game;
     ArrayList<FinalResults> stats;
 
     /**
@@ -135,7 +135,7 @@ public class GameManager {
      * @param nbGames
      */
     private void displayPlayerStats(FinalResults result ,int nbGames){
-        displayWhoItIs(result.getId());
+        displayWhoItIs(result.getId(),result.getPlayerType());
         System.out.println("Win games :" + result.getNbWin());
         System.out.println("Percentage of win games :" + (result.getNbWin()/(float)nbGames)*100 + "%");
         System.out.println("Lost games :" + result.getNbLoose());
@@ -149,9 +149,9 @@ public class GameManager {
     /**
      * Display what player it is
      * @param id
+     * @param playerType
      */
-    private void displayWhoItIs(int id) {
-        //TODO:display of the ia level ?
-        System.out.println("Bot n°"+ id + ", ia level : ");
+    private void displayWhoItIs(int id, Player.PlayerType playerType) {
+        System.out.println("Bot n°"+ id + ", ia level : "+playerType);
     }
 }
