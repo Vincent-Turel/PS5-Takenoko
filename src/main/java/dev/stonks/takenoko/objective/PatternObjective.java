@@ -1,8 +1,11 @@
 package dev.stonks.takenoko.objective;
 
+import dev.stonks.takenoko.IllegalEqualityExceptionGenerator;
 import dev.stonks.takenoko.objective.Objective;
 import dev.stonks.takenoko.objective.ObjectiveKind;
 import dev.stonks.takenoko.pattern.Pattern;
+
+import java.util.Objects;
 
 public class PatternObjective extends Objective {
 
@@ -23,4 +26,18 @@ public class PatternObjective extends Objective {
      * @return local pattern for the classe isValideObjectives
      */
     public Pattern getLocalPattern(){return localPattern;}
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!super.equals(o)) return false;
+        if (getClass() != o.getClass()) throw IllegalEqualityExceptionGenerator.create(PatternObjective.class,o.getClass());
+        PatternObjective that = (PatternObjective) o;
+        return Objects.equals(localPattern, that.localPattern);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), localPattern);
+    }
 }

@@ -1,21 +1,21 @@
 package dev.stonks.takenoko.bot;
 
+import dev.stonks.takenoko.IllegalEqualityExceptionGenerator;
 import dev.stonks.takenoko.map.*;
+import dev.stonks.takenoko.map.Map;
 import dev.stonks.takenoko.pawn.Pawn;
 import dev.stonks.takenoko.gameManagement.Action;
 import dev.stonks.takenoko.objective.Objective;
 import dev.stonks.takenoko.objective.ObjectiveKind;
 
-import java.util.ArrayList;
-import java.util.Random;
-import java.util.Stack;
+import java.util.*;
 
 /**
  * This class is the mother class of every types of player.
  */
 public abstract class Player {
 
-    enum PlayerType{
+    public enum PlayerType{
     RandomPlayer,
     DumbPlayer,
     SmartPlayer
@@ -199,5 +199,28 @@ public abstract class Player {
         this.objectives.clear();
         this.collectedBamboo=new int[]{0, 0, 0};
         this.irrigations.clear();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) throw IllegalEqualityExceptionGenerator.create(Player.class,o.getClass());
+        Player player = (Player) o;
+        return id == player.id &&
+                nbObjectivesAchieved == player.nbObjectivesAchieved &&
+                score == player.score &&
+                playerType == player.playerType &&
+                Objects.equals(objectives, player.objectives) &&
+                Arrays.equals(collectedBamboo, player.collectedBamboo) &&
+                Objects.equals(irrigations, player.irrigations) &&
+                Objects.equals(currentMapState, player.currentMapState) &&
+                Objects.equals(random, player.random);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = Objects.hash(playerType, id, objectives, irrigations, nbObjectivesAchieved, currentMapState, score, random);
+        result = 31 * result + Arrays.hashCode(collectedBamboo);
+        return result;
     }
 }

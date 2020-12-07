@@ -1,6 +1,10 @@
 package dev.stonks.takenoko.objective;
 
+import dev.stonks.takenoko.IllegalEqualityExceptionGenerator;
+import dev.stonks.takenoko.map.DirectionnedTile;
 import dev.stonks.takenoko.pattern.BambooPattern;
+
+import java.util.Objects;
 
 public class PandaObjective extends Objective{
 
@@ -21,5 +25,19 @@ public class PandaObjective extends Objective{
      */
     public BambooPattern getBambooPattern() {
         return this.bambooPattern;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if(!super.equals(o)) return false;
+        if (getClass() != o.getClass()) throw IllegalEqualityExceptionGenerator.create(PandaObjective.class,o.getClass());
+        PandaObjective that = (PandaObjective) o;
+        return Objects.equals(bambooPattern, that.bambooPattern);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), bambooPattern);
     }
 }

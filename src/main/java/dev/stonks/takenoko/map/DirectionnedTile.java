@@ -1,5 +1,10 @@
 package dev.stonks.takenoko.map;
 
+import dev.stonks.takenoko.IllegalEqualityExceptionGenerator;
+import dev.stonks.takenoko.bot.Player;
+
+import java.util.Objects;
+
 /**
  * Holds a <code>Tile</code> and a <code>Direction</code> together.
  *
@@ -35,5 +40,19 @@ public class DirectionnedTile {
      */
     public Direction direction() {
         return d;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) throw IllegalEqualityExceptionGenerator.create(DirectionnedTile.class,o.getClass());
+        DirectionnedTile that = (DirectionnedTile) o;
+        return Objects.equals(t, that.t) &&
+                d == that.d;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(t, d);
     }
 }

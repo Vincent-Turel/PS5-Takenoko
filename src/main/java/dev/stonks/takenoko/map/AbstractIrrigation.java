@@ -1,5 +1,8 @@
 package dev.stonks.takenoko.map;
 
+import dev.stonks.takenoko.IllegalEqualityExceptionGenerator;
+import dev.stonks.takenoko.bot.Player;
+
 public class AbstractIrrigation {
 
     public AbstractIrrigation() {
@@ -12,5 +15,11 @@ public class AbstractIrrigation {
      */
     public Irrigation withCoordinate(Coordinate c, Coordinate d) throws IllegalPlacementException {
         return new Irrigation(c, d);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null || getClass() != obj.getClass()) throw IllegalEqualityExceptionGenerator.create(AbstractIrrigation.class,obj.getClass());
+        return true;
     }
 }

@@ -1,5 +1,9 @@
 package dev.stonks.takenoko.objective;
 
+import dev.stonks.takenoko.IllegalEqualityExceptionGenerator;
+
+import java.util.Objects;
+
 public class Objective {
 
     protected int nbPt;
@@ -36,4 +40,20 @@ public class Objective {
      * Update the states of this objective :
      */
     public void UpdtateStates(){isValid=true;}
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null) return false;
+        if(o.getClass()!= Objective.class && o.getClass()!= GardenerObjective.class && o.getClass()!= PatternObjective.class && o.getClass()!= PandaObjective.class) throw IllegalEqualityExceptionGenerator.create(Objective.class,o.getClass());
+        Objective objective = (Objective) o;
+        return nbPt == objective.nbPt &&
+                objType == objective.objType &&
+                Objects.equals(isValid, objective.isValid);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(nbPt, objType, isValid);
+    }
 }

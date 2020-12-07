@@ -39,9 +39,9 @@ public class Game {
     Objective emperor;
     ArrayList<Objective> achievedObjectives;
     Random random;
-    ArrayList<GameResults> gamePlayersResults;
+    public ArrayList<GameResults> gamePlayersResults;
 
-    Game(ArrayList<Player> players) {
+    public Game(ArrayList<Player> players) {
         map = new Map(28);
         initialiseTileDeck();
         initialiseIrrigationDeck();
@@ -113,7 +113,7 @@ public class Game {
     }
 
 
-    void play() throws IllegalPlacementException {
+    public void play() throws IllegalPlacementException {
         int moreThan500OnlyPawnActions = 0;
         boolean aPlayerWin = false;
         boolean remainingLastTurn = true;
@@ -126,7 +126,7 @@ public class Game {
             for (Player player : players) {
                 if (idWinner.isEmpty() || player.getId() != idWinner.get()) {
                     var possibleActions = findPossibleActions(player);
-                    LOG.info("Actions possibles : ");
+                    LOG.info("Possibles actions  : ");
                     LOG.info(possibleActions.toString());
                     if (possibleActions.size() == 2) {
                         moreThan500OnlyPawnActions += 2;
@@ -137,72 +137,7 @@ public class Game {
                             fillTheFinalScore();
                             return;
                         }
-                        Action chosenAction = player.decide(possibleActions, map);
-                        LOG.info("Player n°" + player.getId() + " has chosen this action : " + chosenAction.toString());
-                        possibleActions.remove(chosenAction);
-                        switch (chosenAction) {
-                            case PutTile:
-                                ArrayList<AbstractTile> possiblesTiles = new ArrayList<>(3);
-                                int index;
-                                int size = 3;
-                                if (size > tileDeck.size()) {
-                                    size = tileDeck.size();
-                                }
-                                for (int i = 0; i < size; i++) {
-                                    index = random.nextInt(tileDeck.size());
-                                    AbstractTile aTile = tileDeck.remove(index);
-                                    possiblesTiles.add(aTile);
-                                }
-                                placedTileDeck.addAll(possiblesTiles);
-                                Tile chosenTile = player.putTile(possiblesTiles);
-                                tileDeck.addAll(possiblesTiles);
-                                placedTileDeck.removeAll(possiblesTiles);
-                                map.setTile(chosenTile);
-                                break;
-                            case MoveGardener:
-                                Gardener gardener = map.getGardener();
-                                gardener.moveToAndAct(player.choseWherePawnShouldGo(gardener), map);
-                                break;
-                            case MovePanda:
-                                Panda panda = map.getPanda();
-                                Optional<Bamboo> bamboo = panda.moveToAndAct(player.choseWherePawnShouldGo(panda));
-                                bamboo.ifPresent(player::addCollectedBamboo);
-                                break;
-                            case DrawIrrigation:
-                                AbstractIrrigation drawnIrrigation = irrigationDeck.pop();
-                                placedIrrigationsDeck.add(drawnIrrigation);
-                                player.addIrrigation(drawnIrrigation);
-                                break;
-                            case DrawObjective:
-                                ArrayList<ObjectiveKind> listPossibleKind = new ArrayList<>();
-                                if (tileObjectives.size() > 0) {
-                                    listPossibleKind.add(ObjectiveKind.Pattern);
-                                }
-                                if (pandaObjectives.size() > 0) {
-                                    listPossibleKind.add(ObjectiveKind.Panda);
-                                }
-                                if (gardenerObjectives.size() > 0) {
-                                    listPossibleKind.add(ObjectiveKind.Gardener);
-                                }
-                                ObjectiveKind objectiveKind = player.chooseObjectiveKind(listPossibleKind);
-                                int num;
-                                if ((objectiveKind == ObjectiveKind.Pattern) && (tileObjectives.size() > 0)) {
-                                    num = random.nextInt(tileObjectives.size());
-                                    player.addObjectives(tileObjectives.get(num));
-                                    tileObjectives.remove(num);
-                                }
-                                if ((objectiveKind == ObjectiveKind.Panda) && (pandaObjectives.size() > 0)) {
-                                    num = random.nextInt(pandaObjectives.size());
-                                    player.addObjectives(pandaObjectives.get(num));
-                                    pandaObjectives.remove(num);
-                                }
-                                if((objectiveKind==ObjectiveKind.Gardener) && (gardenerObjectives.size()>0)) {
-                                    num = random.nextInt(gardenerObjectives.size());
-                                    player.addObjectives(gardenerObjectives.get(num));
-                                    gardenerObjectives.remove(num);
-                                }
-                                break;
-                        }
+                        playerPlay(player,possibleActions);
                     }
                     checkObjectives(player);
                     map.growBambooInMap();
@@ -217,6 +152,75 @@ public class Game {
             }
         }
         fillTheFinalScore();
+    }
+
+    private void playerPlay(Player player, ArrayList<Action> possibleActions) throws IllegalPlacementException {
+        Action chosenAction = player.decide(possibleActions, map);
+        LOG.info("Player n°" + player.getId() + " has chosen this action : " + chosenAction.toString());
+        possibleActions.remove(chosenAction);
+        switch (chosenAction) {
+            case PutTile:
+                ArrayList<AbstractTile> possiblesTiles = new ArrayList<>(3);
+                int index;
+                int size = 3;
+                if (size > tileDeck.size()) {
+                    size = tileDeck.size();
+                }
+                for (int i = 0; i < size; i++) {
+                    index = random.nextInt(tileDeck.size());
+                    AbstractTile aTile = tileDeck.remove(index);
+                    possiblesTiles.add(aTile);
+                }
+                placedTileDeck.addAll(possiblesTiles);
+                Tile chosenTile = player.putTile(possiblesTiles);
+                tileDeck.addAll(possiblesTiles);
+                placedTileDeck.removeAll(possiblesTiles);
+                map.setTile(chosenTile);
+                break;
+            case MoveGardener:
+                Gardener gardener = map.getGardener();
+                gardener.moveToAndAct(player.choseWherePawnShouldGo(gardener), map);
+                break;
+            case MovePanda:
+                Panda panda = map.getPanda();
+                Optional<Bamboo> bamboo = panda.moveToAndAct(player.choseWherePawnShouldGo(panda));
+                bamboo.ifPresent(player::addCollectedBamboo);
+                break;
+            case DrawIrrigation:
+                AbstractIrrigation drawnIrrigation = irrigationDeck.pop();
+                placedIrrigationsDeck.add(drawnIrrigation);
+                player.addIrrigation(drawnIrrigation);
+                break;
+            case DrawObjective:
+                ArrayList<ObjectiveKind> listPossibleKind = new ArrayList<>();
+                if (tileObjectives.size() > 0) {
+                    listPossibleKind.add(ObjectiveKind.Pattern);
+                }
+                if (pandaObjectives.size() > 0) {
+                    listPossibleKind.add(ObjectiveKind.Panda);
+                }
+                if (gardenerObjectives.size() > 0) {
+                    listPossibleKind.add(ObjectiveKind.Gardener);
+                }
+                ObjectiveKind objectiveKind = player.chooseObjectiveKind(listPossibleKind);
+                int num;
+                if ((objectiveKind == ObjectiveKind.Pattern) && (tileObjectives.size() > 0)) {
+                    num = random.nextInt(tileObjectives.size());
+                    player.addObjectives(tileObjectives.get(num));
+                    tileObjectives.remove(num);
+                }
+                if ((objectiveKind == ObjectiveKind.Panda) && (pandaObjectives.size() > 0)) {
+                    num = random.nextInt(pandaObjectives.size());
+                    player.addObjectives(pandaObjectives.get(num));
+                    pandaObjectives.remove(num);
+                }
+                if((objectiveKind==ObjectiveKind.Gardener) && (gardenerObjectives.size()>0)) {
+                    num = random.nextInt(gardenerObjectives.size());
+                    player.addObjectives(gardenerObjectives.get(num));
+                    gardenerObjectives.remove(num);
+                }
+                break;
+        }
     }
 
     private void objectivesDistribution() {
@@ -328,7 +332,7 @@ public class Game {
         return gamePlayersResults;
     }
 
-    void resetGame() throws UnsupportedOperationException{
+    public void resetGame() throws UnsupportedOperationException{
         resetMap();
         resetObjectives();
         resetDecks();
@@ -341,6 +345,7 @@ public class Game {
         placedTileDeck.clear();
         irrigationDeck.addAll(placedIrrigationsDeck);
         placedIrrigationsDeck.clear();
+        patternMatchs.clear();
     }
 
     private void resetMap() {
@@ -395,4 +400,28 @@ public class Game {
         }
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Game game = (Game) o;
+        return Objects.equals(map, game.map) &&
+                tileDeck.containsAll(game.tileDeck) && game.tileDeck.containsAll(tileDeck) &&
+                placedTileDeck.containsAll(game.placedTileDeck) && game.placedTileDeck.containsAll(placedTileDeck) &&
+                Objects.equals(irrigationDeck, game.irrigationDeck) &&
+                Objects.equals(placedIrrigationsDeck, game.placedIrrigationsDeck) &&
+                Objects.equals(players, game.players) &&
+                tileObjectives.containsAll(game.tileObjectives) && game.tileObjectives.containsAll(tileObjectives) &&
+                pandaObjectives.containsAll(game.pandaObjectives) && game.pandaObjectives.containsAll(pandaObjectives) &&
+                gardenerObjectives.containsAll(game.gardenerObjectives) && game.gardenerObjectives.containsAll(gardenerObjectives) &&
+                Objects.equals(patternMatchs, game.patternMatchs) &&
+                Objects.equals(emperor, game.emperor) &&
+                achievedObjectives.containsAll(game.achievedObjectives) && game.achievedObjectives.containsAll(achievedObjectives) &&
+                Objects.equals(gamePlayersResults, game.gamePlayersResults);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(map, tileDeck, placedTileDeck, irrigationDeck, placedIrrigationsDeck, players, tileObjectives, pandaObjectives, gardenerObjectives, patternMatchs, emperor, achievedObjectives, random, gamePlayersResults);
+    }
 }

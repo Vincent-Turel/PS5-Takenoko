@@ -1,7 +1,10 @@
 package dev.stonks.takenoko.pattern;
 
+import dev.stonks.takenoko.IllegalEqualityExceptionGenerator;
 import dev.stonks.takenoko.map.TileKind;
+import dev.stonks.takenoko.objective.PandaObjective;
 
+import java.util.Objects;
 import java.util.Optional;
 
 public class BambooPattern {
@@ -69,5 +72,22 @@ public class BambooPattern {
 
     public Optional<TileKind> getOptionalColor2() {
         return optionalColor2;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) throw IllegalEqualityExceptionGenerator.create(BambooPattern.class,o.getClass());
+        BambooPattern that = (BambooPattern) o;
+        return height == that.height &&
+                nbBamboo == that.nbBamboo &&
+                color == that.color &&
+                Objects.equals(optionalColor1, that.optionalColor1) &&
+                Objects.equals(optionalColor2, that.optionalColor2);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(color, optionalColor1, optionalColor2, height, nbBamboo);
     }
 }
