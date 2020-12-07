@@ -174,6 +174,8 @@ public class Tile {
             return true;
         }
 
+        if(o == null) return false;
+
         if (!(o instanceof Tile)) {
             throw IllegalEqualityExceptionGenerator.create(Tile.class, o.getClass());
         }

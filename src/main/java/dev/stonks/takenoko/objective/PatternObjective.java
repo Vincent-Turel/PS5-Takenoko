@@ -1,5 +1,6 @@
 package dev.stonks.takenoko.objective;
 
+import dev.stonks.takenoko.IllegalEqualityExceptionGenerator;
 import dev.stonks.takenoko.objective.Objective;
 import dev.stonks.takenoko.objective.ObjectiveKind;
 import dev.stonks.takenoko.pattern.Pattern;
@@ -29,8 +30,8 @@ public class PatternObjective extends Objective {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
+        if (getClass() != o.getClass()) throw IllegalEqualityExceptionGenerator.create(PatternObjective.class,o.getClass());
         PatternObjective that = (PatternObjective) o;
         return Objects.equals(localPattern, that.localPattern);
     }

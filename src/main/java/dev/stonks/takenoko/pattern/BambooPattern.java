@@ -1,6 +1,8 @@
 package dev.stonks.takenoko.pattern;
 
+import dev.stonks.takenoko.IllegalEqualityExceptionGenerator;
 import dev.stonks.takenoko.map.TileKind;
+import dev.stonks.takenoko.objective.PandaObjective;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -75,7 +77,7 @@ public class BambooPattern {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (o == null || getClass() != o.getClass()) throw IllegalEqualityExceptionGenerator.create(BambooPattern.class,o.getClass());
         BambooPattern that = (BambooPattern) o;
         return height == that.height &&
                 nbBamboo == that.nbBamboo &&

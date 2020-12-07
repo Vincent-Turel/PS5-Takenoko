@@ -1,7 +1,9 @@
 package dev.stonks.takenoko.pawn;
 
+import dev.stonks.takenoko.IllegalEqualityExceptionGenerator;
 import dev.stonks.takenoko.map.Coordinate;
 import dev.stonks.takenoko.map.Tile;
+import dev.stonks.takenoko.objective.PandaObjective;
 
 import java.util.Objects;
 
@@ -39,7 +41,7 @@ public abstract class Pawn {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (o == null || getClass() != o.getClass()) throw IllegalEqualityExceptionGenerator.create(Pawn.class,o.getClass());
         Pawn pawn = (Pawn) o;
         return Objects.equals(currentCoordinate, pawn.currentCoordinate);
     }

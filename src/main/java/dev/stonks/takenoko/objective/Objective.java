@@ -1,5 +1,7 @@
 package dev.stonks.takenoko.objective;
 
+import dev.stonks.takenoko.IllegalEqualityExceptionGenerator;
+
 import java.util.Objects;
 
 public class Objective {
@@ -42,7 +44,8 @@ public class Objective {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (o == null) return false;
+        if(o.getClass()!= Objective.class && o.getClass()!= GardenerObjective.class && o.getClass()!= PatternObjective.class && o.getClass()!= PandaObjective.class) throw IllegalEqualityExceptionGenerator.create(Objective.class,o.getClass());
         Objective objective = (Objective) o;
         return nbPt == objective.nbPt &&
                 objType == objective.objType &&

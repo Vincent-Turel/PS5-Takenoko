@@ -1,5 +1,8 @@
 package dev.stonks.takenoko.gameManagement;
 
+import dev.stonks.takenoko.IllegalEqualityExceptionGenerator;
+import dev.stonks.takenoko.bot.Player;
+
 import java.util.Objects;
 
 /**
@@ -30,7 +33,7 @@ public class GameResults {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (o == null || getClass() != o.getClass()) throw IllegalEqualityExceptionGenerator.create(GameResults.class,o.getClass());;
         GameResults that = (GameResults) o;
         return id == that.id &&
                 rank == that.rank;

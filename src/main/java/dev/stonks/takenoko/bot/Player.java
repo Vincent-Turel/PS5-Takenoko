@@ -1,5 +1,6 @@
 package dev.stonks.takenoko.bot;
 
+import dev.stonks.takenoko.IllegalEqualityExceptionGenerator;
 import dev.stonks.takenoko.map.*;
 import dev.stonks.takenoko.map.Map;
 import dev.stonks.takenoko.pawn.Pawn;
@@ -203,7 +204,7 @@ public abstract class Player {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (o == null || getClass() != o.getClass()) throw IllegalEqualityExceptionGenerator.create(Player.class,o.getClass());
         Player player = (Player) o;
         return id == player.id &&
                 nbObjectivesAchieved == player.nbObjectivesAchieved &&
