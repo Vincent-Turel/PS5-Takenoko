@@ -211,4 +211,28 @@ public class Coordinate {
 
         return tileCoord;
     }
+
+    /**
+     * Returns, given a group of neighbors, the position of the corresponding
+     * tile.
+     * @param neighbors the tile neighbors
+     * @return the tile direction
+     * @throws IllegalPlacementException thrown when the provided direction
+     *                                       and tile coordinates does not
+     *                                       match each other or when the
+     *                                       computed coordinate don't have
+     *                                       the correct neighbors.
+     */
+    static Coordinate validFromNeighbor(DirectionnedTile... neighbors) throws IllegalPlacementException {
+        Coordinate c = fromNeighbors(neighbors);
+
+        boolean neighborOfInitial = Arrays.stream(neighbors).anyMatch(dt -> dt.tile().isInitial());
+        boolean hasTwoNeighbors = neighbors.length >= 2;
+
+        if (!neighborOfInitial && !hasTwoNeighbors) {
+            throw new IllegalPlacementException("Tile don't have required neighbors");
+        }
+
+        return c;
+    }
 }

@@ -51,7 +51,7 @@ public class Tile {
      * @return The newly created tile
      */
     public static Tile neighborOf(TileKind kind, DirectionnedTile... neighbors) throws IllegalPlacementException {
-        Coordinate tileCoord = Coordinate.fromNeighbors(neighbors);
+        Coordinate tileCoord = Coordinate.validFromNeighbor(neighbors);
         Tile t = new Tile(tileCoord, kind);
         return t;
     }
