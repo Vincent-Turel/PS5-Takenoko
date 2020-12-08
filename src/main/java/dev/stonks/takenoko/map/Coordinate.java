@@ -197,7 +197,7 @@ public class Coordinate {
 
             if (tileCoord == null) {
                 tileCoord = c.moveWith(d.reverse());
-            } else if (tileCoord.moveWith(d) != c) {
+            } else if (!tileCoord.moveWith(d).equals(c)) {
                 throw new IllegalPlacementException("Tiles can not be neighbor");
             }
         }
