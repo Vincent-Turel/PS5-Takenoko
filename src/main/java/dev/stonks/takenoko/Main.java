@@ -1,6 +1,7 @@
 package dev.stonks.takenoko;
 
 import dev.stonks.takenoko.gameManagement.GameManager;
+import dev.stonks.takenoko.map.IllegalPlacementException;
 
 import java.util.Arrays;
 import java.util.logging.Level;
@@ -8,9 +9,9 @@ import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
 public class Main {
-    public static final Level level = Level.ALL;
-    public static final int nbRandomPlayer = 2;
-    public static final int nbDumbPlayer = 2;
+    public static final Level level = Level.SEVERE;
+    public static final int nbRandomPlayer = 1;
+    public static final int nbDumbPlayer = 1;
     public static final int nbIntelligentPlayer = 2;
     private final static Logger LOG = Logger.getLogger(Main.class.getSimpleName());
 
@@ -18,12 +19,7 @@ public class Main {
         setLogConfig();
         GameManager gameManager = new GameManager(nbRandomPlayer,nbDumbPlayer);
         LOG.info("Starting program...");
-        try {
-            gameManager.playNTime(1);
-        }
-        catch (Exception e){
-            e.printStackTrace();
-        }
+        gameManager.playNTime(500);
     }
 
     public static void setLogConfig(){

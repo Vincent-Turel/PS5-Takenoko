@@ -95,6 +95,11 @@ public class Tile {
         this.growBamboo();
     }
 
+    public void deirrigate() {
+        this.irrigated = false;
+    }
+
+
     /**
      * Returns whether if the tile is the initial tile or not.
      */

@@ -44,13 +44,14 @@ public class GameTest {
     @Test
     void verificationOfThePossiblesActions(){
         Player player1 = players.get(0);
-        Set<Action> expected = new HashSet<>();
-        Set<Action> result = new HashSet<>();
-        expected.addAll((Arrays.stream(Action.values()).collect(Collectors.toSet())));
+        Set<Action> expected = new HashSet<>((Arrays.stream(Action.values()).collect(Collectors.toSet())));
         //With one tile, the pawns can't move
         expected.remove(Action.MoveGardener);
         expected.remove(Action.MovePanda);
-        result.addAll(game.findPossibleActions(player1));
+        expected.remove(Action.PutIrrigation);
+        Set<Action> result = new HashSet<>(game.findPossibleActions(player1));
+        System.out.println(result);
+        System.out.println(expected);
         assertTrue(result.equals(expected));
     }
 

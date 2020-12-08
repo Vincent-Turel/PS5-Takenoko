@@ -35,8 +35,7 @@ public class Gardener extends Pawn {
             tile.growBamboo();
         Arrays.stream(Direction.values())
                 .map(d -> map.getNeighborOf(tile, d))
-                .filter(Optional::isPresent)
-                .map(Optional::get)
+                .flatMap(Optional::stream)
                 .filter(Tile::isIrrigated)
                 .filter(t -> t.kind().equals(tile.kind()))
                 .forEach(Tile::growBamboo);

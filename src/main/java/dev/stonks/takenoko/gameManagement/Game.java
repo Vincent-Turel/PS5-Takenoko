@@ -113,7 +113,7 @@ public class Game {
     }
 
 
-    public void play() throws IllegalPlacementException {
+    public void play() {
         int moreThan500OnlyPawnActions = 0;
         boolean aPlayerWin = false;
         boolean remainingLastTurn = true;
@@ -153,7 +153,7 @@ public class Game {
         fillTheFinalScore();
     }
 
-    private void playerPlay(Player player, ArrayList<Action> possibleActions) throws IllegalPlacementException {
+    private void playerPlay(Player player, ArrayList<Action> possibleActions) {
         Action chosenAction = player.decide(possibleActions, map);
         LOG.info("Player n°" + player.getId() + " has chosen this action : " + chosenAction.toString());
         possibleActions.remove(chosenAction);
@@ -174,7 +174,12 @@ public class Game {
                 Tile chosenTile = player.putTile(possiblesTiles);
                 tileDeck.addAll(possiblesTiles);
                 placedTileDeck.removeAll(possiblesTiles);
-                map.setTile(chosenTile);
+                try {
+                    map.setTile(chosenTile);
+                } catch (IllegalPlacementException e) {
+                    e.printStackTrace();
+                    System.exit(1);
+                }
                 break;
             case MoveGardener:
                 Gardener gardener = map.getGardener();
@@ -222,6 +227,7 @@ public class Game {
         }
     }
 
+
     private void objectivesDistribution() {
         int index;
         for (Player player: players) {
@@ -258,7 +264,7 @@ public class Game {
             else if(objective instanceof PandaObjective) {
                 player.upDateInventory(isValidObjectives.isObjectivesPandaValid((PandaObjective) objective,player));
                 if (objective.getStates()) {
-                    LOG.info("Player n°"+player.getId()+" has achieved a "+objective.getClass().getSimpleName());
+                    LOG.info("Player n°"+player.getId()+" has achieved a " + objective.getClass().getSimpleName());
                     player.newObjectivesAchieved(objective);
                     pandaObjectives.remove(objective);
                     achievedObjectives.add(objective);
