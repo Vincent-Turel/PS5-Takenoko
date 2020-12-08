@@ -51,42 +51,9 @@ public class Tile {
      * @return The newly created tile
      */
     public static Tile neighborOf(TileKind kind, DirectionnedTile... neighbors) throws IllegalPlacementException {
-        Coordinate tileCoord = coordinateFromNeighbors(neighbors);
+        Coordinate tileCoord = Coordinate.fromNeighbors(neighbors);
         Tile t = new Tile(tileCoord, kind);
         return t;
-    }
-
-    /**
-     * Returns, given a group of neighbors, the position of the corresponding
-     * tile.
-     * @param neighbors the tile neighbors
-     * @return the tile direction
-     * @throws IllegalPlacementException thrown when the provided direction
-     *                                       and tile coordinates does not
-     *                                       match each other.
-     */
-    private static Coordinate coordinateFromNeighbors(DirectionnedTile... neighbors) throws IllegalPlacementException {
-        Coordinate tileCoord = null;
-
-        for (DirectionnedTile neighbor: neighbors) {
-            Direction d = neighbor.direction();
-            Coordinate c = neighbor.tile().getCoordinate();
-
-            if (tileCoord == null) {
-                tileCoord = c.moveWith(d.reverse());
-            } else if (tileCoord.moveWith(d) != c) {
-                throw new IllegalPlacementException("Tiles can not be neighbor");
-            }
-        }
-
-        boolean neighborOfInitial = Arrays.stream(neighbors).anyMatch(dt -> dt.tile().isInitial());
-        boolean hasTwoNeighbors = neighbors.length >= 2;
-
-        if (!neighborOfInitial && !hasTwoNeighbors) {
-            throw new IllegalPlacementException("Tile don't have required neighbors");
-        }
-
-        return tileCoord;
     }
 
     /**
