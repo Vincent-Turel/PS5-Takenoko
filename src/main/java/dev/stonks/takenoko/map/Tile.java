@@ -85,6 +85,7 @@ public class Tile {
      */
     public void irrigate() {
         this.irrigated = true;
+        this.growBamboo();
     }
 
     /**

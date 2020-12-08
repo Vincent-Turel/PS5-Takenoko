@@ -101,6 +101,23 @@ public class MapTest {
     }
 
     @Test
+    void placingIrrigationNearTileIrrigatesIt() throws IllegalPlacementException {
+        Map m = new Map(42);
+        Tile nn = m.addNeighborOf(TileKind.Green, m.initialTile().withDirection(Direction.South));
+        Tile nen = m.addNeighborOf(TileKind.Pink, m.initialTile().withDirection(Direction.SouthWest));
+
+        Tile last = m.addNeighborOf(TileKind.Pink, nn.withDirection(Direction.SouthWest), nen.withDirection(Direction.South));
+        assertFalse(last.isIrrigated());
+        assertEquals(last.getBamboo().getSize(), 0);
+
+        m.setIrrigation(new Irrigation(nn.getCoordinate(), nen.getCoordinate()));
+        m.setIrrigation(new Irrigation(nn.getCoordinate(), last.getCoordinate()));
+
+        assertTrue(last.isIrrigated());
+        assertEquals(last.getBamboo().getSize(), 1);
+    }
+
+    @Test
     void getPossiblePawnPlacementsTest(){
         dev.stonks.takenoko.map.Map map = spy(new dev.stonks.takenoko.map.Map(50));
         Coordinate c = new Coordinate(1,1);
