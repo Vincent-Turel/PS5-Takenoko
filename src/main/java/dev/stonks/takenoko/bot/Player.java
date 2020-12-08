@@ -3,6 +3,7 @@ package dev.stonks.takenoko.bot;
 import dev.stonks.takenoko.IllegalEqualityExceptionGenerator;
 import dev.stonks.takenoko.map.*;
 import dev.stonks.takenoko.map.Map;
+import dev.stonks.takenoko.objective.PandaObjective;
 import dev.stonks.takenoko.pawn.Pawn;
 import dev.stonks.takenoko.gameManagement.Action;
 import dev.stonks.takenoko.objective.Objective;
@@ -27,6 +28,7 @@ public abstract class Player {
     protected int[] collectedBamboo;
     protected Stack<AbstractIrrigation> irrigations;
     protected int nbObjectivesAchieved;
+    protected int nbPandaObjectivesAchieved;
     protected Map currentMapState;
     protected int score;
     protected Random random;
@@ -35,6 +37,7 @@ public abstract class Player {
         this.id = id;
         this.objectives = new ArrayList<>();
         this.nbObjectivesAchieved = 0;
+        this.nbPandaObjectivesAchieved = 0;
         this.collectedBamboo = new int[]{0, 0, 0}; //[green,yellow,pink]
         this.irrigations = new Stack<>();
         this.score = 0;
@@ -50,8 +53,8 @@ public abstract class Player {
 
     /**
      * This method return the kind of objective the player wants to draw
-     * @param listPossibleKind
-     * @return
+     * @param listPossibleKind a list of all objective kind the player can draw
+     * @return the objective kind the player has chosen
      */
     public abstract ObjectiveKind chooseObjectiveKind(ArrayList<ObjectiveKind> listPossibleKind);
 
@@ -135,6 +138,10 @@ public abstract class Player {
         return this.nbObjectivesAchieved;
     }
 
+    public int getNbPandaObjectivesAchieved() {
+        return nbPandaObjectivesAchieved;
+    }
+
     /**
      * Get a list of all bamboo the player has collected with the panda
      * @return collectedBamboo
@@ -157,7 +164,7 @@ public abstract class Player {
 
     /**
      * Update the player inventory with the new stock of bamboo
-     * @param newInventory
+     * @param newInventory the updated inventory of all bamboo the player got
      */
     public void upDateInventory(int[] newInventory){
         this.collectedBamboo=newInventory;
@@ -171,7 +178,17 @@ public abstract class Player {
         this.objectives.remove(objective);
         this.nbObjectivesAchieved++;
         this.score += objective.getNbPt();
+        if (objective instanceof PandaObjective)
+            nbPandaObjectivesAchieved++;
     }
+
+    /**
+     * Return the action that the player want to do among [PutIrrigation, PutAmmenagment]
+     * Return an empty optional if he doesn't want to play
+     * @param map the map state
+     * @return an optional of an action
+     */
+    public abstract Optional<Action> doYouWantToPutAnIrrigationOrPutAnAmmenagment(Map map);
 
     /**
      * Get the current map state of the game
@@ -181,6 +198,12 @@ public abstract class Player {
     public Map getCurrentMapState() {
         return currentMapState;
     }
+
+    /**
+     * Chose where the player wanna put his irrigation and return it.
+     * @return the an irrigation
+     */
+    public abstract Irrigation putIrrigation();
 
     /**
      * Set the current map state of the game
@@ -196,6 +219,7 @@ public abstract class Player {
     public void resetPlayer(){
         this.score = 0;
         this.nbObjectivesAchieved = 0;
+        nbPandaObjectivesAchieved = 0;
         this.objectives.clear();
         this.collectedBamboo=new int[]{0, 0, 0};
         this.irrigations.clear();

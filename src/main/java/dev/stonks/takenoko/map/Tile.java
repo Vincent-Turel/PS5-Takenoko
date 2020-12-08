@@ -127,6 +127,11 @@ public class Tile {
         this.irrigated = true;
     }
 
+    public void deirrigate() {
+        this.irrigated = false;
+    }
+
+
     /**
      * Returns whether if the tile is the initial tile or not.
      */

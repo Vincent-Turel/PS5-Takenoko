@@ -1,7 +1,6 @@
 package dev.stonks.takenoko.map;
 
 import dev.stonks.takenoko.IllegalEqualityExceptionGenerator;
-import dev.stonks.takenoko.bot.Player;
 
 import java.util.Objects;
 
@@ -33,5 +32,9 @@ public class AbstractTile {
     @Override
     public int hashCode() {
         return Objects.hash(kind);
+    }
+
+    public TileKind getKind() {
+        return kind;
     }
 }

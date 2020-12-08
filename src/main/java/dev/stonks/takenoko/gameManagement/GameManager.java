@@ -1,11 +1,14 @@
 package dev.stonks.takenoko.gameManagement;
 
+import dev.stonks.takenoko.bot.DumbPlayer;
 import dev.stonks.takenoko.bot.Player;
 import dev.stonks.takenoko.bot.RandomPlayer;
 import dev.stonks.takenoko.map.IllegalPlacementException;
 
 import java.util.ArrayList;
 import java.util.logging.Logger;
+
+import static dev.stonks.takenoko.Main.nbIntelligentPlayer;
 
 /**
  * Represents the game manager. It is responsible to create a game
@@ -44,10 +47,10 @@ public class GameManager {
             for(int i = 0;i<nbRP;i++) {
                 players.add(new RandomPlayer(i));
             }
-            /*for(int i = 0;i<nbDP;i++) {
+            for(int i = 0;i<nbDP;i++) {
                 players.add(new DumbPlayer(i+nbRP));
             }
-            for(int i = 0;i<nbIntelligentPlayer;i++) {
+            /*for(int i = 0;i<nbIntelligentPlayer;i++) {
             players.add(new IntelligentPlayer);
             }*/
     }
@@ -58,7 +61,7 @@ public class GameManager {
      *
      * @param n the numnber of games that are going to be played
      */
-    public void playNTime(int n) throws IllegalPlacementException {
+    public void playNTime(int n) {
         for (int i = 1; i <= n; i++) {
             LOG.severe("Starting game n°" + i);
             game.play();

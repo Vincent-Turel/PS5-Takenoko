@@ -151,9 +151,11 @@ public class Map {
         // If t is the initial tile, then the neighbor check is useless.
         // Similarly, no need to irrigate this tile.
         if (!t.isInitial()) {
-            if (tiles[offset].isPresent() || !tileCanBePlacedAt(coord)) {
-                throw new IllegalPlacementException("Attempt to place a tile at illegal coordinate");
+            if (tiles[offset].isPresent()) {
+                throw new IllegalPlacementException("Attempt to place a tile while a tile is already here");
             }
+            if (!tileCanBePlacedAt(coord))
+                throw new IllegalPlacementException("Tile can't be placed here");
 
             if (isNeighborOfInitial(coord)) {
                 t.irrigate();
