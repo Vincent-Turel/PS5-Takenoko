@@ -54,9 +54,13 @@ public class PlayerTest {
         possibleObjectiveKinds.remove(ObjectiveKind.Panda);
 
         assertTrue(possibleObjectiveKinds.contains(randomPlayer.chooseObjectiveKind(possibleObjectiveKinds)));
-        dumbPlayer.addObjectives(Mockito.mock(GardenerObjective.class));
-        dumbPlayer.addObjectives(Mockito.mock(PatternObjective.class));
-        dumbPlayer.addObjectives(Mockito.mock(PatternObjective.class));
+        GardenerObjective gardenerObjective = mock(GardenerObjective.class);
+        when(gardenerObjective.getObjType()).thenReturn(ObjectiveKind.Gardener);
+        PatternObjective patternObjective = mock(PatternObjective.class);
+        when(patternObjective.getObjType()).thenReturn(ObjectiveKind.Pattern, ObjectiveKind.Pattern);
+        dumbPlayer.addObjectives(gardenerObjective);
+        dumbPlayer.addObjectives(patternObjective);
+        dumbPlayer.addObjectives(patternObjective);
         assertTrue(possibleObjectiveKinds.contains(dumbPlayer.chooseObjectiveKind(possibleObjectiveKinds)));
         assertEquals(ObjectiveKind.Gardener, dumbPlayer.chooseObjectiveKind(possibleObjectiveKinds));
         possibleObjectiveKinds.clear();

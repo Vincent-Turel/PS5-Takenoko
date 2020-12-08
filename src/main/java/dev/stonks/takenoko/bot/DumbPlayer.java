@@ -118,12 +118,19 @@ public class DumbPlayer extends Player {
         ArrayList<Objective> playerObjectives = player.getObjectives();
         int nbPoint = 0;
         for (Objective objective : playerObjectives) {
-            if (objective instanceof PatternObjective)
-                isValidObjectives.isValidPatternObjective((PatternObjective) objective, clonedMap, new HashSet<>());
-            else if (objective instanceof PandaObjective)
-                isValidObjectives.isObjectivesPandaValid((PandaObjective) objective, player);
-            else if(objective instanceof GardenerObjective)
-                isValidObjectives.isObjectivesGardenerValid((GardenerObjective) objective, clonedMap);
+            switch (objective.getObjType()) {
+                case Pattern:
+                    isValidObjectives.isValidPatternObjective((PatternObjective) objective, clonedMap, new HashSet<>());
+                    break;
+                case Panda:
+                    isValidObjectives.isObjectivesPandaValid((PandaObjective) objective, player);
+                    break;
+                case Gardener:
+                    isValidObjectives.isObjectivesGardenerValid((GardenerObjective) objective, clonedMap);
+                    break;
+                default:
+                    break;
+            }
             if (objective.getStates()) {
                 objective.resetObj();
                 nbPoint += objective.getNbPt();
@@ -163,27 +170,18 @@ public class DumbPlayer extends Player {
      */
     @Override
     public ObjectiveKind chooseObjectiveKind(ArrayList<ObjectiveKind> listPossibleKind) {
-        List<AbstractMap.SimpleEntry<ObjectiveKind, Integer>> nbObjective = new ArrayList<>();
-        nbObjective.add(new AbstractMap.SimpleEntry<>(ObjectiveKind.Panda, 0));
-        nbObjective.add(new AbstractMap.SimpleEntry<>(ObjectiveKind.Gardener, 0));
-        nbObjective.add(new AbstractMap.SimpleEntry<>(ObjectiveKind.Pattern, 0));
-        for (var elem : objectives){
-            if (elem instanceof PandaObjective)
-                nbObjective.set(0, new AbstractMap.SimpleEntry<>(nbObjective.get(0).getKey(), nbObjective.get(0).getValue()+1));
-            else if (elem instanceof GardenerObjective)
-                nbObjective.set(1, new AbstractMap.SimpleEntry<>(nbObjective.get(1).getKey(), nbObjective.get(1).getValue()+1));
-            else if (elem instanceof PatternObjective)
-                nbObjective.set(2, new AbstractMap.SimpleEntry<>(nbObjective.get(2).getKey(), nbObjective.get(2).getValue()+1));
-            else
-                throw new IllegalStateException("This should never happen");
+        if(listPossibleKind.size()<1){
+            throw new IllegalStateException("There is no more objectives");
         }
-        nbObjective.sort(Comparator.comparingInt(AbstractMap.SimpleEntry::getValue));
+        HashMap<ObjectiveKind, Integer> nbObjective = new HashMap<>();
+        for (ObjectiveKind objectiveKind : listPossibleKind){
+            nbObjective.putIfAbsent(objectiveKind, 0);
+        }
 
-        for (AbstractMap.SimpleEntry<ObjectiveKind, Integer> objectiveKindIntegerSimpleEntry : nbObjective) {
-            if (listPossibleKind.contains(objectiveKindIntegerSimpleEntry.getKey()))
-                return objectiveKindIntegerSimpleEntry.getKey();
-        }
-        throw new IllegalStateException("This should never happen");
+        for (Objective objective : objectives)
+            nbObjective.computeIfPresent(objective.getObjType(), (k, v) -> v+1);
+
+        return Collections.min(nbObjective.entrySet(), java.util.Map.Entry.comparingByValue()).getKey();
     }
 
     /**
@@ -230,8 +228,8 @@ public class DumbPlayer extends Player {
     @Override
     public Optional<Action> doYouWantToPutAnIrrigationOrPutAnAmmenagment(Map map) {
         this.currentMapState = map;
-        explore_irrigations();
         if (irrigations.size() > 0 && new ArrayList<>(currentMapState.getIrrigationPlacements()).size() > 0){
+            explore_irrigations();
             if (chosenOptionalAction.get(0).orElseThrow(IllegalStateException::new) > 0)
                 return Optional.of(Action.PutIrrigation);
             else {

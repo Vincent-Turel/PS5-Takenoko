@@ -226,6 +226,21 @@ public class Game {
                 }
                 break;
         }
+        Optional<Action> decision;
+        while ((decision = player.doYouWantToPutAnIrrigationOrPutAnAmmenagment(new Map(map))).isPresent()){
+            LOG.info("Player n°" + player.getId() + " has chosen this action : " + decision.get().toString());
+            if(decision.get().equals(Action.PutIrrigation)){
+                Irrigation irrigation = player.putIrrigation();
+                try {
+                    map.setIrrigation(irrigation);
+                } catch (IllegalPlacementException e) {
+                    e.printStackTrace();
+                    System.exit(1);
+                }
+            }
+            else
+                throw new IllegalStateException("This should never happen");
+        }
     }
 
 
@@ -252,34 +267,29 @@ public class Game {
         ArrayList<Objective> playerObjectives = player.getObjectives();
 
         for (Objective objective: playerObjectives) {
-            if(objective instanceof PatternObjective) {
-                PatternObjective patternObjective = (PatternObjective) objective;
-                patternMatchs = isValidObjectives.isValidPatternObjective(patternObjective, map, patternMatchs);
-                if (objective.getStates()) {
-                    LOG.info("Player n°"+player.getId()+" has achieved a "+objective.getClass().getSimpleName());
-                    player.newObjectivesAchieved(objective);
-                    tileObjectives.remove(objective);
-                    achievedObjectives.add(objective);
-                }
+            switch (objective.getObjType()) {
+                case Pattern:
+                    patternMatchs = isValidObjectives.isValidPatternObjective((PatternObjective) objective, map, patternMatchs);
+                    if (objective.getStates())
+                        tileObjectives.remove(objective);
+                    break;
+                case Panda:
+                    player.upDateInventory(isValidObjectives.isObjectivesPandaValid((PandaObjective) objective, player));
+                    if (objective.getStates())
+                        pandaObjectives.remove(objective);
+                    break;
+                case Gardener:
+                    isValidObjectives.isObjectivesGardenerValid((GardenerObjective) objective, map);
+                    if (objective.getStates())
+                        gardenerObjectives.remove(objective);
+                    break;
+                default:
+                    break;
             }
-            else if(objective instanceof PandaObjective) {
-                player.upDateInventory(isValidObjectives.isObjectivesPandaValid((PandaObjective) objective,player));
-                if (objective.getStates()) {
-                    LOG.info("Player n°"+player.getId()+" has achieved a " + objective.getClass().getSimpleName());
-                    player.newObjectivesAchieved(objective);
-                    pandaObjectives.remove(objective);
-                    achievedObjectives.add(objective);
-                }
-            }
-
-            else if(objective instanceof GardenerObjective) {
-                isValidObjectives.isObjectivesGardenerValid((GardenerObjective) objective,map);
-                if (objective.getStates()) {
-                    LOG.info("Player n°"+player.getId()+" has achieved a "+objective.getClass().getSimpleName());
-                    player.newObjectivesAchieved(objective);
-                    gardenerObjectives.remove(objective);
-                    achievedObjectives.add(objective);
-                }
+            if (objective.getStates()) {
+                LOG.info("Player n°" + player.getId() + " has achieved a " + objective.getClass().getSimpleName());
+                player.newObjectivesAchieved(objective);
+                achievedObjectives.add(objective);
             }
         }
     }

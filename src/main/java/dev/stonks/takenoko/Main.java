@@ -9,7 +9,7 @@ import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
 public class Main {
-    public static final Level level = Level.SEVERE;
+    public static final Level level = Level.ALL;
     public static final int nbRandomPlayer = 1;
     public static final int nbDumbPlayer = 1;
     public static final int nbIntelligentPlayer = 2;
@@ -19,7 +19,7 @@ public class Main {
         setLogConfig();
         GameManager gameManager = new GameManager(nbRandomPlayer,nbDumbPlayer);
         LOG.info("Starting program...");
-        gameManager.playNTime(500);
+        gameManager.playNTime(1);
     }
 
     public static void setLogConfig(){
