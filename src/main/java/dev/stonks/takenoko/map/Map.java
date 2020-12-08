@@ -123,7 +123,7 @@ public class Map {
      * @throws IllegalPlacementException thrown if a tile is already
      *                                       present.
      */
-    void setTile(Coordinate coord, Tile t) throws IllegalPlacementException {
+    Tile setTile(Coordinate coord, Tile t) throws IllegalPlacementException {
         int offset = coord.toOffset(sideLen);
 
         // If t is the initial tile, then the neighbor check is useless.
@@ -139,6 +139,7 @@ public class Map {
         }
 
         tiles[offset] = Optional.of(t);
+        return t;
     }
 
     /**
@@ -148,8 +149,8 @@ public class Map {
      * @throws IllegalPlacementException thrown if a tile is already
      *                                       present.
      */
-    public void setTile(Coordinate co, AbstractTile t) throws IllegalPlacementException {
-        setTile(t.withCoordinate(co));
+    public Tile setTile(Coordinate co, AbstractTile t) throws IllegalPlacementException {
+        return setTile(t.withCoordinate(co));
     }
 
     /**
@@ -158,8 +159,8 @@ public class Map {
      * @throws IllegalPlacementException thrown if a tile is already
      *                                       present.
      */
-    public void setTile(Tile t) throws IllegalPlacementException {
-        setTile(t.getCoordinate(), t);
+    public Tile setTile(Tile t) throws IllegalPlacementException {
+        return setTile(t.getCoordinate(), t);
     }
 
     /**
