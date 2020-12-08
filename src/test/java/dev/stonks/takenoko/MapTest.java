@@ -101,18 +101,6 @@ public class MapTest {
     }
 
     @Test
-    void growBambooInMap() throws IllegalPlacementException {
-        dev.stonks.takenoko.map.Map m = new dev.stonks.takenoko.map.Map(42);
-        Tile initT = m.initialTile();
-        Tile otherT = m.addNeighborOf(TileKind.Green, initT.withDirection(Direction.North));
-
-        m.growBambooInMap();
-
-        assertEquals(initT.bambooSize(), 0);
-        assertEquals(otherT.bambooSize(), 1);
-    }
-
-    @Test
     void getPossiblePawnPlacementsTest(){
         dev.stonks.takenoko.map.Map map = spy(new dev.stonks.takenoko.map.Map(50));
         Coordinate c = new Coordinate(1,1);

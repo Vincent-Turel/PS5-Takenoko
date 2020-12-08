@@ -425,19 +425,6 @@ public class Map {
     }
 
     /**
-     * Increase the size of all bamboo in all tiles
-     * If the bamboo size > 3, nothing to do
-     * If the tile is not present, nothing to do
-     */
-    public void growBambooInMap(){
-        for(int i=0;i<tiles.length;i++){
-            if(tiles[i].isPresent()){
-                tiles[i].get().growBamboo();
-            }
-        }
-    }
-
-    /**
      * Returns all the coordinates at which a tile is placed in the map. The
      * returned stream is guaranteed to return unique values only.
      */
