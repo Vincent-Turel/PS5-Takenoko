@@ -344,9 +344,9 @@ public class Map {
      * Will place <code>a</code> on top of <code>b</code>.
      */
     public Tile addNeighborOf(TileKind kind, DirectionnedTile... tiles) throws IllegalPlacementException {
-        Tile t = Tile.neighborOf(kind, tiles);
-        setTile(t.getCoordinate(), t);
-        return t;
+        Coordinate c = Coordinate.fromNeighbors(tiles);
+        AbstractTile at = new AbstractTile(kind);
+        return setTile(c, at);
     }
 
     public Optional<Tile> getNeighborOf(Tile t, Direction d) {
