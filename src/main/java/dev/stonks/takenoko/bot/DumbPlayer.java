@@ -5,7 +5,6 @@ import dev.stonks.takenoko.map.*;
 import dev.stonks.takenoko.objective.*;
 import dev.stonks.takenoko.pawn.Pawn;
 import dev.stonks.takenoko.gameManagement.Action;
-
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -20,8 +19,8 @@ public class DumbPlayer extends Player {
 
     public DumbPlayer(int id) {
         super(id);
-        this.chosenAction = List.of(Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty());
-        this.chosenOptionalAction = List.of(Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty());
+        this.chosenAction = new ArrayList<>(Collections.singletonList(Optional.of(0)));
+        this.chosenOptionalAction = new ArrayList<>(Arrays.asList(Optional.of(0), Optional.empty()));
         this.playerType = PlayerType.DumbPlayer;
     }
 
@@ -30,7 +29,6 @@ public class DumbPlayer extends Player {
      * @param possibleAction every action that the player can do.
      */
     private void explore(ArrayList<Action> possibleAction) {
-        List<List<Optional<Integer>>> res = new ArrayList<>();
         for (Action action : possibleAction){
             switch (action){
                 case MovePanda:
@@ -38,10 +36,11 @@ public class DumbPlayer extends Player {
                     for (int i = 0;i < possiblePandaPlacements.size();i++){
                         Map usedCloneMap = new Map(currentMapState);
                         usedCloneMap.getPanda().moveToAndAct(possiblePandaPlacements.get(i));
-                        res.add(List.of(
+                        updateChosenAction(
                                 Optional.of(checkObjectives(this, usedCloneMap)),
-                                Optional.of(action.ordinal()),
-                                Optional.of(i)));
+                                Optional .of(action.ordinal()),
+                                Optional.of(i),
+                                Optional.empty());
                     }
                     break;
                 case MoveGardener:
@@ -49,29 +48,29 @@ public class DumbPlayer extends Player {
                     for (int i = 0;i < possibleGardenerPlacements.size();i++){
                         Map usedCloneMap = new Map(currentMapState);
                         usedCloneMap.getGardener().moveToAndAct(possibleGardenerPlacements.get(i), usedCloneMap);
-                        res.add(List.of(
+                        updateChosenAction(
                                 Optional.of(checkObjectives(this, usedCloneMap)),
-                                Optional.of(action.ordinal()),
-                                Optional.of(i)));
+                                Optional .of(action.ordinal()),
+                                Optional.of(i),
+                                Optional.empty());
                     }
                     break;
                 case PutTile:
                     var tilePlacements = new ArrayList<>(currentMapState.getTilePlacements());
                     for (int i = 0;i < tilePlacements.size();i++){
                         for (int j = 0; j < TileKind.values().length-1; j++) {
-                            TileKind kind = TileKind.values()[j];
                             Map usedCloneMap = new Map(currentMapState);
                             try {
-                                usedCloneMap.setTile(new AbstractTile(kind).withCoordinate(tilePlacements.get(i)));
+                                usedCloneMap.setTile(new AbstractTile(TileKind.values()[j]).withCoordinate(tilePlacements.get(i)));
                             } catch (IllegalPlacementException e) {
                                 e.printStackTrace();
                                 System.exit(1);
                             }
-                            res.add(List.of(
+                            updateChosenAction(
                                     Optional.of(checkObjectives(this, usedCloneMap)),
-                                    Optional.of(action.ordinal()),
+                                    Optional .of(action.ordinal()),
                                     Optional.of(i),
-                                    Optional.of(kind.ordinal())));
+                                    Optional.of(j));
                         }
                     }
                     break;
@@ -79,12 +78,16 @@ public class DumbPlayer extends Player {
                     break;
             }
         }
-        chosenAction = choseBestAction(res);
+    }
+
+    private void updateChosenAction(Optional<Integer> checkObjectives, Optional<Integer> actionOrdinal, Optional<Integer> i, Optional<Integer> kind) {
+        if (checkObjectives.get() > chosenAction.get(0).get()) {
+            this.chosenAction = new ArrayList<>(Arrays.asList(checkObjectives, actionOrdinal, i, kind));
+        }
     }
 
     private void explore_irrigations(){
         Map usedCloneMap;
-        List<List<Optional<Integer>>> res = new ArrayList<>();
         var irrigationPlacements = new ArrayList<>(currentMapState.getIrrigationPlacements());
         for (int i = 0;i < irrigationPlacements.size();i++){
             var coordinates = irrigationPlacements.get(i).getDirectlyIrrigatedCoordinates().toArray(Coordinate[]::new);
@@ -95,19 +98,14 @@ public class DumbPlayer extends Player {
                 e.printStackTrace();
                 System.exit(1);
             }
-            res.add(List.of(Optional.of(checkObjectives(this, usedCloneMap)), Optional.of(i)));
+            updateOptionalChosenAction(Optional.of(checkObjectives(this, usedCloneMap)), Optional.of(i));
         }
-        chosenOptionalAction = choseBestAction(res);
     }
 
-    /**
-     * Find the best action among all the possibles ones
-     * @param res a list of all actions and their result
-     */
-    private List<Optional<Integer>> choseBestAction(List<List<Optional<Integer>>> res) {
-        return res.stream()
-                .max(Comparator.comparingInt(x -> x.get(0).orElseThrow(IllegalAccessError::new)))
-                .orElseThrow(IllegalStateException::new);
+    private void updateOptionalChosenAction(Optional<Integer> checkObjectives, Optional<Integer> i) {
+        if (checkObjectives.get() > chosenAction.get(0).get()) {
+            this.chosenOptionalAction = new ArrayList<>(Arrays.asList(checkObjectives, i));
+        }
     }
 
     /**
@@ -151,9 +149,10 @@ public class DumbPlayer extends Player {
         if (possibleAction.size() < 1)
             throw new IllegalStateException("There should always have possible actions");
         this.currentMapState = map;
+        resetAction(chosenAction);
         explore(possibleAction);
-        if (chosenAction.get(0).orElseThrow(IllegalStateException::new) > 1)
-            return Action.values()[chosenAction.get(1).orElseThrow(IllegalStateException::new)];
+        if (chosenAction.get(0).orElseThrow(NoSuchElementException::new) > 1)
+            return Action.values()[chosenAction.get(1).orElseThrow(NoSuchElementException::new)];
         if (possibleAction.contains(Action.DrawObjective))
             return Action.DrawObjective;
         if (possibleAction.contains(Action.DrawIrrigation)){
@@ -163,6 +162,10 @@ public class DumbPlayer extends Player {
                 possibleAction.remove(Action.DrawIrrigation);
         }
         return possibleAction.get(random.nextInt(possibleAction.size()));
+    }
+
+    private void resetAction(List<Optional<Integer>> action) {
+        action.set(0, Optional.of(0));
     }
 
     /**
@@ -211,7 +214,7 @@ public class DumbPlayer extends Player {
             throw new IllegalStateException("This action shouldn't be possible if there is no tiles remaining");
         if (tilePlacements.size() < 1)
             throw new IllegalStateException("There should always have a place for a new tile");
-        if (chosenAction.get(0).orElseThrow(IllegalStateException::new) == 0) {
+        if (chosenAction.get(0).orElseThrow(NoSuchElementException::new) == 0) {
             AbstractTile tile = tiles.get(random.nextInt(tiles.size()));
             tiles.remove(tile);
             return tile.withCoordinate(tilePlacements.get(random.nextInt(tilePlacements.size())));
@@ -219,12 +222,12 @@ public class DumbPlayer extends Player {
 
         Optional<AbstractTile> abstractTile = Optional.empty();
         for(var elem : tiles) {
-            if (elem.getKind() == TileKind.values()[chosenAction.get(3).orElseThrow(IllegalStateException::new)])
+            if (elem.getKind() == TileKind.values()[chosenAction.get(3).orElseThrow(NoSuchElementException::new)])
                 abstractTile = Optional.of(elem);
         }
         AbstractTile tile = abstractTile.orElse(tiles.get(random.nextInt(tiles.size())));
         tiles.remove(tile);
-        return tile.withCoordinate(new ArrayList<>(tilePlacements).get(chosenAction.get(2).orElseThrow(IllegalStateException::new)));
+        return tile.withCoordinate(new ArrayList<>(tilePlacements).get(chosenAction.get(2).orElseThrow(NoSuchElementException::new)));
     }
 
     /**
@@ -236,11 +239,11 @@ public class DumbPlayer extends Player {
     public Tile choseWherePawnShouldGo(Pawn pawn) {
         ArrayList<Tile> possiblePawnPlacements = new ArrayList<>(currentMapState.getPossiblePawnPlacements(pawn));
         if (possiblePawnPlacements.size() < 1)
-            throw new IllegalStateException("This action shouldn't be possible if there the panda can't move anywhere");
-        if (chosenAction.get(0).orElseThrow(IllegalStateException::new) == 0) {
+            throw new IllegalStateException("This action shouldn't be possible if there the pawn can't move anywhere");
+        if (chosenAction.get(0).orElseThrow(NoSuchElementException::new) == 0) {
             return possiblePawnPlacements.get(random.nextInt(possiblePawnPlacements.size()));
         }
-        return possiblePawnPlacements.get(chosenAction.get(2).orElseThrow(IllegalStateException::new));
+        return possiblePawnPlacements.get(chosenAction.get(2).orElseThrow(NoSuchElementException::new));
     }
 
     /**
@@ -256,8 +259,9 @@ public class DumbPlayer extends Player {
             return Optional.of(Action.PutImprovement);
         }
         if (irrigations.size() > 0 && new ArrayList<>(currentMapState.getIrrigationPlacements()).size() > 0){
+            resetAction(chosenOptionalAction);
             explore_irrigations();
-            if (chosenOptionalAction.get(0).orElseThrow(IllegalStateException::new) > 0)
+            if (chosenOptionalAction.get(0).orElseThrow(NoSuchElementException::new) > 0)
                 return Optional.of(Action.PutIrrigation);
             else {
                 int x = random.nextInt(2);

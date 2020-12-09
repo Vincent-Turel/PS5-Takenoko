@@ -118,7 +118,6 @@ public class Game {
      * @param turn -> current game turn
      * @return weather now update for the player turn !
      */
-
     private void updateGameWeather(Weather weather, int turn){
         if(turn==1){
             LOG.info("No weather for the first turn !");
@@ -130,7 +129,6 @@ public class Game {
         weather.upDateWeather();
         LOG.info("Weather for this turn : "+weather.getCondition().toString());
     }
-
 
     public void play() {
         int gameTurn = 1;
@@ -176,10 +174,7 @@ public class Game {
                                 }
                                 break;*/
                             case Sun:
-                                nbActions = 3;
-                                if(possibleActions.size()<3){
-                                    nbActions = possibleActions.size();
-                                }
+                                nbActions = Math.min(possibleActions.size(), 3);
                                 effectDone = true;
                                 break;
                             case Rain:
@@ -204,7 +199,7 @@ public class Game {
                     }
 
                     for (int j = 0; j < nbActions; j++) {
-                        if (gameTurn > 5000) {
+                        if (gameTurn > 2000) {
                             LOG.info("Party ended due to player playing more than 5000 actions (endless game)\n");
                             fillTheFinalScore();
                             return;
@@ -254,6 +249,7 @@ public class Game {
                     e.printStackTrace();
                     System.exit(1);
                 }
+                LOG.info(String.valueOf(tileDeck.size()));
                 break;
             case MoveGardener:
                 Gardener gardener = map.getGardener();
