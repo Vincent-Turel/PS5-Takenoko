@@ -134,8 +134,6 @@ public class PlayerTest {
 
         dumbPlayer.decide(new ArrayList<>(Arrays.asList(Action.values())), map);
         assertTrue(dumbPlayer.getObjectives().contains(objectiveWin));
-        dumbPlayer.getChosenAction().stream().map(Optional::get).forEach(x -> System.out.print(x + " "));
-        System.out.println("\n");
 
         map.getTile(map.initialTile().getCoordinate().moveWith(Direction.South)).get().irrigate();
         //t.irrigate();
@@ -147,8 +145,6 @@ public class PlayerTest {
                 new AbstractTile(TileKind.Green),
                 new AbstractTile(TileKind.Pink),
                 new AbstractTile(TileKind.Yellow)))), new Tile(map.initialTile().getCoordinate().moveWith(Direction.SouthEast), TileKind.Pink));
-        dumbPlayer.getChosenAction().stream().map(Optional::get).forEach(x -> System.out.print(x + " "));
-        System.out.println("\n");
 
         //map.setTile(map.getTile(map.initialTile().getCoordinate().moveWith(Direction.South)).get().getCoordinate().moveWith(Direction.NorthEast), new AbstractTile(TileKind.Pink));
         map.setTile(map.initialTile().getCoordinate().moveWith(Direction.SouthEast), new AbstractTile(TileKind.Pink));
@@ -160,6 +156,5 @@ public class PlayerTest {
         dumbPlayer.decide(new ArrayList<>(Arrays.asList(Action.values())), map);
         assertFalse(dumbPlayer.getObjectives().contains(objectiveWin));
         assertEquals(dumbPlayer.getChosenAction(), List.of(Optional.of(0), Optional.of(0), Optional.of(0)));
-        dumbPlayer.getChosenAction().stream().map(Optional::get).forEach(x -> System.out.print(x + " "));
     }
 }

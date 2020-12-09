@@ -50,8 +50,6 @@ public class GameTest {
         expected.remove(Action.MovePanda);
         expected.remove(Action.PutIrrigation);
         Set<Action> result = new HashSet<>(game.findPossibleActions(player1));
-        System.out.println(result);
-        System.out.println(expected);
         assertTrue(result.equals(expected));
     }
 
@@ -68,7 +66,7 @@ public class GameTest {
     }
 
     @Test
-    void getTheGoodsResults() throws IllegalPlacementException {
+    void getTheGoodsResults() {
         Game mockGame = mock(Game.class);
         ArrayList<GameResults> mockResults = new ArrayList<>();
         mockResults.add(new GameResults(players.get(0).getId(),1));
@@ -101,9 +99,8 @@ public class GameTest {
     }
 
     @Test
-    void verificationOfReset() throws IllegalPlacementException {
+    void verificationOfReset() {
         Game expected = new Game(players);
-        //System.out.println(players);
         assertTrue(expected.equals(game));
         game.play();
         expected.gamePlayersResults.addAll(game.gamePlayersResults);
