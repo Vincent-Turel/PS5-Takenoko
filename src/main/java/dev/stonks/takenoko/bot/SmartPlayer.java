@@ -1,5 +1,6 @@
 package dev.stonks.takenoko.bot;
 
+<<<<<<< HEAD
 import dev.stonks.takenoko.map.Map;
 import dev.stonks.takenoko.map.*;
 import dev.stonks.takenoko.objective.*;
@@ -19,10 +20,25 @@ import java.util.stream.Collectors;
 public class SmartPlayer extends Player {
     private List<ArrayList<Optional<Integer>>> res;
     private List<ArrayList<Optional<Integer>>> irrigationRes;
+=======
+import dev.stonks.takenoko.gameManagement.Action;
+import dev.stonks.takenoko.map.AbstractTile;
+import dev.stonks.takenoko.map.Irrigation;
+import dev.stonks.takenoko.map.Map;
+import dev.stonks.takenoko.map.Tile;
+import dev.stonks.takenoko.objective.ObjectiveKind;
+import dev.stonks.takenoko.pawn.Pawn;
+
+import java.util.ArrayList;
+import java.util.Optional;
+
+public class SmartPlayer extends Player {
+>>>>>>> ae22109... prepare game
 
     public SmartPlayer(int id) {
         super(id);
         this.playerType = PlayerType.SmartPlayer;
+<<<<<<< HEAD
         this.res = new ArrayList<>(Collections.singletonList(new ArrayList<>(Collections.singletonList(Optional.empty()))));
         this.irrigationRes = new ArrayList<>(Collections.singletonList(new ArrayList<>(Collections.singletonList(Optional.empty()))));
     }
@@ -372,5 +388,37 @@ public class SmartPlayer extends Player {
      */
     public void setChosenAction(List<ArrayList<Optional<Integer>>> res) {
         this.res = res;
+=======
+    }
+
+    @Override
+    public Action decide(ArrayList<Action> possibleAction, Map map) {
+        return null;
+    }
+
+    @Override
+    public ObjectiveKind chooseObjectiveKind(ArrayList<ObjectiveKind> listPossibleKind) {
+        return null;
+    }
+
+    @Override
+    public Tile putTile(ArrayList<AbstractTile> tiles) {
+        return null;
+    }
+
+    @Override
+    public Tile choseWherePawnShouldGo(Pawn pawn) {
+        return null;
+    }
+
+    @Override
+    public Optional<Action> doYouWantToPutAnIrrigationOrPutAnAmmenagment(Map map) {
+        return Optional.empty();
+    }
+
+    @Override
+    public Irrigation putIrrigation() {
+        return null;
+>>>>>>> ae22109... prepare game
     }
 }
