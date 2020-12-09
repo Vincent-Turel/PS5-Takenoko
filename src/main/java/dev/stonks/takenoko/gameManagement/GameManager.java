@@ -3,13 +3,11 @@ package dev.stonks.takenoko.gameManagement;
 import dev.stonks.takenoko.bot.DumbPlayer;
 import dev.stonks.takenoko.bot.Player;
 import dev.stonks.takenoko.bot.RandomPlayer;
-import dev.stonks.takenoko.map.IllegalPlacementException;
+import dev.stonks.takenoko.bot.SmartPlayer;
 
 import java.util.ArrayList;
 import java.util.Optional;
 import java.util.logging.Logger;
-
-import static dev.stonks.takenoko.Main.nbIntelligentPlayer;
 
 /**
  * Represents the game manager. It is responsible to create a game
@@ -30,8 +28,8 @@ public class GameManager {
      * @param nbRP is the number of random player
      * @param nbDP is the number of dumb player
      */
-    public GameManager(int nbRP, int nbDP) {
-        initialisesPlayers(nbRP,nbDP);
+    public GameManager(int nbRP, int nbDP, int nbSP) {
+        initialisesPlayers(nbRP, nbDP, nbSP);
         game = new Game(players);
         initialisesStats();
     }
@@ -43,17 +41,17 @@ public class GameManager {
         }
     }
 
-    private void initialisesPlayers(int nbRP, int nbDP) {
-            players = new ArrayList<Player>();
-            for(int i = 0;i<nbRP;i++) {
+    private void initialisesPlayers(int nbRandomPlayer, int nbDumbPlayer, int nbSmartPlayer) {
+            players = new ArrayList<>();
+            for(int i = 0;i<nbRandomPlayer;i++) {
                 players.add(new RandomPlayer(i));
             }
-            for(int i = 0;i<nbDP;i++) {
-                players.add(new DumbPlayer(i+nbRP));
+            for(int i = 0;i<nbDumbPlayer;i++) {
+                players.add(new DumbPlayer(i+nbRandomPlayer));
             }
-            /*for(int i = 0;i<nbIntelligentPlayer;i++) {
-            players.add(new IntelligentPlayer);
-            }*/
+            for(int i = 0;i<nbSmartPlayer;i++) {
+            players.add(new SmartPlayer(i + nbRandomPlayer + nbDumbPlayer));
+            }
     }
 
     /**
