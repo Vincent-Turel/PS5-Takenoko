@@ -12,6 +12,7 @@ import dev.stonks.takenoko.objective.*;
 
 import java.util.*;
 import java.util.logging.Logger;
+import java.util.stream.Stream;
 
 /**
  * Represents a game.
@@ -375,35 +376,9 @@ public class Game {
     }
 
     private void resetObjectives(){
-        for(Player player:players){
-            for (Objective objective: player.getObjectives()) {
-                if (objective instanceof PatternObjective) {
-                    PatternObjective patternObjective = (PatternObjective) objective;
-                    tileObjectives.add(patternObjective);
-                } else if (objective instanceof PandaObjective) {
-                    PandaObjective pandaObjective = (PandaObjective) objective;
-                    pandaObjectives.add(pandaObjective);
-                }
-                else if(objective instanceof GardenerObjective) {
-                    GardenerObjective gardenerObjective = (GardenerObjective)objective;
-                    gardenerObjectives.add(gardenerObjective);
-                }
-            }
-        }
-        for (Objective objective : achievedObjectives) {
-            if(objective instanceof PatternObjective) {
-                PatternObjective patternObjective = (PatternObjective)objective;
-                tileObjectives.add(patternObjective);
-            }
-            else if(objective instanceof PandaObjective) {
-                PandaObjective pandaObjective = (PandaObjective)objective;
-                pandaObjectives.add(pandaObjective);
-            }
-            else if(objective instanceof GardenerObjective) {
-                GardenerObjective gardenerObjective = (GardenerObjective)objective;
-                gardenerObjectives.add(gardenerObjective);
-            }
-        }
+        Stream.concat(players.stream().map(Player::getObjectives).flatMap(Collection::stream), achievedObjectives.stream())
+                .forEach(this::reIntroduceObjective);
+
         tileObjectives.forEach(Objective::resetObj);
         pandaObjectives.forEach(Objective::resetObj);
         gardenerObjectives.forEach(Objective::resetObj);
@@ -415,6 +390,23 @@ public class Game {
             gameResults.reset();
         }
     }
+
+    private void reIntroduceObjective(Objective objective){
+        switch (objective.getObjType()) {
+            case Pattern:
+                tileObjectives.add((PatternObjective) objective);
+                break;
+            case Panda:
+                pandaObjectives.add((PandaObjective) objective);
+                break;
+            case Gardener:
+                gardenerObjectives.add((GardenerObjective) objective);
+                break;
+            default:
+                break;
+        }
+    }
+
 
     @Override
     public boolean equals(Object o) {
