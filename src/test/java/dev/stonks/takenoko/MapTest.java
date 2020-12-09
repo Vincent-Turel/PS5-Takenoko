@@ -101,15 +101,20 @@ public class MapTest {
     }
 
     @Test
-    void growBambooInMap() throws IllegalPlacementException {
-        dev.stonks.takenoko.map.Map m = new dev.stonks.takenoko.map.Map(42);
-        Tile initT = m.initialTile();
-        Tile otherT = m.addNeighborOf(TileKind.Green, initT.withDirection(Direction.North));
+    void placingIrrigationNearTileIrrigatesIt() throws IllegalPlacementException {
+        Map m = new Map(42);
+        Tile nn = m.addNeighborOf(TileKind.Green, m.initialTile().withDirection(Direction.South));
+        Tile nen = m.addNeighborOf(TileKind.Pink, m.initialTile().withDirection(Direction.SouthWest));
 
-        m.growBambooInMap();
+        Tile last = m.addNeighborOf(TileKind.Pink, nn.withDirection(Direction.SouthWest), nen.withDirection(Direction.South));
+        assertFalse(last.isIrrigated());
+        assertEquals(last.getBamboo().getSize(), 0);
 
-        assertEquals(initT.bambooSize(), 0);
-        assertEquals(otherT.bambooSize(), 1);
+        m.setIrrigation(new Irrigation(nn.getCoordinate(), nen.getCoordinate()));
+        m.setIrrigation(new Irrigation(nn.getCoordinate(), last.getCoordinate()));
+
+        assertTrue(last.isIrrigated());
+        assertEquals(last.getBamboo().getSize(), 1);
     }
 
     @Test

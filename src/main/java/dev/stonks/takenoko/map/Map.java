@@ -145,7 +145,7 @@ public class Map {
      * @throws IllegalPlacementException thrown if a tile is already
      *                                       present.
      */
-    void setTile(Coordinate coord, Tile t) throws IllegalPlacementException {
+    Tile setTile(Coordinate coord, Tile t) throws IllegalPlacementException {
         int offset = coord.toOffset(sideLen);
 
         // If t is the initial tile, then the neighbor check is useless.
@@ -163,6 +163,7 @@ public class Map {
         }
 
         tiles[offset] = Optional.of(t);
+        return t;
     }
 
     /**
@@ -172,8 +173,8 @@ public class Map {
      * @throws IllegalPlacementException thrown if a tile is already
      *                                       present.
      */
-    public void setTile(Coordinate co, AbstractTile t) throws IllegalPlacementException {
-        setTile(t.withCoordinate(co));
+    public Tile setTile(Coordinate co, AbstractTile t) throws IllegalPlacementException {
+        return setTile(t.withCoordinate(co));
     }
 
     /**
@@ -182,8 +183,8 @@ public class Map {
      * @throws IllegalPlacementException thrown if a tile is already
      *                                       present.
      */
-    public void setTile(Tile t) throws IllegalPlacementException {
-        setTile(t.getCoordinate(), t);
+    public Tile setTile(Tile t) throws IllegalPlacementException {
+        return setTile(t.getCoordinate(), t);
     }
 
     /**
@@ -367,9 +368,9 @@ public class Map {
      * Will place <code>a</code> on top of <code>b</code>.
      */
     public Tile addNeighborOf(TileKind kind, DirectionnedTile... tiles) throws IllegalPlacementException {
-        Tile t = Tile.neighborOf(kind, tiles);
-        setTile(t.getCoordinate(), t);
-        return t;
+        Coordinate c = Coordinate.fromNeighbors(tiles);
+        AbstractTile at = new AbstractTile(kind);
+        return setTile(c, at);
     }
 
     public Optional<Tile> getNeighborOf(Tile t, Direction d) {
@@ -445,19 +446,6 @@ public class Map {
         //
         // TODO: investigate if the function can return a long instead.
         return (int) placedTilesCoordinates().count() - 1;
-    }
-
-    /**
-     * Increase the size of all bamboo in all tiles
-     * If the bamboo size > 3, nothing to do
-     * If the tile is not present, nothing to do
-     */
-    public void growBambooInMap(){
-        for(int i=0;i<tiles.length;i++){
-            if(tiles[i].isPresent()){
-                tiles[i].get().growBamboo();
-            }
-        }
     }
 
     /**

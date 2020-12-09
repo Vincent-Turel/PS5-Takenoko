@@ -183,4 +183,61 @@ public class Coordinate {
             throw new IllegalStateException("Neighbors should only generate neighbors");
         }
     }
+
+    /**
+     * Returns, given a group of neighbors, the position of the corresponding
+     * tile.
+     * @param neighbors the tile neighbors
+     * @return the tile direction
+     * @throws IllegalPlacementException thrown when the provided direction
+     *                                       and tile coordinates does not
+     *                                       match each other.
+     */
+    static Coordinate fromNeighbors(DirectionnedTile... neighbors) throws IllegalPlacementException {
+        Coordinate tileCoord = null;
+
+        for (DirectionnedTile neighbor: neighbors) {
+            Direction d = neighbor.direction();
+            Coordinate c = neighbor.tile().getCoordinate();
+
+            if (tileCoord == null) {
+                tileCoord = c.moveWith(d.reverse());
+            } else if (!tileCoord.moveWith(d).equals(c)) {
+                throw new IllegalPlacementException("Tiles can not be neighbor");
+            }
+        }
+
+        boolean neighborOfInitial = Arrays.stream(neighbors).anyMatch(dt -> dt.tile().isInitial());
+        boolean hasTwoNeighbors = neighbors.length >= 2;
+
+        if (!neighborOfInitial && !hasTwoNeighbors) {
+            throw new IllegalPlacementException("Tile don't have required neighbors");
+        }
+
+        return tileCoord;
+    }
+
+    /**
+     * Returns, given a group of neighbors, the position of the corresponding
+     * tile.
+     * @param neighbors the tile neighbors
+     * @return the tile direction
+     * @throws IllegalPlacementException thrown when the provided direction
+     *                                       and tile coordinates does not
+     *                                       match each other or when the
+     *                                       computed coordinate don't have
+     *                                       the correct neighbors.
+     */
+    static Coordinate validFromNeighbor(DirectionnedTile... neighbors) throws IllegalPlacementException {
+        Coordinate c = fromNeighbors(neighbors);
+
+        boolean neighborOfInitial = Arrays.stream(neighbors).anyMatch(dt -> dt.tile().isInitial());
+        boolean hasTwoNeighbors = neighbors.length >= 2;
+
+        if (!neighborOfInitial && !hasTwoNeighbors) {
+            throw new IllegalPlacementException("Tile don't have required neighbors");
+        }
+
+        return c;
+    }
 }

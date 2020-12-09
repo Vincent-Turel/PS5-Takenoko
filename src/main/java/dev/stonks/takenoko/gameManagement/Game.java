@@ -141,7 +141,6 @@ public class Game {
                         playerPlay(player,possibleActions);
                     }
                     checkObjectives(player);
-                    map.growBambooInMap();
                     if (!aPlayerWin) {
                         aPlayerWin = checkIfWinner();
                     }
