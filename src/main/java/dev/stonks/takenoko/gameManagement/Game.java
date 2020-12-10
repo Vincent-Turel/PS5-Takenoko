@@ -28,7 +28,7 @@ public class Game {
     private final static Logger LOG = Logger.getLogger(Game.class.getSimpleName());
     public static final int nbObjectivesToWIn = 9;
     dev.stonks.takenoko.map.Map map;
-    ArrayList<AbstractTile> tileDeck;
+    List<AbstractTile> tileDeck;
     ArrayList<AbstractTile> placedTileDeck = new ArrayList<>();
     Stack<AbstractIrrigation> irrigationDeck;
     Stack<AbstractIrrigation> placedIrrigationsDeck = new Stack<>();
@@ -68,22 +68,7 @@ public class Game {
      * Initialise a deck of tiles (the tiles players will draw)
      */
     private void initialiseTileDeck() {
-        tileDeck = new ArrayList<>();
-
-        // 7 pink tiles
-        for(int i = 0;i < 7;i++){
-            tileDeck.add(new AbstractTile(TileKind.Pink));
-        }
-
-        // 9 yellow tiles
-        for(int i = 0;i < 9;i++){
-            tileDeck.add(new AbstractTile(TileKind.Yellow));
-        }
-
-        // 11 green tiles
-        for(int i = 0;i < 11;i++){
-            tileDeck.add(new AbstractTile(TileKind.Green));
-        }
+        tileDeck = AbstractTile.allLegalAbstractTiles();
     }
 
     /**

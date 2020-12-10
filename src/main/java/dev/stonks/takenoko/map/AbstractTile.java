@@ -2,8 +2,11 @@ package dev.stonks.takenoko.map;
 
 import dev.stonks.takenoko.IllegalEqualityExceptionGenerator;
 
+import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 /**
  * Represents a tile which is in a deck (ie: has not been placed in the map).
@@ -22,6 +25,34 @@ public class AbstractTile {
 
     public AbstractTile(TileKind tk) {
         this(tk, Improvement.Empty);
+    }
+
+    /**
+     * Returns every abstract tile available in the game.
+     */
+    public static List<AbstractTile> allLegalAbstractTiles() {
+        // See http://jeuxstrategieter.free.fr/Takenoko_complet.php for a
+        // complete list of every available abstract tile.
+
+        // TODO: once more improvements are added, edit the ranges here.
+        Stream<AbstractTile> emptyGreen = IntStream.range(0, 10).mapToObj(i -> new AbstractTile(TileKind.Green));
+        Stream<AbstractTile> emptyPink = IntStream.range(0, 6).mapToObj(i -> new AbstractTile(TileKind.Pink));
+        Stream<AbstractTile> emptyYellow = IntStream.range(0, 8).mapToObj(i -> new AbstractTile(TileKind.Yellow));
+
+        Stream<AbstractTile> waterSheds = Stream.of(TileKind.Green, TileKind.Pink, TileKind.Yellow)
+                .map(kind -> new AbstractTile(kind, Improvement.Watershed));
+
+        List<AbstractTile> ats = Stream.of(emptyGreen, emptyPink, emptyYellow, waterSheds)
+                .flatMap(s -> s) // This is good code™️
+                .collect(Collectors.toList());
+
+
+        // We should always return 27 abstract tiles. Let's ensure it.
+        if (ats.size() != 27) {
+            throw new IllegalStateException("27 AbstractTiles should be created");
+        }
+
+        return ats;
     }
 
     /**
