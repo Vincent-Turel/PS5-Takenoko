@@ -4,6 +4,7 @@ import dev.stonks.takenoko.IllegalEqualityExceptionGenerator;
 
 import java.util.Arrays;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -16,12 +17,18 @@ public class Tile {
     private boolean irrigated;
     private Bamboo bamboo;
     private TileKind kind;
+    private Improvement improvement;
 
-    public Tile(Coordinate c, TileKind k) {
+    public Tile(Coordinate c, TileKind k, Improvement i) {
         coord = c;
         kind = k;
         bamboo = new Bamboo(this.kind);
         irrigated = false;
+        improvement = i;
+    }
+
+    public Tile(Coordinate c, TileKind k) {
+        this(c, k, Improvement.Empty);
     }
 
     public Tile(Tile tile) {
@@ -29,6 +36,7 @@ public class Tile {
         this.coord = new Coordinate(tile.coord);
         this.irrigated = tile.irrigated;
         this.kind = tile.kind;
+        this.improvement = tile.improvement;
     }
 
     /**
@@ -163,7 +171,8 @@ public class Tile {
         Tile tile = (Tile) o;
         return coord.equals(tile.coord) &&
                 bamboo.equals(tile.bamboo) &&
-                kind == tile.kind;
+                kind == tile.kind &&
+                improvement == tile.improvement;
     }
 
     @Override
@@ -176,5 +185,12 @@ public class Tile {
      */
     public Set<IrrigationCoordinate> getConvergingIrrigationCoordinate() {
         return coord.getConvertingIrrigationCoordinate();
+    }
+
+    /**
+     * Returns the contained improvement, if it exists.
+     */
+    public Improvement getImprovement() {
+        return improvement;
     }
 }
