@@ -1,8 +1,6 @@
 package dev.stonks.takenoko.objective;
 
 import dev.stonks.takenoko.IllegalEqualityExceptionGenerator;
-import dev.stonks.takenoko.objective.Objective;
-import dev.stonks.takenoko.objective.ObjectiveKind;
 import dev.stonks.takenoko.pattern.Pattern;
 
 import java.util.Objects;

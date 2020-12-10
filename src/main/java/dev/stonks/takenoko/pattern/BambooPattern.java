@@ -2,7 +2,6 @@ package dev.stonks.takenoko.pattern;
 
 import dev.stonks.takenoko.IllegalEqualityExceptionGenerator;
 import dev.stonks.takenoko.map.TileKind;
-import dev.stonks.takenoko.objective.PandaObjective;
 
 import java.util.Objects;
 import java.util.Optional;

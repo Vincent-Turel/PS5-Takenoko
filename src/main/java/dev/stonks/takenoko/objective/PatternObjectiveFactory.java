@@ -1,7 +1,6 @@
 package dev.stonks.takenoko.objective;
 
 import dev.stonks.takenoko.map.TileKind;
-import dev.stonks.takenoko.objective.PatternObjective;
 import dev.stonks.takenoko.pattern.Pattern;
 
 import java.util.ArrayList;

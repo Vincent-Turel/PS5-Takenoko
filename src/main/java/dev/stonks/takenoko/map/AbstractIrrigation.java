@@ -1,7 +1,6 @@
 package dev.stonks.takenoko.map;
 
 import dev.stonks.takenoko.IllegalEqualityExceptionGenerator;
-import dev.stonks.takenoko.bot.Player;
 
 public class AbstractIrrigation {
 

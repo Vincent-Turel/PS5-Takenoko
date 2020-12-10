@@ -3,7 +3,6 @@ package dev.stonks.takenoko.pawn;
 import dev.stonks.takenoko.IllegalEqualityExceptionGenerator;
 import dev.stonks.takenoko.map.Coordinate;
 import dev.stonks.takenoko.map.Tile;
-import dev.stonks.takenoko.objective.PandaObjective;
 
 import java.util.Objects;
 

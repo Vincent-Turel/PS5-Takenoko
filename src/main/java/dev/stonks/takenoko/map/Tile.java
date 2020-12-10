@@ -2,7 +2,6 @@ package dev.stonks.takenoko.map;
 
 import dev.stonks.takenoko.IllegalEqualityExceptionGenerator;
 
-import java.util.Arrays;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;

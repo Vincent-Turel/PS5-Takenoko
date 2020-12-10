@@ -1,7 +1,6 @@
 package dev.stonks.takenoko.objective;
 
 import dev.stonks.takenoko.IllegalEqualityExceptionGenerator;
-import dev.stonks.takenoko.map.DirectionnedTile;
 import dev.stonks.takenoko.pattern.BambooPattern;
 
 import java.util.Objects;
