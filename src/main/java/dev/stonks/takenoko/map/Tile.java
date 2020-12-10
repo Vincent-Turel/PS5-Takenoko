@@ -25,6 +25,10 @@ public class Tile {
         bamboo = new Bamboo(this.kind);
         irrigated = false;
         improvement = i;
+
+        if (improvement == Improvement.Watershed) {
+            irrigate();
+        }
     }
 
     public Tile(Coordinate c, TileKind k) {
