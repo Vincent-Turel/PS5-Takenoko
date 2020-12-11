@@ -4,7 +4,7 @@ import dev.stonks.takenoko.bot.Player;
 import dev.stonks.takenoko.map.*;
 import dev.stonks.takenoko.objective.GardenerObjective;
 import dev.stonks.takenoko.objective.PandaObjective;
-import dev.stonks.takenoko.objective.isValidObjectives;
+import dev.stonks.takenoko.objective.IsValidObjectives;
 import dev.stonks.takenoko.pattern.BambooPattern;
 import dev.stonks.takenoko.pattern.MatchResult;
 import dev.stonks.takenoko.pattern.Pattern;
@@ -14,7 +14,6 @@ import org.junit.jupiter.api.Test;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
@@ -38,10 +37,10 @@ public class IsValidObjectivesTest {
 
         //Test :
         assertEquals(false,objectiveWin.getStates());
-        isValidObjectives.isValidPatternObjective(objectiveWin,map,alreadyUse);
+        IsValidObjectives.isValidPatternObjective(objectiveWin,map,alreadyUse);
         assertEquals(true,objectiveWin.getStates());
         assertEquals(false,objectiveLose.getStates());
-        isValidObjectives.isValidPatternObjective(objectiveLose,map,alreadyUse);
+        IsValidObjectives.isValidPatternObjective(objectiveLose,map,alreadyUse);
         assertEquals(false,objectiveLose.getStates());
 
     }
@@ -63,14 +62,14 @@ public class IsValidObjectivesTest {
         PandaObjective objMultiColor = new PandaObjective(5,multicolor);
 
         //Test isValid Objective simple green
-        isValidObjectives.isObjectivesPandaValid(objective,winPlayer);
+        IsValidObjectives.isObjectivesPandaValid(objective,winPlayer);
         assertEquals(true,objective.getStates());
         int[] valExpected = new int[]{0,3,5};
         for(int i=0;i<3;i++){
             assertEquals(valExpected[i],winPlayer.getCollectedBamboo()[i]);
         }
         //Test isValid Objective multicolor
-        isValidObjectives.isObjectivesPandaValid(objMultiColor,winPlayer2);
+        IsValidObjectives.isObjectivesPandaValid(objMultiColor,winPlayer2);
         assertEquals(true,objMultiColor.getStates());
         valExpected = new int[]{6,4,3};
         for(int i=0;i<3;i++){
@@ -93,14 +92,14 @@ public class IsValidObjectivesTest {
         PandaObjective objMultiColor = new PandaObjective(5,multicolor);
 
         //Test isValid Objective simple green
-        isValidObjectives.isObjectivesPandaValid(objective,losePlayer);
+        IsValidObjectives.isObjectivesPandaValid(objective,losePlayer);
         assertEquals(false,objective.getStates());
         int[] valExpected = new int[]{1,1,1};
         for(int i=0;i<3;i++){
             assertEquals(valExpected[i],losePlayer.getCollectedBamboo()[i]);
         }
         //Test isValid Objective multicolor
-        isValidObjectives.isObjectivesPandaValid(objMultiColor,losePlayer);
+        IsValidObjectives.isObjectivesPandaValid(objMultiColor,losePlayer);
         assertEquals(false,objMultiColor.getStates());
         valExpected = new int[]{1,1,1};
         for(int i=0;i<3;i++){
@@ -117,7 +116,7 @@ public class IsValidObjectivesTest {
         PandaObjective objective = new PandaObjective(5,yellowPattern);
 
         //Test isValid Objective simple yellow
-        isValidObjectives.isObjectivesPandaValid(objective,winPlayer);
+        IsValidObjectives.isObjectivesPandaValid(objective,winPlayer);
         assertEquals(true,objective.getStates());
         int[] valExpected = new int[]{3,1,5};
         for(int i=0;i<3;i++){
@@ -134,7 +133,7 @@ public class IsValidObjectivesTest {
         PandaObjective objective = new PandaObjective(5,pinkPattern);
 
         //Test isValid Objective simple yellow
-        isValidObjectives.isObjectivesPandaValid(objective,winPlayer);
+        IsValidObjectives.isObjectivesPandaValid(objective,winPlayer);
         assertEquals(true,objective.getStates());
         int[] valExpected = new int[]{3,6,0};
         for(int i=0;i<3;i++){
@@ -186,9 +185,9 @@ public class IsValidObjectivesTest {
         GardenerObjective pinkObjective = new GardenerObjective(5,pinkPattern);
 
         //Test function :
-        isValidObjectives.isObjectivesGardenerValid(objectiveWin,map);
-        isValidObjectives.isObjectivesGardenerValid(objectiveLose,map);
-        isValidObjectives.isObjectivesGardenerValid(pinkObjective,map);
+        IsValidObjectives.isObjectivesGardenerValid(objectiveWin,map);
+        IsValidObjectives.isObjectivesGardenerValid(objectiveLose,map);
+        IsValidObjectives.isObjectivesGardenerValid(pinkObjective,map);
 
         assertEquals(true,objectiveWin.getStates());
         assertEquals(false,objectiveLose.getStates());

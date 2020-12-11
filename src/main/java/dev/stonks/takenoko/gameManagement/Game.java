@@ -254,17 +254,17 @@ public class Game {
         for (Objective objective: playerObjectives) {
             switch (objective.getObjType()) {
                 case Pattern:
-                    patternMatchs = isValidObjectives.isValidPatternObjective((PatternObjective) objective, map, patternMatchs);
+                    patternMatchs = IsValidObjectives.isValidPatternObjective((PatternObjective) objective, map, patternMatchs);
                     if (objective.getStates())
                         tileObjectives.remove(objective);
                     break;
                 case Panda:
-                    player.upDateInventory(isValidObjectives.isObjectivesPandaValid((PandaObjective) objective, player));
+                    player.upDateInventory(IsValidObjectives.isObjectivesPandaValid((PandaObjective) objective, player));
                     if (objective.getStates())
                         pandaObjectives.remove(objective);
                     break;
                 case Gardener:
-                    isValidObjectives.isObjectivesGardenerValid((GardenerObjective) objective, map);
+                    IsValidObjectives.isObjectivesGardenerValid((GardenerObjective) objective, map);
                     if (objective.getStates())
                         gardenerObjectives.remove(objective);
                     break;

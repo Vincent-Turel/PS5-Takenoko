@@ -120,13 +120,13 @@ public class DumbPlayer extends Player {
         for (Objective objective : playerObjectives) {
             switch (objective.getObjType()) {
                 case Pattern:
-                    isValidObjectives.isValidPatternObjective((PatternObjective) objective, clonedMap, new HashSet<>());
+                    IsValidObjectives.isValidPatternObjective((PatternObjective) objective, clonedMap, new HashSet<>());
                     break;
                 case Panda:
-                    isValidObjectives.isObjectivesPandaValid((PandaObjective) objective, player);
+                    IsValidObjectives.isObjectivesPandaValid((PandaObjective) objective, player);
                     break;
                 case Gardener:
-                    isValidObjectives.isObjectivesGardenerValid((GardenerObjective) objective, clonedMap);
+                    IsValidObjectives.isObjectivesGardenerValid((GardenerObjective) objective, clonedMap);
                     break;
                 default:
                     break;

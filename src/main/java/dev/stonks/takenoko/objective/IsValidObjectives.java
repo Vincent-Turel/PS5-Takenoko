@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.Optional;
 import java.util.Set;
 
-public class isValidObjectives {
+public class IsValidObjectives {
 
     /**
      * @param objective -> take an objectives to controlling if it's validate or not
