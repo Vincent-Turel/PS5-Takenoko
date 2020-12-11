@@ -69,8 +69,8 @@ public class GameTest {
     void getTheGoodsResults() {
         Game mockGame = mock(Game.class);
         ArrayList<GameResults> mockResults = new ArrayList<>();
-        mockResults.add(new GameResults(players.get(0).getId(),1));
-        mockResults.add(new GameResults(players.get(1).getId(),2));
+        mockResults.add(new GameResults(players.get(0).getId(),1,players.get(0).getNbPandaObjectivesAchieved()));
+        mockResults.add(new GameResults(players.get(1).getId(),2,players.get(1).getNbPandaObjectivesAchieved()));
 
         doAnswer(new Answer() {
             @Override
@@ -82,8 +82,8 @@ public class GameTest {
         doCallRealMethod().when(mockGame).getResults();
 
         ArrayList<GameResults> expected = new ArrayList<>();
-        GameResults gameResults1 = new GameResults(players.get(0).getId(),1);
-        GameResults gameResults2 = new GameResults(players.get(1).getId(),2);
+        GameResults gameResults1 = new GameResults(players.get(0).getId(),1,players.get(0).getNbPandaObjectivesAchieved());
+        GameResults gameResults2 = new GameResults(players.get(1).getId(),2,players.get(1).getNbPandaObjectivesAchieved());
 
         ArrayList<GameResults> initialResults = game.getResults();
         expected.add(gameResults1);

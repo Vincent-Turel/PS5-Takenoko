@@ -12,10 +12,12 @@ import java.util.Objects;
 public class GameResults {
     private int id;
     private int rank;
+    private int nbPandaObjectives;
 
-    public GameResults(int id,int rank) {
+    public GameResults(int id,int rank,int nbPandaObjectives) {
         this.id = id;
         this.rank = rank;
+        this.nbPandaObjectives = nbPandaObjectives;
     }
 
     public int getId() {
@@ -26,8 +28,11 @@ public class GameResults {
         return rank;
     }
 
+    public int getNbPandaObjectives(){return nbPandaObjectives;}
+
     public void reset(){
         rank = 0;
+        nbPandaObjectives = 0;
     }
 
     @Override
@@ -36,11 +41,12 @@ public class GameResults {
         if (o == null || getClass() != o.getClass()) throw IllegalEqualityExceptionGenerator.create(GameResults.class,o.getClass());;
         GameResults that = (GameResults) o;
         return id == that.id &&
-                rank == that.rank;
+                rank == that.rank
+                && nbPandaObjectives == that.nbPandaObjectives;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, rank);
+        return Objects.hash(id, rank, nbPandaObjectives);
     }
 }
