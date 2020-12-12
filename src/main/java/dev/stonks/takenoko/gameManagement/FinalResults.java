@@ -3,6 +3,7 @@ package dev.stonks.takenoko.gameManagement;
 import dev.stonks.takenoko.bot.Player;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 //[bot1[nbWinGame,nbLoseGame,nbDrawGame,summOfTheScore],...,botN[]]
 
@@ -32,18 +33,20 @@ public class FinalResults {
     /**
      * Change the final statistics of a player
      *
-     * @param game is the a int, it design if it's a victory, a loose, or a draw
+     * @param victory is an optionnal boolean who tell if it's a victory
      * @param score
      */
-    public void change(int game, int score){
-        if(game==isAWin){
-            nbWin++;
-        }
-        else if(game==isALoose){
-            nbLoose++;
+    public void change(Optional<Boolean> victory, int score){
+        if(victory.isEmpty()){
+            nbDraw++;
         }
         else{
-            nbDraw++;
+            if(victory.get()==Boolean.TRUE){
+                nbWin++;
+            }
+            if (victory.get()==Boolean.FALSE){
+                nbLoose++;
+            }
         }
         finalScore += score;
     }

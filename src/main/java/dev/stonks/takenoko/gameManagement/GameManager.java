@@ -6,6 +6,7 @@ import dev.stonks.takenoko.bot.RandomPlayer;
 import dev.stonks.takenoko.map.IllegalPlacementException;
 
 import java.util.ArrayList;
+import java.util.Optional;
 import java.util.logging.Logger;
 
 import static dev.stonks.takenoko.Main.nbIntelligentPlayer;
@@ -89,31 +90,42 @@ public class GameManager {
      *
      * @param id
      * @param results
-     * @return the state of the game for one player :
-     * it can be a victory, a loose, or a draw
-     *
+     * @return an optional boolean for the victory
+     * if it's epty, it's a draw
      */
-    private int gameStateOf(int id, ArrayList<GameResults> results){
-        int gameState = 0;
+    private Optional<Boolean> gameStateOf(int id, ArrayList<GameResults> results){
+        Optional<Boolean> victory = Optional.empty();
         boolean isDraw = false;
         int actualRank = 0;
+        int nbPandaObjectivesAchieved = 0;
         for (GameResults result: results) {
             if(result.getId()==id){
                 actualRank = result.getRank();
+                nbPandaObjectivesAchieved = result.getNbPandaObjectives();
             }
         }
         if(actualRank==1) {
             for (GameResults result : results) {
                 if ((result.getId() != id) && (actualRank == result.getRank())) {
-                    gameState = 22;//here, the draw is everything else than 0 or 1 (loose or win)
-                    isDraw = true;
+                    if(nbPandaObjectivesAchieved==result.getNbPandaObjectives()) {
+                        isDraw = true;
+                    }
+                    else if(nbPandaObjectivesAchieved<result.getNbPandaObjectives()){
+                        victory = Optional.of(Boolean.FALSE);
+                    }
+                    else{
+                        victory = Optional.of(Boolean.TRUE);
+                    }
                 }
             }
             if(!isDraw){
-                gameState=1;
+                victory = Optional.of(Boolean.TRUE);
             }
         }
-        return gameState;
+        else{
+            victory = Optional.of(Boolean.FALSE);
+        }
+        return victory;
     }
 
     /**

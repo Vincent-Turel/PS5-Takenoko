@@ -308,7 +308,7 @@ public class Game {
         int id;
         for (Player player : players) {
             id = player.getId();
-            gamePlayersResults.add(new GameResults(id,rankOf(id)));
+            gamePlayersResults.add(new GameResults(id,rankOf(id),player.getNbPandaObjectivesAchieved()));
             LOG.info("Bot n°" + player.getId() + " a réalisé  un score de " + player.getScore() +  " avec "+ player.getNbObjectivesAchieved() + " objectif(s) accompli(s)");
         }
     }
