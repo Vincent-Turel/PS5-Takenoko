@@ -4,6 +4,10 @@ import java.util.Random;
 
 public class Weather {
 
+    /**
+     * state is for the bot (a number)
+     * weatherCondition is for the LOG info
+     */
     private int state;
     private WeatherKind weatherCondition;
 
@@ -20,11 +24,18 @@ public class Weather {
         return weatherCondition.toString();
     }
 
+    /**
+     * Updating the game weather between all possible condition
+     */
     public void upDateWeather(){
         Random r = new Random();
         state = r.nextInt(7);
         upDateWeatherKind();
     }
+
+    /**
+     * For the moment : 1,2,6 = sun and 3,4,5 = rain.
+     */
 
     private void upDateWeatherKind(){
         switch (state){
@@ -39,10 +50,18 @@ public class Weather {
         }
     }
 
+    /**
+     * Futur function when the player has to choice his weather (FreeChoice in WeatherKind)
+     * @param state -> the weather want by player
+     */
     public void setWeather(int state){
         this.state=state;
         upDateWeatherKind();
     }
+
+    /**
+     * Reset weather to its initial value (NoWeather)
+     */
     public void resetWeather(){
         this.weatherCondition=WeatherKind.NoWeather;
         this.state=0;
