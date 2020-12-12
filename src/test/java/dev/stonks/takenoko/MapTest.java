@@ -373,4 +373,37 @@ public class MapTest {
             map.setImprovement(randomCoord, Improvement.Watershed);
         });
     }
+
+    @Test
+    void getImprovementPlacements() throws IllegalPlacementException {
+        // We create a map in which all the following situations are represented:
+        //   - an initial tile (should not be available),
+        //   - an already improved tile (should not be available),
+        //   - no tile (should not ba available),
+        //   - a tile with no improvement (should be available).
+
+        // This adds the initial tile and some no-tile coordinates.
+        Map m = new Map(42);
+
+        Coordinate centerCoord = m.initialTile().getCoordinate();
+
+        // Tile with improvement on it.
+        m.setTile(
+                centerCoord.moveWith(Direction.South),
+                new AbstractTile(TileKind.Pink).withImprovement(Improvement.Watershed)
+        );
+
+        // Tile with no improvement on it.
+        Tile availableImprovement = m.setTile(
+                centerCoord.moveWith(Direction.North),
+                new AbstractTile(TileKind.Pink)
+        );
+
+        Set<Tile> ts = m.getImprovementPlacements();
+
+        assertEquals(ts.size(), 1);
+        assertTrue(ts.contains(availableImprovement));
+        // We tested the set size is 1 and guessed the only element on it.
+        // As such, there is nothing else in the sed.
+    }
 }
