@@ -10,7 +10,12 @@ import java.util.ArrayList;
 import java.util.Optional;
 import java.util.Set;
 
-public class isValidObjectives {
+/**
+ * Static class to check if an objective is complete
+ * @author the StonksDev team
+ */
+
+public class IsValidObjectives {
 
     /**
      * @param objective -> take an objectives to controlling if it's validate or not

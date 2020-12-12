@@ -5,6 +5,11 @@ import dev.stonks.takenoko.pattern.Pattern;
 
 import java.util.Objects;
 
+/**
+ * Class for the pattern objective
+ * @author the StonksDev team
+ */
+
 public class PatternObjective extends Objective {
 
     private Pattern localPattern;

@@ -5,6 +5,11 @@ import dev.stonks.takenoko.pattern.BambooPattern;
 
 import java.util.ArrayList;
 
+/**
+ * Here there are create all Panda and Gardener objectives
+ * @author the StonksDev team
+ */
+
 public class ObjectivesBambooFactory {
 
     /**
