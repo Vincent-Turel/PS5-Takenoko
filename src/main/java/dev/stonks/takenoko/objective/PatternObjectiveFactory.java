@@ -6,6 +6,11 @@ import dev.stonks.takenoko.pattern.Pattern;
 
 import java.util.ArrayList;
 
+/**
+ * Here there are create all patten objectives
+ * @author the StonksDev team
+ */
+
 public class PatternObjectiveFactory {
     /**
      * Returns every valid pattern objective available in the game.

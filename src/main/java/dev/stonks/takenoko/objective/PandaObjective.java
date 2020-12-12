@@ -6,6 +6,11 @@ import dev.stonks.takenoko.pattern.BambooPattern;
 
 import java.util.Objects;
 
+/**
+ * Class for the panda objective
+ * @author the StonksDev team
+ */
+
 public class PandaObjective extends Objective{
 
     private BambooPattern bambooPattern;

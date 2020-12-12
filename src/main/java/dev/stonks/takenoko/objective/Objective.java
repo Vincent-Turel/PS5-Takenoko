@@ -4,6 +4,11 @@ import dev.stonks.takenoko.IllegalEqualityExceptionGenerator;
 
 import java.util.Objects;
 
+/**
+ * Initial class to make all objectives
+ * @author the StonksDev team
+ */
+
 public class Objective {
 
     protected int nbPt;

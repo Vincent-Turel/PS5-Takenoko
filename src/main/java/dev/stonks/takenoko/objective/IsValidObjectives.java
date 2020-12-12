@@ -10,6 +10,11 @@ import java.util.ArrayList;
 import java.util.Optional;
 import java.util.Set;
 
+/**
+ * Static class to check if an objective is complete
+ * @author the StonksDev team
+ */
+
 public class IsValidObjectives {
 
     /**

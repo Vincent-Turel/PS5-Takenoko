@@ -2,6 +2,11 @@ package dev.stonks.takenoko.weather;
 
 import java.util.Random;
 
+/**
+ * Weather for the game :
+ * @author the StonksDev team
+ */
+
 public class Weather {
 
     /**

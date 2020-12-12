@@ -6,6 +6,11 @@ import dev.stonks.takenoko.pattern.BambooPattern;
 
 import java.util.Objects;
 
+/**
+ * Class for the gardener objective
+ * @author the StonksDev team
+ */
+
 public class GardenerObjective extends Objective {
 
     private BambooPattern bambooPattern;
