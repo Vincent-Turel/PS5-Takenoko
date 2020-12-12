@@ -15,8 +15,10 @@ public class Weather {
      */
     private int state;
     private WeatherKind weatherCondition;
+    private Random r;
 
     public Weather(){
+        r = new Random();
         state=0;
         weatherCondition=WeatherKind.NoWeather;
     }
@@ -33,7 +35,6 @@ public class Weather {
      * Updating the game weather between all possible condition
      */
     public void upDateWeather(){
-        Random r = new Random();
         state = r.nextInt(7);
         upDateWeatherKind();
     }
