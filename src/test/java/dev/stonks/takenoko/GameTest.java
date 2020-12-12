@@ -7,6 +7,7 @@ import dev.stonks.takenoko.gameManagement.Game;
 import dev.stonks.takenoko.gameManagement.GameResults;
 import dev.stonks.takenoko.map.IllegalPlacementException;
 import dev.stonks.takenoko.map.Tile;
+import dev.stonks.takenoko.weather.Weather;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Rule;

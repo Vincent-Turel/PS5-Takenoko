@@ -1,7 +1,5 @@
 package dev.stonks.takenoko.weather;
 
-import jdk.jshell.Snippet;
-
 import java.util.Random;
 
 public class Weather {
