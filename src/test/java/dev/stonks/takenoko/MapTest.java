@@ -352,4 +352,25 @@ public class MapTest {
         assertTrue(map.getTile(nNeighbor).get().isIrrigated());
         assertTrue(map.getTile(neNeighbor).get().isIrrigated());
     }
+
+    @Test
+    void setImprovementLegalUse() throws IllegalPlacementException {
+        Map map = new Map(42);
+        Coordinate center = map.initialTile().getCoordinate();
+
+        Coordinate neighbor = map.setTile(center.moveWith(Direction.North), new AbstractTile(TileKind.Pink)).getCoordinate();
+        map.setImprovement(neighbor, Improvement.Watershed);
+
+        assertEquals(map.getTile(neighbor).get().getImprovement(), Improvement.Watershed);
+    }
+
+    @Test
+    void setImprovementOnNoTile() throws IllegalPlacementException {
+        Map map = new Map(42);
+        Coordinate randomCoord = new Coordinate(12, 1);
+
+        assertThrows(IllegalPlacementException.class, () -> {
+            map.setImprovement(randomCoord, Improvement.Watershed);
+        });
+    }
 }

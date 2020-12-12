@@ -118,4 +118,28 @@ public class TileTest {
         assertNotEquals(t1,t3);
         assertNotEquals(t1,t4);
     }
+
+    @Test
+    void addImprovementLegalUse() throws IllegalPlacementException {
+        Tile t = new AbstractTile(TileKind.Pink).withCoordinate(new Coordinate(42, 101));
+        assertEquals(t.getImprovement(), Improvement.Empty);
+
+        t.addImprovement(Improvement.Watershed);
+        assertEquals(t.getImprovement(), Improvement.Watershed);
+    }
+
+    @Test
+    void addImprovementOnExisting() throws IllegalPlacementException {
+        Tile t = new AbstractTile(TileKind.Pink)
+                .withImprovement(Improvement.Watershed)
+                .withCoordinate(new Coordinate(42, 101));
+
+        assertThrows(IllegalPlacementException.class, () -> t.addImprovement(Improvement.Watershed));
+    }
+
+    @Test
+    void addImprovementOnInitial() throws IllegalPlacementException {
+        Tile t = Tile.initialTile(new Coordinate(42, 42));
+        assertThrows(IllegalPlacementException.class, () -> t.addImprovement(Improvement.Watershed));
+    }
 }

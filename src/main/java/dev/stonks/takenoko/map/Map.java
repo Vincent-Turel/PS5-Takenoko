@@ -486,4 +486,22 @@ public class Map {
         result = 31 * result + Arrays.hashCode(irrigations);
         return result;
     }
+
+    /**
+     * Adds an improvement at a given coordinate on the map.
+     * @param c the coordinate at which the improvement must be added.
+     * @param i the improvement to be added
+     * @throws IllegalPlacementException if there is no tile at such
+     * coordinate, or if there is already an improvement on the said tile, or
+     * if the tile is the initial tile.
+     */
+    public void setImprovement(Coordinate c, Improvement i) throws IllegalPlacementException {
+        Optional<Tile> maybeTile = getTile(c);
+
+        if (maybeTile.isEmpty()) {
+            throw new IllegalPlacementException("Attempt to place an improvement on a non-existing tile");
+        }
+
+        maybeTile.get().addImprovement(i);
+    }
 }

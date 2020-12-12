@@ -196,4 +196,22 @@ public class Tile {
     public Improvement getImprovement() {
         return improvement;
     }
+
+    /**
+     * Adds an improvement to the tile
+     * @param i the improvement to be added.
+     * @throws IllegalPlacementException if there is already an improvement on
+     * the tile or if the tile is the initial tile.
+     */
+    public void addImprovement(Improvement i) throws IllegalPlacementException {
+        if (!improvement.isEmpty()) {
+            throw new IllegalPlacementException("Attempt to add an improvement on a tile that already contains one");
+        }
+
+        if (isInitial()) {
+            throw new IllegalPlacementException("Attempt to add an improvement on the initial tile");
+        }
+
+        improvement = i;
+    }
 }
