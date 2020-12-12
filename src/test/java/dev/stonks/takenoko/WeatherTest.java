@@ -28,8 +28,14 @@ public class WeatherTest {
             myWeather.upDateWeather();
             weatherState = myWeather.getStates();
         }
+    }
 
-
-
+    @Test
+    public void setWeatherTest(){
+        Weather myWeather = new Weather();
+        myWeather.setWeather(1);
+        assertEquals("Sun",myWeather.getCondition());
+        myWeather.setWeather(4);
+        assertEquals("Rain",myWeather.getCondition());
     }
 }

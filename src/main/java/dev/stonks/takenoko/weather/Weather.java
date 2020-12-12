@@ -4,16 +4,16 @@ import java.util.Random;
 
 public class Weather {
 
-    private int states;
+    private int state;
     private WeatherKind weatherCondition;
 
     public Weather(){
-        states=0;
+        state=0;
         weatherCondition=WeatherKind.NoWeather;
     }
 
     public int getStates() {
-        return states;
+        return state;
     }
 
     public String getCondition() {
@@ -22,12 +22,12 @@ public class Weather {
 
     public void upDateWeather(){
         Random r = new Random();
-        states = r.nextInt(7);
+        state = r.nextInt(7);
         upDateWeatherKind();
     }
 
     private void upDateWeatherKind(){
-        switch (states){
+        switch (state){
             case 1:
             case 2:
             case 6:
@@ -37,5 +37,10 @@ public class Weather {
             case 5:
                 weatherCondition=WeatherKind.Rain;break;
         }
+    }
+
+    public void setWeather(int state){
+        this.state=state;
+        upDateWeatherKind();
     }
 }
