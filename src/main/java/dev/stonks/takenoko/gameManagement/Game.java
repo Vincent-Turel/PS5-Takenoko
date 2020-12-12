@@ -9,6 +9,7 @@ import dev.stonks.takenoko.objective.PatternObjectiveFactory;
 import dev.stonks.takenoko.pawn.Gardener;
 import dev.stonks.takenoko.pawn.Panda;
 import dev.stonks.takenoko.objective.*;
+import dev.stonks.takenoko.weather.Weather;
 
 import java.util.*;
 import java.util.logging.Logger;
@@ -40,6 +41,7 @@ public class Game {
     Objective emperor;
     ArrayList<Objective> achievedObjectives;
     Random random;
+    Weather gameWeather;
     public ArrayList<GameResults> gamePlayersResults;
 
     public Game(ArrayList<Player> players) {
@@ -47,6 +49,7 @@ public class Game {
         initialiseTileDeck();
         initialiseIrrigationDeck();
         initialisesObjectives();
+        gameWeather = initialiseWeather();
         patternMatchs = new HashSet<>();
         this.players = players;
         achievedObjectives = new ArrayList<>();
@@ -70,6 +73,12 @@ public class Game {
     private void initialiseTileDeck() {
         tileDeck = AbstractTile.allLegalAbstractTiles();
     }
+
+    /***
+     * Initialise the game weather :
+     * @return the current weather set to noWeather
+     */
+    private Weather initialiseWeather(){Weather weather = new Weather();weather.resetWeather();return weather;}
 
     /**
      * Initialise the objectives (here, it's 10 tile objectives)
@@ -98,9 +107,30 @@ public class Game {
         return possibleAction;
     }
 
+    /**
+     * Update the state of the weather before the round of all player
+     * @param weather -> current weather
+     * @param turn -> current game turn
+     * @return weather now update for the player turn !
+     */
+
+    private Weather gameWeatherUpDate(Weather weather,int turn){
+        if(turn==1){
+            LOG.info("No weather for the first turn !");
+            return weather;
+        }
+        if(turn==2) {
+            LOG.info("Weather now enabled !");
+        }
+        weather.upDateWeather();
+        LOG.info("Weather for this turn : "+weather.getCondition());
+        return weather;
+    }
+
 
     public void play() {
         int moreThan500OnlyPawnActions = 0;
+        int gameTurn = 1;
         boolean aPlayerWin = false;
         boolean remainingLastTurn = true;
         Optional<Integer> idWinner = Optional.empty();
@@ -109,7 +139,9 @@ public class Game {
             if(idWinner.isPresent()){
                 remainingLastTurn = false;
             }
+            LOG.info("Turn n°"+gameTurn+" :");
             for (Player player : players) {
+                gameWeather = gameWeatherUpDate(gameWeather,gameTurn);
                 if (idWinner.isEmpty() || player.getId() != idWinner.get()) {
                     var possibleActions = findPossibleActions(player);
                     LOG.info("Possibles actions  : ");
@@ -135,6 +167,7 @@ public class Game {
                     }
                 }
             }
+            gameTurn++;
         }
         fillTheFinalScore();
     }

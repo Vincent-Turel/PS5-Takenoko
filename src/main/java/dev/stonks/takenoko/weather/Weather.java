@@ -1,5 +1,7 @@
 package dev.stonks.takenoko.weather;
 
+import jdk.jshell.Snippet;
+
 import java.util.Random;
 
 public class Weather {
@@ -42,5 +44,9 @@ public class Weather {
     public void setWeather(int state){
         this.state=state;
         upDateWeatherKind();
+    }
+    public void resetWeather(){
+        this.weatherCondition=WeatherKind.NoWeather;
+        this.state=0;
     }
 }
