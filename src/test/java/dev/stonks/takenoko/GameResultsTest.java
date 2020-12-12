@@ -33,7 +33,7 @@ public class GameResultsTest {
     public void testResetRes(){
         res1.reset();
         assertTrue(res1.getRank()==0);
-        assertTrue(res1.getNbPandaObjectives()==0);
+        assertEquals(0,res1.getNbPandaObjectives());
         assertTrue(res2.getRank()!=0);
         assertTrue(res2.getNbPandaObjectives()!=0);
     }
