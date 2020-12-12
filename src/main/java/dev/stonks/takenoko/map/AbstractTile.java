@@ -73,7 +73,7 @@ public class AbstractTile {
     }
 
     public Tile withCoordinate(Coordinate c) {
-        return new Tile(c, kind);
+        return new Tile(c, kind, improvement);
     }
 
     @Override
