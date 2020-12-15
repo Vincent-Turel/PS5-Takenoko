@@ -10,6 +10,7 @@ import dev.stonks.takenoko.pawn.Gardener;
 import dev.stonks.takenoko.pawn.Panda;
 import dev.stonks.takenoko.objective.*;
 import dev.stonks.takenoko.weather.Weather;
+import dev.stonks.takenoko.weather.WeatherKind;
 
 import java.util.*;
 import java.util.logging.Logger;
@@ -43,6 +44,8 @@ public class Game {
     Random random;
     Weather gameWeather;
     public ArrayList<GameResults> gamePlayersResults;
+    List<Improvement> improvements;
+
 
     public Game(ArrayList<Player> players) {
         map = new Map(28);
@@ -55,6 +58,11 @@ public class Game {
         achievedObjectives = new ArrayList<>();
         random = new Random();
         gamePlayersResults = new ArrayList<>();
+        initialiseImprovement();
+    }
+
+    private void initialiseImprovement(){
+        improvements = new ArrayList<>();
     }
 
     /**
@@ -114,22 +122,20 @@ public class Game {
      * @return weather now update for the player turn !
      */
 
-    private Weather gameWeatherUpDate(Weather weather,int turn){
+    private void updateGameWeather(Weather weather, int turn){
         if(turn==1){
             LOG.info("No weather for the first turn !");
-            return weather;
+            return;
         }
         if(turn==2) {
             LOG.info("Weather now enabled !");
         }
         weather.upDateWeather();
-        LOG.info("Weather for this turn : "+weather.getCondition());
-        return weather;
+        LOG.info("Weather for this turn : "+weather.getCondition().toString());
     }
 
 
     public void play() {
-        int moreThan500OnlyPawnActions = 0;
         int gameTurn = 1;
         boolean aPlayerWin = false;
         boolean remainingLastTurn = true;
@@ -141,17 +147,16 @@ public class Game {
             }
             LOG.info("Turn n°"+gameTurn+" :");
             for (Player player : players) {
-                gameWeather = gameWeatherUpDate(gameWeather,gameTurn);
+                updateGameWeather(gameWeather, gameTurn);
                 if (idWinner.isEmpty() || player.getId() != idWinner.get()) {
                     var possibleActions = findPossibleActions(player);
                     LOG.info("Possibles actions  : ");
                     LOG.info(possibleActions.toString());
-                    if (possibleActions.size() == 2) {
-                        moreThan500OnlyPawnActions += 2;
-                    }
+                    if (gameWeather.getCondition() == WeatherKind.Cloud)
+                        player.choseImprovement(improvements);
                     for (int j = 0; j < 2; j++) {
-                        if (moreThan500OnlyPawnActions > 500) {
-                            LOG.info("Party ended due to player playing more than 500 only pawn actions\n");
+                        if (gameTurn > 5000) {
+                            LOG.info("Party ended due to player playing more than 5000 actions (endless game)\n");
                             fillTheFinalScore();
                             return;
                         }
@@ -255,6 +260,9 @@ public class Game {
                     e.printStackTrace();
                     System.exit(1);
                 }
+            }
+            else if (decision.get().equals(Action.PutImprovement)){
+                player.putImprovement();
             }
             else
                 throw new IllegalStateException("This should never happen");
@@ -367,6 +375,7 @@ public class Game {
     }
 
     public void resetGame() throws UnsupportedOperationException{
+        gameWeather.resetWeather();
         resetMap();
         resetObjectives();
         resetDecks();
@@ -442,7 +451,8 @@ public class Game {
                 Objects.equals(patternMatchs, game.patternMatchs) &&
                 Objects.equals(emperor, game.emperor) &&
                 achievedObjectives.containsAll(game.achievedObjectives) && game.achievedObjectives.containsAll(achievedObjectives) &&
-                Objects.equals(gamePlayersResults, game.gamePlayersResults);
+                Objects.equals(gamePlayersResults, game.gamePlayersResults) &&
+                gameWeather.equals(game.gameWeather);
     }
 
     @Override
