@@ -2,6 +2,7 @@ package dev.stonks.takenoko.objective;
 
 import dev.stonks.takenoko.IllegalEqualityExceptionGenerator;
 import dev.stonks.takenoko.map.DirectionnedTile;
+import dev.stonks.takenoko.map.Improvement;
 import dev.stonks.takenoko.pattern.BambooPattern;
 
 import java.util.Objects;
@@ -14,6 +15,7 @@ import java.util.Objects;
 public class GardenerObjective extends Objective {
 
     private BambooPattern bambooPattern;
+    private Improvement localImprovement;
 
     /**
      *Make a gardener objective
@@ -23,6 +25,19 @@ public class GardenerObjective extends Objective {
     public GardenerObjective(int nbPT, BambooPattern bambooPattern){
         super(ObjectiveKind.Gardener,nbPT);
         this.bambooPattern=bambooPattern;
+        this.localImprovement=Improvement.Empty;
+    }
+
+    /**
+     * Make a gardener objective with improvement
+     * @param nbPT n° of point
+     * @param bambooPattern pattern for the objective
+     * @param improvement type of improvement
+     */
+    public GardenerObjective(int nbPT, BambooPattern bambooPattern,Improvement improvement){
+        super(ObjectiveKind.Gardener,nbPT);
+        this.bambooPattern=bambooPattern;
+        this.localImprovement=improvement;
     }
 
     /**
@@ -31,6 +46,11 @@ public class GardenerObjective extends Objective {
     public BambooPattern getBambooPattern() {
         return this.bambooPattern;
     }
+
+    /**
+     * @return local improvement
+     */
+    public Improvement getLocalImprovement(){ return this.localImprovement;}
 
     @Override
     public boolean equals(Object o) {
