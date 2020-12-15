@@ -1,11 +1,14 @@
 package dev.stonks.takenoko.objective;
 
+import dev.stonks.takenoko.map.Improvement;
 import dev.stonks.takenoko.map.Tile;
 import dev.stonks.takenoko.pattern.BambooPattern;
 import dev.stonks.takenoko.bot.Player;
 import dev.stonks.takenoko.map.Map;
 import dev.stonks.takenoko.pattern.MatchResult;
+import dev.stonks.takenoko.pawn.Gardener;
 
+import java.security.cert.TrustAnchor;
 import java.util.ArrayList;
 import java.util.Optional;
 import java.util.Set;
@@ -100,13 +103,27 @@ public class IsValidObjectives {
         int nbMath = 0;
 
         for(Tile value : allTiles){
-            if(value.getBamboo().getColor().equals(objective.getBambooPattern().getColor())&&value.getBamboo().getSize()==objective.getBambooPattern().getHeight()){
+            if(value.getBamboo().getColor().equals(objective.getBambooPattern().getColor())&&value.getBamboo().getSize()==objective.getBambooPattern().getHeight() && isImprovementValid(objective,value)){
                 nbMath++;
             }
         }
         if(nbMath>=objective.getBambooPattern().getNbBamboo()){
             objective.UpdtateStates();
         }
+    }
+
+    private static boolean isImprovementValid(GardenerObjective objective, Tile tile){
+        if(objective.getLocalImprovement().equals(Improvement.Empty)){
+            return true;
+        }
+        if(objective.getLocalImprovement().equals(Improvement.NoImprovementHere)){
+            if(tile.getImprovement()==Improvement.Empty){return true;}
+            else {return false;}
+        }
+        if(objective.getLocalImprovement().equals(tile.getImprovement())){
+            return true;
+        }
+        return false;
     }
 
 }

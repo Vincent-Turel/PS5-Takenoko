@@ -9,6 +9,7 @@ import dev.stonks.takenoko.pattern.BambooPattern;
 import dev.stonks.takenoko.pattern.MatchResult;
 import dev.stonks.takenoko.pattern.Pattern;
 import dev.stonks.takenoko.objective.PatternObjective;
+import dev.stonks.takenoko.pawn.Gardener;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashSet;
@@ -155,12 +156,15 @@ public class IsValidObjectivesTest {
         //Making some tiles :
         Tile tileGreen = mock(Tile.class);
         when(tileGreen.getBamboo()).thenReturn(greenBamboo);
+        when(tileGreen.getImprovement()).thenReturn(Improvement.Watershed);
 
         Tile tilePink1 = mock(Tile.class);
         when(tilePink1.getBamboo()).thenReturn(pinkBamboo);
+        when(tilePink1.getImprovement()).thenReturn(Improvement.Empty);
 
         Tile tilePink2 = mock(Tile.class);
         when(tilePink2.getBamboo()).thenReturn(pinkBamboo);
+        when(tilePink2.getImprovement()).thenReturn(Improvement.Empty);
 
         //Making the tab tiles for map :
         Optional<Tile>[] tiles = new Optional[4];
@@ -184,14 +188,27 @@ public class IsValidObjectivesTest {
         BambooPattern pinkPattern = new BambooPattern(TileKind.Pink,4,2);
         GardenerObjective pinkObjective = new GardenerObjective(5,pinkPattern);
 
+        GardenerObjective objectiveWinWithImprovement = new GardenerObjective(5,winPattern,Improvement.Watershed);
+        GardenerObjective objectiveLoseWithImprovement = new GardenerObjective(5,winPattern,Improvement.NoImprovementHere);
+        GardenerObjective objectiveWinWithNoImprovement = new GardenerObjective(5,pinkPattern,Improvement.NoImprovementHere);
+        GardenerObjective objectiveLoseImprovementNoHere = new GardenerObjective(5,pinkPattern,Improvement.Watershed);
+
         //Test function :
         IsValidObjectives.isObjectivesGardenerValid(objectiveWin,map);
         IsValidObjectives.isObjectivesGardenerValid(objectiveLose,map);
         IsValidObjectives.isObjectivesGardenerValid(pinkObjective,map);
+        IsValidObjectives.isObjectivesGardenerValid(objectiveWinWithImprovement,map);
+        IsValidObjectives.isObjectivesGardenerValid(objectiveLoseWithImprovement,map);
+        IsValidObjectives.isObjectivesGardenerValid(objectiveWinWithNoImprovement,map);
+        IsValidObjectives.isObjectivesGardenerValid(objectiveLoseImprovementNoHere,map);
 
         assertEquals(true,objectiveWin.getStates());
         assertEquals(false,objectiveLose.getStates());
         assertEquals(true,pinkObjective.getStates());
+        assertEquals(true,objectiveWinWithImprovement.getStates());
+        assertEquals(false,objectiveLoseWithImprovement.getStates());
+        assertEquals(true,objectiveWinWithNoImprovement.getStates());
+        assertEquals(false,objectiveLoseImprovementNoHere.getStates());
     }
 
 }
