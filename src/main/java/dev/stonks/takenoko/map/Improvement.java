@@ -9,7 +9,8 @@ public enum Improvement {
     // Enclosure,
     // Fertilizer,
     Watershed,
-    Empty;
+    Empty,
+    NoImprovementHere;
 
     /**
      * Returns whether if the current improvement is empty or not.
