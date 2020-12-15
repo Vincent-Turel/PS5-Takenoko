@@ -1,13 +1,12 @@
 package dev.stonks.takenoko.bot;
 
 import dev.stonks.takenoko.map.*;
+import dev.stonks.takenoko.map.Map;
 import dev.stonks.takenoko.pawn.Pawn;
 import dev.stonks.takenoko.gameManagement.Action;
 import dev.stonks.takenoko.objective.ObjectiveKind;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * This player plays randomly every time.
@@ -53,17 +52,16 @@ public class RandomPlayer extends Player{
      */
     @Override
     public Tile putTile(ArrayList<AbstractTile> tiles) {
+        ArrayList<Coordinate> possiblePlacements = new ArrayList<>(this.currentMapState.getTilePlacements());
+
         if (tiles.size() < 1)
             throw new IllegalStateException("This action shouldn't be possible if there is no tiles remaining");
-        AbstractTile chosenAbstractTile = tiles.get(random.nextInt(tiles.size()));
-        ArrayList<Coordinate> possiblePlacemnts = new ArrayList<>(this.currentMapState.getTilePlacements());
-        if (possiblePlacemnts.size() < 1)
+        if (possiblePlacements.size() < 1)
             throw new IllegalStateException("There should always have a place for a new tile");
-        Coordinate chosenLocation = possiblePlacemnts.get(random.nextInt(possiblePlacemnts.size()));
-        tiles.remove(chosenAbstractTile);
 
+        AbstractTile chosenAbstractTile = tiles.remove(random.nextInt(tiles.size()));
 
-        return chosenAbstractTile.withCoordinate(chosenLocation);
+        return chosenAbstractTile.withCoordinate(possiblePlacements.get(random.nextInt(possiblePlacements.size())));
     }
 
     /**
@@ -89,8 +87,18 @@ public class RandomPlayer extends Player{
     public Optional<Action> doYouWantToPutAnIrrigationOrPutAnAmmenagment(Map map) {
         this.currentMapState = map;
         if (irrigations.size() > 0 && new ArrayList<>(currentMapState.getIrrigationPlacements()).size() > 0){
+            if (improvements.size() > 0 && new HashSet<>(currentMapState.getImprovementPlacements()).size() > 0){
+                int x = random.nextInt(3);
+                return x ==  0 ? Optional.of(Action.PutIrrigation) : x == 1 ? Optional.of(Action.PutImprovement) : Optional.empty();
+            }
+            else {
+                int x = random.nextInt(2);
+                return x ==  0 ? Optional.of(Action.PutIrrigation) : Optional.empty();
+            }
+        }
+        else if (improvements.size() > 0 && new HashSet<>(currentMapState.getImprovementPlacements()).size() > 0){
             int x = random.nextInt(2);
-            return x ==  0 ? Optional.of(Action.PutIrrigation) : Optional.empty();
+            return x ==  0 ? Optional.of(Action.PutImprovement) : Optional.empty();
         }
         else
             return Optional.empty();
@@ -102,8 +110,27 @@ public class RandomPlayer extends Player{
      */
     @Override
     public Irrigation putIrrigation() {
-        List<IrrigationCoordinate> x = new ArrayList<>(currentMapState.getIrrigationPlacements());
-        return irrigations.pop().withCoordinate(x.get(random.nextInt(x.size())));
+        if (irrigations.size() < 1)
+            throw new IllegalStateException("This action shouldn't be possible");
+        List<IrrigationCoordinate> irrigationCoordinates = new ArrayList<>(currentMapState.getIrrigationPlacements());
+        return irrigations.pop().withCoordinate(irrigationCoordinates.get(random.nextInt(irrigationCoordinates.size())));
+    }
 
+    @Override
+    public void putImprovement() {
+        if (improvements.size() < 1)
+            throw new IllegalStateException("This action shouldn't be possible");
+        List<Tile> improvementPlacements = new ArrayList<>(currentMapState.getImprovementPlacements());
+        Tile chosenTile = improvementPlacements.get(random.nextInt(improvementPlacements.size()));
+        try {
+            chosenTile.addImprovement(improvements.remove(random.nextInt(improvements.size())));
+        } catch (IllegalPlacementException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void choseImprovement(List<Improvement> improvements) {
+        this.improvements.add(improvements.remove(random.nextInt(improvements.size())));
     }
 }

@@ -1,5 +1,7 @@
 package dev.stonks.takenoko;
 
+import dev.stonks.takenoko.map.Improvement;
+import dev.stonks.takenoko.map.TileKind;
 import dev.stonks.takenoko.objective.GardenerObjective;
 import dev.stonks.takenoko.objective.Objective;
 import dev.stonks.takenoko.objective.ObjectiveKind;
@@ -7,6 +9,7 @@ import dev.stonks.takenoko.objective.PandaObjective;
 import dev.stonks.takenoko.pattern.BambooPattern;
 import dev.stonks.takenoko.pattern.Pattern;
 import dev.stonks.takenoko.objective.PatternObjective;
+import dev.stonks.takenoko.pawn.Gardener;
 import org.junit.jupiter.api.Test;
 import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -69,6 +72,18 @@ class ObjectivesTest {
         assertEquals(aBambooPattern,gardener.getBambooPattern());
         assertEquals(aPattern,pattern.getLocalPattern());
 
+    }
+
+    @Test
+    void objectiveGardenerTestComplementary(){
+        BambooPattern pattern = mock(BambooPattern.class);
+        GardenerObjective objectiveWithImprovement = new GardenerObjective(5,pattern, Improvement.Watershed);
+        GardenerObjective objectiveWithoutImprovement = new GardenerObjective(5,pattern);
+        GardenerObjective objectiveWithNoImprovementForValidation = new GardenerObjective(5,pattern, Improvement.NoImprovementHere);
+
+        assertEquals(Improvement.Watershed,objectiveWithImprovement.getLocalImprovement());
+        assertEquals(Improvement.Empty,objectiveWithoutImprovement.getLocalImprovement());
+        assertEquals(Improvement.NoImprovementHere,objectiveWithNoImprovementForValidation.getLocalImprovement());
     }
 
 }

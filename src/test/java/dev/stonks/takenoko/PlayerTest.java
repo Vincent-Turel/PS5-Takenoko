@@ -19,8 +19,7 @@ import org.mockito.Mockito;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @SuppressWarnings("unchecked")
 public class PlayerTest {
@@ -156,5 +155,66 @@ public class PlayerTest {
         dumbPlayer.decide(new ArrayList<>(Arrays.asList(Action.values())), map);
         assertFalse(dumbPlayer.getObjectives().contains(objectiveWin));
         assertEquals(dumbPlayer.getChosenAction(), List.of(Optional.of(0), Optional.of(0), Optional.of(0)));
+    }
+
+    @Test
+    public void choseImprovementTest() {
+        ArrayList<Improvement> improvements = new ArrayList<>(Arrays.asList(Improvement.Watershed, Improvement.Watershed));
+        assertEquals(2, improvements.size());
+        randomPlayer.choseImprovement(improvements);
+        assertEquals(1, improvements.size());
+        improvements.addAll(Arrays.asList(Improvement.Watershed, Improvement.Watershed));
+        assertEquals(3, improvements.size());
+        dumbPlayer.choseImprovement(improvements);
+        assertEquals(2, improvements.size());
+    }
+
+    @Test
+    public void putImprovementTest() throws IllegalPlacementException {
+        ArrayList<Improvement> improvements = new ArrayList<>(Arrays.asList(Improvement.Watershed, Improvement.Watershed));
+        Map map = new Map(15);
+        Tile t = map.setTile(map.initialTile().getCoordinate().moveWith(Direction.South), new AbstractTile(TileKind.Green));
+        assertEquals(Improvement.Empty, t.getImprovement());
+        randomPlayer.setCurrentMapState(map);
+        randomPlayer.choseImprovement(improvements);
+        assertEquals(1, randomPlayer.getImprovements().size());
+        randomPlayer.putImprovement();
+        assertEquals(Improvement.Watershed, t.getImprovement());
+        assertEquals(0, randomPlayer.getImprovements().size());
+        assertThrows(IllegalStateException.class, () -> randomPlayer.putImprovement());
+
+        Tile t2 = map.setTile(map.initialTile().getCoordinate().moveWith(Direction.North), new AbstractTile(TileKind.Pink));
+        assertEquals(Improvement.Empty, t2.getImprovement());
+        dumbPlayer.setCurrentMapState(map);
+        dumbPlayer.choseImprovement(improvements);
+        assertEquals(1, dumbPlayer.getImprovements().size());
+        dumbPlayer.putImprovement();
+        assertEquals(Improvement.Watershed, t2.getImprovement());
+        assertEquals(0, randomPlayer.getImprovements().size());
+        assertThrows(IllegalStateException.class, () -> randomPlayer.putImprovement());
+    }
+
+    @Test
+    public void putIrrigationTest() throws IllegalPlacementException {
+        Map map = new Map(15);
+        map.setTile(map.initialTile().getCoordinate().moveWith(Direction.South), new AbstractTile(TileKind.Green));
+        map.setTile(map.initialTile().getCoordinate().moveWith(Direction.SouthEast), new AbstractTile(TileKind.Pink));
+
+        randomPlayer.setCurrentMapState(map);
+        dumbPlayer.setCurrentMapState(map);
+
+        randomPlayer.addIrrigation(new AbstractIrrigation());
+        assertEquals(1, randomPlayer.getIrrigations().size());
+        Irrigation irrigation = randomPlayer.putIrrigation();
+        assertEquals(0, randomPlayer.getIrrigations().size());
+        assertTrue(map.getIrrigationPlacements().contains(irrigation.getCoordinate()));
+        assertThrows(IllegalStateException.class, () -> randomPlayer.putIrrigation());
+
+        dumbPlayer.addIrrigation(new AbstractIrrigation());
+        assertEquals(1, dumbPlayer.getIrrigations().size());
+        Irrigation irrigation2 = dumbPlayer.putIrrigation();
+        assertEquals(0, dumbPlayer.getIrrigations().size());
+        assertTrue(map.getIrrigationPlacements().contains(irrigation2.getCoordinate()));
+        assertThrows(IllegalStateException.class, () -> dumbPlayer.putIrrigation());
     }
 }
