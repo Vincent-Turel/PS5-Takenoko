@@ -47,6 +47,9 @@ public class GardenerObjective extends Objective {
         return this.bambooPattern;
     }
 
+    /**
+     * @return local improvement
+     */
     public Improvement getLocalImprovement(){ return this.localImprovement;}
 
     @Override

@@ -112,6 +112,12 @@ public class IsValidObjectives {
         }
     }
 
+    /**
+     * Check if the improvement is valid between an objective and a tile :
+     * @param objective ->current objective
+     * @param tile -> current tile
+     * @return True if the objective improvement correspond to the tile improvement otherwise false.
+     */
     private static boolean isImprovementValid(GardenerObjective objective, Tile tile){
         if(objective.getLocalImprovement().equals(Improvement.Empty)){
             return true;
