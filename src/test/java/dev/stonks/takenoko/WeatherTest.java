@@ -19,11 +19,11 @@ public class WeatherTest {
                 case 1:
                 case 2:
                 case 6:
-                    assertEquals("Sun",myWeather.getCondition());break;
+                    assertEquals("Sun",myWeather.getCondition().toString());break;
                 case 3:
                 case 4:
                 case 5:
-                    assertEquals("Rain",myWeather.getCondition());break;
+                    assertEquals("Rain",myWeather.getCondition().toString());break;
             }
             myWeather.upDateWeather();
             weatherState = myWeather.getStates();
@@ -34,8 +34,8 @@ public class WeatherTest {
     public void setWeatherTest(){
         Weather myWeather = new Weather();
         myWeather.setWeather(1);
-        assertEquals("Sun",myWeather.getCondition());
+        assertEquals("Sun",myWeather.getCondition().toString());
         myWeather.setWeather(4);
-        assertEquals("Rain",myWeather.getCondition());
+        assertEquals("Rain",myWeather.getCondition().toString());
     }
 }

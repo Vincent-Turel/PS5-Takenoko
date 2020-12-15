@@ -27,6 +27,7 @@ public abstract class Player {
     protected ArrayList<Objective> objectives;
     protected int[] collectedBamboo;
     protected Stack<AbstractIrrigation> irrigations;
+    protected List<Improvement> improvements;
     protected int nbObjectivesAchieved;
     protected int nbPandaObjectivesAchieved;
     protected Map currentMapState;
@@ -40,6 +41,7 @@ public abstract class Player {
         this.nbPandaObjectivesAchieved = 0;
         this.collectedBamboo = new int[]{0, 0, 0}; //[green,yellow,pink]
         this.irrigations = new Stack<>();
+        this.improvements = new ArrayList<>();
         this.score = 0;
         this.random = new Random();
     }
@@ -199,11 +201,23 @@ public abstract class Player {
         return currentMapState;
     }
 
+    public List<Improvement> getImprovements() {
+        return improvements;
+    }
+
     /**
      * Chose where the player wanna put his irrigation and return it.
-     * @return the an irrigation
+     * @return an irrigation
      */
     public abstract Irrigation putIrrigation();
+
+    /**
+     * Chose where the player wanna put his irrigation and return it.
+     * @return an improvement as a tile in order to update the tile on the map with the caracteristics of this tile
+     */
+    public abstract void putImprovement();
+
+    public abstract void choseImprovement(List<Improvement> improvements);
 
     /**
      * Set the current map state of the game

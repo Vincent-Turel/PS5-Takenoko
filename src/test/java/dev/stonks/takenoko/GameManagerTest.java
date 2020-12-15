@@ -6,6 +6,10 @@ import dev.stonks.takenoko.map.IllegalPlacementException;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import java.util.Arrays;
+import java.util.logging.Level;
+import java.util.logging.LogManager;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
@@ -19,6 +23,7 @@ public class GameManagerTest {
 
     @Test
     void TestOfThePlayNTimeMethod(){
+        Arrays.stream(LogManager.getLogManager().getLogger("").getHandlers()).forEach(h -> h.setLevel(Level.OFF));
         Game spy = spy(gameManager.game);
         gameManager.game = spy;
         try {

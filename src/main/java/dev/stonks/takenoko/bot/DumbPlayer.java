@@ -20,6 +20,7 @@ public class DumbPlayer extends Player {
     public DumbPlayer(int id) {
         super(id);
         this.chosenAction = List.of(Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty());
+        this.chosenOptionalAction = List.of(Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty());
         this.playerType = PlayerType.DumbPlayer;
     }
 
@@ -195,15 +196,20 @@ public class DumbPlayer extends Player {
             throw new IllegalStateException("This action shouldn't be possible if there is no tiles remaining");
         if (tilePlacements.size() < 1)
             throw new IllegalStateException("There should always have a place for a new tile");
-        if (chosenAction.get(0).orElseThrow(IllegalStateException::new) == 0)
-            return tiles.get(random.nextInt(tiles.size())).withCoordinate(tilePlacements.get(random.nextInt(tilePlacements.size())));
+        if (chosenAction.get(0).orElseThrow(IllegalStateException::new) == 0) {
+            AbstractTile tile = tiles.get(random.nextInt(tiles.size()));
+            tiles.remove(tile);
+            return tile.withCoordinate(tilePlacements.get(random.nextInt(tilePlacements.size())));
+        }
+
         Optional<AbstractTile> abstractTile = Optional.empty();
         for(var elem : tiles) {
             if (elem.getKind() == TileKind.values()[chosenAction.get(3).orElseThrow(IllegalStateException::new)])
                 abstractTile = Optional.of(elem);
         }
-        return abstractTile.orElse(tiles.get(random.nextInt(tiles.size()))).withCoordinate(
-                new ArrayList<>(tilePlacements).get(chosenAction.get(2).orElseThrow(IllegalStateException::new)));
+        AbstractTile tile = abstractTile.orElse(tiles.get(random.nextInt(tiles.size())));
+        tiles.remove(tile);
+        return tile.withCoordinate(new ArrayList<>(tilePlacements).get(chosenAction.get(2).orElseThrow(IllegalStateException::new)));
     }
 
     /**
@@ -216,7 +222,10 @@ public class DumbPlayer extends Player {
         ArrayList<Tile> possiblePawnPlacements = new ArrayList<>(currentMapState.getPossiblePawnPlacements(pawn));
         if (possiblePawnPlacements.size() < 1)
             throw new IllegalStateException("This action shouldn't be possible if there the panda can't move anywhere");
-        return new ArrayList<>(possiblePawnPlacements).get(chosenAction.get(2).orElse(random.nextInt(possiblePawnPlacements.size())));
+        if (chosenAction.get(0).orElseThrow(IllegalStateException::new) == 0) {
+            return possiblePawnPlacements.get(random.nextInt(possiblePawnPlacements.size()));
+        }
+        return possiblePawnPlacements.get(chosenAction.get(2).orElseThrow(IllegalStateException::new));
     }
 
     /**
@@ -228,6 +237,9 @@ public class DumbPlayer extends Player {
     @Override
     public Optional<Action> doYouWantToPutAnIrrigationOrPutAnAmmenagment(Map map) {
         this.currentMapState = map;
+        if (improvements.size() > 0 && new HashSet<>(currentMapState.getImprovementPlacements()).size() > 0){
+            return Optional.of(Action.PutImprovement);
+        }
         if (irrigations.size() > 0 && new ArrayList<>(currentMapState.getIrrigationPlacements()).size() > 0){
             explore_irrigations();
             if (chosenOptionalAction.get(0).orElseThrow(IllegalStateException::new) > 0)
@@ -248,8 +260,28 @@ public class DumbPlayer extends Player {
      */
     @Override
     public Irrigation putIrrigation() {
+        if (irrigations.size() < 1)
+            throw new IllegalStateException("This action shouldn't be possible");
         List<IrrigationCoordinate> irrigationCoordinates = new ArrayList<>(currentMapState.getIrrigationPlacements());
         return irrigations.pop().withCoordinate(irrigationCoordinates.get(chosenOptionalAction.get(1).orElse(random.nextInt(irrigationCoordinates.size()))));
+    }
+
+    @Override
+    public void putImprovement() {
+        if (improvements.size() < 1)
+            throw new IllegalStateException("This action shouldn't be possible");
+        List<Tile> improvementPlacements = new ArrayList<>(currentMapState.getImprovementPlacements());
+        Tile chosenTile = improvementPlacements.get(random.nextInt(improvementPlacements.size()));
+        try {
+            chosenTile.addImprovement(improvements.remove(random.nextInt(improvements.size())));
+        } catch (IllegalPlacementException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void choseImprovement(List<Improvement> improvements) {
+        this.improvements.add(improvements.remove(random.nextInt(improvements.size())));
     }
 
     /**

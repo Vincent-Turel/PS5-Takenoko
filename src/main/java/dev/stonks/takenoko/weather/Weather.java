@@ -1,5 +1,6 @@
 package dev.stonks.takenoko.weather;
 
+import java.util.Objects;
 import java.util.Random;
 
 /**
@@ -27,8 +28,8 @@ public class Weather {
         return state;
     }
 
-    public String getCondition() {
-        return weatherCondition.toString();
+    public WeatherKind getCondition() {
+        return weatherCondition;
     }
 
     /**
@@ -71,5 +72,19 @@ public class Weather {
     public void resetWeather(){
         this.weatherCondition=WeatherKind.NoWeather;
         this.state=0;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Weather)) return false;
+        Weather weather = (Weather) o;
+        return state == weather.state &&
+                weatherCondition == weather.weatherCondition;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(state, weatherCondition, r);
     }
 }

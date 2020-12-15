@@ -50,6 +50,7 @@ public class GameTest {
         expected.remove(Action.MoveGardener);
         expected.remove(Action.MovePanda);
         expected.remove(Action.PutIrrigation);
+        expected.remove(Action.PutImprovement);
         Set<Action> result = new HashSet<>(game.findPossibleActions(player1));
         assertTrue(result.equals(expected));
     }
@@ -73,13 +74,11 @@ public class GameTest {
         mockResults.add(new GameResults(players.get(0).getId(),1,players.get(0).getNbPandaObjectivesAchieved()));
         mockResults.add(new GameResults(players.get(1).getId(),2,players.get(1).getNbPandaObjectivesAchieved()));
 
-        doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
-                mockGame.gamePlayersResults = mockResults;
-                return true;
-            }
+        doAnswer(invocationOnMock -> {
+            mockGame.gamePlayersResults = mockResults;
+            return true;
         }).when(mockGame).play();
+
         doCallRealMethod().when(mockGame).getResults();
 
         ArrayList<GameResults> expected = new ArrayList<>();
