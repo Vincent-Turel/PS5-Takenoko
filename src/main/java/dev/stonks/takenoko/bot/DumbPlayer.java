@@ -195,15 +195,20 @@ public class DumbPlayer extends Player {
             throw new IllegalStateException("This action shouldn't be possible if there is no tiles remaining");
         if (tilePlacements.size() < 1)
             throw new IllegalStateException("There should always have a place for a new tile");
-        if (chosenAction.get(0).orElseThrow(IllegalStateException::new) == 0)
-            return tiles.get(random.nextInt(tiles.size())).withCoordinate(tilePlacements.get(random.nextInt(tilePlacements.size())));
+        if (chosenAction.get(0).orElseThrow(IllegalStateException::new) == 0) {
+            AbstractTile tile = tiles.get(random.nextInt(tiles.size()));
+            tiles.remove(tile);
+            return tile.withCoordinate(tilePlacements.get(random.nextInt(tilePlacements.size())));
+        }
+
         Optional<AbstractTile> abstractTile = Optional.empty();
         for(var elem : tiles) {
             if (elem.getKind() == TileKind.values()[chosenAction.get(3).orElseThrow(IllegalStateException::new)])
                 abstractTile = Optional.of(elem);
         }
-        return abstractTile.orElse(tiles.get(random.nextInt(tiles.size()))).withCoordinate(
-                new ArrayList<>(tilePlacements).get(chosenAction.get(2).orElseThrow(IllegalStateException::new)));
+        AbstractTile tile = abstractTile.orElse(tiles.get(random.nextInt(tiles.size())));
+        tiles.remove(tile);
+        return tile.withCoordinate(new ArrayList<>(tilePlacements).get(chosenAction.get(2).orElseThrow(IllegalStateException::new)));
     }
 
     /**
@@ -216,7 +221,10 @@ public class DumbPlayer extends Player {
         ArrayList<Tile> possiblePawnPlacements = new ArrayList<>(currentMapState.getPossiblePawnPlacements(pawn));
         if (possiblePawnPlacements.size() < 1)
             throw new IllegalStateException("This action shouldn't be possible if there the panda can't move anywhere");
-        return new ArrayList<>(possiblePawnPlacements).get(chosenAction.get(2).orElse(random.nextInt(possiblePawnPlacements.size())));
+        if (chosenAction.get(0).orElseThrow(IllegalStateException::new) == 0) {
+            return possiblePawnPlacements.get(random.nextInt(possiblePawnPlacements.size()));
+        }
+        return possiblePawnPlacements.get(chosenAction.get(2).orElseThrow(IllegalStateException::new));
     }
 
     /**

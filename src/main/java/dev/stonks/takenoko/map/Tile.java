@@ -95,6 +95,9 @@ public class Tile {
         this.growBamboo();
     }
 
+    /**
+     * ONLY FOR TEST
+     */
     public void deirrigate() {
         this.irrigated = false;
     }
