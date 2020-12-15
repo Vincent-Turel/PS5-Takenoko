@@ -214,7 +214,11 @@ public class DumbPlayer extends Player {
             throw new IllegalStateException("This action shouldn't be possible if there is no tiles remaining");
         if (tilePlacements.size() < 1)
             throw new IllegalStateException("There should always have a place for a new tile");
+<<<<<<< HEAD
         if (chosenAction.get(0).orElseThrow(NoSuchElementException::new) == 0) {
+=======
+        if (chosenAction.get(0).orElseThrow(IllegalStateException::new) == 0) {
+>>>>>>> 117ece1... begining of bot_3
             AbstractTile tile = tiles.get(random.nextInt(tiles.size()));
             tiles.remove(tile);
             return tile.withCoordinate(tilePlacements.get(random.nextInt(tilePlacements.size())));
@@ -227,7 +231,11 @@ public class DumbPlayer extends Player {
         }
         AbstractTile tile = abstractTile.orElse(tiles.get(random.nextInt(tiles.size())));
         tiles.remove(tile);
+<<<<<<< HEAD
         return tile.withCoordinate(new ArrayList<>(tilePlacements).get(chosenAction.get(2).orElseThrow(NoSuchElementException::new)));
+=======
+        return tile.withCoordinate(new ArrayList<>(tilePlacements).get(chosenAction.get(2).orElseThrow(IllegalStateException::new)));
+>>>>>>> 117ece1... begining of bot_3
     }
 
     /**
@@ -239,11 +247,19 @@ public class DumbPlayer extends Player {
     public Tile choseWherePawnShouldGo(Pawn pawn) {
         ArrayList<Tile> possiblePawnPlacements = new ArrayList<>(currentMapState.getPossiblePawnPlacements(pawn));
         if (possiblePawnPlacements.size() < 1)
+<<<<<<< HEAD
             throw new IllegalStateException("This action shouldn't be possible if there the pawn can't move anywhere");
         if (chosenAction.get(0).orElseThrow(NoSuchElementException::new) == 0) {
             return possiblePawnPlacements.get(random.nextInt(possiblePawnPlacements.size()));
         }
         return possiblePawnPlacements.get(chosenAction.get(2).orElseThrow(NoSuchElementException::new));
+=======
+            throw new IllegalStateException("This action shouldn't be possible if there the panda can't move anywhere");
+        if (chosenAction.get(0).orElseThrow(IllegalStateException::new) == 0) {
+            return possiblePawnPlacements.get(random.nextInt(possiblePawnPlacements.size()));
+        }
+        return possiblePawnPlacements.get(chosenAction.get(2).orElseThrow(IllegalStateException::new));
+>>>>>>> 117ece1... begining of bot_3
     }
 
     /**

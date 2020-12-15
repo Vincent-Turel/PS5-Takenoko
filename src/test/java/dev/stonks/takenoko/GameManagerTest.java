@@ -10,6 +10,11 @@ import org.junit.jupiter.api.Test;
 import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.LogManager;
+<<<<<<< HEAD
+=======
+
+import static dev.stonks.takenoko.Main.level;
+>>>>>>> 117ece1... begining of bot_3
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
