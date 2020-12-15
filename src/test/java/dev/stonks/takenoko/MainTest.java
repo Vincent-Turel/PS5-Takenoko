@@ -6,12 +6,12 @@ import org.junit.jupiter.api.BeforeEach;
 public class MainTest {
     public static final int nbRandomPlayer = 2;
     public static final int nbDumbPlayer = 2;
-    public static final int nbIntelligentPlayer = 2;
+    public static final int nbSmartPlayer = 2;
     GameManager gameManager;
 
     @BeforeEach
     public void Initialises() {
-        gameManager = new GameManager(nbRandomPlayer,nbDumbPlayer);
+        gameManager = new GameManager(nbRandomPlayer, nbDumbPlayer, nbSmartPlayer);
     }
     /*
     @BeforeEach
