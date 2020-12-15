@@ -20,6 +20,7 @@ public class DumbPlayer extends Player {
     public DumbPlayer(int id) {
         super(id);
         this.chosenAction = List.of(Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty());
+        this.chosenOptionalAction = List.of(Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty());
         this.playerType = PlayerType.DumbPlayer;
     }
 
