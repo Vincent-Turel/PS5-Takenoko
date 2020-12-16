@@ -27,15 +27,11 @@ public enum Direction {
     NorthWest;
 
     private static Direction fromIndex(int i) {
-        switch (i) {
-            case 0: return Direction.North;
-            case 1: return Direction.NorthEast;
-            case 2: return Direction.SouthEast;
-            case 3: return Direction.South;
-            case 4: return Direction.SouthWest;
-            case 5: return Direction.NorthWest;
-            default: throw new RuntimeException("New direction should be bigger than 0 and smaller than 5");
+        if (i < 0 || 5 < i) {
+            throw new RuntimeException("New direction should be bigger than 0 and smaller than 5");
         }
+
+        return Direction.values()[i];
     }
 
     /**
