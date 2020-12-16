@@ -18,15 +18,15 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class SmartPlayer extends Player {
     private List<Optional<Integer>> chosenAction;
     private final List<ArrayList<ArrayList<Optional<Integer>>>> res;
-    private List<Optional<Integer>> chosenOptionalActions;
+    private List<Optional<Integer>> chosenOptionalAction;
     private final List<ArrayList<ArrayList<Optional<Integer>>>> irrigationRes;
 
     public SmartPlayer(int id) {
         super(id);
         this.playerType = PlayerType.SmartPlayer;
-        this.chosenAction = new ArrayList<>();
+        this.chosenAction = List.of(Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty());
+        this.chosenOptionalAction = List.of(Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty());
         this.res = new ArrayList<>();
-        this.chosenOptionalActions = new ArrayList<>();
         this.irrigationRes = new ArrayList<>();
     }
 
@@ -91,8 +91,8 @@ public class SmartPlayer extends Player {
         else
             actions.set(actions.size() - 1, newAction);
 
-
-        actions.add(0, new ArrayList<>(Collections.singletonList(Optional.of(checkObjectives(this, usedCloneMap)))));
+        int x = checkObjectives(this, usedCloneMap);
+        actions.add(0, new ArrayList<>(Collections.singletonList(Optional.of(x))));
         this.res.add(new ArrayList<>(actions));
         actions.remove(0);
 
@@ -111,7 +111,7 @@ public class SmartPlayer extends Player {
             }
             doNextIrrigations(nb, deepness, clonedMap, actions, i);
         }
-        chosenOptionalActions = choseBestAction(irrigationRes);
+        chosenOptionalAction = choseBestAction(irrigationRes);
     }
 
     private void doNextIrrigations(int nb, int deepness, Map usedCloneMap, ArrayList<ArrayList<Optional<Integer>>> actions, int i) {
@@ -149,12 +149,10 @@ public class SmartPlayer extends Player {
 
     /**
      * Check if an action has achevied an objective
-     *
-     * @param player    the player who tried the action
+     * @param player the player who tried the action
      * @param clonedMap the map on which we tried the action
      * @return the number of point of the achieved objective. 0 if no objective achieved
      */
-    @SuppressWarnings("DuplicatedCode")
     private int checkObjectives(Player player, Map clonedMap) {
         ArrayList<Objective> playerObjectives = player.getObjectives();
         int nbPoint = 0;
@@ -188,16 +186,17 @@ public class SmartPlayer extends Player {
     public Action decide(ArrayList<Action> possibleAction, Map map) {
         if (possibleAction.size() < 1)
             throw new IllegalStateException("There should always have possible actions");
+
         this.currentMapState = map;
-        chosenAction.clear();
+        chosenAction = List.of(Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty());
         res.clear();
         explore(new CopyOnWriteArrayList<>(possibleAction), currentMapState, 1, 2, new ArrayList<>());
         chosenAction = choseBestAction(res);
 
-        if (chosenAction.get(0).orElseThrow(IllegalStateException::new) > 1)
-            return Action.values()[chosenAction.get(1).orElseThrow(IllegalStateException::new)];
         if (possibleAction.contains(Action.DrawObjective))
             return Action.DrawObjective;
+        if (chosenAction.get(0).orElseThrow(IllegalStateException::new) > 1)
+            return Action.values()[chosenAction.get(1).orElseThrow(IllegalStateException::new)];
         if (possibleAction.contains(Action.DrawIrrigation)) {
             if (this.irrigations.size() < 5)
                 return Action.DrawIrrigation;
@@ -248,7 +247,7 @@ public class SmartPlayer extends Player {
         }
 
         return abstractTile.orElse(tiles.get(random.nextInt(tiles.size()))).withCoordinate(
-                new ArrayList<>(tilePlacements).get(chosenAction.get(2).orElseThrow(IllegalStateException::new)));
+                tilePlacements.get(chosenAction.get(2).orElseThrow(IllegalStateException::new)));
     }
 
     /**
@@ -280,14 +279,17 @@ public class SmartPlayer extends Player {
     public Optional<Action> doYouWantToPutAnIrrigationOrPutAnAmmenagment(Map map) {
         this.currentMapState = map;
         if (irrigations.size() > 0 && new ArrayList<>(currentMapState.getIrrigationPlacements()).size() > 0) {
-            if (chosenOptionalActions.size() < 2){
-                chosenOptionalActions.clear();
-                exploreIrrigations(currentMapState, 1, irrigations.size(), new ArrayList<>());
-                chosenOptionalActions = choseBestAction(irrigationRes);
-            }
-            if (chosenOptionalActions.get(0).orElseThrow(IllegalStateException::new) > 0)
+            chosenOptionalAction = List.of(Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty());
+            irrigationRes.clear();
+            exploreIrrigations(currentMapState, 1, irrigations.size(), new ArrayList<>());
+            chosenOptionalAction = choseBestAction(irrigationRes);
+
+            if (chosenOptionalAction.get(0).orElseThrow(IllegalStateException::new) > 0)
                 return Optional.of(Action.PutIrrigation);
         }
+        if (improvements.size() > 0)
+            return Optional.of(Action.PutImprovement);
+
         return Optional.empty();
     }
 
@@ -299,18 +301,28 @@ public class SmartPlayer extends Player {
      */
     @Override
     public Irrigation putIrrigation() {
+        if (irrigations.size() < 1)
+            throw new IllegalStateException("This action shouldn't be possible");
         List<IrrigationCoordinate> irrigationCoordinates = new ArrayList<>(currentMapState.getIrrigationPlacements());
-        return irrigations.pop().withCoordinate(irrigationCoordinates.get(chosenOptionalActions.get(2).orElseThrow(IllegalStateException::new)));
+        return irrigations.pop().withCoordinate(irrigationCoordinates.get(chosenOptionalAction.get(1).orElse(random.nextInt(irrigationCoordinates.size()))));
     }
 
     @Override
     public void putImprovement() {
-
+        if (improvements.size() < 1)
+            throw new IllegalStateException("This action shouldn't be possible");
+        List<Tile> improvementPlacements = new ArrayList<>(currentMapState.getImprovementPlacements());
+        Tile chosenTile = improvementPlacements.get(random.nextInt(improvementPlacements.size()));
+        try {
+            chosenTile.addImprovement(improvements.remove(random.nextInt(improvements.size())));
+        } catch (IllegalPlacementException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void choseImprovement(List<Improvement> improvements) {
-
+        this.improvements.add(improvements.remove(random.nextInt(improvements.size())));
     }
 
     /**
