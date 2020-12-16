@@ -2,6 +2,7 @@ package dev.stonks.takenoko.gameManagement;
 
 import dev.stonks.takenoko.map.Improvement;
 
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -48,4 +49,22 @@ public class ImprovementDeck {
             return Optional.empty();
         }
     }
+
+    public void reset(){
+        remainingWatershed = 3;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ImprovementDeck that = (ImprovementDeck) o;
+        return remainingWatershed == that.remainingWatershed;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(remainingWatershed);
+    }
+
 }

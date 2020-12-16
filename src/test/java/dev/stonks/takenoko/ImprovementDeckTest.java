@@ -1,6 +1,7 @@
 package dev.stonks.takenoko;
 
 import dev.stonks.takenoko.gameManagement.ImprovementDeck;
+import dev.stonks.takenoko.map.Improvement;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -41,5 +42,20 @@ public class ImprovementDeckTest {
         // Drawing last watershed.
         deck.drawWatershed();
         assertFalse(deck.isWatershedAvailable());
+    }
+
+    @Test
+    void resetTest(){
+        ImprovementDeck expected = new ImprovementDeck();
+
+        assertEquals(expected,deck);
+
+        deck.drawWatershed();
+
+        assertNotEquals(expected,deck);
+
+        deck.reset();
+
+        assertEquals(expected,deck);
     }
 }
