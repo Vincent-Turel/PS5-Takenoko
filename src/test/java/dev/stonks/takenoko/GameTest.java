@@ -101,10 +101,10 @@ public class GameTest {
     @Test
     void verificationOfReset() {
         Game expected = new Game(players);
-        assertTrue(expected.equals(game));
+        assertEquals(expected,game);
         game.play();
         expected.gamePlayersResults.addAll(game.gamePlayersResults);
         game.resetGame();
-        assertTrue(expected.equals(game));
+        assertEquals(expected,game);;
     }
 }

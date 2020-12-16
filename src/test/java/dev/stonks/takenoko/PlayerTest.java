@@ -68,6 +68,26 @@ public class PlayerTest {
     }
 
     @Test
+    public void chooseTileToGrowTest() throws IllegalPlacementException {
+        Map map = new Map(3);
+        assertEquals(Optional.empty(),randomPlayer.chooseTileToGrow(map));
+        assertEquals(Optional.empty(),dumbPlayer.chooseTileToGrow(map));
+
+        Optional<Tile> t1 = Optional.of(map.addNeighborOf(TileKind.Green, map.initialTile().withDirection(Direction.South)));
+        assertEquals(t1,randomPlayer.chooseTileToGrow(map));
+        assertEquals(t1,dumbPlayer.chooseTileToGrow(map));
+
+
+        Optional<Tile> t2 = Optional.of(map.addNeighborOf(TileKind.Green, map.initialTile().withDirection(Direction.SouthEast)));
+
+        Optional<Tile> chosenTilerandomPlayer = randomPlayer.chooseTileToGrow(map);
+        Optional<Tile> chosenTileDumbPlayer = dumbPlayer.chooseTileToGrow(map);
+        assertTrue(chosenTilerandomPlayer.equals(t1) || chosenTilerandomPlayer.equals(t2));
+        assertTrue(chosenTileDumbPlayer.equals(t1) || chosenTileDumbPlayer.equals(t2));
+
+    }
+
+    @Test
     public void putTileTest(){
         Set<Coordinate> placements = new HashSet<>(Arrays.asList(new Coordinate(1,1),new Coordinate(2,2)));
         Set<Coordinate> placements2 = new HashSet<>();

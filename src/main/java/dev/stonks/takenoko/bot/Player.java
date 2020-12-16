@@ -61,6 +61,14 @@ public abstract class Player {
     public abstract ObjectiveKind chooseObjectiveKind(ArrayList<ObjectiveKind> listPossibleKind);
 
     /**
+     * This method return the tile where the player want to grow bamboo
+     * and return an optional empty if he dosen't want or if he can't
+     * @param map
+     * @return
+     */
+    public abstract Optional<Tile> chooseTileToGrow(Map map);
+
+    /**
      * @param tiles A liste of tiles
      * @return The coordinate and the tile the player has chosen
      */
