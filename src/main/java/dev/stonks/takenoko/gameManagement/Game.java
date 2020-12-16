@@ -44,7 +44,7 @@ public class Game {
     Random random;
     Weather gameWeather;
     public ArrayList<GameResults> gamePlayersResults;
-    List<Improvement> improvements;
+    private ImprovementDeck improvementDeck;
 
 
     public Game(ArrayList<Player> players) {
@@ -58,12 +58,9 @@ public class Game {
         achievedObjectives = new ArrayList<>();
         random = new Random();
         gamePlayersResults = new ArrayList<>();
-        initialiseImprovement();
+        improvementDeck = new ImprovementDeck();
     }
 
-    private void initialiseImprovement(){
-        improvements = new ArrayList<>();
-    }
 
     /**
      * Initialise a deck of irrigations (the irrigations players will draw)
@@ -139,6 +136,8 @@ public class Game {
         int gameTurn = 1;
         boolean aPlayerWin = false;
         boolean remainingLastTurn = true;
+        boolean effectDone;
+        int nbActions;
         Optional<Integer> idWinner = Optional.empty();
         objectivesDistribution();
         while(!aPlayerWin || remainingLastTurn) {
@@ -147,14 +146,64 @@ public class Game {
             }
             LOG.info("Turn n°"+gameTurn+" :");
             for (Player player : players) {
+                effectDone = false;
+                nbActions = 2;
                 updateGameWeather(gameWeather, gameTurn);
                 if (idWinner.isEmpty() || player.getId() != idWinner.get()) {
                     var possibleActions = findPossibleActions(player);
                     LOG.info("Possibles actions  : ");
                     LOG.info(possibleActions.toString());
-                    if (gameWeather.getCondition() == WeatherKind.Cloud)
-                        player.choseImprovement(improvements);
-                    for (int j = 0; j < 2; j++) {
+                    while(!effectDone) {
+                        //TODO: modifier le nombre d'aménagements restant une fois choisi par le joueur
+                        //TODO: Faire les fonctions chez les bots
+                        switch (gameWeather.getCondition()) {
+                            /*case Cloud:
+                                List<Improvement> improvements = new ArrayList<>();
+                                if(enclosure>0){
+                                    improvements.add(Improvement.Enclosure);
+                                }
+                                if(fertilizer>0){
+                                    improvements.add(Improvement.Fertilizer);
+                                }
+                                if (watershed > 0) {
+                                    improvements.add(Improvement.Watershed);
+                                }
+                                if (improvements.size() < 1) {
+                                    gameWeather.setWeather(player.chooseNewWeather(WeatherKind.cloudWeathers));
+                                } else {
+                                    player.choseImprovement(improvements);
+                                    effectDone = true;
+                                }
+                                break;*/
+                            case Sun:
+                                nbActions = 3;
+                                if(possibleActions.size()<3){
+                                    nbActions = possibleActions.size();
+                                }
+                                effectDone = true;
+                                break;
+                            case Rain:
+                                Optional<Tile> tileWhereGrow = player.chooseTileToGrow(new Map(map));
+                                if(tileWhereGrow.isPresent()) {
+                                    if(tileWhereGrow.get().isIrrigated())
+                                        tileWhereGrow.get().growBamboo();
+                                }
+                                effectDone = true;
+                                break;
+                            /*case Thunderstorm:
+                                Optional<Tile> tileWhereMovePanda = player.chooseTileToMovePanda(map);
+                                if(tileWhereMovePanda.isPresent())
+                                    map.getPanda().moveToAndAct(tileWhereMovePanda.get());
+                                effectDone = true;
+                                break;
+                            case FreeChoice:
+                                gameWeather.setWeather(player.chooseNewWeather(WeatherKind.freeChoiceWeathers));*/
+                            default:
+                                effectDone = true;
+                        }
+                    }
+
+                    for (int j = 0; j < nbActions; j++) {
                         if (gameTurn > 5000) {
                             LOG.info("Party ended due to player playing more than 5000 actions (endless game)\n");
                             fillTheFinalScore();
@@ -180,7 +229,8 @@ public class Game {
     private void playerPlay(Player player, ArrayList<Action> possibleActions) {
         Action chosenAction = player.decide(possibleActions, map);
         LOG.info("Player n°" + player.getId() + " has chosen this action : " + chosenAction.toString());
-        possibleActions.remove(chosenAction);
+        if(gameWeather.getCondition() != WeatherKind.Wind)
+            possibleActions.remove(chosenAction);
         switch (chosenAction) {
             case PutTile:
                 ArrayList<AbstractTile> possiblesTiles = new ArrayList<>(3);
@@ -381,6 +431,11 @@ public class Game {
         resetDecks();
         resetPlayers();
         resetGameResults();
+        resetImprovementDeck();
+    }
+
+    private void resetImprovementDeck() {
+        improvementDeck.reset();
     }
 
     private void resetDecks() {
@@ -452,11 +507,12 @@ public class Game {
                 Objects.equals(emperor, game.emperor) &&
                 achievedObjectives.containsAll(game.achievedObjectives) && game.achievedObjectives.containsAll(achievedObjectives) &&
                 Objects.equals(gamePlayersResults, game.gamePlayersResults) &&
-                gameWeather.equals(game.gameWeather);
+                gameWeather.equals(game.gameWeather) &&
+                improvementDeck.equals(game.improvementDeck);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(map, tileDeck, placedTileDeck, irrigationDeck, placedIrrigationsDeck, players, tileObjectives, pandaObjectives, gardenerObjectives, patternMatchs, emperor, achievedObjectives, random, gamePlayersResults);
+        return Objects.hash(map, tileDeck, placedTileDeck, irrigationDeck, placedIrrigationsDeck, players, tileObjectives, pandaObjectives, gardenerObjectives, patternMatchs, emperor, achievedObjectives, random, gamePlayersResults,improvementDeck);
     }
 }
