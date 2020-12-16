@@ -7,6 +7,8 @@ import dev.stonks.takenoko.gameManagement.Action;
 import dev.stonks.takenoko.objective.ObjectiveKind;
 
 import java.util.*;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 /**
  * This player plays randomly every time.
@@ -44,6 +46,20 @@ public class RandomPlayer extends Player{
             throw new IllegalStateException("There is no more objectives");
         }
         return listPossibleKind.get(random.nextInt(listPossibleKind.size()));
+    }
+
+    @Override
+    public Optional<Tile> chooseTileToGrow(Map map) {
+        currentMapState = map;
+        List<Tile> tiles = Arrays.stream(currentMapState.getTiles())
+                .flatMap(Optional::stream)
+                .filter(tile -> (tile.isIrrigated()&& !tile.isInitial())).collect(Collectors.toList());
+        boolean aIrrigatedTileExist = tiles.stream().count() > 0;
+        if(aIrrigatedTileExist){
+            int index = random.nextInt(tiles.size());
+            return Optional.of(tiles.get(index));
+        }
+        return Optional.empty();
     }
 
     /**

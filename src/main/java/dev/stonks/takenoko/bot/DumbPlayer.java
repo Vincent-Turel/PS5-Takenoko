@@ -185,6 +185,11 @@ public class DumbPlayer extends Player {
         return Collections.min(nbObjective.entrySet(), java.util.Map.Entry.comparingByValue()).getKey();
     }
 
+    @Override
+    public Optional<Tile> chooseTileToGrow(Map map) {
+        return Optional.empty();
+    }
+
     /**
      * @param tiles A liste of tiles
      * @return The coordinate and the tile the player has chosen
