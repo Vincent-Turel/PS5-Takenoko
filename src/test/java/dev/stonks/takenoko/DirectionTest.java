@@ -30,4 +30,14 @@ public class DirectionTest {
             assertEquals(d.reverse().reverse(), d);
         }
     }
+
+    @Test
+    void enumIndexTest() {
+        assertEquals(Direction.North.index(), 0);
+        assertEquals(Direction.NorthEast.index(), 1);
+        assertEquals(Direction.SouthEast.index(), 2);
+        assertEquals(Direction.South.index(), 3);
+        assertEquals(Direction.SouthWest.index(), 4);
+        assertEquals(Direction.NorthWest.index(), 5);
+    }
 }

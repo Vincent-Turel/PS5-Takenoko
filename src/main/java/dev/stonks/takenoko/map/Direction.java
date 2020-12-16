@@ -19,18 +19,12 @@ package dev.stonks.takenoko.map;
  * </pre>
  */
 public enum Direction {
-    North(0),
-    NorthEast(1),
-    SouthEast(2),
-    South(3),
-    SouthWest(4),
-    NorthWest(5);
-
-    private int index;
-
-    private Direction(int i) {
-        index = i;
-    }
+    North,
+    NorthEast,
+    SouthEast,
+    South,
+    SouthWest,
+    NorthWest;
 
     private static Direction fromIndex(int i) {
         switch (i) {
@@ -50,7 +44,7 @@ public enum Direction {
      * @return
      */
     public int index() {
-        return index;
+        return this.ordinal();
     }
 
     /**
@@ -58,7 +52,7 @@ public enum Direction {
      * @return
      */
     public Direction reverse() {
-        int newDir = (index + 3) % 6;
+        int newDir = (ordinal() + 3) % 6;
         return Direction.fromIndex(newDir);
     }
 
@@ -69,7 +63,7 @@ public enum Direction {
      * angles of each direction relative to the north.
      */
     public Direction addWith(Direction rhs) {
-        int newIndex = (index + rhs.index) % 6;
+        int newIndex = (ordinal() + rhs.ordinal()) % 6;
         return Direction.fromIndex(newIndex);
     }
 }
