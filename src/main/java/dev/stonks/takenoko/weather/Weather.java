@@ -36,7 +36,7 @@ public class Weather {
      * Updating the game weather between all possible condition
      */
     public void upDateWeather(){
-        state = r.nextInt(7);
+        state = r.nextInt(6);
         upDateWeatherKind();
     }
 
@@ -46,13 +46,13 @@ public class Weather {
 
     private void upDateWeatherKind(){
         switch (state){
+            case 0:
             case 1:
-            case 2:
-            case 6:
+            case 5:
                 weatherCondition=WeatherKind.Sun;break;
+            case 2:
             case 3:
             case 4:
-            case 5:
                 weatherCondition=WeatherKind.Rain;break;
         }
     }
@@ -64,6 +64,18 @@ public class Weather {
     public void setWeather(int state){
         this.state=state;
         upDateWeatherKind();
+    }
+
+    /**
+     * Same function but with a weather enum :
+     * @param newWeather -> the weather want by player
+     */
+    public void setWeather(WeatherKind newWeather){
+        switch (newWeather.toString()){
+            case ("Sun") : this.state=0;break;
+            case ("Rain") : this.state=2;break;
+        }
+        this.weatherCondition=newWeather;
     }
 
     /**
