@@ -7,6 +7,7 @@ import dev.stonks.takenoko.pawn.Pawn;
 import dev.stonks.takenoko.gameManagement.Action;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * This player plays accordingly to some rules that we thought were the best
@@ -187,6 +188,15 @@ public class DumbPlayer extends Player {
 
     @Override
     public Optional<Tile> chooseTileToGrow(Map map) {
+        currentMapState = map;
+        List<Tile> tiles = Arrays.stream(currentMapState.getTiles())
+                .flatMap(Optional::stream)
+                .filter(tile -> (tile.isIrrigated()&& !tile.isInitial())).collect(Collectors.toList());
+        boolean aIrrigatedTileExist = tiles.stream().count() > 0;
+        if(aIrrigatedTileExist){
+            int index = random.nextInt(tiles.size());
+            return Optional.of(tiles.get(index));
+        }
         return Optional.empty();
     }
 
