@@ -7,12 +7,35 @@ package dev.stonks.takenoko.weather;
  */
 
 public enum WeatherKind {
-    Sun,            //3
-    Rain,           //1
-    Wind,           //5
-    Thunderstorm,   //4
-    Cloud,          //2
-    FreeChoice,     //6
+    Sun,            //2
+    Rain,           //0
+    Wind,           //4
+    Thunderstorm,   //3
+    Cloud,          //1
+    FreeChoice,     //5
     //Initial value (first tour):
     NoWeather;
+
+    /**
+     * When the weather set to free choice is select :
+     */
+    static public final WeatherKind[] freeChoiceWeathers = {
+            Sun,
+            Rain,
+            Wind,
+            Thunderstorm,
+            Cloud
+    };
+
+    /**
+     * When the weather set to cloud is select :
+     */
+    static public final WeatherKind[] cloudWeathers = {
+            Sun,
+            Rain,
+            Wind,
+            Thunderstorm
+    };
+
+
 }
