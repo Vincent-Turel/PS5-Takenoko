@@ -9,8 +9,8 @@ import java.util.logging.Logger;
 
 public class Main {
     public static final Level level = Level.SEVERE;
-    public static final int nbRandomPlayer = 1;
-    public static final int nbDumbPlayer = 0;
+    public static final int nbRandomPlayer = 0;
+    public static final int nbDumbPlayer = 1;
     public static final int nbSmartPlayer = 1;
     private final static Logger LOG = Logger.getLogger(Main.class.getSimpleName());
 
