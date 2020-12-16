@@ -16,16 +16,12 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * @see Player
  */
 public class SmartPlayer extends Player {
-    private List<Optional<Integer>> chosenAction;
-    private final List<ArrayList<ArrayList<Optional<Integer>>>> res;
-    private List<Optional<Integer>> chosenOptionalAction;
-    private final List<ArrayList<ArrayList<Optional<Integer>>>> irrigationRes;
+    private List<ArrayList<Optional<Integer>>> res;
+    private List<ArrayList<Optional<Integer>>> irrigationRes;
 
     public SmartPlayer(int id) {
         super(id);
         this.playerType = PlayerType.SmartPlayer;
-        this.chosenAction = List.of(Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty());
-        this.chosenOptionalAction = List.of(Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty());
         this.res = new ArrayList<>();
         this.irrigationRes = new ArrayList<>();
     }
@@ -93,7 +89,18 @@ public class SmartPlayer extends Player {
 
         int x = checkObjectives(this, usedCloneMap);
         actions.add(0, new ArrayList<>(Collections.singletonList(Optional.of(x))));
-        this.res.add(new ArrayList<>(actions));
+        if (res.size() == 0)
+            res = new ArrayList<>(actions);
+        else {
+            if (actions.get(0).get(0).get().equals(res.get(0).get(0).get())) {
+                if (actions.size() < res.size())
+                    this.res = new ArrayList<>(actions);
+            }
+            else if (actions.get(0).get(0).get() > res.get(0).get(0).get()) {
+                this.res = new ArrayList<>(actions);
+            }
+        }
+
         actions.remove(0);
 
         if (nb < deepness)
@@ -111,7 +118,6 @@ public class SmartPlayer extends Player {
             }
             doNextIrrigations(nb, deepness, clonedMap, actions, i);
         }
-        chosenOptionalAction = choseBestAction(irrigationRes);
     }
 
     private void doNextIrrigations(int nb, int deepness, Map usedCloneMap, ArrayList<ArrayList<Optional<Integer>>> actions, int i) {
@@ -121,35 +127,27 @@ public class SmartPlayer extends Player {
             actions.set(actions.size() - 1, new ArrayList<>(Collections.singletonList(Optional.of(i))));
 
         actions.add(0, new ArrayList<>(Collections.singletonList(Optional.of(checkObjectives(this, usedCloneMap)))));
-        this.irrigationRes.add(new ArrayList<>(actions));
+        if (irrigationRes.size() == 0)
+            res = new ArrayList<>(actions);
+        else {
+            if (actions.get(0).get(0).get().equals(res.get(0).get(0).get())) {
+                if (actions.size() < res.size())
+                    this.irrigationRes = new ArrayList<>(actions);
+            }
+            else if (actions.get(0).get(0).get() > res.get(0).get(0).get()) {
+                this.irrigationRes = new ArrayList<>(actions);
+            }
+        }
         actions.remove(0);
 
         if (nb < deepness)
-            exploreIrrigations(usedCloneMap,nb + 1, deepness, actions);
-    }
-
-    /**
-     * Find the best action among all the possibles ones
-     *
-     * @param res a list of all actions and their result
-     */
-    private List<Optional<Integer>> choseBestAction(List<ArrayList<ArrayList<Optional<Integer>>>> res) {
-        Comparator<List<ArrayList<Optional<Integer>>>> comparator = Comparator
-                .comparing((List<ArrayList<Optional<Integer>>> x) -> x.get(0).get(0).orElseThrow(IllegalStateException::new))
-                .thenComparing(List::size).reversed();
-
-        var tmp = res.stream()
-                .max(comparator)
-                .orElseThrow(IllegalStateException::new);
-
-        var chosenAction = tmp.get(0);
-        chosenAction.addAll(tmp.get(1));
-        return chosenAction;
+            exploreIrrigations(usedCloneMap, nb + 1, deepness, actions);
     }
 
     /**
      * Check if an action has achevied an objective
-     * @param player the player who tried the action
+     *
+     * @param player    the player who tried the action
      * @param clonedMap the map on which we tried the action
      * @return the number of point of the achieved objective. 0 if no objective achieved
      */
@@ -178,6 +176,22 @@ public class SmartPlayer extends Player {
         return nbPoint;
     }
 
+    private int getResScore(){
+        return res.get(0).get(0).orElseThrow(IllegalAccessError::new);
+    }
+
+    private int getOptionalResScore() {
+        return irrigationRes.get(0).get(0).orElseThrow(IllegalAccessError::new);
+    }
+
+    private ArrayList<Optional<Integer>> getResAction(){
+        return res.get(1);
+    }
+
+    private ArrayList<Optional<Integer>> getOptionalResAction(){
+        return irrigationRes.get(1);
+    }
+
     /**
      * @param map the game's map
      * @return the action the player has decided to do
@@ -188,15 +202,13 @@ public class SmartPlayer extends Player {
             throw new IllegalStateException("There should always have possible actions");
 
         this.currentMapState = map;
-        chosenAction = List.of(Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty());
         res.clear();
         explore(new CopyOnWriteArrayList<>(possibleAction), currentMapState, 1, 2, new ArrayList<>());
-        chosenAction = choseBestAction(res);
 
         if (possibleAction.contains(Action.DrawObjective))
             return Action.DrawObjective;
-        if (chosenAction.get(0).orElseThrow(IllegalStateException::new) > 1)
-            return Action.values()[chosenAction.get(1).orElseThrow(IllegalStateException::new)];
+        if (getResScore() > 1)
+            return Action.values()[getResAction().get(0).orElseThrow(IllegalStateException::new)];
         if (possibleAction.contains(Action.DrawIrrigation)) {
             if (this.irrigations.size() < 5)
                 return Action.DrawIrrigation;
@@ -237,17 +249,17 @@ public class SmartPlayer extends Player {
             throw new IllegalStateException("This action shouldn't be possible if there is no tiles remaining");
         if (tilePlacements.size() < 1)
             throw new IllegalStateException("There should always have a place for a new tile");
-        if (chosenAction.get(0).orElseThrow(IllegalStateException::new) == 0) {
+        if (getResScore() == 0) {
             return tiles.get(random.nextInt(tiles.size())).withCoordinate(tilePlacements.get(random.nextInt(tilePlacements.size())));
         }
         Optional<AbstractTile> abstractTile = Optional.empty();
         for (var elem : tiles) {
-            if (elem.getKind() == TileKind.values()[chosenAction.get(3).orElseThrow(IllegalStateException::new)])
+            if (elem.getKind() == TileKind.values()[getResAction().get(2).orElseThrow(IllegalStateException::new)])
                 abstractTile = Optional.of(elem);
         }
 
         return abstractTile.orElse(tiles.get(random.nextInt(tiles.size()))).withCoordinate(
-                tilePlacements.get(chosenAction.get(2).orElseThrow(IllegalStateException::new)));
+                tilePlacements.get(getResAction().get(1).orElseThrow(IllegalStateException::new)));
     }
 
     /**
@@ -261,11 +273,11 @@ public class SmartPlayer extends Player {
         ArrayList<Tile> possiblePawnPlacements = new ArrayList<>(currentMapState.getPossiblePawnPlacements(pawn));
         if (possiblePawnPlacements.size() < 1)
             throw new IllegalStateException("This action shouldn't be possible if the pawn can't move anywhere");
-        if (chosenAction.get(0).orElseThrow(IllegalStateException::new) == 0) {
+        if (getResScore() == 0) {
             return possiblePawnPlacements.get(random.nextInt(possiblePawnPlacements.size()));
         }
 
-        return possiblePawnPlacements.get(chosenAction.get(2).orElseThrow(IllegalStateException::new));
+        return possiblePawnPlacements.get(getResAction().get(1).orElseThrow(IllegalStateException::new));
     }
 
     /**
@@ -279,12 +291,10 @@ public class SmartPlayer extends Player {
     public Optional<Action> doYouWantToPutAnIrrigationOrPutAnAmmenagment(Map map) {
         this.currentMapState = map;
         if (irrigations.size() > 0 && new ArrayList<>(currentMapState.getIrrigationPlacements()).size() > 0) {
-            chosenOptionalAction = List.of(Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty());
             irrigationRes.clear();
             exploreIrrigations(currentMapState, 1, irrigations.size(), new ArrayList<>());
-            chosenOptionalAction = choseBestAction(irrigationRes);
 
-            if (chosenOptionalAction.get(0).orElseThrow(IllegalStateException::new) > 0)
+            if (getOptionalResScore() > 0)
                 return Optional.of(Action.PutIrrigation);
         }
         if (improvements.size() > 0)
@@ -292,7 +302,6 @@ public class SmartPlayer extends Player {
 
         return Optional.empty();
     }
-
 
     /**
      * Chose where the player wanna put his irrigation and return it.
@@ -304,7 +313,7 @@ public class SmartPlayer extends Player {
         if (irrigations.size() < 1)
             throw new IllegalStateException("This action shouldn't be possible");
         List<IrrigationCoordinate> irrigationCoordinates = new ArrayList<>(currentMapState.getIrrigationPlacements());
-        return irrigations.pop().withCoordinate(irrigationCoordinates.get(chosenOptionalAction.get(1).orElse(random.nextInt(irrigationCoordinates.size()))));
+        return irrigations.pop().withCoordinate(irrigationCoordinates.get(getOptionalResAction().get(0).orElse(random.nextInt(irrigationCoordinates.size()))));
     }
 
     @Override
@@ -330,16 +339,16 @@ public class SmartPlayer extends Player {
      *
      * @return the chosen action
      */
-    public List<Optional<Integer>> getChosenAction() {
-        return chosenAction;
+    public List<ArrayList<Optional<Integer>>> getChosenAction() {
+        return res;
     }
 
     /**
      * ONLY FOR TESTING
      *
-     * @param chosenAction a fake chosen action in order to do some test.
+     * @param res a fake chosen action in order to do some test.
      */
-    public void setChosenAction(List<Optional<Integer>> chosenAction) {
-        this.chosenAction = chosenAction;
+    public void setChosenAction(List<ArrayList<Optional<Integer>>> res) {
+        this.res = res;
     }
 }

@@ -108,7 +108,7 @@ public class PlayerTest {
         dumbPlayer.setCurrentMapState(map);
         dumbPlayer.setChosenAction(List.of(Optional.of(5), Optional.of(Action.PutTile.ordinal()), Optional.of(1), Optional.of(TileKind.Yellow.ordinal())));
         smartPlayer.setCurrentMapState(map);
-        smartPlayer.setChosenAction(List.of(Optional.of(5), Optional.of(Action.PutTile.ordinal()), Optional.of(1), Optional.of(TileKind.Yellow.ordinal())));
+        smartPlayer.setChosenAction(List.of(new ArrayList<>(Collections.singletonList(Optional.of(5))), new ArrayList<>(Arrays.asList(Optional.of(Action.PutTile.ordinal()), Optional.of(1), Optional.of(TileKind.Yellow.ordinal())))));
 
         assertTrue(res.contains(randomPlayer.putTile(tiles)));
         assertTrue(res.contains(dumbPlayer.putTile(tiles)));
@@ -138,7 +138,7 @@ public class PlayerTest {
         dumbPlayer.setCurrentMapState(map);
         dumbPlayer.setChosenAction(List.of(Optional.of(5), Optional.of(Action.MovePanda.ordinal()), Optional.of(1), Optional.empty()));
         smartPlayer.setCurrentMapState(map);
-        smartPlayer.setChosenAction(List.of(Optional.of(5), Optional.of(Action.MovePanda.ordinal()), Optional.of(1), Optional.empty()));
+        smartPlayer.setChosenAction(List.of(new ArrayList<>(Collections.singletonList(Optional.of(5))), new ArrayList<>(Arrays.asList(Optional.of(Action.MovePanda.ordinal()), Optional.of(1), Optional.empty()))));
 
         assertTrue(placements.contains(randomPlayer.choseWherePawnShouldGo(panda)));
         assertTrue(placements.contains(dumbPlayer.choseWherePawnShouldGo(panda)));
@@ -181,7 +181,7 @@ public class PlayerTest {
 
         assertTrue(dumbPlayer.getObjectives().contains(objectiveWin));
         assertTrue(smartPlayer.getObjectives().contains(objectiveWin));
-        assertEquals(List.of(Optional.of(5), Optional.of(2), Optional.of(1), Optional.of(2)), smartPlayer.getChosenAction());
+        assertEquals(List.of(List.of(Optional.of(5)), List.of(Optional.of(2), Optional.of(1), Optional.of(2))), smartPlayer.getChosenAction());
         assertEquals(List.of(Optional.of(5), Optional.of(2), Optional.of(1), Optional.of(2)), dumbPlayer.getChosenAction());
 
 
@@ -209,7 +209,7 @@ public class PlayerTest {
 
         smartPlayer.decide(new ArrayList<>(Arrays.asList(Action.values())), map);
         assertFalse(smartPlayer.getObjectives().contains(objectiveWin));
-        assertEquals(smartPlayer.getChosenAction(), List.of(Optional.of(0), Optional.of(0), Optional.of(0)));
+        assertEquals(smartPlayer.getChosenAction(), List.of(List.of(Optional.of(0)), List.of(Optional.of(0), Optional.of(0), Optional.empty())));
     }
 
     @Test
