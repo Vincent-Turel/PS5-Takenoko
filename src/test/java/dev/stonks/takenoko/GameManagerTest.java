@@ -33,7 +33,7 @@ public class GameManagerTest {
         Game spy = spy(gameManager.game);
         gameManager.game = spy;
         try {
-            gameManager.playNTime(10);
+            gameManager.playNTime(8);
             verify(spy, times(10)).play();
         } catch (Exception e) {
             assertEquals(IllegalPlacementException.class,e.getClass());
