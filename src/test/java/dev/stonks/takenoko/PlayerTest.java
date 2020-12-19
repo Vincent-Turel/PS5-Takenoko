@@ -153,10 +153,17 @@ public class PlayerTest {
     @Test
     public void exploreTest() throws IllegalPlacementException {
         //Some objective :
-        Pattern pattern = new Pattern().withCenter(TileKind.Green).withNeighbor(Direction.NorthEast, TileKind.Pink);
+        Pattern pattern = new Pattern()
+                .withCenter(TileKind.Green)
+                .withNeighbor(Direction.NorthEast, TileKind.Pink);
+        Pattern pattern2 = new Pattern()
+                .withCenter(TileKind.Pink)
+                .withNeighbor(Direction.SouthWest, TileKind.Green);
         PatternObjective objectiveWin = new PatternObjective(5,pattern);
+        PatternObjective objectiveWin2 = new PatternObjective(10,pattern2);
         dumbPlayer.addObjectives(objectiveWin);
         smartPlayer.addObjectives(objectiveWin);
+        smartPlayer.addObjectives(objectiveWin2);
 
         //Making a map :
         Map map = new Map(42);
@@ -181,7 +188,7 @@ public class PlayerTest {
 
         assertTrue(dumbPlayer.getObjectives().contains(objectiveWin));
         assertTrue(smartPlayer.getObjectives().contains(objectiveWin));
-        assertEquals(List.of(List.of(Optional.of(5)), List.of(Optional.of(2), Optional.of(1), Optional.of(2))), smartPlayer.getChosenAction());
+        assertEquals(List.of(List.of(Optional.of(15)), List.of(Optional.of(2), Optional.of(1), Optional.of(2))), smartPlayer.getChosenAction());
         assertEquals(List.of(Optional.of(5), Optional.of(2), Optional.of(1), Optional.of(2)), dumbPlayer.getChosenAction());
 
 
@@ -199,6 +206,7 @@ public class PlayerTest {
         map.setTile(map.initialTile().getCoordinate().moveWith(Direction.SouthEast), new AbstractTile(TileKind.Pink));
         dumbPlayer.newObjectivesAchieved(objectiveWin);
         smartPlayer.newObjectivesAchieved(objectiveWin);
+        smartPlayer.newObjectivesAchieved(objectiveWin2);
 
         //Tile t3 = map.addNeighborOf(TileKind.Pink, t.withDirection(Direction.NorthEast));
         //Tile t2 = map.addNeighborOf(TileKind.Pink, map.initialTile().withDirection(Direction.SouthEast));

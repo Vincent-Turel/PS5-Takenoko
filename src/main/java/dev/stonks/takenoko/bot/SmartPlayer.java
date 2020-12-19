@@ -23,7 +23,7 @@ public class SmartPlayer extends Player {
         super(id);
         this.playerType = PlayerType.SmartPlayer;
         this.res = new ArrayList<>();
-        this.irrigationRes = new ArrayList<>();
+        this.irrigationRes = new ArrayList<>(Arrays.asList( new ArrayList<>(Collections.singletonList(Optional.empty())), new ArrayList<>(Collections.singletonList(Optional.empty()))));
     }
 
     /**
@@ -107,9 +107,10 @@ public class SmartPlayer extends Player {
             explore(new CopyOnWriteArrayList<>(possibleAction), usedCloneMap, nb + 1, deepness, actions);
     }
 
-    private void exploreIrrigations(Map clonedMap, int nb, int deepness, ArrayList<ArrayList<Optional<Integer>>> actions) {
-        var irrigationCoordinates = new ArrayList<>(clonedMap.getIrrigationPlacements());
+    private void exploreIrrigations(Map map, int nb, int deepness, ArrayList<ArrayList<Optional<Integer>>> actions) {
+        var irrigationCoordinates = new ArrayList<>(map.getIrrigationPlacements());
         for (int i = 0; i < irrigationCoordinates.size(); i++) {
+            Map clonedMap = new Map(map);
             try {
                 clonedMap.setIrrigation(new AbstractIrrigation().withCoordinate(irrigationCoordinates.get(i)));
             } catch (IllegalPlacementException e) {
@@ -128,13 +129,13 @@ public class SmartPlayer extends Player {
 
         actions.add(0, new ArrayList<>(Collections.singletonList(Optional.of(checkObjectives(this, usedCloneMap)))));
         if (irrigationRes.size() == 0)
-            res = new ArrayList<>(actions);
+            irrigationRes = new ArrayList<>(actions);
         else {
-            if (actions.get(0).get(0).get().equals(res.get(0).get(0).get())) {
-                if (actions.size() < res.size())
+            if (actions.get(0).get(0).get().equals(irrigationRes.get(0).get(0).get())) {
+                if (actions.size() < irrigationRes.size())
                     this.irrigationRes = new ArrayList<>(actions);
             }
-            else if (actions.get(0).get(0).get() > res.get(0).get(0).get()) {
+            else if (actions.get(0).get(0).get() > irrigationRes.get(0).get(0).get()) {
                 this.irrigationRes = new ArrayList<>(actions);
             }
         }
@@ -292,7 +293,7 @@ public class SmartPlayer extends Player {
         this.currentMapState = map;
         if (irrigations.size() > 0 && new ArrayList<>(currentMapState.getIrrigationPlacements()).size() > 0) {
             irrigationRes.clear();
-            exploreIrrigations(currentMapState, 1, irrigations.size(), new ArrayList<>());
+            exploreIrrigations(new Map(currentMapState), 1, irrigations.size(), new ArrayList<>());
 
             if (getOptionalResScore() > 0)
                 return Optional.of(Action.PutIrrigation);
