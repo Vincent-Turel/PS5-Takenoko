@@ -24,7 +24,7 @@ public class SmartPlayer extends Player {
         super(id);
         this.playerType = PlayerType.SmartPlayer;
         this.res = new ArrayList<>(Collections.singletonList(new ArrayList<>(Collections.singletonList(Optional.empty()))));
-        this.irrigationRes = new ArrayList<>(Collections.singletonList(new ArrayList<>(Collections.singletonList(Optional.empty()))));
+        this.irrigationRes = new ArrayList<>(Arrays.asList(new ArrayList<>(Collections.singletonList(Optional.empty())), new ArrayList<>(Arrays.asList(Optional.empty()))));
     }
 
     /**
@@ -250,10 +250,9 @@ public class SmartPlayer extends Player {
         List<Tile> tiles = Arrays.stream(currentMapState.getTiles())
                 .flatMap(Optional::stream)
                 .filter(tile -> (tile.isIrrigated()&& !tile.isInitial())).collect(Collectors.toList());
-        boolean aIrrigatedTileExist = tiles.stream().count() > 0;
-        if(aIrrigatedTileExist){
-            int index = random.nextInt(tiles.size());
-            return Optional.of(tiles.get(index));
+
+        if(tiles.size() > 0) {
+            return Optional.of(getRandomInCollection(tiles));
         }
         return Optional.empty();
     }
@@ -263,25 +262,29 @@ public class SmartPlayer extends Player {
      * @return The coordinate and the tile the player has chosen
      */
     @Override
-    public Tile putTile(ArrayList<AbstractTile> tiles) {
+    public MultipleAnswer<AbstractTile, Coordinate> putTile(ArrayList<AbstractTile> tiles) {
         ArrayList<Coordinate> tilePlacements = new ArrayList<>(currentMapState.getTilePlacements());
+
         if (tiles.size() < 1)
             throw new IllegalStateException("This action shouldn't be possible if there is no tiles remaining");
         if (tilePlacements.size() < 1)
             throw new IllegalStateException("There should always have a place for a new tile");
-        if (getResScore() == 0) {
-            AbstractTile tile = tiles.get(random.nextInt(tiles.size()));
-            tiles.remove(tile);
-            return tile.withCoordinate(tilePlacements.get(random.nextInt(tilePlacements.size())));
+
+        AbstractTile chosenTile = getRandomInCollection(tiles);
+        Coordinate chosenCoordinate = getRandomInCollection(tilePlacements);
+
+        if (getResScore() > 0) {
+            chosenCoordinate = new ArrayList<>(tilePlacements).get(getResAction().get(1).orElseThrow(NoSuchElementException::new));
+
+            var sortedList = tiles.stream()
+                    .filter(x -> x.getKind() == TileKind.values()[getResAction().get(2).orElseThrow(NoSuchElementException::new)])
+                    .sorted(Comparator.comparingInt(x -> x.getImprovement().ordinal()))
+                    .collect(Collectors.toList());
+
+            if (!sortedList.isEmpty())
+                chosenTile = sortedList.get(sortedList.size() - 1);
         }
-        Optional<AbstractTile> abstractTile = Optional.empty();
-        for (var elem : tiles) {
-            if (elem.getKind() == TileKind.values()[getResAction().get(2).orElseThrow(NoSuchElementException::new)])
-                abstractTile = Optional.of(elem);
-        }
-        AbstractTile tile = abstractTile.orElse(tiles.get(random.nextInt(tiles.size())));
-        tiles.remove(tile);
-        return tile.withCoordinate(tilePlacements.get(getResAction().get(1).orElseThrow(NoSuchElementException::new)));
+        return new MultipleAnswer<>(chosenTile, chosenCoordinate);
     }
 
     /**
@@ -331,24 +334,32 @@ public class SmartPlayer extends Player {
      * @return the an irrigation
      */
     @Override
-    public Irrigation putIrrigation() {
+    public MultipleAnswer<AbstractIrrigation, IrrigationCoordinate> putIrrigation() {
+        List<IrrigationCoordinate> irrigationCoordinates = new ArrayList<>(currentMapState.getIrrigationPlacements());
+
         if (irrigations.size() < 1)
             throw new IllegalStateException("This action shouldn't be possible");
-        List<IrrigationCoordinate> irrigationCoordinates = new ArrayList<>(currentMapState.getIrrigationPlacements());
-        return irrigations.pop().withCoordinate(irrigationCoordinates.get(getOptionalResAction().get(0).orElse(random.nextInt(irrigationCoordinates.size()))));
+        if (irrigationCoordinates.size() < 1)
+            throw new IllegalStateException("There is nowhere I can put an irrigation");
+
+        return new MultipleAnswer<>(
+                irrigations.pop(),
+                irrigationCoordinates.get(getOptionalResAction().get(0).orElse(random.nextInt(irrigationCoordinates.size()))));
     }
 
     @Override
-    public void putImprovement() {
+    public MultipleAnswer<Tile, Improvement> putImprovement() {
+        Set<Tile> improvementPlacements = currentMapState.getImprovementPlacements();
+
         if (improvements.size() < 1)
             throw new IllegalStateException("This action shouldn't be possible");
-        List<Tile> improvementPlacements = new ArrayList<>(currentMapState.getImprovementPlacements());
-        Tile chosenTile = improvementPlacements.get(random.nextInt(improvementPlacements.size()));
-        try {
-            chosenTile.addImprovement(improvements.remove(random.nextInt(improvements.size())));
-        } catch (IllegalPlacementException e) {
-            e.printStackTrace();
-        }
+        if (improvementPlacements.size() < 1)
+            throw new IllegalStateException("There is nowhere I can put an irrigation");
+
+        Tile chosenTile = getRandomInCollection(improvementPlacements);
+        Improvement chosenImprovement = getRandomInCollection(improvements);
+
+        return new MultipleAnswer<>(chosenTile, chosenImprovement);
     }
 
     @Override

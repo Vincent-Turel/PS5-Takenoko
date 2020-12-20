@@ -3,7 +3,6 @@ package dev.stonks.takenoko;
 import dev.stonks.takenoko.gameManagement.Game;
 import dev.stonks.takenoko.gameManagement.GameManager;
 import dev.stonks.takenoko.map.IllegalPlacementException;
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -28,8 +27,8 @@ public class GameManagerTest {
         Game spy = spy(gameManager.game);
         gameManager.game = spy;
         try {
-            gameManager.playNTime(8);
-            verify(spy, times(10)).play();
+            gameManager.playNTime(5);
+            verify(spy, times(5)).play();
         } catch (Exception e) {
             assertEquals(IllegalPlacementException.class,e.getClass());
         }

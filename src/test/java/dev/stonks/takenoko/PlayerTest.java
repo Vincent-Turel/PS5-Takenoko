@@ -1,6 +1,7 @@
 package dev.stonks.takenoko;
 
 import dev.stonks.takenoko.bot.DumbPlayer;
+import dev.stonks.takenoko.bot.MultipleAnswer;
 import dev.stonks.takenoko.bot.RandomPlayer;
 import dev.stonks.takenoko.bot.SmartPlayer;
 import dev.stonks.takenoko.map.*;
@@ -213,7 +214,7 @@ public class PlayerTest {
 
         dumbPlayer.decide(new ArrayList<>(Arrays.asList(Action.values())), map);
         assertFalse(dumbPlayer.getObjectives().contains(objectiveWin));
-        assertEquals(Optional.of(0), dumbPlayer.getChosenAction());
+        assertEquals(Optional.of(0), dumbPlayer.getChosenAction().get(0));
 
         smartPlayer.decide(new ArrayList<>(Arrays.asList(Action.values())), map);
         assertFalse(smartPlayer.getObjectives().contains(objectiveWin));
@@ -283,21 +284,24 @@ public class PlayerTest {
 
         randomPlayer.addIrrigation(new AbstractIrrigation());
         assertEquals(1, randomPlayer.getIrrigations().size());
-        Irrigation irrigation = randomPlayer.putIrrigation();
+        MultipleAnswer<AbstractIrrigation, IrrigationCoordinate> answer = randomPlayer.putIrrigation();
+        Irrigation irrigation = answer.getT().withCoordinate(answer.getU());
         assertEquals(0, randomPlayer.getIrrigations().size());
         assertTrue(map.getIrrigationPlacements().contains(irrigation.getCoordinate()));
         assertThrows(IllegalStateException.class, () -> randomPlayer.putIrrigation());
 
         dumbPlayer.addIrrigation(new AbstractIrrigation());
         assertEquals(1, dumbPlayer.getIrrigations().size());
-        Irrigation irrigation2 = dumbPlayer.putIrrigation();
+        MultipleAnswer<AbstractIrrigation, IrrigationCoordinate> answer2 = randomPlayer.putIrrigation();
+        Irrigation irrigation2 = answer.getT().withCoordinate(answer.getU());
         assertEquals(0, dumbPlayer.getIrrigations().size());
         assertTrue(map.getIrrigationPlacements().contains(irrigation2.getCoordinate()));
         assertThrows(IllegalStateException.class, () -> dumbPlayer.putIrrigation());
 
         smartPlayer.addIrrigation(new AbstractIrrigation());
         assertEquals(1, smartPlayer.getIrrigations().size());
-        Irrigation irrigation3 = smartPlayer.putIrrigation();
+        MultipleAnswer<AbstractIrrigation, IrrigationCoordinate> answer3 = randomPlayer.putIrrigation();
+        Irrigation irrigation3 = answer.getT().withCoordinate(answer.getU());
         assertEquals(0, smartPlayer.getIrrigations().size());
         assertTrue(map.getIrrigationPlacements().contains(irrigation3.getCoordinate()));
         assertThrows(IllegalStateException.class, () -> smartPlayer.putIrrigation());

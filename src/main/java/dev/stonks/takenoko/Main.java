@@ -8,17 +8,17 @@ import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
 public class Main {
-    public static final Level level = Level.ALL;
-    public static final int nbRandomPlayer = 0;
+    public static final Level level = Level.SEVERE;
+    public static final int nbRandomPlayer = 1;
     public static final int nbDumbPlayer = 1;
-    public static final int nbSmartPlayer = 1;
+    public static final int nbSmartPlayer = 0;
     private final static Logger LOG = Logger.getLogger(Main.class.getSimpleName());
 
     public static void main(String... args) {
         setLogConfig();
         GameManager gameManager = new GameManager(nbRandomPlayer, nbDumbPlayer, nbSmartPlayer);
         LOG.info("Starting program...");
-        gameManager.playNTime(50);
+        gameManager.playNTime(10);
     }
 
     public static void setLogConfig(){

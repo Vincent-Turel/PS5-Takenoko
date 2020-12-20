@@ -54,6 +54,19 @@ public abstract class Player {
     public abstract Action decide(ArrayList<Action> possibleAction, Map map);
 
     /**
+     * @param tiles A liste of tiles
+     * @return The coordinate and the tile the player has chosen
+     */
+    public abstract MultipleAnswer<AbstractTile, Coordinate> putTile (ArrayList<AbstractTile> tiles);
+
+    /**
+     * This method return the tile where the player want to move the pawn (Panda or Gardener)
+     * @param pawn the pawn that has to be moved
+     * @return Tile the tile that the player has chosen
+     */
+    public abstract Tile choseWherePawnShouldGo(Pawn pawn);
+
+    /**
      * This method return the kind of objective the player wants to draw
      * @param listPossibleKind a list of all objective kind the player can draw
      * @return the objective kind the player has chosen
@@ -63,23 +76,10 @@ public abstract class Player {
     /**
      * This method return the tile where the player want to grow bamboo
      * and return an optional empty if he dosen't want or if he can't
-     * @param map
-     * @return
+     * @param map the current map
+     * @return an optional of a tile
      */
     public abstract Optional<Tile> chooseTileToGrow(Map map);
-
-    /**
-     * @param tiles A liste of tiles
-     * @return The coordinate and the tile the player has chosen
-     */
-    public abstract Tile putTile (ArrayList<AbstractTile> tiles);
-
-    /**
-     * This method return the tile where the player want to move the pawn (Panda or Gardener)
-     * @param pawn the pawn that has to be moved
-     * @return Tile the tile that the player has chosen
-     */
-    public abstract Tile choseWherePawnShouldGo(Pawn pawn);
 
     /**
      * Add an objective to the player's objective list
@@ -153,14 +153,6 @@ public abstract class Player {
     }
 
     /**
-     * Get a list of all bamboo the player has collected with the panda
-     * @return collectedBamboo
-     */
-    public int[] getCollectedBamboo() {
-        return collectedBamboo;
-    }
-
-    /**
      * Add a bamboo to a list of collected bamboo
      * @param bamboo the bambo that has been collected thanks to the panda
      */
@@ -170,6 +162,14 @@ public abstract class Player {
             case Yellow:collectedBamboo[1]++;break;
             case Pink:collectedBamboo[2]++;break;
         }
+    }
+
+    /**
+     * Get a list of all bamboo the player has collected with the panda
+     * @return collectedBamboo
+     */
+    public int[] getCollectedBamboo() {
+        return collectedBamboo;
     }
 
     /**
@@ -217,13 +217,13 @@ public abstract class Player {
      * Chose where the player wanna put his irrigation and return it.
      * @return an irrigation
      */
-    public abstract Irrigation putIrrigation();
+    public abstract MultipleAnswer<AbstractIrrigation, IrrigationCoordinate> putIrrigation();
 
     /**
      * Chose where the player wanna put his irrigation and return it.
      * @return an improvement as a tile in order to update the tile on the map with the caracteristics of this tile
      */
-    public abstract void putImprovement();
+    public abstract MultipleAnswer<Tile, Improvement> putImprovement();
 
     public abstract void choseImprovement(List<Improvement> improvements);
 
@@ -268,5 +268,10 @@ public abstract class Player {
         int result = Objects.hash(playerType, id, objectives, irrigations, nbObjectivesAchieved, currentMapState, score, random);
         result = 31 * result + Arrays.hashCode(collectedBamboo);
         return result;
+    }
+
+    protected  <T> T getRandomInCollection(Collection<T> collection){
+        List<T> list = new ArrayList<>(collection);
+        return list.get(random.nextInt(list.size()));
     }
 }

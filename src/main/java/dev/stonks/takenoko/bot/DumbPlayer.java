@@ -19,7 +19,7 @@ public class DumbPlayer extends Player {
 
     public DumbPlayer(int id) {
         super(id);
-        this.chosenAction = new ArrayList<>(Collections.singletonList(Optional.of(0)));
+        this.chosenAction = new ArrayList<>(Arrays.asList(Optional.of(0), Optional.empty()));
         this.chosenOptionalAction = new ArrayList<>(Arrays.asList(Optional.of(0), Optional.empty()));
         this.playerType = PlayerType.DumbPlayer;
     }
@@ -166,6 +166,7 @@ public class DumbPlayer extends Player {
 
     private void resetAction(List<Optional<Integer>> action) {
         action.set(0, Optional.of(0));
+        action.set(1, Optional.empty());
     }
 
     /**
@@ -175,7 +176,7 @@ public class DumbPlayer extends Player {
      */
     @Override
     public ObjectiveKind chooseObjectiveKind(ArrayList<ObjectiveKind> listPossibleKind) {
-        if(listPossibleKind.size()<1){
+        if(listPossibleKind.size() < 1){
             throw new IllegalStateException("There is no more objectives");
         }
         HashMap<ObjectiveKind, Integer> nbObjective = new HashMap<>();
@@ -195,10 +196,9 @@ public class DumbPlayer extends Player {
         List<Tile> tiles = Arrays.stream(currentMapState.getTiles())
                 .flatMap(Optional::stream)
                 .filter(tile -> (tile.isIrrigated()&& !tile.isInitial())).collect(Collectors.toList());
-        boolean aIrrigatedTileExist = tiles.stream().count() > 0;
-        if(aIrrigatedTileExist){
-            int index = random.nextInt(tiles.size());
-            return Optional.of(tiles.get(index));
+
+        if(tiles.size() > 0) {
+            return Optional.of(getRandomInCollection(tiles));
         }
         return Optional.empty();
     }
@@ -208,26 +208,30 @@ public class DumbPlayer extends Player {
      * @return The coordinate and the tile the player has chosen
      */
     @Override
-    public Tile putTile(ArrayList<AbstractTile> tiles) {
-        ArrayList<Coordinate> tilePlacements = new ArrayList<>(currentMapState.getTilePlacements());
+    public MultipleAnswer<AbstractTile, Coordinate> putTile(ArrayList<AbstractTile> tiles) {
+        Set<Coordinate> tilePlacements = currentMapState.getTilePlacements();
+
         if (tiles.size() < 1)
             throw new IllegalStateException("This action shouldn't be possible if there is no tiles remaining");
         if (tilePlacements.size() < 1)
             throw new IllegalStateException("There should always have a place for a new tile");
-        if (chosenAction.get(0).orElseThrow(NoSuchElementException::new) == 0) {
-            AbstractTile tile = tiles.get(random.nextInt(tiles.size()));
-            tiles.remove(tile);
-            return tile.withCoordinate(tilePlacements.get(random.nextInt(tilePlacements.size())));
+
+        AbstractTile chosenTile = getRandomInCollection(tiles);
+        Coordinate chosenCoordinate = getRandomInCollection(tilePlacements);
+
+        if (chosenAction.get(0).orElseThrow(NoSuchElementException::new) > 0) {
+            chosenCoordinate = new ArrayList<>(tilePlacements).get(chosenAction.get(2).orElseThrow(NoSuchElementException::new));
+
+            var sortedList = tiles.stream()
+                    .filter(x -> x.getKind() == TileKind.values()[chosenAction.get(3).orElseThrow(NoSuchElementException::new)])
+                    .sorted(Comparator.comparingInt(x -> x.getImprovement().ordinal()))
+                    .collect(Collectors.toList());
+
+            if (!sortedList.isEmpty())
+                chosenTile = sortedList.get(sortedList.size() - 1);
         }
 
-        Optional<AbstractTile> abstractTile = Optional.empty();
-        for(var elem : tiles) {
-            if (elem.getKind() == TileKind.values()[chosenAction.get(3).orElseThrow(NoSuchElementException::new)])
-                abstractTile = Optional.of(elem);
-        }
-        AbstractTile tile = abstractTile.orElse(tiles.get(random.nextInt(tiles.size())));
-        tiles.remove(tile);
-        return tile.withCoordinate(new ArrayList<>(tilePlacements).get(chosenAction.get(2).orElseThrow(NoSuchElementException::new)));
+        return new MultipleAnswer<>(chosenTile, chosenCoordinate);
     }
 
     /**
@@ -238,11 +242,13 @@ public class DumbPlayer extends Player {
     @Override
     public Tile choseWherePawnShouldGo(Pawn pawn) {
         ArrayList<Tile> possiblePawnPlacements = new ArrayList<>(currentMapState.getPossiblePawnPlacements(pawn));
+
         if (possiblePawnPlacements.size() < 1)
             throw new IllegalStateException("This action shouldn't be possible if there the pawn can't move anywhere");
-        if (chosenAction.get(0).orElseThrow(NoSuchElementException::new) == 0) {
-            return possiblePawnPlacements.get(random.nextInt(possiblePawnPlacements.size()));
-        }
+
+        if (chosenAction.get(0).orElseThrow(NoSuchElementException::new) == 0)
+            return getRandomInCollection(possiblePawnPlacements);
+
         return possiblePawnPlacements.get(chosenAction.get(2).orElseThrow(NoSuchElementException::new));
     }
 
@@ -278,29 +284,37 @@ public class DumbPlayer extends Player {
      * @return the an irrigation
      */
     @Override
-    public Irrigation putIrrigation() {
+    public MultipleAnswer<AbstractIrrigation, IrrigationCoordinate> putIrrigation() {
+        List<IrrigationCoordinate> irrigationCoordinates = new ArrayList<>(currentMapState.getIrrigationPlacements());
+
         if (irrigations.size() < 1)
             throw new IllegalStateException("This action shouldn't be possible");
-        List<IrrigationCoordinate> irrigationCoordinates = new ArrayList<>(currentMapState.getIrrigationPlacements());
-        return irrigations.pop().withCoordinate(irrigationCoordinates.get(chosenOptionalAction.get(1).orElse(random.nextInt(irrigationCoordinates.size()))));
+        if (irrigationCoordinates.size() < 1)
+            throw new IllegalStateException("There is nowhere I can put an irrigation");
+
+        return new MultipleAnswer<>(
+                irrigations.pop(),
+                irrigationCoordinates.get(chosenOptionalAction.get(1).orElse(random.nextInt(irrigationCoordinates.size()))));
     }
 
     @Override
-    public void putImprovement() {
+    public MultipleAnswer<Tile, Improvement> putImprovement() {
+        Set<Tile> improvementPlacements = currentMapState.getImprovementPlacements();
+
         if (improvements.size() < 1)
             throw new IllegalStateException("This action shouldn't be possible");
-        List<Tile> improvementPlacements = new ArrayList<>(currentMapState.getImprovementPlacements());
-        Tile chosenTile = improvementPlacements.get(random.nextInt(improvementPlacements.size()));
-        try {
-            chosenTile.addImprovement(improvements.remove(random.nextInt(improvements.size())));
-        } catch (IllegalPlacementException e) {
-            e.printStackTrace();
-        }
+        if (improvementPlacements.size() < 1)
+            throw new IllegalStateException("There is nowhere I can put an irrigation");
+
+        Tile chosenTile = getRandomInCollection(improvementPlacements);
+        Improvement chosenImprovement = getRandomInCollection(improvements);
+
+        return new MultipleAnswer<>(chosenTile, chosenImprovement);
     }
 
     @Override
     public void choseImprovement(List<Improvement> improvements) {
-        this.improvements.add(improvements.remove(random.nextInt(improvements.size())));
+        this.improvements.add(getRandomInCollection(improvements));
     }
 
     /**

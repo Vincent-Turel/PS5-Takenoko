@@ -1,5 +1,6 @@
 package dev.stonks.takenoko.gameManagement;
 
+import dev.stonks.takenoko.bot.MultipleAnswer;
 import dev.stonks.takenoko.bot.Player;
 import dev.stonks.takenoko.map.*;
 import dev.stonks.takenoko.map.Map;
@@ -14,6 +15,7 @@ import dev.stonks.takenoko.weather.WeatherKind;
 
 import java.util.*;
 import java.util.logging.Logger;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 /**
@@ -116,7 +118,6 @@ public class Game {
      * Update the state of the weather before the round of all player
      * @param weather -> current weather
      * @param turn -> current game turn
-     * @return weather now update for the player turn !
      */
     private void updateGameWeather(Weather weather, int turn){
         if(turn==1){
@@ -229,27 +230,17 @@ public class Game {
         switch (chosenAction) {
             case PutTile:
                 ArrayList<AbstractTile> possiblesTiles = new ArrayList<>(3);
-                int index;
-                int size = 3;
-                if (size > tileDeck.size()) {
-                    size = tileDeck.size();
-                }
-                for (int i = 0; i < size; i++) {
-                    index = random.nextInt(tileDeck.size());
-                    AbstractTile aTile = tileDeck.remove(index);
-                    possiblesTiles.add(aTile);
-                }
-                placedTileDeck.addAll(possiblesTiles);
-                Tile chosenTile = player.putTile(possiblesTiles);
-                tileDeck.addAll(possiblesTiles);
-                placedTileDeck.removeAll(possiblesTiles);
+                IntStream.range(0, Math.min(3, tileDeck.size())).forEach(i -> possiblesTiles.add(tileDeck.get(random.nextInt(tileDeck.size()))));
+                MultipleAnswer<AbstractTile, Coordinate> answer = player.putTile(possiblesTiles);
+                placedTileDeck.add(answer.getT());
+                tileDeck.remove(answer.getT());
+
                 try {
-                    map.setTile(chosenTile);
+                    map.setTile(new Tile(answer.getT().withCoordinate(answer.getU())));
                 } catch (IllegalPlacementException e) {
                     e.printStackTrace();
                     System.exit(1);
                 }
-                LOG.info(String.valueOf(tileDeck.size()));
                 break;
             case MoveGardener:
                 Gardener gardener = map.getGardener();
@@ -278,17 +269,17 @@ public class Game {
                 }
                 ObjectiveKind objectiveKind = player.chooseObjectiveKind(listPossibleKind);
                 int num;
-                if ((objectiveKind == ObjectiveKind.Pattern) && (tileObjectives.size() > 0)) {
+                if (objectiveKind == ObjectiveKind.Pattern) {
                     num = random.nextInt(tileObjectives.size());
                     player.addObjectives(tileObjectives.get(num));
                     tileObjectives.remove(num);
                 }
-                if ((objectiveKind == ObjectiveKind.Panda) && (pandaObjectives.size() > 0)) {
+                if (objectiveKind == ObjectiveKind.Panda) {
                     num = random.nextInt(pandaObjectives.size());
                     player.addObjectives(pandaObjectives.get(num));
                     pandaObjectives.remove(num);
                 }
-                if((objectiveKind==ObjectiveKind.Gardener) && (gardenerObjectives.size()>0)) {
+                if(objectiveKind==ObjectiveKind.Gardener) {
                     num = random.nextInt(gardenerObjectives.size());
                     player.addObjectives(gardenerObjectives.get(num));
                     gardenerObjectives.remove(num);
@@ -299,16 +290,22 @@ public class Game {
         while ((decision = player.doYouWantToPutAnIrrigationOrPutAnAmmenagment(new Map(map))).isPresent()){
             LOG.info("Player n°" + player.getId() + " has chosen this action : " + decision.get().toString());
             if(decision.get().equals(Action.PutIrrigation)){
-                Irrigation irrigation = player.putIrrigation();
+                MultipleAnswer<AbstractIrrigation, IrrigationCoordinate> answer = player.putIrrigation();
                 try {
-                    map.setIrrigation(irrigation);
+                    map.setIrrigation(new Irrigation(answer.getT().withCoordinate(answer.getU())));
                 } catch (IllegalPlacementException e) {
                     e.printStackTrace();
                     System.exit(1);
                 }
             }
             else if (decision.get().equals(Action.PutImprovement)){
-                player.putImprovement();
+                MultipleAnswer<Tile, Improvement> answer = player.putImprovement();
+                try {
+                    answer.getT().addImprovement(answer.getU());
+                } catch (IllegalPlacementException e) {
+                    e.printStackTrace();
+                    System.exit(1);
+                }
             }
             else
                 throw new IllegalStateException("This should never happen");
