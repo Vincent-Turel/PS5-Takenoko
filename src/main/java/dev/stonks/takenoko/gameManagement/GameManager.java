@@ -68,16 +68,25 @@ public class GameManager {
         long start = System.currentTimeMillis();
         AtomicInteger count = new AtomicInteger(0);
         if (parallel) {
+<<<<<<< HEAD
             if (LogManager.getLogManager().getLogger("").getHandlers()[0].getLevel().intValue() >= Level.SEVERE.intValue()) {
                 String string1 = "Progression : " + String.format("%4s", 0 + "%") + " [" + " ".repeat(71) + "] " + 0 + "/" + n;
                 System.out.print(string1);
             }
+=======
+            if (LogManager.getLogManager().getLogger("").getHandlers()[0].getLevel().intValue() >= Level.SEVERE.intValue())
+                System.out.print("Progression : ");
+>>>>>>> 6b3614b... fix tests
             IntStream.range(0, n).parallel().mapToObj(x -> new Game(createPlayers())).forEach(game -> {
                 simulate(game);
                 var actualCount = count.incrementAndGet();
                 if (LogManager.getLogManager().getLogger("").getHandlers()[0].getLevel().intValue() >= Level.SEVERE.intValue()) {
                     float pourcentDone = actualCount / (float) n * 100;
+<<<<<<< HEAD
                     String string = "Progression : " + String.format("%4s", (int) pourcentDone + "%") + " [" + "=".repeat((int) (pourcentDone / 100f * 70f)) + ">" + " ".repeat(70 - (int) (pourcentDone / 100f * 70f)) + "] " + actualCount + "/" + n;
+=======
+                    String string = "Progression : "+ String.format("%4s", (int)pourcentDone + "%") +  " [" + "=".repeat((int)(pourcentDone/100f*70f)) + ">" + " ".repeat(70 - (int)(pourcentDone/100f*70f)) + "] " + actualCount + "/" + n;
+>>>>>>> 6b3614b... fix tests
                     System.out.print("\r" + string);
                 }
             });
