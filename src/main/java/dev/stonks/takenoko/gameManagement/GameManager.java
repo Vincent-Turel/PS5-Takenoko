@@ -71,7 +71,6 @@ public class GameManager {
                 simulate(game);
                 var actualCount = count.incrementAndGet();
                 float pourcentDone = actualCount / (float) n * 100;
-
                 String string = "Progression : "+ String.format("%4s", (int)pourcentDone + "%") +  " [" + "=".repeat((int)(pourcentDone/100f*70f)) + ">" + " ".repeat(70 - (int)(pourcentDone/100f*70f)) + "] " + actualCount + "/" + n;
                 System.out.print("\r" + string);
             });

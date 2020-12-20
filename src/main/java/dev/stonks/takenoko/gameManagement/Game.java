@@ -14,10 +14,8 @@ import dev.stonks.takenoko.weather.Weather;
 import dev.stonks.takenoko.weather.WeatherKind;
 
 import java.util.*;
-import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Logger;
 import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
 /**
  * Represents a game.
@@ -31,21 +29,21 @@ import java.util.stream.Stream;
  */
 public class Game {
     private final static Logger LOG = Logger.getLogger(Game.class.getSimpleName());
-    public final int nbObjectivesToWIn;
-    dev.stonks.takenoko.map.Map map;
-    List<AbstractTile> tileDeck;
-    Stack<AbstractIrrigation> irrigationDeck;
-    ArrayList<Player> players;
-    ArrayList<PatternObjective> tileObjectives;
-    ArrayList<PandaObjective> pandaObjectives;
-    ArrayList<GardenerObjective> gardenerObjectives;
-    Set<MatchResult> patternMatchs;
-    Objective emperor;
-    ArrayList<Objective> achievedObjectives;
-    Random random;
-    Weather gameWeather;
+    private final int nbObjectivesToWIn;
+    private final dev.stonks.takenoko.map.Map map;
+    private final ArrayList<Player> players;
+    private final Weather gameWeather;
+    private List<AbstractTile> tileDeck;
+    private ArrayList<PatternObjective> tileObjectives;
+    private Stack<AbstractIrrigation> irrigationDeck;
+    private final ImprovementDeck improvementDeck;
+    private ArrayList<PandaObjective> pandaObjectives;
+    private ArrayList<GardenerObjective> gardenerObjectives;
+    private Set<MatchResult> patternMatchs;
+    private Objective emperor;
+    private final Random random;
     public ArrayList<GameResults> gamePlayersResults;
-    private ImprovementDeck improvementDeck;
+
 
     public Game(ArrayList<Player> players) {
         map = new Map(28);
@@ -55,7 +53,6 @@ public class Game {
         gameWeather = initialiseWeather();
         patternMatchs = new HashSet<>();
         this.players = players;
-        achievedObjectives = new ArrayList<>();
         random = new Random();
         gamePlayersResults = new ArrayList<>();
         improvementDeck = new ImprovementDeck();
@@ -354,7 +351,6 @@ public class Game {
             if (objective.getStates()) {
                 LOG.info("Player n°" + player.getId() + " has achieved a " + objective.getClass().getSimpleName());
                 player.newObjectivesAchieved(objective);
-                achievedObjectives.add(objective);
             }
         }
     }
@@ -382,7 +378,6 @@ public class Game {
     /**
      * Fill the final state of the game
      * 2 players with the same score have the same rank.
-     *
      */
     private void fillTheFinalScore() {
         int id;
@@ -413,7 +408,6 @@ public class Game {
         return gamePlayersResults;
     }
 
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -428,7 +422,6 @@ public class Game {
                 gardenerObjectives.containsAll(game.gardenerObjectives) && game.gardenerObjectives.containsAll(gardenerObjectives) &&
                 Objects.equals(patternMatchs, game.patternMatchs) &&
                 Objects.equals(emperor, game.emperor) &&
-                achievedObjectives.containsAll(game.achievedObjectives) && game.achievedObjectives.containsAll(achievedObjectives) &&
                 Objects.equals(gamePlayersResults, game.gamePlayersResults) &&
                 gameWeather.equals(game.gameWeather) &&
                 improvementDeck.equals(game.improvementDeck);
@@ -436,6 +429,6 @@ public class Game {
 
     @Override
     public int hashCode() {
-        return Objects.hash(map, tileDeck, irrigationDeck, players, tileObjectives, pandaObjectives, gardenerObjectives, patternMatchs, emperor, achievedObjectives, random, gamePlayersResults,improvementDeck);
+        return Objects.hash(map, tileDeck, irrigationDeck, players, tileObjectives, pandaObjectives, gardenerObjectives, patternMatchs, emperor, random, gamePlayersResults,improvementDeck);
     }
 }
