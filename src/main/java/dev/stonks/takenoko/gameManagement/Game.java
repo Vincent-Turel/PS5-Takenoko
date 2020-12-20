@@ -14,6 +14,7 @@ import dev.stonks.takenoko.weather.Weather;
 import dev.stonks.takenoko.weather.WeatherKind;
 
 import java.util.*;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Logger;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -30,12 +31,10 @@ import java.util.stream.Stream;
  */
 public class Game {
     private final static Logger LOG = Logger.getLogger(Game.class.getSimpleName());
-    public static final int nbObjectivesToWIn = 9;
+    public final int nbObjectivesToWIn;
     dev.stonks.takenoko.map.Map map;
     List<AbstractTile> tileDeck;
-    ArrayList<AbstractTile> placedTileDeck = new ArrayList<>();
     Stack<AbstractIrrigation> irrigationDeck;
-    Stack<AbstractIrrigation> placedIrrigationsDeck = new Stack<>();
     ArrayList<Player> players;
     ArrayList<PatternObjective> tileObjectives;
     ArrayList<PandaObjective> pandaObjectives;
@@ -47,7 +46,6 @@ public class Game {
     Weather gameWeather;
     public ArrayList<GameResults> gamePlayersResults;
     private ImprovementDeck improvementDeck;
-
 
     public Game(ArrayList<Player> players) {
         map = new Map(28);
@@ -61,8 +59,8 @@ public class Game {
         random = new Random();
         gamePlayersResults = new ArrayList<>();
         improvementDeck = new ImprovementDeck();
+        nbObjectivesToWIn = players.size() == 2 ? 9 : players.size() == 3 ? 8 : 7;
     }
-
 
     /**
      * Initialise a deck of irrigations (the irrigations players will draw)
@@ -232,7 +230,6 @@ public class Game {
                 ArrayList<AbstractTile> possiblesTiles = new ArrayList<>(3);
                 IntStream.range(0, Math.min(3, tileDeck.size())).forEach(i -> possiblesTiles.add(tileDeck.get(random.nextInt(tileDeck.size()))));
                 MultipleAnswer<AbstractTile, Coordinate> answer = player.putTile(possiblesTiles);
-                placedTileDeck.add(answer.getT());
                 tileDeck.remove(answer.getT());
 
                 try {
@@ -253,7 +250,6 @@ public class Game {
                 break;
             case DrawIrrigation:
                 AbstractIrrigation drawnIrrigation = irrigationDeck.pop();
-                placedIrrigationsDeck.add(drawnIrrigation);
                 player.addIrrigation(drawnIrrigation);
                 break;
             case DrawObjective:
@@ -417,70 +413,6 @@ public class Game {
         return gamePlayersResults;
     }
 
-    public void resetGame() throws UnsupportedOperationException{
-        gameWeather.resetWeather();
-        resetMap();
-        resetObjectives();
-        resetDecks();
-        resetPlayers();
-        resetGameResults();
-        resetImprovementDeck();
-    }
-
-    private void resetImprovementDeck() {
-        improvementDeck.reset();
-    }
-
-    private void resetDecks() {
-        tileDeck.addAll(placedTileDeck);
-        placedTileDeck.clear();
-        irrigationDeck.addAll(placedIrrigationsDeck);
-        placedIrrigationsDeck.clear();
-        patternMatchs.clear();
-    }
-
-    private void resetMap() {
-        map.reset();
-    }
-
-    private void resetPlayers(){
-        for (Player player : players) {
-            player.resetPlayer();
-        }
-    }
-
-    private void resetObjectives(){
-        Stream.concat(players.stream().map(Player::getObjectives).flatMap(Collection::stream), achievedObjectives.stream())
-                .forEach(this::reIntroduceObjective);
-
-        tileObjectives.forEach(Objective::resetObj);
-        pandaObjectives.forEach(Objective::resetObj);
-        gardenerObjectives.forEach(Objective::resetObj);
-        achievedObjectives.clear();
-    }
-
-    private void resetGameResults() {
-        for (GameResults gameResults : gamePlayersResults) {
-            gameResults.reset();
-        }
-    }
-
-    private void reIntroduceObjective(Objective objective){
-        switch (objective.getObjType()) {
-            case Pattern:
-                tileObjectives.add((PatternObjective) objective);
-                break;
-            case Panda:
-                pandaObjectives.add((PandaObjective) objective);
-                break;
-            case Gardener:
-                gardenerObjectives.add((GardenerObjective) objective);
-                break;
-            default:
-                break;
-        }
-    }
-
 
     @Override
     public boolean equals(Object o) {
@@ -489,9 +421,7 @@ public class Game {
         Game game = (Game) o;
         return Objects.equals(map, game.map) &&
                 tileDeck.containsAll(game.tileDeck) && game.tileDeck.containsAll(tileDeck) &&
-                placedTileDeck.containsAll(game.placedTileDeck) && game.placedTileDeck.containsAll(placedTileDeck) &&
                 Objects.equals(irrigationDeck, game.irrigationDeck) &&
-                Objects.equals(placedIrrigationsDeck, game.placedIrrigationsDeck) &&
                 Objects.equals(players, game.players) &&
                 tileObjectives.containsAll(game.tileObjectives) && game.tileObjectives.containsAll(tileObjectives) &&
                 pandaObjectives.containsAll(game.pandaObjectives) && game.pandaObjectives.containsAll(pandaObjectives) &&
@@ -506,6 +436,6 @@ public class Game {
 
     @Override
     public int hashCode() {
-        return Objects.hash(map, tileDeck, placedTileDeck, irrigationDeck, placedIrrigationsDeck, players, tileObjectives, pandaObjectives, gardenerObjectives, patternMatchs, emperor, achievedObjectives, random, gamePlayersResults,improvementDeck);
+        return Objects.hash(map, tileDeck, irrigationDeck, players, tileObjectives, pandaObjectives, gardenerObjectives, patternMatchs, emperor, achievedObjectives, random, gamePlayersResults,improvementDeck);
     }
 }
