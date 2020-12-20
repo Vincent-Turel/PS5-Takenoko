@@ -1,7 +1,5 @@
 package dev.stonks.takenoko.map;
 
-import dev.stonks.takenoko.IllegalEqualityExceptionGenerator;
-
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -82,5 +80,19 @@ public class AbstractTile {
 
     public Improvement getImprovement() {
         return improvement;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof AbstractTile)) return false;
+        AbstractTile that = (AbstractTile) o;
+        return getKind() == that.getKind() &&
+                getImprovement() == that.getImprovement();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getKind(), getImprovement());
     }
 }

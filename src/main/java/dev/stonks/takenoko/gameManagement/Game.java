@@ -228,7 +228,6 @@ public class Game {
                 IntStream.range(0, Math.min(3, tileDeck.size())).forEach(i -> possiblesTiles.add(tileDeck.get(random.nextInt(tileDeck.size()))));
                 MultipleAnswer<AbstractTile, Coordinate> answer = player.putTile(possiblesTiles);
                 tileDeck.remove(answer.getT());
-
                 try {
                     map.setTile(new Tile(answer.getT().withCoordinate(answer.getU())));
                 } catch (IllegalPlacementException e) {

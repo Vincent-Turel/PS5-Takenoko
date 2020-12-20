@@ -152,13 +152,13 @@ public class RandomPlayer extends Player{
             throw new IllegalStateException("There is nowhere I can put an irrigation");
 
         Tile chosenTile = getRandomInCollection(improvementPlacements);
-        Improvement chosenImprovement = getRandomInCollection(improvements);
+        Improvement chosenImprovement = improvements.remove(random.nextInt(improvements.size()));
 
         return new MultipleAnswer<>(chosenTile, chosenImprovement);
     }
 
     @Override
     public void choseImprovement(List<Improvement> improvements) {
-        this.improvements.add(getRandomInCollection(improvements));
+        this.improvements.add(improvements.remove(random.nextInt(improvements.size())));
     }
 }

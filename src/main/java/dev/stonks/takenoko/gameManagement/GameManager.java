@@ -8,6 +8,8 @@ import dev.stonks.takenoko.bot.SmartPlayer;
 import java.util.ArrayList;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.logging.Level;
+import java.util.logging.LogManager;
 import java.util.logging.Logger;
 import java.util.stream.IntStream;
 
@@ -66,13 +68,16 @@ public class GameManager {
         long start = System.currentTimeMillis();
         AtomicInteger count = new AtomicInteger(0);
         if (parallel) {
-            System.out.print("Progression : ");
+            if (LogManager.getLogManager().getLogger("").getHandlers()[0].getLevel().intValue() >= Level.SEVERE.intValue())
+                System.out.print("Progression : ");
             IntStream.range(0, n).parallel().mapToObj(x -> new Game(createPlayers())).forEach(game -> {
                 simulate(game);
                 var actualCount = count.incrementAndGet();
-                float pourcentDone = actualCount / (float) n * 100;
-                String string = "Progression : "+ String.format("%4s", (int)pourcentDone + "%") +  " [" + "=".repeat((int)(pourcentDone/100f*70f)) + ">" + " ".repeat(70 - (int)(pourcentDone/100f*70f)) + "] " + actualCount + "/" + n;
-                System.out.print("\r" + string);
+                if (LogManager.getLogManager().getLogger("").getHandlers()[0].getLevel().intValue() >= Level.SEVERE.intValue()) {
+                    float pourcentDone = actualCount / (float) n * 100;
+                    String string = "Progression : "+ String.format("%4s", (int)pourcentDone + "%") +  " [" + "=".repeat((int)(pourcentDone/100f*70f)) + ">" + " ".repeat(70 - (int)(pourcentDone/100f*70f)) + "] " + actualCount + "/" + n;
+                    System.out.print("\r" + string);
+                }
             });
             System.out.print("\n");
         } else {

@@ -84,8 +84,8 @@ public class GameTest {
         ArrayList<GameResults> results = mockGame.getResults();
 
         assertEquals(expected.size(),results.size());
-        assertTrue(expected.equals(results));
-        assertFalse(initialResults.equals(results));
+        assertEquals(expected, results);
+        assertNotEquals(initialResults, results);
     }
 
     /*
