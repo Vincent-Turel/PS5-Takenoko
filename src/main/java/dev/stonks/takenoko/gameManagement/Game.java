@@ -218,7 +218,7 @@ public class Game {
     }
 
     private void playerPlay(Player player, ArrayList<Action> possibleActions) {
-        Action chosenAction = player.decide(possibleActions, map);
+        Action chosenAction = player.decide(new ArrayList<>(possibleActions), map);
         LOG.info("Player n°" + player.getId() + " has chosen this action : " + chosenAction.toString());
         if(gameWeather.getCondition() != WeatherKind.Wind)
             possibleActions.remove(chosenAction);

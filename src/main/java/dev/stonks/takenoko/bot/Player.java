@@ -3,11 +3,9 @@ package dev.stonks.takenoko.bot;
 import dev.stonks.takenoko.IllegalEqualityExceptionGenerator;
 import dev.stonks.takenoko.map.*;
 import dev.stonks.takenoko.map.Map;
-import dev.stonks.takenoko.objective.PandaObjective;
+import dev.stonks.takenoko.objective.*;
 import dev.stonks.takenoko.pawn.Pawn;
 import dev.stonks.takenoko.gameManagement.Action;
-import dev.stonks.takenoko.objective.Objective;
-import dev.stonks.takenoko.objective.ObjectiveKind;
 
 import java.util.*;
 
@@ -273,5 +271,37 @@ public abstract class Player {
     protected  <T> T getRandomInCollection(Collection<T> collection){
         List<T> list = new ArrayList<>(collection);
         return list.get(random.nextInt(list.size()));
+    }
+
+    /**
+     * Check if an action has achevied an objective
+     *
+     * @param player    the player who tried the action
+     * @param clonedMap the map on which we tried the action
+     * @return the number of point of the achieved objective. 0 if no objective achieved
+     */
+    protected int checkObjectives(Player player, Map clonedMap) {
+        ArrayList<Objective> playerObjectives = player.getObjectives();
+        int nbPoint = 0;
+        for (Objective objective : playerObjectives) {
+            switch (objective.getObjType()) {
+                case Pattern:
+                    IsValidObjectives.isValidPatternObjective((PatternObjective) objective, clonedMap, new HashSet<>());
+                    break;
+                case Panda:
+                    IsValidObjectives.isObjectivesPandaValid((PandaObjective) objective, player);
+                    break;
+                case Gardener:
+                    IsValidObjectives.isObjectivesGardenerValid((GardenerObjective) objective, clonedMap);
+                    break;
+                default:
+                    break;
+            }
+            if (objective.getStates()) {
+                objective.resetObj();
+                nbPoint += objective.getNbPt();
+            }
+        }
+        return nbPoint;
     }
 }

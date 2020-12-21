@@ -19,7 +19,7 @@ public class Main {
         setLogConfig();
         GameManager gameManager = new GameManager(nbRandomPlayer, nbDumbPlayer, nbSmartPlayer);
         LOG.severe("Starting program...");
-        gameManager.playNTime(100, true);
+        gameManager.playNTime(500, true);
     }
 
     public static void setLogConfig(){

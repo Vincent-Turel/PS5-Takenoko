@@ -36,8 +36,10 @@ public class PlayerTest {
 
     @Test
     public void decideTest(){
-        Map map = new Map(3);
+        Map map = new Map(25);
         ArrayList<Action> possibleActions = new ArrayList<>(Arrays.asList(Action.values()));
+        possibleActions.remove(Action.PutImprovement);
+        possibleActions.remove(Action.PutIrrigation);
 
         assertTrue(possibleActions.contains(randomPlayer.decide(possibleActions, map)));
         assertEquals(randomPlayer.getCurrentMapState(), map);
@@ -45,7 +47,8 @@ public class PlayerTest {
         assertTrue(possibleActions.contains(dumbPlayer.decide(possibleActions, map)));
         assertEquals(dumbPlayer.getCurrentMapState(), map);
 
-        assertTrue(possibleActions.contains(smartPlayer.decide(possibleActions, map)));
+        Action action = smartPlayer.decide(possibleActions, map);
+        assertTrue(possibleActions.contains(action));
         assertEquals(smartPlayer.getCurrentMapState(), map);
 
         possibleActions.clear();
@@ -99,11 +102,11 @@ public class PlayerTest {
         when(map.getTilePlacements()).thenReturn(placements, placements, placements, placements2, placements2, placements2, placements, placements, placements);
 
         ArrayList<AbstractTile> tiles = new ArrayList<>(Arrays.asList(new AbstractTile(TileKind.Green),new AbstractTile(TileKind.Pink), new AbstractTile(TileKind.Pink)));
-        ArrayList<Tile> res = new ArrayList<>(List.of(
-                tiles.get(0).withCoordinate(placementsList.get(0)),
-                tiles.get(0).withCoordinate(placementsList.get(1)),
-                tiles.get(1).withCoordinate(placementsList.get(0)),
-                tiles.get(1).withCoordinate(placementsList.get(1))));
+        ArrayList<MultipleAnswer<AbstractTile, Coordinate>> res = new ArrayList<>(Arrays.asList(
+                new MultipleAnswer<>(tiles.get(0), placementsList.get(0)),
+                new MultipleAnswer<>(tiles.get(0), placementsList.get(1)),
+                new MultipleAnswer<>(tiles.get(1), placementsList.get(0)),
+                new MultipleAnswer<>(tiles.get(1), placementsList.get(1))));
 
         randomPlayer.setCurrentMapState(map);
         dumbPlayer.setCurrentMapState(map);
@@ -196,12 +199,12 @@ public class PlayerTest {
         assertEquals(dumbPlayer.putTile(new ArrayList<>(List.of(
                 new AbstractTile(TileKind.Green),
                 new AbstractTile(TileKind.Pink),
-                new AbstractTile(TileKind.Yellow)))), new Tile(map.initialTile().getCoordinate().moveWith(Direction.SouthEast), TileKind.Pink));
+                new AbstractTile(TileKind.Yellow)))), new MultipleAnswer<>(new AbstractTile(TileKind.Pink), map.initialTile().getCoordinate().moveWith(Direction.SouthEast)));
 
         assertEquals(smartPlayer.putTile(new ArrayList<>(List.of(
                 new AbstractTile(TileKind.Green),
                 new AbstractTile(TileKind.Pink),
-                new AbstractTile(TileKind.Yellow)))), new Tile(map.initialTile().getCoordinate().moveWith(Direction.SouthEast), TileKind.Pink));
+                new AbstractTile(TileKind.Yellow)))), new MultipleAnswer<>(new AbstractTile(TileKind.Pink), map.initialTile().getCoordinate().moveWith(Direction.SouthEast)));
 
         //map.setTile(map.getTile(map.initialTile().getCoordinate().moveWith(Direction.South)).get().getCoordinate().moveWith(Direction.NorthEast), new AbstractTile(TileKind.Pink));
         map.setTile(map.initialTile().getCoordinate().moveWith(Direction.SouthEast), new AbstractTile(TileKind.Pink));
@@ -241,33 +244,33 @@ public class PlayerTest {
     public void putImprovementTest() throws IllegalPlacementException {
         ArrayList<Improvement> improvements = new ArrayList<>(Arrays.asList(Improvement.Watershed, Improvement.Watershed, Improvement.Watershed));
         Map map = new Map(15);
-        Tile t = map.setTile(map.initialTile().getCoordinate().moveWith(Direction.South), new AbstractTile(TileKind.Green));
-        assertEquals(Improvement.Empty, t.getImprovement());
+        map.setTile(map.initialTile().getCoordinate().moveWith(Direction.South), new AbstractTile(TileKind.Green));
         randomPlayer.setCurrentMapState(map);
+
         randomPlayer.choseImprovement(improvements);
         assertEquals(1, randomPlayer.getImprovements().size());
-        randomPlayer.putImprovement();
-        assertEquals(Improvement.Watershed, t.getImprovement());
+        var answer = randomPlayer.putImprovement();
+        assertEquals(Improvement.Watershed, answer.getU());
         assertEquals(0, randomPlayer.getImprovements().size());
         assertThrows(IllegalStateException.class, () -> randomPlayer.putImprovement());
 
-        Tile t2 = map.setTile(map.initialTile().getCoordinate().moveWith(Direction.North), new AbstractTile(TileKind.Pink));
-        assertEquals(Improvement.Empty, t2.getImprovement());
+        map.setTile(map.initialTile().getCoordinate().moveWith(Direction.North), new AbstractTile(TileKind.Green));
         dumbPlayer.setCurrentMapState(map);
+
         dumbPlayer.choseImprovement(improvements);
         assertEquals(1, dumbPlayer.getImprovements().size());
-        dumbPlayer.putImprovement();
-        assertEquals(Improvement.Watershed, t2.getImprovement());
+        var answer2 = dumbPlayer.putImprovement();
+        assertEquals(Improvement.Watershed, answer2.getU());
         assertEquals(0, dumbPlayer.getImprovements().size());
         assertThrows(IllegalStateException.class, () -> dumbPlayer.putImprovement());
 
-        Tile t3 = map.setTile(map.initialTile().getCoordinate().moveWith(Direction.SouthEast), new AbstractTile(TileKind.Pink));
-        assertEquals(Improvement.Empty, t3.getImprovement());
+        map.setTile(map.initialTile().getCoordinate().moveWith(Direction.NorthWest), new AbstractTile(TileKind.Green));
         smartPlayer.setCurrentMapState(map);
+
         smartPlayer.choseImprovement(improvements);
         assertEquals(1, smartPlayer.getImprovements().size());
-        smartPlayer.putImprovement();
-        assertEquals(Improvement.Watershed, t3.getImprovement());
+        var answer3 = smartPlayer.putImprovement();
+        assertEquals(Improvement.Watershed, answer3.getU());
         assertEquals(0, smartPlayer.getImprovements().size());
         assertThrows(IllegalStateException.class, () -> smartPlayer.putImprovement());
     }
@@ -292,16 +295,16 @@ public class PlayerTest {
 
         dumbPlayer.addIrrigation(new AbstractIrrigation());
         assertEquals(1, dumbPlayer.getIrrigations().size());
-        MultipleAnswer<AbstractIrrigation, IrrigationCoordinate> answer2 = randomPlayer.putIrrigation();
-        Irrigation irrigation2 = answer.getT().withCoordinate(answer.getU());
+        MultipleAnswer<AbstractIrrigation, IrrigationCoordinate> answer2 = dumbPlayer.putIrrigation();
+        Irrigation irrigation2 = answer2.getT().withCoordinate(answer2.getU());
         assertEquals(0, dumbPlayer.getIrrigations().size());
         assertTrue(map.getIrrigationPlacements().contains(irrigation2.getCoordinate()));
         assertThrows(IllegalStateException.class, () -> dumbPlayer.putIrrigation());
 
         smartPlayer.addIrrigation(new AbstractIrrigation());
         assertEquals(1, smartPlayer.getIrrigations().size());
-        MultipleAnswer<AbstractIrrigation, IrrigationCoordinate> answer3 = randomPlayer.putIrrigation();
-        Irrigation irrigation3 = answer.getT().withCoordinate(answer.getU());
+        MultipleAnswer<AbstractIrrigation, IrrigationCoordinate> answer3 = smartPlayer.putIrrigation();
+        Irrigation irrigation3 = answer3.getT().withCoordinate(answer3.getU());
         assertEquals(0, smartPlayer.getIrrigations().size());
         assertTrue(map.getIrrigationPlacements().contains(irrigation3.getCoordinate()));
         assertThrows(IllegalStateException.class, () -> smartPlayer.putIrrigation());

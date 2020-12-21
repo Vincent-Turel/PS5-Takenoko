@@ -6,6 +6,7 @@ import dev.stonks.takenoko.objective.*;
 import dev.stonks.takenoko.pawn.Pawn;
 import dev.stonks.takenoko.gameManagement.Action;
 import java.util.*;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 /**
@@ -14,6 +15,8 @@ import java.util.stream.Collectors;
  * @see Player
  */
 public class DumbPlayer extends Player {
+    private final static Logger LOG = Logger.getLogger(DumbPlayer.class.getSimpleName());
+
     private List<Optional<Integer>> chosenAction;
     private List<Optional<Integer>> chosenOptionalAction;
 
@@ -109,37 +112,6 @@ public class DumbPlayer extends Player {
     }
 
     /**
-     * Check if an action has achevied an objective
-     * @param player the player who tried the action
-     * @param clonedMap the map on which we tried the action
-     * @return the number of point of the achieved objective. 0 if no objective achieved
-     */
-    private int checkObjectives(Player player, Map clonedMap) {
-        ArrayList<Objective> playerObjectives = player.getObjectives();
-        int nbPoint = 0;
-        for (Objective objective : playerObjectives) {
-            switch (objective.getObjType()) {
-                case Pattern:
-                    IsValidObjectives.isValidPatternObjective((PatternObjective) objective, clonedMap, new HashSet<>());
-                    break;
-                case Panda:
-                    IsValidObjectives.isObjectivesPandaValid((PandaObjective) objective, player);
-                    break;
-                case Gardener:
-                    IsValidObjectives.isObjectivesGardenerValid((GardenerObjective) objective, clonedMap);
-                    break;
-                default:
-                    break;
-            }
-            if (objective.getStates()) {
-                objective.resetObj();
-                nbPoint += objective.getNbPt();
-            }
-        }
-        return nbPoint;
-    }
-
-    /**
      *
      * @param map the game's map
      * @return the action the player has decided to do
@@ -158,7 +130,7 @@ public class DumbPlayer extends Player {
         if (possibleAction.contains(Action.DrawIrrigation)){
             if (this.irrigations.size() < 4)
                 return Action.DrawIrrigation;
-            else
+            else if (possibleAction.size() > 1)
                 possibleAction.remove(Action.DrawIrrigation);
         }
         return possibleAction.get(random.nextInt(possibleAction.size()));
@@ -307,14 +279,14 @@ public class DumbPlayer extends Player {
             throw new IllegalStateException("There is nowhere I can put an irrigation");
 
         Tile chosenTile = getRandomInCollection(improvementPlacements);
-        Improvement chosenImprovement = getRandomInCollection(improvements);
+        Improvement chosenImprovement = improvements.remove(random.nextInt(improvements.size()));
 
         return new MultipleAnswer<>(chosenTile, chosenImprovement);
     }
 
     @Override
     public void choseImprovement(List<Improvement> improvements) {
-        this.improvements.add(getRandomInCollection(improvements));
+        this.improvements.add(improvements.remove(random.nextInt(improvements.size())));
     }
 
     /**

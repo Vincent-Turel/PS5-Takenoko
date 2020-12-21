@@ -7,12 +7,15 @@ import dev.stonks.takenoko.gameManagement.Game;
 import dev.stonks.takenoko.gameManagement.GameResults;
 import dev.stonks.takenoko.map.IllegalPlacementException;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.LogManager;
 import java.util.stream.Collectors;
 
 import static org.junit.Assert.*;
@@ -24,8 +27,8 @@ public class GameTest {
     static ArrayList<Player> players;
     static Game game;
 
-    @BeforeAll
-    static void createAGame(){
+    @BeforeEach
+    void createAGame(){
         players = new ArrayList<>();
         players.add(new RandomPlayer(0));
         players.add(new RandomPlayer(1));
@@ -47,6 +50,7 @@ public class GameTest {
 
     @Test
     void testThePlayMethod(){
+        Arrays.stream(LogManager.getLogManager().getLogger("").getHandlers()).forEach(h -> h.setLevel(Level.OFF));
         Game emptyGame = new Game(players);
         try {
             game.play();
@@ -84,8 +88,8 @@ public class GameTest {
         ArrayList<GameResults> results = mockGame.getResults();
 
         assertEquals(expected.size(),results.size());
-        assertTrue(expected.equals(results));
-        assertFalse(initialResults.equals(results));
+        assertEquals(results, expected);
+        assertNotEquals(initialResults, results);
     }
 
     /*
