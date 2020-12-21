@@ -1,6 +1,5 @@
 package dev.stonks.takenoko.bot;
 
-import dev.stonks.takenoko.gameManagement.GameManager;
 import dev.stonks.takenoko.map.Map;
 import dev.stonks.takenoko.map.*;
 import dev.stonks.takenoko.objective.*;
@@ -8,7 +7,6 @@ import dev.stonks.takenoko.pawn.Pawn;
 import dev.stonks.takenoko.gameManagement.Action;
 
 import java.util.*;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 /**
@@ -19,16 +17,14 @@ import java.util.stream.Collectors;
  */
 public class SmartPlayer extends Player {
 
-    private final static Logger LOG = Logger.getLogger(SmartPlayer.class.getSimpleName());
-
-    private List<ArrayList<Optional<Integer>>> res;
+    private List<ArrayList<Integer>> res;
 
     public SmartPlayer(int id) {
         super(id);
         this.playerType = PlayerType.SmartPlayer;
         this.res = new ArrayList<>(Arrays.asList(
-                new ArrayList<>(Collections.singletonList(Optional.empty())),
-                new ArrayList<>(Arrays.asList(Optional.empty(), Optional.empty()))));
+                new ArrayList<>(Collections.singletonList(null)),
+                new ArrayList<>(Arrays.asList(null, null))));
     }
 
     /**
@@ -36,7 +32,7 @@ public class SmartPlayer extends Player {
      *
      * @param action every action that the player can do.
      */
-    private void explore(Action action, Map map, int nb, int deepness, ArrayList<ArrayList<Optional<Integer>>> actions) {
+    private void explore(Action action, Map map, int nb, int deepness, ArrayList<ArrayList<Integer>> actions) {
         Map usedCloneMap;
         switch (action) {
             case MovePanda:
@@ -44,7 +40,7 @@ public class SmartPlayer extends Player {
                 for (int i = 0; i < possiblePandaPlacements.size(); i++) {
                     usedCloneMap = new Map(map);
                     usedCloneMap.getPanda().moveToAndAct(possiblePandaPlacements.get(i));
-                    doNext(action, nb, deepness, usedCloneMap, actions, new ArrayList<>(Arrays.asList(Optional.of(action.ordinal()), Optional.of(i), Optional.empty())));
+                    doNext(action, nb, deepness, usedCloneMap, actions, new ArrayList<>(Arrays.asList(action.ordinal(), i, null)));
                 }
                 break;
             case MoveGardener:
@@ -52,7 +48,7 @@ public class SmartPlayer extends Player {
                 for (int i = 0; i < possibleGardenerPlacements.size(); i++) {
                     usedCloneMap = new Map(map);
                     usedCloneMap.getGardener().moveToAndAct(possibleGardenerPlacements.get(i), usedCloneMap);
-                    doNext(action, nb, deepness, usedCloneMap, actions, new ArrayList<>(Arrays.asList(Optional.of(action.ordinal()), Optional.of(i), Optional.empty())));
+                    doNext(action, nb, deepness, usedCloneMap, actions, new ArrayList<>(Arrays.asList(action.ordinal(), i, null)));
                 }
                 break;
             case PutTile:
@@ -67,7 +63,7 @@ public class SmartPlayer extends Player {
                             e.printStackTrace();
                             System.exit(1);
                         }
-                        doNext(action, nb, deepness, usedCloneMap, actions, new ArrayList<>(Arrays.asList(Optional.of(action.ordinal()), Optional.of(i), Optional.of(j))));
+                        doNext(action, nb, deepness, usedCloneMap, actions, new ArrayList<>(Arrays.asList(action.ordinal(), i, j)));
                     }
                 }
                 break;
@@ -81,7 +77,7 @@ public class SmartPlayer extends Player {
                         e.printStackTrace();
                         System.exit(1);
                     }
-                    doNext(action, nb, deepness, usedCloneMap, actions, new ArrayList<>(Arrays.asList(Optional.of(action.ordinal()), Optional.of(i), Optional.empty())));
+                    doNext(action, nb, deepness, usedCloneMap, actions, new ArrayList<>(Arrays.asList(action.ordinal(), i, null)));
                 }
                 break;
             default:
@@ -91,21 +87,21 @@ public class SmartPlayer extends Player {
             actions.remove(actions.size() - 1);
     }
 
-    private void doNext(Action action, int nb, int deepness, Map usedCloneMap, ArrayList<ArrayList<Optional<Integer>>> actions, ArrayList<Optional<Integer>> newAction) {
+    private void doNext(Action action, int nb, int deepness, Map usedCloneMap, ArrayList<ArrayList<Integer>> actions, ArrayList<Integer> newAction) {
         if (actions.size() - nb < 0)
             actions.add(newAction);
         else
             actions.set(actions.size() - 1, newAction);
 
         int x = checkObjectives(this, usedCloneMap);
-        actions.add(0, new ArrayList<>(Collections.singletonList(Optional.of(x))));
+        actions.add(0, new ArrayList<>(Collections.singletonList(x)));
         if (res.size() == 0)
             res = new ArrayList<>(actions);
         else {
-            if (actions.get(0).get(0).orElseThrow(NoSuchElementException::new).equals(res.get(0).get(0).orElseThrow(NoSuchElementException::new))) {
+            if (actions.get(0).get(0).equals(res.get(0).get(0))) {
                 if (actions.size() < res.size())
                     this.res = new ArrayList<>(actions);
-            } else if (actions.get(0).get(0).orElseThrow(NoSuchElementException::new) > res.get(0).get(0).orElseThrow(NoSuchElementException::new)) {
+            } else if (actions.get(0).get(0)> res.get(0).get(0)) {
                 this.res = new ArrayList<>(actions);
             }
         }
@@ -117,10 +113,10 @@ public class SmartPlayer extends Player {
     }
 
     private int getResScore() {
-        return res.get(0).get(0).orElseThrow(NoSuchElementException::new);
+        return res.get(0).get(0);
     }
 
-    private ArrayList<Optional<Integer>> getResAction() {
+    private ArrayList<Integer> getResAction() {
         return res.get(1);
     }
 
@@ -142,7 +138,7 @@ public class SmartPlayer extends Player {
         if (possibleAction.contains(Action.DrawObjective))
             return Action.DrawObjective;
         if (getResScore() > 1)
-            return Action.values()[getResAction().get(0).orElseThrow(NoSuchElementException::new)];
+            return Action.values()[getResAction().get(0)];
         if (possibleAction.contains(Action.DrawIrrigation)) {
             if (this.irrigations.size() < 3)
                 return Action.DrawIrrigation;
@@ -153,7 +149,7 @@ public class SmartPlayer extends Player {
     }
 
     private void resetResScore() {
-        res.get(0).set(0, Optional.of(0));
+        res.get(0).set(0, 0);
     }
 
     /**
@@ -206,10 +202,10 @@ public class SmartPlayer extends Player {
         Coordinate chosenCoordinate = getRandomInCollection(tilePlacements);
 
         if (getResScore() > 0) {
-            chosenCoordinate = new ArrayList<>(tilePlacements).get(getResAction().get(1).orElseThrow(NoSuchElementException::new));
+            chosenCoordinate = new ArrayList<>(tilePlacements).get(getResAction().get(1));
 
             var sortedList = tiles.stream()
-                    .filter(x -> x.getKind() == TileKind.values()[getResAction().get(2).orElseThrow(NoSuchElementException::new)])
+                    .filter(x -> x.getKind() == TileKind.values()[getResAction().get(2)])
                     .sorted(Comparator.comparingInt(x -> x.getImprovement().ordinal()))
                     .collect(Collectors.toList());
 
@@ -234,7 +230,7 @@ public class SmartPlayer extends Player {
             return possiblePawnPlacements.get(random.nextInt(possiblePawnPlacements.size()));
         }
 
-        return possiblePawnPlacements.get(getResAction().get(1).orElseThrow(NoSuchElementException::new));
+        return possiblePawnPlacements.get(getResAction().get(1));
     }
 
     /**
@@ -274,9 +270,13 @@ public class SmartPlayer extends Player {
         if (irrigationCoordinates.size() < 1)
             throw new IllegalStateException("There is nowhere I can put an irrigation");
 
+        IrrigationCoordinate chosenIrrigationCoordinate = getResAction().get(1) != null ?
+                irrigationCoordinates.get(getResAction().get(1)) :
+                getRandomInCollection(irrigationCoordinates);
+
         return new MultipleAnswer<>(
                 irrigations.pop(),
-                irrigationCoordinates.get(getResAction().get(1).orElse(random.nextInt(irrigationCoordinates.size()))));
+                chosenIrrigationCoordinate);
     }
 
     @Override
@@ -304,7 +304,7 @@ public class SmartPlayer extends Player {
      *
      * @return the chosen action
      */
-    public List<ArrayList<Optional<Integer>>> getChosenAction() {
+    public List<ArrayList<Integer>> getChosenAction() {
         return res;
     }
 
@@ -313,7 +313,7 @@ public class SmartPlayer extends Player {
      *
      * @param res a fake chosen action in order to do some test.
      */
-    public void setChosenAction(List<ArrayList<Optional<Integer>>> res) {
+    public void setChosenAction(List<ArrayList<Integer>> res) {
         this.res = res;
     }
 }

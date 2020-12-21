@@ -110,9 +110,9 @@ public class PlayerTest {
 
         randomPlayer.setCurrentMapState(map);
         dumbPlayer.setCurrentMapState(map);
-        dumbPlayer.setChosenAction(List.of(Optional.of(5), Optional.of(Action.PutTile.ordinal()), Optional.of(1), Optional.of(TileKind.Yellow.ordinal())));
+        dumbPlayer.setChosenAction(List.of(5, Action.PutTile.ordinal(), 1, TileKind.Yellow.ordinal()));
         smartPlayer.setCurrentMapState(map);
-        smartPlayer.setChosenAction(List.of(new ArrayList<>(Collections.singletonList(Optional.of(5))), new ArrayList<>(Arrays.asList(Optional.of(Action.PutTile.ordinal()), Optional.of(1), Optional.of(TileKind.Yellow.ordinal())))));
+        smartPlayer.setChosenAction(List.of(new ArrayList<>(Collections.singletonList(5)), new ArrayList<>(Arrays.asList(Action.PutTile.ordinal(), 1, TileKind.Yellow.ordinal()))));
 
         assertTrue(res.contains(randomPlayer.putTile(tiles)));
         assertTrue(res.contains(dumbPlayer.putTile(tiles)));
@@ -140,9 +140,9 @@ public class PlayerTest {
         when(map.getPossiblePawnPlacements(panda)).thenReturn(placements, placements, placements, placements2, placements2, placements2);
         randomPlayer.setCurrentMapState(map);
         dumbPlayer.setCurrentMapState(map);
-        dumbPlayer.setChosenAction(List.of(Optional.of(5), Optional.of(Action.MovePanda.ordinal()), Optional.of(1), Optional.empty()));
+        dumbPlayer.setChosenAction(Arrays.asList(5, Action.MovePanda.ordinal(), 1, null));
         smartPlayer.setCurrentMapState(map);
-        smartPlayer.setChosenAction(List.of(new ArrayList<>(Collections.singletonList(Optional.of(5))), new ArrayList<>(Arrays.asList(Optional.of(Action.MovePanda.ordinal()), Optional.of(1), Optional.empty()))));
+        smartPlayer.setChosenAction(List.of(new ArrayList<>(Collections.singletonList(5)), new ArrayList<>(Arrays.asList(Action.MovePanda.ordinal(), 1, null))));
 
         assertTrue(placements.contains(randomPlayer.choseWherePawnShouldGo(panda)));
         assertTrue(placements.contains(dumbPlayer.choseWherePawnShouldGo(panda)));
@@ -192,8 +192,8 @@ public class PlayerTest {
 
         assertTrue(dumbPlayer.getObjectives().contains(objectiveWin));
         assertTrue(smartPlayer.getObjectives().contains(objectiveWin));
-        assertEquals(List.of(List.of(Optional.of(15)), List.of(Optional.of(2), Optional.of(1), Optional.of(2))), smartPlayer.getChosenAction());
-        assertEquals(List.of(Optional.of(5), Optional.of(2), Optional.of(1), Optional.of(2)), dumbPlayer.getChosenAction());
+        assertEquals(List.of(List.of(15), List.of(2, 1, 2)), smartPlayer.getChosenAction());
+        assertEquals(List.of(5, 2, 1, 2), dumbPlayer.getChosenAction());
 
 
         assertEquals(dumbPlayer.putTile(new ArrayList<>(List.of(
@@ -217,11 +217,11 @@ public class PlayerTest {
 
         dumbPlayer.decide(new ArrayList<>(Arrays.asList(Action.values())), map);
         assertFalse(dumbPlayer.getObjectives().contains(objectiveWin));
-        assertEquals(Optional.of(0), dumbPlayer.getChosenAction().get(0));
+        assertEquals(0, dumbPlayer.getChosenAction().get(0));
 
         smartPlayer.decide(new ArrayList<>(Arrays.asList(Action.values())), map);
         assertFalse(smartPlayer.getObjectives().contains(objectiveWin));
-        assertEquals(Optional.of(0), smartPlayer.getChosenAction().get(0).get(0));
+        assertEquals(0, smartPlayer.getChosenAction().get(0).get(0));
     }
 
     @Test

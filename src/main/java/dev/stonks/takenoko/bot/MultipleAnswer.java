@@ -1,8 +1,13 @@
 package dev.stonks.takenoko.bot;
 
 import java.util.Objects;
-import java.util.Optional;
 
+/**
+ * This class is a generic class that allows the player
+ * to give a multiple answer to the game, whatever are the types of the answer.
+ * @param <T> the type of the first element of the answer
+ * @param <U> the type of the second element of the answer
+ */
 public class MultipleAnswer<T, U> {
     private final T t;
     private final U u;
@@ -12,10 +17,18 @@ public class MultipleAnswer<T, U> {
         this.u = u;
     }
 
+    /**
+     * Get the fist element of the answer
+     * @return an object of generic type T
+     */
     public T getT() {
         return t;
     }
 
+    /**
+     * Get the second element of the answer
+     * @return an object of generic type U
+     */
     public U getU() {
         return u;
     }

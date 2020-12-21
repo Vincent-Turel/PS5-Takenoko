@@ -43,6 +43,10 @@ public class GameManager {
         }
     }
 
+    /**
+     * Create all the players for the simulation
+     * @return an arraysList of all the players
+     */
     private ArrayList<Player> createPlayers() {
         ArrayList<Player> players = new ArrayList<>();
         for (int i = 0; i < nbPlayers[0]; i++) {
@@ -58,7 +62,7 @@ public class GameManager {
     }
 
     /**
-     * Play n time the same game with the same bot,
+     * Play n time the same game with the same bots,
      * and display statistics at the end.
      *
      * @param n the numnber of games that are going to be played
@@ -68,18 +72,10 @@ public class GameManager {
         long start = System.currentTimeMillis();
         AtomicInteger count = new AtomicInteger(0);
         if (parallel) {
-            if (LogManager.getLogManager().getLogger("").getHandlers()[0].getLevel().intValue() >= Level.SEVERE.intValue()) {
-                String string1 = "Progression : " + String.format("%4s", 0 + "%") + " [" + " ".repeat(71) + "] " + 0 + "/" + n;
-                System.out.print(string1);
-            }
+            updateProgressBar(n, 0);
             IntStream.range(0, n).parallel().mapToObj(x -> new Game(createPlayers())).forEach(game -> {
                 simulate(game);
-                var actualCount = count.incrementAndGet();
-                if (LogManager.getLogManager().getLogger("").getHandlers()[0].getLevel().intValue() >= Level.SEVERE.intValue()) {
-                    float pourcentDone = actualCount / (float) n * 100;
-                    String string = "Progression : " + String.format("%4s", (int) pourcentDone + "%") + " [" + "=".repeat((int) (pourcentDone / 100f * 70f)) + ">" + " ".repeat(70 - (int) (pourcentDone / 100f * 70f)) + "] " + actualCount + "/" + n;
-                    System.out.print("\r" + string);
-                }
+                updateProgressBar(n, count.incrementAndGet());
             });
             System.out.print("\n");
         } else {
@@ -99,6 +95,23 @@ public class GameManager {
         displayStats(n);
     }
 
+    /**
+     * Display the progress bar curent state
+     * @param n the number of games to run
+     * @param actualCount the actuel number of games that have already been runned
+     */
+    private void updateProgressBar(int n, int actualCount) {
+        if (LogManager.getLogManager().getLogger("").getHandlers()[0].getLevel().intValue() >= Level.SEVERE.intValue()) {
+            float pourcentDone = actualCount / (float) n * 100;
+            String string = "Progression : " + String.format("%4s", (int) pourcentDone + "%") + " [" + "=".repeat((int) (pourcentDone / 100f * 70f)) + (actualCount == 0 ? " " : ">") + " ".repeat(70 - (int) (pourcentDone / 100f * 70f)) + "] " + actualCount + "/" + n;
+            System.out.print("\r" + string);
+        }
+    }
+
+    /**
+     * Play a game and get the result
+     * @param game the game to simulate
+     */
     private void simulate(Game game) {
         game.play();
         changeStats(game);
