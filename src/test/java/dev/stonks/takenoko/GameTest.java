@@ -91,15 +91,4 @@ public class GameTest {
         assertEquals(expected, results);
         assertNotEquals(initialResults, results);
     }
-
-    /*
-    @Test
-    void verificationOfReset() {
-        Game expected = new Game(1, players);
-        assertEquals(expected,game);
-        game.play();
-        expected.gamePlayersResults.addAll(game.gamePlayersResults);
-        game.resetGame();
-        assertEquals(expected,game);;
-    }*/
 }

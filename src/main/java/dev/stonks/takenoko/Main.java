@@ -1,6 +1,7 @@
 package dev.stonks.takenoko;
 
 import dev.stonks.takenoko.gameManagement.GameManager;
+import picocli.CommandLine;
 
 import java.util.Arrays;
 import java.util.logging.Level;
@@ -10,18 +11,17 @@ import java.util.logging.Logger;
 public class Main {
     private final static Logger LOG = Logger.getLogger(Main.class.getSimpleName());
 
-    public static final Level level = Level.INFO;
+    public static final Level level = Level.SEVERE;
     public static final int nbRandomPlayer = 1;
     public static final int nbDumbPlayer = 1;
     public static final int nbSmartPlayer = 0;
 
     public static void main(String... args) {
-        CommandLineParser commandLineParser = new CommandLineParser();
-        commandLineParser.run();
+        new CommandLine(new CommandLineParser()).execute(args);
         setLogConfig();
         GameManager gameManager = new GameManager(nbRandomPlayer, nbDumbPlayer, nbSmartPlayer);
         LOG.severe("Starting program...");
-        gameManager.playNTime(1, true);
+        gameManager.playNTime(100, true);
     }
 
     public static void setLogConfig(){
