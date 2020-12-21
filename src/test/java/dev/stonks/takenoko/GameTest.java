@@ -7,6 +7,7 @@ import dev.stonks.takenoko.gameManagement.Game;
 import dev.stonks.takenoko.gameManagement.GameResults;
 import dev.stonks.takenoko.map.IllegalPlacementException;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -24,8 +25,8 @@ public class GameTest {
     static ArrayList<Player> players;
     static Game game;
 
-    @BeforeAll
-    static void createAGame(){
+    @BeforeEach
+    void createAGame(){
         players = new ArrayList<>();
         players.add(new RandomPlayer(0));
         players.add(new RandomPlayer(1));
@@ -87,15 +88,4 @@ public class GameTest {
         assertEquals(expected, results);
         assertNotEquals(initialResults, results);
     }
-
-    /*
-    @Test
-    void verificationOfReset() {
-        Game expected = new Game(1, players);
-        assertEquals(expected,game);
-        game.play();
-        expected.gamePlayersResults.addAll(game.gamePlayersResults);
-        game.resetGame();
-        assertEquals(expected,game);;
-    }*/
 }
