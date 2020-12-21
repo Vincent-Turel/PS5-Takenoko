@@ -6,7 +6,6 @@ import dev.stonks.takenoko.objective.*;
 import dev.stonks.takenoko.pawn.Pawn;
 import dev.stonks.takenoko.gameManagement.Action;
 import java.util.*;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 /**
@@ -15,15 +14,14 @@ import java.util.stream.Collectors;
  * @see Player
  */
 public class DumbPlayer extends Player {
-    private final static Logger LOG = Logger.getLogger(DumbPlayer.class.getSimpleName());
 
-    private List<Optional<Integer>> chosenAction;
-    private List<Optional<Integer>> chosenOptionalAction;
+    private List<Integer> chosenAction;
+    private List<Integer> chosenOptionalAction;
 
     public DumbPlayer(int id) {
         super(id);
-        this.chosenAction = new ArrayList<>(Arrays.asList(Optional.of(0), Optional.empty()));
-        this.chosenOptionalAction = new ArrayList<>(Arrays.asList(Optional.of(0), Optional.empty()));
+        this.chosenAction = new ArrayList<>(Arrays.asList(0, null));
+        this.chosenOptionalAction = new ArrayList<>(Arrays.asList(0, null));
         this.playerType = PlayerType.DumbPlayer;
     }
 
@@ -39,11 +37,7 @@ public class DumbPlayer extends Player {
                     for (int i = 0;i < possiblePandaPlacements.size();i++){
                         Map usedCloneMap = new Map(currentMapState);
                         usedCloneMap.getPanda().moveToAndAct(possiblePandaPlacements.get(i));
-                        updateChosenAction(
-                                Optional.of(checkObjectives(this, usedCloneMap)),
-                                Optional .of(action.ordinal()),
-                                Optional.of(i),
-                                Optional.empty());
+                        updateChosenAction(checkObjectives(this, usedCloneMap), action.ordinal(), i, null);
                     }
                     break;
                 case MoveGardener:
@@ -51,11 +45,7 @@ public class DumbPlayer extends Player {
                     for (int i = 0;i < possibleGardenerPlacements.size();i++){
                         Map usedCloneMap = new Map(currentMapState);
                         usedCloneMap.getGardener().moveToAndAct(possibleGardenerPlacements.get(i), usedCloneMap);
-                        updateChosenAction(
-                                Optional.of(checkObjectives(this, usedCloneMap)),
-                                Optional .of(action.ordinal()),
-                                Optional.of(i),
-                                Optional.empty());
+                        updateChosenAction(checkObjectives(this, usedCloneMap), action.ordinal(), i, null);
                     }
                     break;
                 case PutTile:
@@ -69,11 +59,7 @@ public class DumbPlayer extends Player {
                                 e.printStackTrace();
                                 System.exit(1);
                             }
-                            updateChosenAction(
-                                    Optional.of(checkObjectives(this, usedCloneMap)),
-                                    Optional .of(action.ordinal()),
-                                    Optional.of(i),
-                                    Optional.of(j));
+                            updateChosenAction(checkObjectives(this, usedCloneMap), action.ordinal(), i, j);
                         }
                     }
                     break;
@@ -83,8 +69,8 @@ public class DumbPlayer extends Player {
         }
     }
 
-    private void updateChosenAction(Optional<Integer> checkObjectives, Optional<Integer> actionOrdinal, Optional<Integer> i, Optional<Integer> kind) {
-        if (checkObjectives.get() > chosenAction.get(0).get()) {
+    private void updateChosenAction(Integer checkObjectives, Integer actionOrdinal, Integer i, Integer kind) {
+        if (checkObjectives > chosenAction.get(0)) {
             this.chosenAction = new ArrayList<>(Arrays.asList(checkObjectives, actionOrdinal, i, kind));
         }
     }
@@ -101,12 +87,12 @@ public class DumbPlayer extends Player {
                 e.printStackTrace();
                 System.exit(1);
             }
-            updateOptionalChosenAction(Optional.of(checkObjectives(this, usedCloneMap)), Optional.of(i));
+            updateOptionalChosenAction(checkObjectives(this, usedCloneMap), i);
         }
     }
 
-    private void updateOptionalChosenAction(Optional<Integer> checkObjectives, Optional<Integer> i) {
-        if (checkObjectives.get() > chosenAction.get(0).get()) {
+    private void updateOptionalChosenAction(Integer checkObjectives, Integer i) {
+        if (checkObjectives > chosenAction.get(0)) {
             this.chosenOptionalAction = new ArrayList<>(Arrays.asList(checkObjectives, i));
         }
     }
@@ -123,8 +109,8 @@ public class DumbPlayer extends Player {
         this.currentMapState = map;
         resetAction(chosenAction);
         explore(possibleAction);
-        if (chosenAction.get(0).orElseThrow(NoSuchElementException::new) > 1)
-            return Action.values()[chosenAction.get(1).orElseThrow(NoSuchElementException::new)];
+        if (chosenAction.get(0) > 1)
+            return Action.values()[chosenAction.get(1)];
         if (possibleAction.contains(Action.DrawObjective))
             return Action.DrawObjective;
         if (possibleAction.contains(Action.DrawIrrigation)){
@@ -136,9 +122,9 @@ public class DumbPlayer extends Player {
         return possibleAction.get(random.nextInt(possibleAction.size()));
     }
 
-    private void resetAction(List<Optional<Integer>> action) {
-        action.set(0, Optional.of(0));
-        action.set(1, Optional.empty());
+    private void resetAction(List<Integer> action) {
+        action.set(0, 0);
+        action.set(1, null);
     }
 
     /**
@@ -191,11 +177,11 @@ public class DumbPlayer extends Player {
         AbstractTile chosenTile = getRandomInCollection(tiles);
         Coordinate chosenCoordinate = getRandomInCollection(tilePlacements);
 
-        if (chosenAction.get(0).orElseThrow(NoSuchElementException::new) > 0) {
-            chosenCoordinate = new ArrayList<>(tilePlacements).get(chosenAction.get(2).orElseThrow(NoSuchElementException::new));
+        if (chosenAction.get(0) > 0) {
+            chosenCoordinate = new ArrayList<>(tilePlacements).get(chosenAction.get(2));
 
             var sortedList = tiles.stream()
-                    .filter(x -> x.getKind() == TileKind.values()[chosenAction.get(3).orElseThrow(NoSuchElementException::new)])
+                    .filter(x -> x.getKind() == TileKind.values()[chosenAction.get(3)])
                     .sorted(Comparator.comparingInt(x -> x.getImprovement().ordinal()))
                     .collect(Collectors.toList());
 
@@ -218,10 +204,10 @@ public class DumbPlayer extends Player {
         if (possiblePawnPlacements.size() < 1)
             throw new IllegalStateException("This action shouldn't be possible if there the pawn can't move anywhere");
 
-        if (chosenAction.get(0).orElseThrow(NoSuchElementException::new) == 0)
+        if (chosenAction.get(0) == 0)
             return getRandomInCollection(possiblePawnPlacements);
 
-        return possiblePawnPlacements.get(chosenAction.get(2).orElseThrow(NoSuchElementException::new));
+        return possiblePawnPlacements.get(chosenAction.get(2));
     }
 
     /**
@@ -239,7 +225,7 @@ public class DumbPlayer extends Player {
         if (irrigations.size() > 0 && new ArrayList<>(currentMapState.getIrrigationPlacements()).size() > 0){
             resetAction(chosenOptionalAction);
             explore_irrigations();
-            if (chosenOptionalAction.get(0).orElseThrow(NoSuchElementException::new) > 0)
+            if (chosenOptionalAction.get(0) > 0)
                 return Optional.of(Action.PutIrrigation);
             else {
                 int x = random.nextInt(2);
@@ -264,9 +250,13 @@ public class DumbPlayer extends Player {
         if (irrigationCoordinates.size() < 1)
             throw new IllegalStateException("There is nowhere I can put an irrigation");
 
+        IrrigationCoordinate chosenIrrigationCoordinate = chosenOptionalAction.get(1) != null ?
+                irrigationCoordinates.get(chosenOptionalAction.get(1)) :
+                getRandomInCollection(irrigationCoordinates);
+
         return new MultipleAnswer<>(
                 irrigations.pop(),
-                irrigationCoordinates.get(chosenOptionalAction.get(1).orElse(random.nextInt(irrigationCoordinates.size()))));
+                chosenIrrigationCoordinate);
     }
 
     @Override
@@ -293,7 +283,7 @@ public class DumbPlayer extends Player {
      * ONLY FOR TESTING
      * @return the chosen action
      */
-    public List<Optional<Integer>> getChosenAction() {
+    public List<Integer> getChosenAction() {
         return chosenAction;
     }
 
@@ -301,7 +291,7 @@ public class DumbPlayer extends Player {
      * ONLY FOR TESTING
      * @param chosenAction a fake chosen action in order to do some test.
      */
-    public void setChosenAction(List<Optional<Integer>> chosenAction) {
+    public void setChosenAction(List<Integer> chosenAction) {
         this.chosenAction = chosenAction;
     }
 }
