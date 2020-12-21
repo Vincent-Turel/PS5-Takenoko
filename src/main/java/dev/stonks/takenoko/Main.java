@@ -17,7 +17,8 @@ public class Main {
     public static final int nbSmartPlayer = 0;
 
     public static void main(String... args) {
-        new CommandLine(new CommandLineParser()).execute(args);
+        var x = new CommandLine(new CommandLineParser()).execute(args);
+        System.exit(x);
         setLogConfig();
         GameManager gameManager = new GameManager(nbRandomPlayer, nbDumbPlayer, nbSmartPlayer);
         LOG.severe("Starting program...");
