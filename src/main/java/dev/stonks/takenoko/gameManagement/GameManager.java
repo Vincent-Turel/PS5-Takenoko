@@ -2,12 +2,12 @@ package dev.stonks.takenoko.gameManagement;
 
 import dev.stonks.takenoko.bot.DumbPlayer;
 import dev.stonks.takenoko.bot.Player;
+import dev.stonks.takenoko.bot.Player.PlayerType;
 import dev.stonks.takenoko.bot.RandomPlayer;
 import dev.stonks.takenoko.bot.SmartPlayer;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
@@ -46,7 +46,7 @@ public class GameManager {
      * Create all the players for the simulation
      * @return an arraysList of all the players
      */
-    private ArrayList<Player> clonePlayers() {
+    private ArrayList<Player> createPlayers() {
         ArrayList<Player> players= new ArrayList<>();
         this.players.forEach(player -> {
             switch (player.getPlayerType()) {
@@ -76,13 +76,13 @@ public class GameManager {
         AtomicInteger count = new AtomicInteger(0);
         if (!sequential) {
             updateProgressBar(n, 0);
-            IntStream.range(0, n).parallel().mapToObj(x -> new Game(clonePlayers())).forEach(game -> {
+            IntStream.range(0, n).parallel().mapToObj(x -> new Game(createPlayers())).forEach(game -> {
                 simulate(game);
                 updateProgressBar(n, count.incrementAndGet());
             });
             System.out.print("\n");
         } else {
-            IntStream.range(0, n).sequential().mapToObj(x -> new Game(clonePlayers())).forEach(game -> {
+            IntStream.range(0, n).sequential().mapToObj(x -> new Game(createPlayers())).forEach(game -> {
                 LOG.severe("Starting game n°" + count.incrementAndGet());
                 simulate(game);
             });
@@ -210,12 +210,7 @@ public class GameManager {
      * @param id         the player's id
      * @param playerType the player's type
      */
-    private void displayWhoItIs(int id, Player.PlayerType playerType) {
-        int deepness = -1;
-        if (playerType == Player.PlayerType.SmartPlayer) {
-            SmartPlayer smartPlayer = (SmartPlayer) players.stream().filter(player -> player.getId() == id).findAny().orElseThrow(NoSuchElementException::new);
-            deepness = smartPlayer.getDEEPNESS();
-        }
-        System.out.println("Bot n°" + id + " - IA level : " + playerType + (deepness == -1 ? "" : " - Deepness : " + deepness));
+    private void displayWhoItIs(int id, PlayerType playerType) {
+        System.out.println("Bot n°" + id + " - IA level : " + playerType);
     }
 }

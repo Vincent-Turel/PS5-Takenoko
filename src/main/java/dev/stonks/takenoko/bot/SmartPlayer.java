@@ -15,8 +15,8 @@ import java.util.stream.Collectors;
  *
  * @see Player
  */
-public class SmartPlayer extends Player {
-    private int DEEPNESS = 2;
+public class SmartPlayer extends Player implements Cloneable{
+
     private List<ArrayList<Integer>> res;
 
     public SmartPlayer(int id) {
@@ -133,7 +133,7 @@ public class SmartPlayer extends Player {
         resetResScore();
 
         for (Action action : possibleAction) {
-            explore(action, currentMapState, 1, DEEPNESS, new ArrayList<>());
+            explore(action, currentMapState, 1, 2, new ArrayList<>());
         }
 
         if (possibleAction.contains(Action.DrawObjective))
@@ -316,13 +316,5 @@ public class SmartPlayer extends Player {
      */
     public void setChosenAction(List<ArrayList<Integer>> res) {
         this.res = res;
-    }
-
-    /**
-     * Get the deepness at which this player look for best move.
-     * @return DEEPNESS an int
-     */
-    public int getDEEPNESS() {
-        return DEEPNESS;
     }
 }

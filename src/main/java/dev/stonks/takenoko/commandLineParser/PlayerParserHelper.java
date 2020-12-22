@@ -9,12 +9,18 @@ import picocli.CommandLine;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+/**
+ * This class aims to give to the commandLineParser
+ * a list of candidates and associated conveter
+ * for the player parameters.
+ */
 class PlayerParserHelper extends ArrayList<String> implements CommandLine.ITypeConverter<Player> {
-    private static int countId = 0;
+    private static int countId = 1;
 
     PlayerParserHelper(){
         super(Arrays.asList("random", "dumb", "smart"));
     }
+
     @Override
     public Player convert(String s) {
         switch (s) {
