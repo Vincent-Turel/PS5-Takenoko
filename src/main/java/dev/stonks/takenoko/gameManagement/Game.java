@@ -1,5 +1,6 @@
 package dev.stonks.takenoko.gameManagement;
 
+import dev.stonks.takenoko.bot.MultipleAnswer;
 import dev.stonks.takenoko.bot.Player;
 import dev.stonks.takenoko.map.*;
 import dev.stonks.takenoko.map.Map;
@@ -14,7 +15,7 @@ import dev.stonks.takenoko.weather.WeatherKind;
 
 import java.util.*;
 import java.util.logging.Logger;
-import java.util.stream.Stream;
+import java.util.stream.IntStream;
 
 /**
  * Represents a game.
@@ -28,23 +29,20 @@ import java.util.stream.Stream;
  */
 public class Game {
     private final static Logger LOG = Logger.getLogger(Game.class.getSimpleName());
-    public static final int nbObjectivesToWIn = 9;
-    dev.stonks.takenoko.map.Map map;
-    List<AbstractTile> tileDeck;
-    ArrayList<AbstractTile> placedTileDeck = new ArrayList<>();
-    Stack<AbstractIrrigation> irrigationDeck;
-    Stack<AbstractIrrigation> placedIrrigationsDeck = new Stack<>();
-    ArrayList<Player> players;
-    ArrayList<PatternObjective> tileObjectives;
-    ArrayList<PandaObjective> pandaObjectives;
-    ArrayList<GardenerObjective> gardenerObjectives;
-    Set<MatchResult> patternMatchs;
-    Objective emperor;
-    ArrayList<Objective> achievedObjectives;
-    Random random;
-    Weather gameWeather;
+    private final int nbObjectivesToWIn;
+    private final dev.stonks.takenoko.map.Map map;
+    private final ArrayList<Player> players;
+    private final Weather gameWeather;
+    private List<AbstractTile> tileDeck;
+    private ArrayList<PatternObjective> tileObjectives;
+    private Stack<AbstractIrrigation> irrigationDeck;
+    private final ImprovementDeck improvementDeck;
+    private ArrayList<PandaObjective> pandaObjectives;
+    private ArrayList<GardenerObjective> gardenerObjectives;
+    private Set<MatchResult> patternMatchs;
+    private Objective emperor;
+    private final Random random;
     public ArrayList<GameResults> gamePlayersResults;
-    private ImprovementDeck improvementDeck;
 
 
     public Game(ArrayList<Player> players) {
@@ -55,12 +53,11 @@ public class Game {
         gameWeather = initialiseWeather();
         patternMatchs = new HashSet<>();
         this.players = players;
-        achievedObjectives = new ArrayList<>();
         random = new Random();
         gamePlayersResults = new ArrayList<>();
         improvementDeck = new ImprovementDeck();
+        nbObjectivesToWIn = players.size() == 2 ? 9 : players.size() == 3 ? 8 : 7;
     }
-
 
     /**
      * Initialise a deck of irrigations (the irrigations players will draw)
@@ -116,9 +113,7 @@ public class Game {
      * Update the state of the weather before the round of all player
      * @param weather -> current weather
      * @param turn -> current game turn
-     * @return weather now update for the player turn !
      */
-
     private void updateGameWeather(Weather weather, int turn){
         if(turn==1){
             LOG.info("No weather for the first turn !");
@@ -130,7 +125,6 @@ public class Game {
         weather.upDateWeather();
         LOG.info("Weather for this turn : "+weather.getCondition().toString());
     }
-
 
     public void play() {
         int gameTurn = 1;
@@ -176,10 +170,7 @@ public class Game {
                                 }
                                 break;*/
                             case Sun:
-                                nbActions = 3;
-                                if(possibleActions.size()<3){
-                                    nbActions = possibleActions.size();
-                                }
+                                nbActions = Math.min(possibleActions.size(), 3);
                                 effectDone = true;
                                 break;
                             case Rain:
@@ -204,7 +195,7 @@ public class Game {
                     }
 
                     for (int j = 0; j < nbActions; j++) {
-                        if (gameTurn > 5000) {
+                        if (gameTurn > 2000) {
                             LOG.info("Party ended due to player playing more than 5000 actions (endless game)\n");
                             fillTheFinalScore();
                             return;
@@ -227,29 +218,19 @@ public class Game {
     }
 
     private void playerPlay(Player player, ArrayList<Action> possibleActions) {
-        Action chosenAction = player.decide(possibleActions, map);
+        Action chosenAction = player.decide(new ArrayList<>(possibleActions), map);
         LOG.info("Player n°" + player.getId() + " has chosen this action : " + chosenAction.toString());
         if(gameWeather.getCondition() != WeatherKind.Wind)
             possibleActions.remove(chosenAction);
         switch (chosenAction) {
             case PutTile:
                 ArrayList<AbstractTile> possiblesTiles = new ArrayList<>(3);
-                int index;
-                int size = 3;
-                if (size > tileDeck.size()) {
-                    size = tileDeck.size();
-                }
-                for (int i = 0; i < size; i++) {
-                    index = random.nextInt(tileDeck.size());
-                    AbstractTile aTile = tileDeck.remove(index);
-                    possiblesTiles.add(aTile);
-                }
-                placedTileDeck.addAll(possiblesTiles);
-                Tile chosenTile = player.putTile(possiblesTiles);
-                tileDeck.addAll(possiblesTiles);
-                placedTileDeck.removeAll(possiblesTiles);
+                IntStream.range(0, Math.min(3, tileDeck.size())).forEach(i -> possiblesTiles.add(tileDeck.get(random.nextInt(tileDeck.size()))));
+                MultipleAnswer<AbstractTile, Coordinate> answer = player.putTile(possiblesTiles);
+                tileDeck.remove(answer.getT());
+
                 try {
-                    map.setTile(chosenTile);
+                    map.setTile(new Tile(answer.getT().withCoordinate(answer.getU())));
                 } catch (IllegalPlacementException e) {
                     e.printStackTrace();
                     System.exit(1);
@@ -266,7 +247,6 @@ public class Game {
                 break;
             case DrawIrrigation:
                 AbstractIrrigation drawnIrrigation = irrigationDeck.pop();
-                placedIrrigationsDeck.add(drawnIrrigation);
                 player.addIrrigation(drawnIrrigation);
                 break;
             case DrawObjective:
@@ -282,17 +262,17 @@ public class Game {
                 }
                 ObjectiveKind objectiveKind = player.chooseObjectiveKind(listPossibleKind);
                 int num;
-                if ((objectiveKind == ObjectiveKind.Pattern) && (tileObjectives.size() > 0)) {
+                if (objectiveKind == ObjectiveKind.Pattern) {
                     num = random.nextInt(tileObjectives.size());
                     player.addObjectives(tileObjectives.get(num));
                     tileObjectives.remove(num);
                 }
-                if ((objectiveKind == ObjectiveKind.Panda) && (pandaObjectives.size() > 0)) {
+                if (objectiveKind == ObjectiveKind.Panda) {
                     num = random.nextInt(pandaObjectives.size());
                     player.addObjectives(pandaObjectives.get(num));
                     pandaObjectives.remove(num);
                 }
-                if((objectiveKind==ObjectiveKind.Gardener) && (gardenerObjectives.size()>0)) {
+                if(objectiveKind==ObjectiveKind.Gardener) {
                     num = random.nextInt(gardenerObjectives.size());
                     player.addObjectives(gardenerObjectives.get(num));
                     gardenerObjectives.remove(num);
@@ -303,16 +283,22 @@ public class Game {
         while ((decision = player.doYouWantToPutAnIrrigationOrPutAnAmmenagment(new Map(map))).isPresent()){
             LOG.info("Player n°" + player.getId() + " has chosen this action : " + decision.get().toString());
             if(decision.get().equals(Action.PutIrrigation)){
-                Irrigation irrigation = player.putIrrigation();
+                MultipleAnswer<AbstractIrrigation, IrrigationCoordinate> answer = player.putIrrigation();
                 try {
-                    map.setIrrigation(irrigation);
+                    map.setIrrigation(new Irrigation(answer.getT().withCoordinate(answer.getU())));
                 } catch (IllegalPlacementException e) {
                     e.printStackTrace();
                     System.exit(1);
                 }
             }
             else if (decision.get().equals(Action.PutImprovement)){
-                player.putImprovement();
+                MultipleAnswer<Tile, Improvement> answer = player.putImprovement();
+                try {
+                    answer.getT().addImprovement(answer.getU());
+                } catch (IllegalPlacementException e) {
+                    e.printStackTrace();
+                    System.exit(1);
+                }
             }
             else
                 throw new IllegalStateException("This should never happen");
@@ -365,7 +351,6 @@ public class Game {
             if (objective.getStates()) {
                 LOG.info("Player n°" + player.getId() + " has achieved a " + objective.getClass().getSimpleName());
                 player.newObjectivesAchieved(objective);
-                achievedObjectives.add(objective);
             }
         }
     }
@@ -393,7 +378,6 @@ public class Game {
     /**
      * Fill the final state of the game
      * 2 players with the same score have the same rank.
-     *
      */
     private void fillTheFinalScore() {
         int id;
@@ -424,71 +408,6 @@ public class Game {
         return gamePlayersResults;
     }
 
-    public void resetGame() throws UnsupportedOperationException{
-        gameWeather.resetWeather();
-        resetMap();
-        resetObjectives();
-        resetDecks();
-        resetPlayers();
-        resetGameResults();
-        resetImprovementDeck();
-    }
-
-    private void resetImprovementDeck() {
-        improvementDeck.reset();
-    }
-
-    private void resetDecks() {
-        tileDeck.addAll(placedTileDeck);
-        placedTileDeck.clear();
-        irrigationDeck.addAll(placedIrrigationsDeck);
-        placedIrrigationsDeck.clear();
-        patternMatchs.clear();
-    }
-
-    private void resetMap() {
-        map.reset();
-    }
-
-    private void resetPlayers(){
-        for (Player player : players) {
-            player.resetPlayer();
-        }
-    }
-
-    private void resetObjectives(){
-        Stream.concat(players.stream().map(Player::getObjectives).flatMap(Collection::stream), achievedObjectives.stream())
-                .forEach(this::reIntroduceObjective);
-
-        tileObjectives.forEach(Objective::resetObj);
-        pandaObjectives.forEach(Objective::resetObj);
-        gardenerObjectives.forEach(Objective::resetObj);
-        achievedObjectives.clear();
-    }
-
-    private void resetGameResults() {
-        for (GameResults gameResults : gamePlayersResults) {
-            gameResults.reset();
-        }
-    }
-
-    private void reIntroduceObjective(Objective objective){
-        switch (objective.getObjType()) {
-            case Pattern:
-                tileObjectives.add((PatternObjective) objective);
-                break;
-            case Panda:
-                pandaObjectives.add((PandaObjective) objective);
-                break;
-            case Gardener:
-                gardenerObjectives.add((GardenerObjective) objective);
-                break;
-            default:
-                break;
-        }
-    }
-
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -496,16 +415,13 @@ public class Game {
         Game game = (Game) o;
         return Objects.equals(map, game.map) &&
                 tileDeck.containsAll(game.tileDeck) && game.tileDeck.containsAll(tileDeck) &&
-                placedTileDeck.containsAll(game.placedTileDeck) && game.placedTileDeck.containsAll(placedTileDeck) &&
                 Objects.equals(irrigationDeck, game.irrigationDeck) &&
-                Objects.equals(placedIrrigationsDeck, game.placedIrrigationsDeck) &&
                 Objects.equals(players, game.players) &&
                 tileObjectives.containsAll(game.tileObjectives) && game.tileObjectives.containsAll(tileObjectives) &&
                 pandaObjectives.containsAll(game.pandaObjectives) && game.pandaObjectives.containsAll(pandaObjectives) &&
                 gardenerObjectives.containsAll(game.gardenerObjectives) && game.gardenerObjectives.containsAll(gardenerObjectives) &&
                 Objects.equals(patternMatchs, game.patternMatchs) &&
                 Objects.equals(emperor, game.emperor) &&
-                achievedObjectives.containsAll(game.achievedObjectives) && game.achievedObjectives.containsAll(achievedObjectives) &&
                 Objects.equals(gamePlayersResults, game.gamePlayersResults) &&
                 gameWeather.equals(game.gameWeather) &&
                 improvementDeck.equals(game.improvementDeck);
@@ -513,6 +429,6 @@ public class Game {
 
     @Override
     public int hashCode() {
-        return Objects.hash(map, tileDeck, placedTileDeck, irrigationDeck, placedIrrigationsDeck, players, tileObjectives, pandaObjectives, gardenerObjectives, patternMatchs, emperor, achievedObjectives, random, gamePlayersResults,improvementDeck);
+        return Objects.hash(map, tileDeck, irrigationDeck, players, tileObjectives, pandaObjectives, gardenerObjectives, patternMatchs, emperor, random, gamePlayersResults,improvementDeck);
     }
 }

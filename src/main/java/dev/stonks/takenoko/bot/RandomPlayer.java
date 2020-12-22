@@ -7,7 +7,6 @@ import dev.stonks.takenoko.gameManagement.Action;
 import dev.stonks.takenoko.objective.ObjectiveKind;
 
 import java.util.*;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 /**
@@ -32,7 +31,7 @@ public class RandomPlayer extends Player{
         if (possibleAction.size() < 1)
             throw new IllegalStateException("There should always have possible actions");
         currentMapState = map;
-        return possibleAction.get(random.nextInt(possibleAction.size()));
+        return getRandomInCollection(possibleAction);
     }
 
     /**
@@ -45,19 +44,24 @@ public class RandomPlayer extends Player{
         if(listPossibleKind.size()<1){
             throw new IllegalStateException("There is no more objectives");
         }
-        return listPossibleKind.get(random.nextInt(listPossibleKind.size()));
+        return getRandomInCollection(listPossibleKind);
     }
 
+    /**
+     * This method return the tile where the player want to grow bamboo
+     * and return an optional empty if he dosen't want or if he can't
+     * @param map the current map
+     * @return an optional of a tile
+     */
     @Override
     public Optional<Tile> chooseTileToGrow(Map map) {
         currentMapState = map;
         List<Tile> tiles = Arrays.stream(currentMapState.getTiles())
                 .flatMap(Optional::stream)
                 .filter(tile -> (tile.isIrrigated()&& !tile.isInitial())).collect(Collectors.toList());
-        boolean aIrrigatedTileExist = tiles.stream().count() > 0;
-        if(aIrrigatedTileExist){
-            int index = random.nextInt(tiles.size());
-            return Optional.of(tiles.get(index));
+
+        if(tiles.size() > 0) {
+            return Optional.of(getRandomInCollection(tiles));
         }
         return Optional.empty();
     }
@@ -67,17 +71,18 @@ public class RandomPlayer extends Player{
      * @return The coordinate and the tile the player has chosen
      */
     @Override
-    public Tile putTile(ArrayList<AbstractTile> tiles) {
-        ArrayList<Coordinate> possiblePlacements = new ArrayList<>(this.currentMapState.getTilePlacements());
+    public MultipleAnswer<AbstractTile, Coordinate> putTile(ArrayList<AbstractTile> tiles) {
+        Set<Coordinate> possiblePlacements = this.currentMapState.getTilePlacements();
 
         if (tiles.size() < 1)
             throw new IllegalStateException("This action shouldn't be possible if there is no tiles remaining");
         if (possiblePlacements.size() < 1)
             throw new IllegalStateException("There should always have a place for a new tile");
 
-        AbstractTile chosenAbstractTile = tiles.remove(random.nextInt(tiles.size()));
+        AbstractTile chosenAbstractTile = getRandomInCollection(tiles);
+        Coordinate chosenCoordinate = getRandomInCollection(possiblePlacements);
 
-        return chosenAbstractTile.withCoordinate(possiblePlacements.get(random.nextInt(possiblePlacements.size())));
+        return new MultipleAnswer<>(chosenAbstractTile, chosenCoordinate);
     }
 
     /**
@@ -87,10 +92,12 @@ public class RandomPlayer extends Player{
      */
     @Override
     public Tile choseWherePawnShouldGo(Pawn pawn) {
-        var possiblePawnPlacements = currentMapState.getPossiblePawnPlacements(pawn);
+        Set<Tile> possiblePawnPlacements = currentMapState.getPossiblePawnPlacements(pawn);
+
         if (possiblePawnPlacements.size() < 1)
             throw new IllegalStateException("This action shouldn't be possible if there the panda can't move anywhere");
-        return new ArrayList<>(possiblePawnPlacements).get(random.nextInt(possiblePawnPlacements.size()));
+
+        return getRandomInCollection(possiblePawnPlacements);
     }
 
     /**
@@ -102,18 +109,17 @@ public class RandomPlayer extends Player{
     @Override
     public Optional<Action> doYouWantToPutAnIrrigationOrPutAnAmmenagment(Map map) {
         this.currentMapState = map;
-        if (irrigations.size() > 0 && new ArrayList<>(currentMapState.getIrrigationPlacements()).size() > 0){
-            if (improvements.size() > 0 && new HashSet<>(currentMapState.getImprovementPlacements()).size() > 0){
-                int x = random.nextInt(3);
+        int x = random.nextInt(2);
+        if (irrigations.size() > 0 && currentMapState.getIrrigationPlacements().size() > 0){
+            if (improvements.size() > 0 && currentMapState.getImprovementPlacements().size() > 0){
+                x = random.nextInt(3);
                 return x ==  0 ? Optional.of(Action.PutIrrigation) : x == 1 ? Optional.of(Action.PutImprovement) : Optional.empty();
             }
             else {
-                int x = random.nextInt(2);
                 return x ==  0 ? Optional.of(Action.PutIrrigation) : Optional.empty();
             }
         }
-        else if (improvements.size() > 0 && new HashSet<>(currentMapState.getImprovementPlacements()).size() > 0){
-            int x = random.nextInt(2);
+        else if (improvements.size() > 0 && currentMapState.getImprovementPlacements().size() > 0){
             return x ==  0 ? Optional.of(Action.PutImprovement) : Optional.empty();
         }
         else
@@ -125,24 +131,30 @@ public class RandomPlayer extends Player{
      * @return the an irrigation
      */
     @Override
-    public Irrigation putIrrigation() {
+    public MultipleAnswer<AbstractIrrigation, IrrigationCoordinate> putIrrigation() {
+        Set<IrrigationCoordinate> irrigationCoordinates = currentMapState.getIrrigationPlacements();
+
         if (irrigations.size() < 1)
             throw new IllegalStateException("This action shouldn't be possible");
-        List<IrrigationCoordinate> irrigationCoordinates = new ArrayList<>(currentMapState.getIrrigationPlacements());
-        return irrigations.pop().withCoordinate(irrigationCoordinates.get(random.nextInt(irrigationCoordinates.size())));
+        if (irrigationCoordinates.size() < 1)
+            throw new IllegalStateException("There is nowhere I can put an irrigation");
+
+        return new MultipleAnswer<>(irrigations.pop(), getRandomInCollection(irrigationCoordinates));
     }
 
     @Override
-    public void putImprovement() {
+    public MultipleAnswer<Tile, Improvement> putImprovement() {
+        Set<Tile> improvementPlacements = currentMapState.getImprovementPlacements();
+
         if (improvements.size() < 1)
             throw new IllegalStateException("This action shouldn't be possible");
-        List<Tile> improvementPlacements = new ArrayList<>(currentMapState.getImprovementPlacements());
-        Tile chosenTile = improvementPlacements.get(random.nextInt(improvementPlacements.size()));
-        try {
-            chosenTile.addImprovement(improvements.remove(random.nextInt(improvements.size())));
-        } catch (IllegalPlacementException e) {
-            e.printStackTrace();
-        }
+        if (improvementPlacements.size() < 1)
+            throw new IllegalStateException("There is nowhere I can put an irrigation");
+
+        Tile chosenTile = getRandomInCollection(improvementPlacements);
+        Improvement chosenImprovement = improvements.remove(random.nextInt(improvements.size()));
+
+        return new MultipleAnswer<>(chosenTile, chosenImprovement);
     }
 
     @Override

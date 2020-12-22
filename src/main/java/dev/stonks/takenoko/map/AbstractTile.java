@@ -76,24 +76,26 @@ public class AbstractTile {
         return new Tile(c, kind, improvement);
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) throw IllegalEqualityExceptionGenerator.create(AbstractTile.class,o.getClass());
-        AbstractTile that = (AbstractTile) o;
-        return kind == that.kind && improvement == that.improvement;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(kind, improvement);
-    }
-
     public TileKind getKind() {
         return kind;
     }
 
     public Improvement getImprovement() {
         return improvement;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof AbstractTile))
+            throw IllegalEqualityExceptionGenerator.create(AbstractTile.class, o.getClass());
+        AbstractTile that = (AbstractTile) o;
+        return getKind() == that.getKind() &&
+                getImprovement() == that.getImprovement();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getKind(), getImprovement());
     }
 }
