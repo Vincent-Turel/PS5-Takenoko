@@ -1,5 +1,8 @@
 package dev.stonks.takenoko.bot;
 
+import dev.stonks.takenoko.IllegalEqualityExceptionGenerator;
+import dev.stonks.takenoko.map.AbstractTile;
+
 import java.util.Objects;
 
 /**
@@ -36,7 +39,8 @@ public class MultipleAnswer<T, U> {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof MultipleAnswer)) return false;
+        if (!(o instanceof MultipleAnswer))
+            throw IllegalEqualityExceptionGenerator.create(MultipleAnswer.class, o.getClass());
         MultipleAnswer<?, ?> answer = (MultipleAnswer<?, ?>) o;
         return Objects.equals(getT(), answer.getT()) &&
                 Objects.equals(getU(), answer.getU());
