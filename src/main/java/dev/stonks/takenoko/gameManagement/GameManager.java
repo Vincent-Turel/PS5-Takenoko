@@ -160,7 +160,9 @@ public class GameManager {
                     }
                 }
             }
+<<<<<<< Updated upstream
             if (!isDraw) {
+            if(!isDraw && victory.isEmpty()){
                 victory = Optional.of(Boolean.TRUE);
             }
         } else {
