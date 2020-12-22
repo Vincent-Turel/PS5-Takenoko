@@ -7,10 +7,12 @@ Ce projet a pour objectif d'implémenter le jeu de plateau [Takenoko](https://ww
 Le projet commence gentiment !
 
 ## Building
-`mvn -B package --file pom.xml`
+`mvn compile assembly:single`
 
 ## Running
-`mvn exec:java`
+`java -jar target/Takenoko-0.5.0-jar-with-dependencies.jar`
+This project required parameters and is configurable.
+To see every parameters and option, run with `-h` or `--help` parameters.
 
 ## Testing
 `mvn test`
