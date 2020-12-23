@@ -8,11 +8,11 @@ import java.util.Optional;
 
 public class BambooPattern {
 
-    private TileKind color;
-    private Optional<TileKind> optionalColor1;
-    private Optional<TileKind> optionalColor2;
-    private int height;
-    private int nbBamboo;
+    private final TileKind color;
+    private final Optional<TileKind> optionalColor1;
+    private final Optional<TileKind> optionalColor2;
+    private final int height;
+    private final int nbBamboo;
 
     /**
      * Make a bamboo pattern :
@@ -76,13 +76,14 @@ public class BambooPattern {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) throw IllegalEqualityExceptionGenerator.create(BambooPattern.class,o.getClass());
+        if (!(o instanceof BambooPattern))
+            throw IllegalEqualityExceptionGenerator.create(BambooPattern.class,o.getClass());
         BambooPattern that = (BambooPattern) o;
-        return height == that.height &&
-                nbBamboo == that.nbBamboo &&
-                color == that.color &&
-                Objects.equals(optionalColor1, that.optionalColor1) &&
-                Objects.equals(optionalColor2, that.optionalColor2);
+        return getHeight() == that.getHeight() &&
+                getNbBamboo() == that.getNbBamboo() &&
+                getColor() == that.getColor() &&
+                Objects.equals(getOptionalColor1(), that.getOptionalColor1()) &&
+                Objects.equals(getOptionalColor2(), that.getOptionalColor2());
     }
 
     @Override

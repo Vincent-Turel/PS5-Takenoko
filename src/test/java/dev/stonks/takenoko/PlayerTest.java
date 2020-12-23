@@ -102,7 +102,7 @@ public class PlayerTest {
         when(map.getTilePlacements()).thenReturn(placements, placements, placements, placements2, placements2, placements2, placements, placements, placements);
 
         ArrayList<AbstractTile> tiles = new ArrayList<>(Arrays.asList(new AbstractTile(TileKind.Green),new AbstractTile(TileKind.Pink), new AbstractTile(TileKind.Pink)));
-        ArrayList<MultipleAnswer<AbstractTile, Coordinate>> res = new ArrayList<>(Arrays.asList(
+        ArrayList<MultipleAnswer<AbstractTile, Coordinate, ?>> res = new ArrayList<>(Arrays.asList(
                 new MultipleAnswer<>(tiles.get(0), placementsList.get(0)),
                 new MultipleAnswer<>(tiles.get(0), placementsList.get(1)),
                 new MultipleAnswer<>(tiles.get(1), placementsList.get(0)),
@@ -176,7 +176,7 @@ public class PlayerTest {
 
         //Tile t = map.addNeighborOf(TileKind.Green, map.initialTile().withDirection(Direction.South));
 
-        map.getTile(map.initialTile().getCoordinate().moveWith(Direction.South)).get().deirrigate();
+        map.getTile(map.initialTile().getCoordinate().moveWith(Direction.South)).get().setIrrigated(false);
 
         dumbPlayer.decide(new ArrayList<>(Arrays.asList(Action.values())), map);
         smartPlayer.decide(new ArrayList<>(Arrays.asList(Action.values())), map);
@@ -287,7 +287,7 @@ public class PlayerTest {
 
         randomPlayer.addIrrigation(new AbstractIrrigation());
         assertEquals(1, randomPlayer.getIrrigations().size());
-        MultipleAnswer<AbstractIrrigation, IrrigationCoordinate> answer = randomPlayer.putIrrigation();
+        MultipleAnswer<AbstractIrrigation, IrrigationCoordinate, ?> answer = randomPlayer.putIrrigation();
         Irrigation irrigation = answer.getT().withCoordinate(answer.getU());
         assertEquals(0, randomPlayer.getIrrigations().size());
         assertTrue(map.getIrrigationPlacements().contains(irrigation.getCoordinate()));
@@ -295,7 +295,7 @@ public class PlayerTest {
 
         dumbPlayer.addIrrigation(new AbstractIrrigation());
         assertEquals(1, dumbPlayer.getIrrigations().size());
-        MultipleAnswer<AbstractIrrigation, IrrigationCoordinate> answer2 = dumbPlayer.putIrrigation();
+        MultipleAnswer<AbstractIrrigation, IrrigationCoordinate, ?> answer2 = dumbPlayer.putIrrigation();
         Irrigation irrigation2 = answer2.getT().withCoordinate(answer2.getU());
         assertEquals(0, dumbPlayer.getIrrigations().size());
         assertTrue(map.getIrrigationPlacements().contains(irrigation2.getCoordinate()));
@@ -303,7 +303,7 @@ public class PlayerTest {
 
         smartPlayer.addIrrigation(new AbstractIrrigation());
         assertEquals(1, smartPlayer.getIrrigations().size());
-        MultipleAnswer<AbstractIrrigation, IrrigationCoordinate> answer3 = smartPlayer.putIrrigation();
+        MultipleAnswer<AbstractIrrigation, IrrigationCoordinate, ?> answer3 = smartPlayer.putIrrigation();
         Irrigation irrigation3 = answer3.getT().withCoordinate(answer3.getU());
         assertEquals(0, smartPlayer.getIrrigations().size());
         assertTrue(map.getIrrigationPlacements().contains(irrigation3.getCoordinate()));

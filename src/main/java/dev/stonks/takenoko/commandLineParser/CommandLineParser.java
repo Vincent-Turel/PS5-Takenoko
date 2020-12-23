@@ -1,8 +1,13 @@
 package dev.stonks.takenoko.commandLineParser;
 
+import dev.stonks.takenoko.bot.DumbPlayer;
 import dev.stonks.takenoko.bot.Player;
+import dev.stonks.takenoko.bot.RandomPlayer;
+import dev.stonks.takenoko.bot.SmartPlayer;
 import dev.stonks.takenoko.gameManagement.GameManager;
 import picocli.CommandLine;
+
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
@@ -25,7 +30,7 @@ public class CommandLineParser implements Runnable {
             converter = PlayerParserHelper.class,
             arity = "2..4"
     )
-    private Player[] players;
+    private Player.PlayerType[] playersType;
 
     @CommandLine.Option(
             required = true,
@@ -42,6 +47,19 @@ public class CommandLineParser implements Runnable {
     )
     private Boolean sequential;
 
+    @CommandLine.Option(
+            names = {"-f", "--full-result"},
+            description = {"Weither or not the result should be full written.", "(default: ${DEFAULT-VALUE})"},
+            defaultValue = "false"
+    )
+    private Boolean fullResult;
+
+    @CommandLine.Option(
+            names = {"-u", "--ugly"},
+            description = {"Weither or not the result should be ugly.", "(default: ${DEFAULT-VALUE})"},
+            defaultValue = "false"
+    )
+    private Boolean ugly;
 
     @CommandLine.Option(
             required = true,
@@ -53,15 +71,22 @@ public class CommandLineParser implements Runnable {
     )
     private Level level;
 
+    private static int count = 1;
+
     @Override
     public void run() {
-        System.out.println("Welcome in the famous game of takenoko !");
+        System.out.println("\nWelcome in the famous game of Takenoko !\n");
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
         setLogConfig(level);
 
-        GameManager gameManager = new GameManager(List.of(players));
+        GameManager gameManager = new GameManager(getPlayers(), fullResult, ugly);
 
-        LOG.severe("Starting program...");
+        LOG.severe("Starting program...\n");
         gameManager.playNTime(numGames, sequential);
     }
 
@@ -72,5 +97,28 @@ public class CommandLineParser implements Runnable {
     public static void setLogConfig(Level level) {
         System.setProperty("java.util.logging.SimpleFormatter.format", "%1$tF %1$tT - [%4$s] %3$s : %5$s%n");
         Arrays.stream(LogManager.getLogManager().getLogger("").getHandlers()).forEach(h -> h.setLevel(level));
+    }
+
+    private List<Player> getPlayers(){
+        List<Player> players= new ArrayList<>();
+         Arrays.stream(playersType).forEach(playerType -> {
+            switch (playerType) {
+                case RandomPlayer:
+                    players.add(new RandomPlayer(count++));
+                    break;
+                case DumbPlayer:
+                    players.add(new DumbPlayer(count++));
+                    break;
+                case SmartPlayer:
+                    players.add(new SmartPlayer(count++));
+                    break;
+                case SmartPlayer3:
+                    players.add(new SmartPlayer(count++, 3));
+                    break;
+                case SmartPlayer4:
+                    players.add(new SmartPlayer(count++, 4));
+            }
+        });
+         return players;
     }
 }
