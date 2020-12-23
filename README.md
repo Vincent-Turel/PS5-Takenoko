@@ -4,13 +4,15 @@
 Ce projet a pour objectif d'implémenter le jeu de plateau [Takenoko](https://www.trictrac.net/jeu-de-societe/takenoko) et d'y faire s'affronter différents bots.
 
 ## Progression
-Le projet commence gentiment !
+Le projet touche à sa fin !
 
 ## Building
-`mvn -B package --file pom.xml`
+`mvn compile assembly:single`
 
 ## Running
-`mvn exec:java`
+`java -jar target/Takenoko-0.5.0-jar-with-dependencies.jar`  
+This project requires parameters and is configurable.
+To see every parameters and option, run with `-h` or `--help` parameters.
 
 ## Testing
 `mvn test`
