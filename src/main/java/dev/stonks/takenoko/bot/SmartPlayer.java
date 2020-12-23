@@ -359,6 +359,7 @@ public class SmartPlayer extends Player implements Cloneable {
 
         return new MultipleAnswer<>(
                 irrigations.pop(),
+
                 irrigationCoordinates.get(getResAction().get(1)));
     }
 

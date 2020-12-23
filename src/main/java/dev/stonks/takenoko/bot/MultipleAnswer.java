@@ -60,11 +60,12 @@ public class MultipleAnswer<T, U, V> {
             throw IllegalEqualityExceptionGenerator.create(MultipleAnswer.class, o.getClass());
         MultipleAnswer<?, ?, ?> answer = (MultipleAnswer<?, ?, ?>) o;
         return Objects.equals(getT(), answer.getT()) &&
-                Objects.equals(getU(), answer.getU());
+                Objects.equals(getU(), answer.getU()) &&
+                Objects.equals(getV(), answer.getV());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getT(), getU());
+        return Objects.hash(getT(), getU(), getV());
     }
 }
