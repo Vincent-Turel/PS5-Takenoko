@@ -8,6 +8,9 @@ import dev.stonks.takenoko.gameManagement.GameManager;
 import picocli.CommandLine;
 
 import java.util.ArrayList;
+import dev.stonks.takenoko.bot.Player;
+import dev.stonks.takenoko.gameManagement.GameManager;
+import picocli.CommandLine;
 import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
@@ -87,6 +90,7 @@ public class CommandLineParser implements Runnable {
         GameManager gameManager = new GameManager(getPlayers(), fullResult, ugly);
 
         LOG.severe("Starting program...\n");
+
         gameManager.playNTime(numGames, sequential);
     }
 

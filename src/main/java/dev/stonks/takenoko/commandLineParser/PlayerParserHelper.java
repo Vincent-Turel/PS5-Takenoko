@@ -1,5 +1,9 @@
 package dev.stonks.takenoko.commandLineParser;
 
+import dev.stonks.takenoko.bot.DumbPlayer;
+import dev.stonks.takenoko.bot.Player;
+import dev.stonks.takenoko.bot.RandomPlayer;
+import dev.stonks.takenoko.bot.SmartPlayer;
 import picocli.CommandLine;
 
 import java.util.ArrayList;

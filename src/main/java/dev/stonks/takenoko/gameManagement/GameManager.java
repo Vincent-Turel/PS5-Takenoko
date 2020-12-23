@@ -77,7 +77,7 @@ public class GameManager {
      * Play n time the same game with the same bots,
      * and display statistics at the end.
      *
-     * @param n          the numnber of games that are going to be played
+     * @param n the numnber of games that are going to be played
      * @param sequential a boolean which indicates weither or not the game should be played in parallel.
      */
     public void playNTime(int n, boolean sequential) {
