@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
  *
  * @see Player
  */
-public class SmartPlayer extends Player {
+public class SmartPlayer extends Player implements Cloneable{
 
     private List<ArrayList<Integer>> res;
 
@@ -131,6 +131,7 @@ public class SmartPlayer extends Player {
 
         this.currentMapState = map;
         resetResScore();
+
         for (Action action : possibleAction) {
             explore(action, currentMapState, 1, 2, new ArrayList<>());
         }
