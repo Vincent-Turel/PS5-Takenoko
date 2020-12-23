@@ -1,5 +1,8 @@
 package dev.stonks.takenoko.weather;
 
+import dev.stonks.takenoko.IllegalEqualityExceptionGenerator;
+import dev.stonks.takenoko.map.AbstractTile;
+
 import java.util.Objects;
 import java.util.Random;
 
@@ -89,7 +92,8 @@ public class Weather {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Weather)) return false;
+        if (!(o instanceof Weather))
+            throw IllegalEqualityExceptionGenerator.create(Weather.class, o.getClass());
         Weather weather = (Weather) o;
         return state == weather.state &&
                 weatherCondition == weather.weatherCondition;

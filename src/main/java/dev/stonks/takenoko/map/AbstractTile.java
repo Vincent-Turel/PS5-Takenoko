@@ -88,7 +88,7 @@ public class AbstractTile {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof AbstractTile))
-            throw IllegalEqualityExceptionGenerator.create(Coordinate.class, o.getClass());
+            throw IllegalEqualityExceptionGenerator.create(AbstractTile.class, o.getClass());
         AbstractTile that = (AbstractTile) o;
         return getKind() == that.getKind() &&
                 getImprovement() == that.getImprovement();

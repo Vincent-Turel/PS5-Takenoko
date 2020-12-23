@@ -53,7 +53,7 @@ public class MultipleAnswer<T, U, V> {
         return v;
     }
 
-    @Override
+   @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof MultipleAnswer))
