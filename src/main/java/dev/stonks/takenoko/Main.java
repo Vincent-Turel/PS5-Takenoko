@@ -5,7 +5,8 @@ import picocli.CommandLine;
 
 public class Main {
     public static void main(String... args) {
-        //new CommandLine(new CommandLineParser()).execute("random", "dumb", "-n", "500", "-l", "severe");
+
+        //new CommandLine(new CommandLineParser()).execute("dumb", "random", "-n", "25");
         new CommandLine(new CommandLineParser()).execute(args);
     }
 }

@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 /**
  * This player plays accordingly to some rules that we thought were the best
  * and chose an action by trying them all and getting the best one.
+ *
  * @see Player
  */
 public class DumbPlayer extends Player {
@@ -148,25 +149,12 @@ public class DumbPlayer extends Player {
         return Collections.min(nbObjective.entrySet(), java.util.Map.Entry.comparingByValue()).getKey();
     }
 
-    @Override
-    public Optional<Tile> chooseTileToGrow(Map map) {
-        currentMapState = map;
-        List<Tile> tiles = Arrays.stream(currentMapState.getTiles())
-                .flatMap(Optional::stream)
-                .filter(tile -> (tile.isIrrigated()&& !tile.isInitial())).collect(Collectors.toList());
-
-        if(tiles.size() > 0) {
-            return Optional.of(getRandomInCollection(tiles));
-        }
-        return Optional.empty();
-    }
-
     /**
      * @param tiles A liste of tiles
      * @return The coordinate and the tile the player has chosen
      */
     @Override
-    public MultipleAnswer<AbstractTile, Coordinate> putTile(ArrayList<AbstractTile> tiles) {
+    public MultipleAnswer<AbstractTile, Coordinate, ?> putTile(ArrayList<AbstractTile> tiles) {
         Set<Coordinate> tilePlacements = currentMapState.getTilePlacements();
 
         if (tiles.size() < 1)
@@ -217,7 +205,7 @@ public class DumbPlayer extends Player {
      * @return an optional of an action
      */
     @Override
-    public Optional<Action> doYouWantToPutAnIrrigationOrPutAnAmmenagment(Map map) {
+    public Optional<Action> doYouWantToPutAnIrrigationOrAnImprovement(Map map) {
         this.currentMapState = map;
         if (improvements.size() > 0 && new HashSet<>(currentMapState.getImprovementPlacements()).size() > 0){
             return Optional.of(Action.PutImprovement);
@@ -242,7 +230,7 @@ public class DumbPlayer extends Player {
      * @return the an irrigation
      */
     @Override
-    public MultipleAnswer<AbstractIrrigation, IrrigationCoordinate> putIrrigation() {
+    public MultipleAnswer<AbstractIrrigation, IrrigationCoordinate, ?> putIrrigation() {
         List<IrrigationCoordinate> irrigationCoordinates = new ArrayList<>(currentMapState.getIrrigationPlacements());
 
         if (irrigations.size() < 1)
@@ -257,21 +245,6 @@ public class DumbPlayer extends Player {
         return new MultipleAnswer<>(
                 irrigations.pop(),
                 chosenIrrigationCoordinate);
-    }
-
-    @Override
-    public MultipleAnswer<Tile, Improvement> putImprovement() {
-        Set<Tile> improvementPlacements = currentMapState.getImprovementPlacements();
-
-        if (improvements.size() < 1)
-            throw new IllegalStateException("This action shouldn't be possible");
-        if (improvementPlacements.size() < 1)
-            throw new IllegalStateException("There is nowhere I can put an irrigation");
-
-        Tile chosenTile = getRandomInCollection(improvementPlacements);
-        Improvement chosenImprovement = improvements.remove(random.nextInt(improvements.size()));
-
-        return new MultipleAnswer<>(chosenTile, chosenImprovement);
     }
 
     @Override

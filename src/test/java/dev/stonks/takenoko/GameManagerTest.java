@@ -20,7 +20,7 @@ public class GameManagerTest {
     @BeforeAll
     static void initialisesGameManager(){
         Arrays.stream(LogManager.getLogManager().getLogger("").getHandlers()).forEach(h -> h.setLevel(Level.OFF));
-        gameManager = new GameManager(List.of(new RandomPlayer(0), new RandomPlayer(1)));
+        gameManager = new GameManager(List.of(new RandomPlayer(0), new RandomPlayer(1)), true,  false);
     }
 
     /*

@@ -16,7 +16,7 @@ public class MainTest {
         gameManager = new GameManager(List.of(
                 new RandomPlayer(0), new RandomPlayer(1),
                 new DumbPlayer(2), new DumbPlayer(3),
-                new SmartPlayer(4), new SmartPlayer(5)));
+                new SmartPlayer(4), new SmartPlayer(5)), false, false);
     }
     /*
     @BeforeEach

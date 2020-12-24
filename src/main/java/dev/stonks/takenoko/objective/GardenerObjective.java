@@ -1,7 +1,5 @@
 package dev.stonks.takenoko.objective;
 
-import dev.stonks.takenoko.IllegalEqualityExceptionGenerator;
-import dev.stonks.takenoko.map.DirectionnedTile;
 import dev.stonks.takenoko.map.Improvement;
 import dev.stonks.takenoko.pattern.BambooPattern;
 
@@ -14,8 +12,8 @@ import java.util.Objects;
 
 public class GardenerObjective extends Objective {
 
-    private BambooPattern bambooPattern;
-    private Improvement localImprovement;
+    private final BambooPattern bambooPattern;
+    private final Improvement localImprovement;
 
     /**
      *Make a gardener objective
