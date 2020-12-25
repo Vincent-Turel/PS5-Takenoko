@@ -226,9 +226,8 @@ public class Game {
             case PutTile:
                 ArrayList<AbstractTile> possiblesTiles = new ArrayList<>(3);
                 IntStream.range(0, Math.min(3, tileDeck.size())).forEach(i -> possiblesTiles.add(tileDeck.get(random.nextInt(tileDeck.size()))));
-                MultipleAnswer<AbstractTile, Coordinate> answer = player.putTile(possiblesTiles);
+                MultipleAnswer<AbstractTile, Coordinate, ?> answer = player.putTile(possiblesTiles);
                 tileDeck.remove(answer.getT());
-
                 try {
                     map.setTile(new Tile(answer.getT().withCoordinate(answer.getU())));
                 } catch (IllegalPlacementException e) {
@@ -280,10 +279,10 @@ public class Game {
                 break;
         }
         Optional<Action> decision;
-        while ((decision = player.doYouWantToPutAnIrrigationOrPutAnAmmenagment(new Map(map))).isPresent()){
+        while ((decision = player.doYouWantToPutAnIrrigationOrAnImprovement(new Map(map))).isPresent()){
             LOG.info("Player n°" + player.getId() + " has chosen this action : " + decision.get().toString());
             if(decision.get().equals(Action.PutIrrigation)){
-                MultipleAnswer<AbstractIrrigation, IrrigationCoordinate> answer = player.putIrrigation();
+                MultipleAnswer<AbstractIrrigation, IrrigationCoordinate, ?> answer = player.putIrrigation();
                 try {
                     map.setIrrigation(new Irrigation(answer.getT().withCoordinate(answer.getU())));
                 } catch (IllegalPlacementException e) {
@@ -292,7 +291,7 @@ public class Game {
                 }
             }
             else if (decision.get().equals(Action.PutImprovement)){
-                MultipleAnswer<Tile, Improvement> answer = player.putImprovement();
+                MultipleAnswer<Tile, Improvement, ?> answer = player.putImprovement();
                 try {
                     answer.getT().addImprovement(answer.getU());
                 } catch (IllegalPlacementException e) {
@@ -332,18 +331,12 @@ public class Game {
             switch (objective.getObjType()) {
                 case Pattern:
                     patternMatchs = IsValidObjectives.isValidPatternObjective((PatternObjective) objective, map, patternMatchs);
-                    if (objective.getStates())
-                        tileObjectives.remove(objective);
                     break;
                 case Panda:
                     player.upDateInventory(IsValidObjectives.isObjectivesPandaValid((PandaObjective) objective, player));
-                    if (objective.getStates())
-                        pandaObjectives.remove(objective);
                     break;
                 case Gardener:
                     IsValidObjectives.isObjectivesGardenerValid((GardenerObjective) objective, map);
-                    if (objective.getStates())
-                        gardenerObjectives.remove(objective);
                     break;
                 default:
                     break;

@@ -3,7 +3,6 @@ package dev.stonks.takenoko.map;
 import dev.stonks.takenoko.IllegalEqualityExceptionGenerator;
 
 import java.util.Objects;
-import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -14,8 +13,8 @@ import java.util.Set;
 public class Tile {
     private final Coordinate coord;
     private boolean irrigated;
-    private Bamboo bamboo;
-    private TileKind kind;
+    private final Bamboo bamboo;
+    private final TileKind kind;
     private Improvement improvement;
 
     public Tile(Coordinate c, TileKind k, Improvement i) {
@@ -105,14 +104,6 @@ public class Tile {
         this.irrigated = true;
         this.growBamboo();
     }
-
-    /**
-     * ONLY FOR TEST
-     */
-    public void deirrigate() {
-        this.irrigated = false;
-    }
-
 
     /**
      * Returns whether if the tile is the initial tile or not.
@@ -216,5 +207,15 @@ public class Tile {
         }
 
         improvement = i;
+    }
+
+    /**
+     * This method is usefull for the players because it allows
+     * him to irrigate a tile without growing the bamboo.
+     * Also usefull for test
+     * @param irrigated boolean which specifies weither or not the tile should be irrigated.
+     */
+    public void setIrrigated(boolean irrigated) {
+        this.irrigated = irrigated;
     }
 }
