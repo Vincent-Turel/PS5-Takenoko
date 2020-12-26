@@ -176,7 +176,7 @@ public class GameManager {
                     }
                 }
             }
-            if (!isDraw) {
+            if(!isDraw && victory.isEmpty()){
                 victory = Optional.of(Boolean.TRUE);
             }
         } else {
