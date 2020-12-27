@@ -16,60 +16,47 @@ class ObjectivesTest {
   
     @Test
     void objectiveClassTest(){
-        Objective pattern = new Objective(ObjectiveKind.ObjectivePattern, 5);
-        Objective gardener = new Objective(ObjectiveKind.ObjectiveGardener, 6);
-        Objective panda = new Objective(ObjectiveKind.ObjectivePanda, 7);
+        Objective objective = new Objective(ObjectiveKind.ObjectivePattern, 5);
         //nbPt test :
-        assertEquals(5,pattern.getNbPt());
-        assertEquals(6,gardener.getNbPt());
-        assertEquals(7,panda.getNbPt());
-        //type test :
-        assertEquals(ObjectiveKind.ObjectivePattern,pattern.getObjType());
-        assertEquals(ObjectiveKind.ObjectiveGardener,gardener.getObjType());
-        assertEquals(ObjectiveKind.ObjectivePanda,panda.getObjType());
+        assertEquals(5,objective.getNbPt());
         //objective value test :
-        assertEquals(false,pattern.getStates());
-        assertEquals(false,gardener.getStates());
-        assertEquals(false,panda.getStates());
+        assertEquals(false,objective.getStates());
         //updateStates test :
-        pattern.updateStates();
-        gardener.updateStates();
-        panda.updateStates();
-        assertEquals(true,pattern.getStates());
-        assertEquals(true,gardener.getStates());
-        assertEquals(true,panda.getStates());
+        objective.updateStates();
+        assertEquals(true,objective.getStates());
         //reset test :
-        pattern.resetObj();
-        gardener.resetObj();
-        panda.resetObj();
-        assertEquals(false,pattern.getStates());
-        assertEquals(false,gardener.getStates());
-        assertEquals(false,panda.getStates());
+        objective.resetObj();
+        assertEquals(false,objective.getStates());
     }
 
     @Test
-    void objectiveCreationTest(){
+    void objectivePatternCreationTest(){
         Pattern aPattern = mock(Pattern.class);
-        BambooPattern aBambooPattern = mock(BambooPattern.class);
         PatternObjective pattern = new PatternObjective(5,aPattern);
-        GardenerObjective gardener = new GardenerObjective(6, aBambooPattern);
-        PandaObjective panda = new PandaObjective(7, aBambooPattern);
-
-        //test nbPt :
-        assertEquals(5,pattern.getNbPt());
-        assertEquals(6,gardener.getNbPt());
-        assertEquals(7,panda.getNbPt());
-
-        //test objType :
         assertEquals(ObjectiveKind.ObjectivePattern,pattern.getObjType());
-        assertEquals(ObjectiveKind.ObjectiveGardener,gardener.getObjType());
-        assertEquals(ObjectiveKind.ObjectivePanda,panda.getObjType());
-
-        //test objPattern :
-        assertEquals(aBambooPattern,panda.getBambooPattern());
-        assertEquals(aBambooPattern,gardener.getBambooPattern());
+        assertEquals(5,pattern.getNbPt());
+        assertEquals(ObjectiveKind.ObjectivePattern,pattern.getObjType());
         assertEquals(aPattern,pattern.getLocalPattern());
+    }
 
+    @Test
+    void objectivePandaCreationTest(){
+        BambooPattern aBambooPattern = mock(BambooPattern.class);
+        PandaObjective panda = new PandaObjective(7, aBambooPattern);
+        assertEquals(ObjectiveKind.ObjectivePanda,panda.getObjType());
+        assertEquals(7,panda.getNbPt());
+        assertEquals(ObjectiveKind.ObjectivePanda,panda.getObjType());
+        assertEquals(aBambooPattern,panda.getBambooPattern());
+    }
+
+    @Test
+    void objectiveGardenerCreationTest(){
+        BambooPattern aBambooPattern = mock(BambooPattern.class);
+        GardenerObjective gardener = new GardenerObjective(6, aBambooPattern);
+        assertEquals(ObjectiveKind.ObjectiveGardener,gardener.getObjType());
+        assertEquals(6,gardener.getNbPt());
+        assertEquals(ObjectiveKind.ObjectiveGardener,gardener.getObjType());
+        assertEquals(aBambooPattern,gardener.getBambooPattern());
     }
 
     @Test
