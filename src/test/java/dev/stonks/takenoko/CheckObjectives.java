@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class IsValidObjectivesTest {
+public class CheckObjectives {
 
     @Test
     public void objPatternTest() throws IllegalPlacementException {
