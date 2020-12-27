@@ -336,7 +336,7 @@ public abstract class Player {
                     ((PandaObjective)objective).isObjectivesPandaValid(player);
                     break;
                 case Gardener:
-                    IsValidObjectives.isObjectivesGardenerValid((GardenerObjective) objective, clonedMap);
+                    ((GardenerObjective)objective).isObjectivesGardenerValid(clonedMap);
                     break;
                 default:
                     break;

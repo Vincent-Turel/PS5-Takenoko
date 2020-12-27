@@ -194,13 +194,13 @@ public class IsValidObjectivesTest {
         GardenerObjective objectiveLoseImprovementNoHere = new GardenerObjective(5,pinkPattern,Improvement.Watershed);
 
         //Test function :
-        IsValidObjectives.isObjectivesGardenerValid(objectiveWin,map);
-        IsValidObjectives.isObjectivesGardenerValid(objectiveLose,map);
-        IsValidObjectives.isObjectivesGardenerValid(pinkObjective,map);
-        IsValidObjectives.isObjectivesGardenerValid(objectiveWinWithImprovement,map);
-        IsValidObjectives.isObjectivesGardenerValid(objectiveLoseWithImprovement,map);
-        IsValidObjectives.isObjectivesGardenerValid(objectiveWinWithNoImprovement,map);
-        IsValidObjectives.isObjectivesGardenerValid(objectiveLoseImprovementNoHere,map);
+        objectiveWin.isObjectivesGardenerValid(map);
+        objectiveLose.isObjectivesGardenerValid(map);
+        pinkObjective.isObjectivesGardenerValid(map);
+        objectiveWinWithImprovement.isObjectivesGardenerValid(map);
+        objectiveLoseWithImprovement.isObjectivesGardenerValid(map);
+        objectiveWinWithNoImprovement.isObjectivesGardenerValid(map);
+        objectiveLoseImprovementNoHere.isObjectivesGardenerValid(map);
 
         assertEquals(true,objectiveWin.getStates());
         assertEquals(false,objectiveLose.getStates());

@@ -1,9 +1,13 @@
 package dev.stonks.takenoko.objective;
 
 import dev.stonks.takenoko.map.Improvement;
+import dev.stonks.takenoko.map.Map;
+import dev.stonks.takenoko.map.Tile;
 import dev.stonks.takenoko.pattern.BambooPattern;
 
+import java.util.ArrayList;
 import java.util.Objects;
+import java.util.Optional;
 
 /**
  * Class for the gardener objective
@@ -43,6 +47,45 @@ public class GardenerObjective extends Objective {
      */
     public BambooPattern getBambooPattern() {
         return this.bambooPattern;
+    }
+
+    /**
+     *Check if a gardener objective are complete
+     * @return true if objectives complete, else false
+     */
+    public void isObjectivesGardenerValid(Map map){
+        ArrayList<Tile> allTiles = new ArrayList<>();
+        for(Optional<Tile> tile : map.getTiles()){
+            tile.ifPresent(allTiles::add);
+        }
+        int nbMath = 0;
+        for(Tile value : allTiles){
+            if(value.getBamboo().getColor().equals(bambooPattern.getColor())&&value.getBamboo().getSize()==bambooPattern.getHeight() && isImprovementValid(value)){
+                nbMath++;
+            }
+        }
+        if(nbMath>=bambooPattern.getNbBamboo()){
+            this.UpdtateStates();
+        }
+    }
+
+    /**
+     * Check if the improvement is valid between an objective and a tile :
+     * @param tile -> current tile
+     * @return True if the objective improvement correspond to the tile improvement otherwise false.
+     */
+    private boolean isImprovementValid(Tile tile){
+        if(localImprovement.equals(Improvement.Empty)){
+            return true;
+        }
+        if(localImprovement.equals(Improvement.NoImprovementHere)){
+            if(tile.getImprovement()==Improvement.Empty){return true;}
+            else {return false;}
+        }
+        if(localImprovement.equals(tile.getImprovement())){
+            return true;
+        }
+        return false;
     }
 
     /**

@@ -336,7 +336,7 @@ public class Game {
                     player.upDateInventory(((PandaObjective)objective).isObjectivesPandaValid(player));
                     break;
                 case Gardener:
-                    IsValidObjectives.isObjectivesGardenerValid((GardenerObjective) objective, map);
+                    ((GardenerObjective)objective).isObjectivesGardenerValid(map);
                     break;
                 default:
                     break;
