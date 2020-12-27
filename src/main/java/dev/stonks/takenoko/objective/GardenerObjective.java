@@ -25,7 +25,7 @@ public class GardenerObjective extends Objective {
      * @param bambooPattern pattern for the objective
      */
     public GardenerObjective(int nbPT, BambooPattern bambooPattern){
-        super(ObjectiveKind.ObjectiveGardener,nbPT);
+        super(nbPT);
         this.bambooPattern=bambooPattern;
         this.localImprovement=Improvement.Empty;
     }
@@ -37,7 +37,7 @@ public class GardenerObjective extends Objective {
      * @param improvement type of improvement
      */
     public GardenerObjective(int nbPT, BambooPattern bambooPattern,Improvement improvement){
-        super(ObjectiveKind.ObjectiveGardener,nbPT);
+        super(nbPT);
         this.bambooPattern=bambooPattern;
         this.localImprovement=improvement;
     }

@@ -16,7 +16,7 @@ class ObjectivesTest {
   
     @Test
     void objectiveClassTest(){
-        Objective objective = new Objective(ObjectiveKind.ObjectivePattern, 5);
+        Objective objective = new Objective(5);
         //nbPt test :
         assertEquals(5,objective.getNbPt());
         //objective value test :
@@ -33,9 +33,9 @@ class ObjectivesTest {
     void objectivePatternCreationTest(){
         Pattern aPattern = mock(Pattern.class);
         PatternObjective pattern = new PatternObjective(5,aPattern);
-        assertEquals(ObjectiveKind.ObjectivePattern,pattern.getObjType());
+        assertEquals(ObjectiveKind.PatternObjective,pattern.getObjType());
         assertEquals(5,pattern.getNbPt());
-        assertEquals(ObjectiveKind.ObjectivePattern,pattern.getObjType());
+        assertEquals(ObjectiveKind.PatternObjective,pattern.getObjType());
         assertEquals(aPattern,pattern.getLocalPattern());
     }
 
@@ -43,9 +43,9 @@ class ObjectivesTest {
     void objectivePandaCreationTest(){
         BambooPattern aBambooPattern = mock(BambooPattern.class);
         PandaObjective panda = new PandaObjective(7, aBambooPattern);
-        assertEquals(ObjectiveKind.ObjectivePanda,panda.getObjType());
+        assertEquals(ObjectiveKind.PandaObjective,panda.getObjType());
         assertEquals(7,panda.getNbPt());
-        assertEquals(ObjectiveKind.ObjectivePanda,panda.getObjType());
+        assertEquals(ObjectiveKind.PandaObjective,panda.getObjType());
         assertEquals(aBambooPattern,panda.getBambooPattern());
     }
 
@@ -53,9 +53,9 @@ class ObjectivesTest {
     void objectiveGardenerCreationTest(){
         BambooPattern aBambooPattern = mock(BambooPattern.class);
         GardenerObjective gardener = new GardenerObjective(6, aBambooPattern);
-        assertEquals(ObjectiveKind.ObjectiveGardener,gardener.getObjType());
+        assertEquals(ObjectiveKind.GardenerObjective,gardener.getObjType());
         assertEquals(6,gardener.getNbPt());
-        assertEquals(ObjectiveKind.ObjectiveGardener,gardener.getObjType());
+        assertEquals(ObjectiveKind.GardenerObjective,gardener.getObjType());
         assertEquals(aBambooPattern,gardener.getBambooPattern());
     }
 

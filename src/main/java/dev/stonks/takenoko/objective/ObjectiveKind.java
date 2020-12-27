@@ -5,8 +5,7 @@ package dev.stonks.takenoko.objective;
  * @author the StonksDev team
  */
 public enum ObjectiveKind {
-    ObjectivePattern,
-    ObjectivePanda,
-    ObjectiveGardener,
-    ObjectiveEmperor;
+    PatternObjective,
+    PandaObjective,
+    GardenerObjective;
 }

@@ -21,7 +21,7 @@ public class PandaObjective extends Objective{
      * @param bambooPattern pattern for the objective
      */
     public PandaObjective(int nbPT, BambooPattern bambooPattern){
-        super(ObjectiveKind.ObjectivePanda,nbPT);
+        super(nbPT);
         this.bambooPattern=bambooPattern;
     }
 

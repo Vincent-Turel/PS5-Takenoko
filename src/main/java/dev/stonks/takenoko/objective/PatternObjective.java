@@ -24,7 +24,7 @@ public class PatternObjective extends Objective {
      */
 
     public PatternObjective(int nbPT, Pattern localPattern){
-        super(ObjectiveKind.ObjectivePattern,nbPT);
+        super(nbPT);
         this.localPattern=localPattern;
     }
 
