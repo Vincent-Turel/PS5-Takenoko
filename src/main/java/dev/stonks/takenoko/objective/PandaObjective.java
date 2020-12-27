@@ -37,6 +37,7 @@ public class PandaObjective extends Objective{
      *Check if a panda objective are complete
      * @return the update of the inventory if objectives complete, else juste the old inventory
      */
+    @Override
     public void checkObjective(Map map, Player player){
         int[] bambooStock = player.getCollectedBamboo();
         if(bambooPattern.getOptionalColor1().isPresent()){

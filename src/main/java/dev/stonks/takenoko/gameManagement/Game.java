@@ -328,19 +328,7 @@ public class Game {
         ArrayList<Objective> playerObjectives = player.getObjectives();
 
         for (Objective objective: playerObjectives) {
-            switch (objective.getObjType()) {
-                case PatternObjective:
-                    ((PatternObjective) objective).checkObjective(map,player);
-                    break;
-                case PandaObjective:
-                    ((PandaObjective)objective).checkObjective(map,player);
-                    break;
-                case GardenerObjective:
-                    ((GardenerObjective)objective).checkObjective(map,player);
-                    break;
-                default:
-                    break;
-            }
+            objective.checkObjective(map,player);
             if (objective.getStates()) {
                 LOG.info("Player n°" + player.getId() + " has achieved a " + objective.getClass().getSimpleName());
                 player.newObjectivesAchieved(objective);

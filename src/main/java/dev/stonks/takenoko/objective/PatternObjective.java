@@ -38,6 +38,7 @@ public class PatternObjective extends Objective {
      * @param map -> map of the game (states of all tiles and placement)
      * @return true if objectives complete, else false
      */
+    @Override
     public void checkObjective(Map map, Player player){
         Set<MatchResult> result = localPattern.getMatchesOn(map);
         if(result.size()!=0){

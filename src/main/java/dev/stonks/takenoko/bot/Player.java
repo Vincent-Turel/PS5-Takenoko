@@ -328,19 +328,7 @@ public abstract class Player {
         ArrayList<Objective> playerObjectives = player.getObjectives();
         int nbPoint = 0;
         for (Objective objective : playerObjectives) {
-            switch (objective.getObjType()) {
-                case PatternObjective:
-                    ((PatternObjective) objective).checkObjective(clonedMap,player);
-                    break;
-                case PandaObjective:
-                    ((PandaObjective)objective).checkObjective(clonedMap,player);
-                    break;
-                case GardenerObjective:
-                    ((GardenerObjective)objective).checkObjective(clonedMap,player);
-                    break;
-                default:
-                    break;
-            }
+            objective.checkObjective(clonedMap,player);
             if (objective.getStates()) {
                 objective.resetObj();
                 nbPoint += objective.getNbPt();
