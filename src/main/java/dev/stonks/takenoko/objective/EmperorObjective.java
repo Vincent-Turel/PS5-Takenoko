@@ -10,5 +10,6 @@ public class EmperorObjective extends Objective {
 
     @Override
     public void checkObjective(Map map, Player player) {
+        throw new IllegalCallerException("This method should not be used on Emperor Objective");
     }
 }
