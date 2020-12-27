@@ -19,48 +19,7 @@ import java.util.Set;
  */
 
 public class IsValidObjectives {
-
-    /**
-     *Check if a panda objective are complete
-     * @return the update of the inventory if objectives complete, else juste the old inventory
-     */
-    public static int[] isObjectivesPandaValid(PandaObjective objective, Player player){
-        int[] bambooStock = player.getCollectedBamboo();
-        BambooPattern localPattern = objective.getBambooPattern();
-        if(localPattern.getOptionalColor1().isPresent()){
-            if(bambooStock[0]>=localPattern.getHeight() && bambooStock[1]>=localPattern.getHeight() && bambooStock[2]>=localPattern.getHeight()){
-                objective.UpdtateStates();
-                bambooStock[0]-=localPattern.getHeight()*localPattern.getNbBamboo();
-                bambooStock[1]-=localPattern.getHeight()*localPattern.getNbBamboo();
-                bambooStock[2]-=localPattern.getHeight()*localPattern.getNbBamboo();
-            }
-        }
-        else{
-            switch (localPattern.getColor()){
-                case Pink:
-                    if(bambooStock[2]>=localPattern.getHeight()*localPattern.getNbBamboo()){
-                        objective.UpdtateStates();
-                        bambooStock[2]-=localPattern.getHeight()*localPattern.getNbBamboo();
-                    }
-                    break;
-                case Yellow:
-                    if(bambooStock[1]>=localPattern.getHeight()*localPattern.getNbBamboo()){
-                        objective.UpdtateStates();
-                        bambooStock[1]-=localPattern.getHeight()*localPattern.getNbBamboo();
-                    }
-                    break;
-                case Green:
-                    if(bambooStock[0]>=localPattern.getHeight()*localPattern.getNbBamboo()){
-                        objective.UpdtateStates();
-                        bambooStock[0]-=localPattern.getHeight()*localPattern.getNbBamboo();
-                    }
-                    break;
-            }
-        }
-        return bambooStock;
-    }
-
-
+    
     /**
      *Check if a gardener objective are complete
      * @return true if objectives complete, else false

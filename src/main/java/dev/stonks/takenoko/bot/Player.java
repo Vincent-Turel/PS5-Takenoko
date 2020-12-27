@@ -333,7 +333,7 @@ public abstract class Player {
                     ((PatternObjective) objective).isValidPatternObjective(clonedMap);
                     break;
                 case Panda:
-                    IsValidObjectives.isObjectivesPandaValid((PandaObjective) objective, player);
+                    ((PandaObjective)objective).isObjectivesPandaValid(player);
                     break;
                 case Gardener:
                     IsValidObjectives.isObjectivesGardenerValid((GardenerObjective) objective, clonedMap);

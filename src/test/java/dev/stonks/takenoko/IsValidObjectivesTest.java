@@ -63,14 +63,14 @@ public class IsValidObjectivesTest {
         PandaObjective objMultiColor = new PandaObjective(5,multicolor);
 
         //Test isValid Objective simple green
-        IsValidObjectives.isObjectivesPandaValid(objective,winPlayer);
+        objective.isObjectivesPandaValid(winPlayer);
         assertEquals(true,objective.getStates());
         int[] valExpected = new int[]{0,3,5};
         for(int i=0;i<3;i++){
             assertEquals(valExpected[i],winPlayer.getCollectedBamboo()[i]);
         }
         //Test isValid Objective multicolor
-        IsValidObjectives.isObjectivesPandaValid(objMultiColor,winPlayer2);
+        objMultiColor.isObjectivesPandaValid(winPlayer2);
         assertEquals(true,objMultiColor.getStates());
         valExpected = new int[]{6,4,3};
         for(int i=0;i<3;i++){
@@ -79,7 +79,7 @@ public class IsValidObjectivesTest {
     }
 
     @Test
-    public void loseObjectivies(){
+    public void loseObjectives(){
         //loser :
         Player losePlayer = mock(Player.class);
         when(losePlayer.getCollectedBamboo()).thenReturn(new int[]{1,1,1});
@@ -93,14 +93,14 @@ public class IsValidObjectivesTest {
         PandaObjective objMultiColor = new PandaObjective(5,multicolor);
 
         //Test isValid Objective simple green
-        IsValidObjectives.isObjectivesPandaValid(objective,losePlayer);
+        objective.isObjectivesPandaValid(losePlayer);
         assertEquals(false,objective.getStates());
         int[] valExpected = new int[]{1,1,1};
         for(int i=0;i<3;i++){
             assertEquals(valExpected[i],losePlayer.getCollectedBamboo()[i]);
         }
         //Test isValid Objective multicolor
-        IsValidObjectives.isObjectivesPandaValid(objMultiColor,losePlayer);
+        objMultiColor.isObjectivesPandaValid(losePlayer);
         assertEquals(false,objMultiColor.getStates());
         valExpected = new int[]{1,1,1};
         for(int i=0;i<3;i++){
@@ -117,7 +117,7 @@ public class IsValidObjectivesTest {
         PandaObjective objective = new PandaObjective(5,yellowPattern);
 
         //Test isValid Objective simple yellow
-        IsValidObjectives.isObjectivesPandaValid(objective,winPlayer);
+        objective.isObjectivesPandaValid(winPlayer);
         assertEquals(true,objective.getStates());
         int[] valExpected = new int[]{3,1,5};
         for(int i=0;i<3;i++){
@@ -134,7 +134,7 @@ public class IsValidObjectivesTest {
         PandaObjective objective = new PandaObjective(5,pinkPattern);
 
         //Test isValid Objective simple yellow
-        IsValidObjectives.isObjectivesPandaValid(objective,winPlayer);
+        objective.isObjectivesPandaValid(winPlayer);
         assertEquals(true,objective.getStates());
         int[] valExpected = new int[]{3,6,0};
         for(int i=0;i<3;i++){

@@ -1,6 +1,7 @@
 package dev.stonks.takenoko.objective;
 
 import dev.stonks.takenoko.IllegalEqualityExceptionGenerator;
+import dev.stonks.takenoko.bot.Player;
 import dev.stonks.takenoko.pattern.BambooPattern;
 
 import java.util.Objects;
@@ -29,6 +30,45 @@ public class PandaObjective extends Objective{
      */
     public BambooPattern getBambooPattern() {
         return this.bambooPattern;
+    }
+
+    /**
+     *Check if a panda objective are complete
+     * @return the update of the inventory if objectives complete, else juste the old inventory
+     */
+    public int[] isObjectivesPandaValid(Player player){
+        int[] bambooStock = player.getCollectedBamboo();
+        if(bambooPattern.getOptionalColor1().isPresent()){
+            if(bambooStock[0]>=bambooPattern.getHeight() && bambooStock[1]>=bambooPattern.getHeight() && bambooStock[2]>=bambooPattern.getHeight()){
+                this.UpdtateStates();
+                bambooStock[0]-=bambooPattern.getHeight()*bambooPattern.getNbBamboo();
+                bambooStock[1]-=bambooPattern.getHeight()*bambooPattern.getNbBamboo();
+                bambooStock[2]-=bambooPattern.getHeight()*bambooPattern.getNbBamboo();
+            }
+        }
+        else{
+            switch (bambooPattern.getColor()){
+                case Pink:
+                    if(bambooStock[2]>=bambooPattern.getHeight()*bambooPattern.getNbBamboo()){
+                        this.UpdtateStates();
+                        bambooStock[2]-=bambooPattern.getHeight()*bambooPattern.getNbBamboo();
+                    }
+                    break;
+                case Yellow:
+                    if(bambooStock[1]>=bambooPattern.getHeight()*bambooPattern.getNbBamboo()){
+                        this.UpdtateStates();
+                        bambooStock[1]-=bambooPattern.getHeight()*bambooPattern.getNbBamboo();
+                    }
+                    break;
+                case Green:
+                    if(bambooStock[0]>=bambooPattern.getHeight()*bambooPattern.getNbBamboo()){
+                        this.UpdtateStates();
+                        bambooStock[0]-=bambooPattern.getHeight()*bambooPattern.getNbBamboo();
+                    }
+                    break;
+            }
+        }
+        return bambooStock;
     }
 
     @Override
