@@ -7,11 +7,11 @@ package dev.stonks.takenoko.weather;
  */
 
 public enum WeatherKind {
-    Sun,            //2
     Rain,           //0
-    Wind,           //4
-    Thunderstorm,   //3
     Cloud,          //1
+    Sun,            //2
+    Thunderstorm,   //3
+    Wind,           //4
     FreeChoice,     //5
     //Initial value (first tour):
     NoWeather; //6
