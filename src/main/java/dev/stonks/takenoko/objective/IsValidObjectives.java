@@ -23,31 +23,13 @@ public class IsValidObjectives {
     /**
      * @param objective -> take an objectives to controlling if it's validate or not
      * @param map -> map of the game (states of all tiles and placement)
-     * @param alreadyUsed -> all pattern already used to complete objective
      * @return true if objectives complete, else false
      */
-    public static Set<MatchResult> isValidPatternObjective(PatternObjective objective, Map map, Set<MatchResult> alreadyUsed) {
-        int old=alreadyUsed.size();
-        alreadyUsed= isPatternConstraintValid(objective,map,alreadyUsed);
-        if(alreadyUsed.size()!=old){
+    public static void isValidPatternObjective(PatternObjective objective, Map map){
+        Set<MatchResult> result = objective.getLocalPattern().getMatchesOn(map);
+        if(result.size()!=0){
             objective.UpdtateStates();
         }
-        return alreadyUsed;
-    }
-
-    /**
-     *Check if a pattern constraint objective are complete
-     * @return the new math result if objectives complete
-     */
-    private static Set<MatchResult> isPatternConstraintValid(PatternObjective objective, Map map, Set<MatchResult> alreadyUsed){
-        Set<MatchResult> result = objective.getLocalPattern().getMatchesOn(map);
-        for(MatchResult value: result) {
-            if(!(alreadyUsed.contains(value))){
-                alreadyUsed.add(value);
-                return alreadyUsed;
-            }
-        }
-        return alreadyUsed;
     }
 
     /**

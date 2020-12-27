@@ -330,7 +330,7 @@ public class Game {
         for (Objective objective: playerObjectives) {
             switch (objective.getObjType()) {
                 case Pattern:
-                    patternMatchs = IsValidObjectives.isValidPatternObjective((PatternObjective) objective, map, patternMatchs);
+                    IsValidObjectives.isValidPatternObjective((PatternObjective) objective, map);
                     break;
                 case Panda:
                     player.upDateInventory(IsValidObjectives.isObjectivesPandaValid((PandaObjective) objective, player));

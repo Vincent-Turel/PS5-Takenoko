@@ -26,22 +26,22 @@ public class IsValidObjectivesTest {
     public void objPatternTest() throws IllegalPlacementException {
         //Some objective :
         Pattern pattern = new Pattern().withCenter(TileKind.Green);
+        Pattern patternLose = new Pattern().withCenter(TileKind.Pink);
         PatternObjective objectiveWin = new PatternObjective(5,pattern);
-        PatternObjective objectiveLose = new PatternObjective(5,pattern);
+        PatternObjective objectiveLose = new PatternObjective(5,patternLose);
         //Making a map :
         Map map = new Map(42);
         Tile t = map.addNeighborOf(TileKind.Green, map.initialTile().withDirection(Direction.South));
         t.irrigate();
         Coordinate center = map.initialTile().getCoordinate();
-        //All pattern already use :
-        Set<MatchResult> alreadyUse = new HashSet<>();
 
         //Test :
         assertEquals(false,objectiveWin.getStates());
-        IsValidObjectives.isValidPatternObjective(objectiveWin,map,alreadyUse);
+        IsValidObjectives.isValidPatternObjective(objectiveWin,map);
         assertEquals(true,objectiveWin.getStates());
+
         assertEquals(false,objectiveLose.getStates());
-        IsValidObjectives.isValidPatternObjective(objectiveLose,map,alreadyUse);
+        IsValidObjectives.isValidPatternObjective(objectiveLose,map);
         assertEquals(false,objectiveLose.getStates());
 
     }
