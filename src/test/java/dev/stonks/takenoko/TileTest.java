@@ -3,6 +3,8 @@ package dev.stonks.takenoko;
 import dev.stonks.takenoko.map.*;
 import org.junit.jupiter.api.Test;
 
+import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class TileTest {
@@ -72,15 +74,32 @@ public class TileTest {
     }
 
     @Test
-    void cutBamboo() {
+    void cutBambooOnNonEnclosed() {
         Coordinate initialCoord = new Coordinate(42, 42);
         Tile t = new Tile(initialCoord, TileKind.Green);
         t.growBamboo();
         t.growBamboo();
         t.growBamboo();
         assertEquals(t.bambooSize(), 3);
-        t.cutBamboo();
+        assertEquals(t.cutBamboo(), Optional.of(TileKind.Green));
         assertEquals(t.bambooSize(), 2);
+        assertEquals(t.cutBamboo(), Optional.of(TileKind.Green));
+        assertEquals(t.cutBamboo(), Optional.of(TileKind.Green));
+        assertEquals(t.cutBamboo(), Optional.empty());
+    }
+
+    @Test
+    void cutBambooOnEnclosed() throws IllegalPlacementException {
+        Coordinate initialCoord = new Coordinate(42, 42);
+        Tile t = new Tile(initialCoord, TileKind.Green);
+        t.addImprovement(Improvement.Enclosure);
+        t.growBamboo();
+        t.growBamboo();
+        t.growBamboo();
+        assertEquals(t.bambooSize(), 3);
+        assertEquals(t.cutBamboo(), Optional.empty());
+        assertEquals(t.bambooSize(), 3);
+        assertEquals(t.cutBamboo(), Optional.empty());
     }
 
     @Test

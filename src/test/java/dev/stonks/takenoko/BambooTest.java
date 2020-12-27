@@ -5,6 +5,8 @@ import dev.stonks.takenoko.map.TileKind;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -47,5 +49,15 @@ public class BambooTest {
         assertTrue(bamboo1.equalsWithoutSize(bamboo2));
         assertTrue(bamboo1.equalsWithoutSize(bamboo3));
         assertFalse(bamboo1.equalsWithoutSize(bamboo4));
+    }
+
+    @Test
+    void cutTest() {
+        // There are two sections in bamboo1. Let's remove them
+        assertEquals(bamboo1.cut(), Optional.of(TileKind.Green));
+        assertEquals(bamboo1.cut(), Optional.of(TileKind.Green));
+
+        // No more bamboo
+        assertEquals(bamboo1.cut(), Optional.empty());
     }
 }
