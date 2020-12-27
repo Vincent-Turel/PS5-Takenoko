@@ -1,6 +1,8 @@
 package dev.stonks.takenoko.objective;
 
 import dev.stonks.takenoko.IllegalEqualityExceptionGenerator;
+import dev.stonks.takenoko.bot.Player;
+import dev.stonks.takenoko.map.Map;
 
 import java.util.Objects;
 
@@ -9,27 +11,22 @@ import java.util.Objects;
  * @author the StonksDev team
  */
 
-public class Objective {
+public abstract class Objective {
 
     protected int nbPt;
-    private ObjectiveKind objType;
     protected Boolean isValid;
 
     /**
-     * Constucteur for 1 objective
+     * Constructor for 1 objective
      *
      * @param nbPT n° of point
-     * @param objType -> Pattern, Gardener, Panda, Emperor
      *
      * @author the StonksDev team
      */
-    public Objective(ObjectiveKind objType, int nbPT){
+    public Objective(int nbPT){
         this.nbPt = nbPT;
-        this.objType=objType;
         this.isValid=false;
     }
-
-    public ObjectiveKind getObjType() {return objType;}
 
     public Boolean getStates() {return isValid;}
 
@@ -41,10 +38,16 @@ public class Objective {
      */
     public int getNbPt(){return nbPt;}
 
+    public ObjectiveKind getObjType(){
+        return ObjectiveKind.valueOf(this.getClass().getSimpleName());
+    }
+
     /**
      * Update the states of this objective :
      */
-    public void UpdtateStates(){isValid=true;}
+    public void updateStates(){isValid=true;}
+
+    public abstract void checkObjective(Map map, Player player);
 
     @Override
     public boolean equals(Object o) {
@@ -53,12 +56,12 @@ public class Objective {
         if(o.getClass()!= Objective.class && o.getClass()!= GardenerObjective.class && o.getClass()!= PatternObjective.class && o.getClass()!= PandaObjective.class) throw IllegalEqualityExceptionGenerator.create(Objective.class,o.getClass());
         Objective objective = (Objective) o;
         return nbPt == objective.nbPt &&
-                objType == objective.objType &&
+                this.getClass().getSimpleName().equals(objective.getClass().getSimpleName()) &&
                 Objects.equals(isValid, objective.isValid);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(nbPt, objType, isValid);
+        return Objects.hash(nbPt,this.getClass().getSimpleName(), isValid);
     }
 }

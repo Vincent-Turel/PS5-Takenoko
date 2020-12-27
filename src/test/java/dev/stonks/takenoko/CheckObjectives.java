@@ -4,44 +4,40 @@ import dev.stonks.takenoko.bot.Player;
 import dev.stonks.takenoko.map.*;
 import dev.stonks.takenoko.objective.GardenerObjective;
 import dev.stonks.takenoko.objective.PandaObjective;
-import dev.stonks.takenoko.objective.IsValidObjectives;
 import dev.stonks.takenoko.pattern.BambooPattern;
-import dev.stonks.takenoko.pattern.MatchResult;
 import dev.stonks.takenoko.pattern.Pattern;
 import dev.stonks.takenoko.objective.PatternObjective;
-import dev.stonks.takenoko.pawn.Gardener;
 import org.junit.jupiter.api.Test;
 
-import java.util.HashSet;
 import java.util.Optional;
-import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class IsValidObjectivesTest {
+public class CheckObjectives {
 
     @Test
     public void objPatternTest() throws IllegalPlacementException {
+        Player player = mock(Player.class);
         //Some objective :
         Pattern pattern = new Pattern().withCenter(TileKind.Green);
+        Pattern patternLose = new Pattern().withCenter(TileKind.Pink);
         PatternObjective objectiveWin = new PatternObjective(5,pattern);
-        PatternObjective objectiveLose = new PatternObjective(5,pattern);
+        PatternObjective objectiveLose = new PatternObjective(5,patternLose);
         //Making a map :
         Map map = new Map(42);
         Tile t = map.addNeighborOf(TileKind.Green, map.initialTile().withDirection(Direction.South));
         t.irrigate();
         Coordinate center = map.initialTile().getCoordinate();
-        //All pattern already use :
-        Set<MatchResult> alreadyUse = new HashSet<>();
 
         //Test :
         assertEquals(false,objectiveWin.getStates());
-        IsValidObjectives.isValidPatternObjective(objectiveWin,map,alreadyUse);
+        objectiveWin.checkObjective(map,player);
         assertEquals(true,objectiveWin.getStates());
+
         assertEquals(false,objectiveLose.getStates());
-        IsValidObjectives.isValidPatternObjective(objectiveLose,map,alreadyUse);
+        objectiveLose.checkObjective(map,player);
         assertEquals(false,objectiveLose.getStates());
 
     }
@@ -49,6 +45,7 @@ public class IsValidObjectivesTest {
     @Test
     public void winObjectives(){
         //winner :
+        Map map = mock(Map.class);
         Player winPlayer = mock(Player.class);
         when(winPlayer.getCollectedBamboo()).thenReturn(new int[]{4, 3, 5});
         Player winPlayer2 = mock(Player.class);
@@ -63,14 +60,14 @@ public class IsValidObjectivesTest {
         PandaObjective objMultiColor = new PandaObjective(5,multicolor);
 
         //Test isValid Objective simple green
-        IsValidObjectives.isObjectivesPandaValid(objective,winPlayer);
+        objective.checkObjective(map,winPlayer);
         assertEquals(true,objective.getStates());
         int[] valExpected = new int[]{0,3,5};
         for(int i=0;i<3;i++){
             assertEquals(valExpected[i],winPlayer.getCollectedBamboo()[i]);
         }
         //Test isValid Objective multicolor
-        IsValidObjectives.isObjectivesPandaValid(objMultiColor,winPlayer2);
+        objMultiColor.checkObjective(map,winPlayer2);
         assertEquals(true,objMultiColor.getStates());
         valExpected = new int[]{6,4,3};
         for(int i=0;i<3;i++){
@@ -79,8 +76,9 @@ public class IsValidObjectivesTest {
     }
 
     @Test
-    public void loseObjectivies(){
+    public void loseObjectives(){
         //loser :
+        Map map = mock(Map.class);
         Player losePlayer = mock(Player.class);
         when(losePlayer.getCollectedBamboo()).thenReturn(new int[]{1,1,1});
 
@@ -93,14 +91,14 @@ public class IsValidObjectivesTest {
         PandaObjective objMultiColor = new PandaObjective(5,multicolor);
 
         //Test isValid Objective simple green
-        IsValidObjectives.isObjectivesPandaValid(objective,losePlayer);
+        objective.checkObjective(map,losePlayer);
         assertEquals(false,objective.getStates());
         int[] valExpected = new int[]{1,1,1};
         for(int i=0;i<3;i++){
             assertEquals(valExpected[i],losePlayer.getCollectedBamboo()[i]);
         }
         //Test isValid Objective multicolor
-        IsValidObjectives.isObjectivesPandaValid(objMultiColor,losePlayer);
+        objMultiColor.checkObjective(map,losePlayer);
         assertEquals(false,objMultiColor.getStates());
         valExpected = new int[]{1,1,1};
         for(int i=0;i<3;i++){
@@ -110,6 +108,7 @@ public class IsValidObjectivesTest {
 
     @Test
     public void winYellowObjective(){
+        Map map = mock(Map.class);
         Player winPlayer = mock(Player.class);
         when(winPlayer.getCollectedBamboo()).thenReturn(new int[]{3, 9, 5});
 
@@ -117,7 +116,7 @@ public class IsValidObjectivesTest {
         PandaObjective objective = new PandaObjective(5,yellowPattern);
 
         //Test isValid Objective simple yellow
-        IsValidObjectives.isObjectivesPandaValid(objective,winPlayer);
+        objective.checkObjective(map,winPlayer);
         assertEquals(true,objective.getStates());
         int[] valExpected = new int[]{3,1,5};
         for(int i=0;i<3;i++){
@@ -127,6 +126,7 @@ public class IsValidObjectivesTest {
 
     @Test
     public void winPinkObjective(){
+        Map map = mock(Map.class);
         Player winPlayer = mock(Player.class);
         when(winPlayer.getCollectedBamboo()).thenReturn(new int[]{3, 6, 6});
 
@@ -134,7 +134,7 @@ public class IsValidObjectivesTest {
         PandaObjective objective = new PandaObjective(5,pinkPattern);
 
         //Test isValid Objective simple yellow
-        IsValidObjectives.isObjectivesPandaValid(objective,winPlayer);
+        objective.checkObjective(map,winPlayer);
         assertEquals(true,objective.getStates());
         int[] valExpected = new int[]{3,6,0};
         for(int i=0;i<3;i++){
@@ -144,6 +144,7 @@ public class IsValidObjectivesTest {
 
     @Test
     public void testForGardenerObjective(){
+        Player player = mock(Player.class);
         //Making some bamboos :
         Bamboo greenBamboo = mock(Bamboo.class);
         when(greenBamboo.getSize()).thenReturn(3);
@@ -194,13 +195,13 @@ public class IsValidObjectivesTest {
         GardenerObjective objectiveLoseImprovementNoHere = new GardenerObjective(5,pinkPattern,Improvement.Watershed);
 
         //Test function :
-        IsValidObjectives.isObjectivesGardenerValid(objectiveWin,map);
-        IsValidObjectives.isObjectivesGardenerValid(objectiveLose,map);
-        IsValidObjectives.isObjectivesGardenerValid(pinkObjective,map);
-        IsValidObjectives.isObjectivesGardenerValid(objectiveWinWithImprovement,map);
-        IsValidObjectives.isObjectivesGardenerValid(objectiveLoseWithImprovement,map);
-        IsValidObjectives.isObjectivesGardenerValid(objectiveWinWithNoImprovement,map);
-        IsValidObjectives.isObjectivesGardenerValid(objectiveLoseImprovementNoHere,map);
+        objectiveWin.checkObjective(map,player);
+        objectiveLose.checkObjective(map,player);
+        pinkObjective.checkObjective(map,player);
+        objectiveWinWithImprovement.checkObjective(map,player);
+        objectiveLoseWithImprovement.checkObjective(map,player);
+        objectiveWinWithNoImprovement.checkObjective(map,player);
+        objectiveLoseImprovementNoHere.checkObjective(map,player);
 
         assertEquals(true,objectiveWin.getStates());
         assertEquals(false,objectiveLose.getStates());

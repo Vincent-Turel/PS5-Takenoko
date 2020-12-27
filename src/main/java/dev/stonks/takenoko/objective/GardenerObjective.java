@@ -1,9 +1,14 @@
 package dev.stonks.takenoko.objective;
 
+import dev.stonks.takenoko.bot.Player;
 import dev.stonks.takenoko.map.Improvement;
+import dev.stonks.takenoko.map.Map;
+import dev.stonks.takenoko.map.Tile;
 import dev.stonks.takenoko.pattern.BambooPattern;
 
+import java.util.ArrayList;
 import java.util.Objects;
+import java.util.Optional;
 
 /**
  * Class for the gardener objective
@@ -21,7 +26,7 @@ public class GardenerObjective extends Objective {
      * @param bambooPattern pattern for the objective
      */
     public GardenerObjective(int nbPT, BambooPattern bambooPattern){
-        super(ObjectiveKind.Gardener,nbPT);
+        super(nbPT);
         this.bambooPattern=bambooPattern;
         this.localImprovement=Improvement.Empty;
     }
@@ -33,7 +38,7 @@ public class GardenerObjective extends Objective {
      * @param improvement type of improvement
      */
     public GardenerObjective(int nbPT, BambooPattern bambooPattern,Improvement improvement){
-        super(ObjectiveKind.Gardener,nbPT);
+        super(nbPT);
         this.bambooPattern=bambooPattern;
         this.localImprovement=improvement;
     }
@@ -43,6 +48,45 @@ public class GardenerObjective extends Objective {
      */
     public BambooPattern getBambooPattern() {
         return this.bambooPattern;
+    }
+
+    /**
+     *Check if a gardener objective are complete
+     * @return true if objectives complete, else false
+     */
+    @Override
+    public void checkObjective(Map map, Player player){
+        ArrayList<Tile> allTiles = new ArrayList<>();
+        for(Optional<Tile> tile : map.getTiles()){
+            tile.ifPresent(allTiles::add);
+        }
+        int nbMath = 0;
+        for(Tile value : allTiles){
+            if(value.getBamboo().getColor().equals(bambooPattern.getColor())&&value.getBamboo().getSize()==bambooPattern.getHeight() && checkImprovement(value)){
+                nbMath++;
+            }
+        }
+        if(nbMath>=bambooPattern.getNbBamboo()){
+            this.updateStates();
+        }
+    }
+
+    /**
+     * Check if the improvement is valid between an objective and a tile :
+     * @param tile -> current tile
+     * @return True if the objective improvement correspond to the tile improvement otherwise false.
+     */
+    private boolean checkImprovement(Tile tile){
+        if(localImprovement.equals(Improvement.Empty)){
+            return true;
+        }
+        if(localImprovement.equals(Improvement.NoImprovementHere)){
+            return tile.getImprovement()==Improvement.Empty;
+        }
+        if(localImprovement.equals(tile.getImprovement())){
+            return true;
+        }
+        return false;
     }
 
     /**

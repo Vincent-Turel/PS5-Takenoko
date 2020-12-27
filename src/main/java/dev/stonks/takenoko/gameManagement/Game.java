@@ -40,7 +40,7 @@ public class Game {
     private ArrayList<PandaObjective> pandaObjectives;
     private ArrayList<GardenerObjective> gardenerObjectives;
     private Set<MatchResult> patternMatchs;
-    private Objective emperor;
+    private EmperorObjective emperor;
     private final Random random;
     public ArrayList<GameResults> gamePlayersResults;
 
@@ -90,7 +90,7 @@ public class Game {
         tileObjectives = PatternObjectiveFactory.validPatternObjectives();
         gardenerObjectives = ObjectivesBambooFactory.gardenerObjectiveList();
         pandaObjectives = ObjectivesBambooFactory.pandaObjectiveList();
-        emperor = new Objective(ObjectiveKind.Emperor,2);
+        emperor = new EmperorObjective();
     }
 
     public ArrayList<Action> findPossibleActions(Player player){
@@ -251,27 +251,27 @@ public class Game {
             case DrawObjective:
                 ArrayList<ObjectiveKind> listPossibleKind = new ArrayList<>();
                 if (tileObjectives.size() > 0) {
-                    listPossibleKind.add(ObjectiveKind.Pattern);
+                    listPossibleKind.add(ObjectiveKind.PatternObjective);
                 }
                 if (pandaObjectives.size() > 0) {
-                    listPossibleKind.add(ObjectiveKind.Panda);
+                    listPossibleKind.add(ObjectiveKind.PandaObjective);
                 }
                 if (gardenerObjectives.size() > 0) {
-                    listPossibleKind.add(ObjectiveKind.Gardener);
+                    listPossibleKind.add(ObjectiveKind.GardenerObjective);
                 }
                 ObjectiveKind objectiveKind = player.chooseObjectiveKind(listPossibleKind);
                 int num;
-                if (objectiveKind == ObjectiveKind.Pattern) {
+                if (objectiveKind == ObjectiveKind.PatternObjective) {
                     num = random.nextInt(tileObjectives.size());
                     player.addObjectives(tileObjectives.get(num));
                     tileObjectives.remove(num);
                 }
-                if (objectiveKind == ObjectiveKind.Panda) {
+                if (objectiveKind == ObjectiveKind.PandaObjective) {
                     num = random.nextInt(pandaObjectives.size());
                     player.addObjectives(pandaObjectives.get(num));
                     pandaObjectives.remove(num);
                 }
-                if(objectiveKind==ObjectiveKind.Gardener) {
+                if(objectiveKind==ObjectiveKind.GardenerObjective) {
                     num = random.nextInt(gardenerObjectives.size());
                     player.addObjectives(gardenerObjectives.get(num));
                     gardenerObjectives.remove(num);
@@ -328,19 +328,7 @@ public class Game {
         ArrayList<Objective> playerObjectives = player.getObjectives();
 
         for (Objective objective: playerObjectives) {
-            switch (objective.getObjType()) {
-                case Pattern:
-                    patternMatchs = IsValidObjectives.isValidPatternObjective((PatternObjective) objective, map, patternMatchs);
-                    break;
-                case Panda:
-                    player.upDateInventory(IsValidObjectives.isObjectivesPandaValid((PandaObjective) objective, player));
-                    break;
-                case Gardener:
-                    IsValidObjectives.isObjectivesGardenerValid((GardenerObjective) objective, map);
-                    break;
-                default:
-                    break;
-            }
+            objective.checkObjective(map,player);
             if (objective.getStates()) {
                 LOG.info("Player n°" + player.getId() + " has achieved a " + objective.getClass().getSimpleName());
                 player.newObjectivesAchieved(objective);

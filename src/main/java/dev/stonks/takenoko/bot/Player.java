@@ -328,19 +328,7 @@ public abstract class Player {
         ArrayList<Objective> playerObjectives = player.getObjectives();
         int nbPoint = 0;
         for (Objective objective : playerObjectives) {
-            switch (objective.getObjType()) {
-                case Pattern:
-                    IsValidObjectives.isValidPatternObjective((PatternObjective) objective, clonedMap, new HashSet<>());
-                    break;
-                case Panda:
-                    IsValidObjectives.isObjectivesPandaValid((PandaObjective) objective, player);
-                    break;
-                case Gardener:
-                    IsValidObjectives.isObjectivesGardenerValid((GardenerObjective) objective, clonedMap);
-                    break;
-                default:
-                    break;
-            }
+            objective.checkObjective(clonedMap,player);
             if (objective.getStates()) {
                 objective.resetObj();
                 nbPoint += objective.getNbPt();
