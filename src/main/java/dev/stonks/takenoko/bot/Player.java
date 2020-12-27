@@ -179,10 +179,10 @@ public abstract class Player {
     /**
      * Add a bamboo to a list of collected bamboo
      *
-     * @param bamboo the bambo that has been collected thanks to the panda
+     * @param color the bamboo color that has been collected thanks to the panda
      */
-    public void addCollectedBamboo(Bamboo bamboo) {
-        switch (bamboo.getColor()) {
+    public void addCollectedBamboo(TileKind color) {
+        switch (color) {
             case Green:
                 collectedBamboo[0]++;
                 break;

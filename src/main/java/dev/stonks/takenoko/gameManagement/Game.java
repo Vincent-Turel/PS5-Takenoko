@@ -241,7 +241,7 @@ public class Game {
                 break;
             case MovePanda:
                 Panda panda = map.getPanda();
-                Optional<Bamboo> bamboo = panda.moveToAndAct(player.choseWherePawnShouldGo(panda));
+                Optional<TileKind> bamboo = panda.moveToAndAct(player.choseWherePawnShouldGo(panda));
                 bamboo.ifPresent(player::addCollectedBamboo);
                 break;
             case DrawIrrigation:
