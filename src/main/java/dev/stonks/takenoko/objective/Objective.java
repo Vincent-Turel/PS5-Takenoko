@@ -9,13 +9,13 @@ import java.util.Objects;
  * @author the StonksDev team
  */
 
-public class Objective {
+public abstract class Objective {
 
     protected int nbPt;
     protected Boolean isValid;
 
     /**
-     * Constucteur for 1 objective
+     * Constructor for 1 objective
      *
      * @param nbPT n° of point
      *
@@ -52,7 +52,7 @@ public class Objective {
         if(o.getClass()!= Objective.class && o.getClass()!= GardenerObjective.class && o.getClass()!= PatternObjective.class && o.getClass()!= PandaObjective.class) throw IllegalEqualityExceptionGenerator.create(Objective.class,o.getClass());
         Objective objective = (Objective) o;
         return nbPt == objective.nbPt &&
-                this.getClass().getSimpleName() == objective.getClass().getSimpleName() &&
+                this.getClass().getSimpleName().equals(objective.getClass().getSimpleName()) &&
                 Objects.equals(isValid, objective.isValid);
     }
 

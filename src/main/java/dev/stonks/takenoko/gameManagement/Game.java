@@ -40,7 +40,7 @@ public class Game {
     private ArrayList<PandaObjective> pandaObjectives;
     private ArrayList<GardenerObjective> gardenerObjectives;
     private Set<MatchResult> patternMatchs;
-    private Objective emperor;
+    private EmperorObjective emperor;
     private final Random random;
     public ArrayList<GameResults> gamePlayersResults;
 
@@ -90,7 +90,7 @@ public class Game {
         tileObjectives = PatternObjectiveFactory.validPatternObjectives();
         gardenerObjectives = ObjectivesBambooFactory.gardenerObjectiveList();
         pandaObjectives = ObjectivesBambooFactory.pandaObjectiveList();
-        emperor = new Objective(2);
+        emperor = new EmperorObjective();
     }
 
     public ArrayList<Action> findPossibleActions(Player player){

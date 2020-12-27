@@ -79,8 +79,7 @@ public class GardenerObjective extends Objective {
             return true;
         }
         if(localImprovement.equals(Improvement.NoImprovementHere)){
-            if(tile.getImprovement()==Improvement.Empty){return true;}
-            else {return false;}
+            return tile.getImprovement()==Improvement.Empty;
         }
         if(localImprovement.equals(tile.getImprovement())){
             return true;

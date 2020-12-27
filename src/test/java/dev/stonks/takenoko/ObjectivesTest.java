@@ -13,21 +13,6 @@ import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class ObjectivesTest {
-  
-    @Test
-    void objectiveClassTest(){
-        Objective objective = new Objective(5);
-        //nbPt test :
-        assertEquals(5,objective.getNbPt());
-        //objective value test :
-        assertEquals(false,objective.getStates());
-        //updateStates test :
-        objective.updateStates();
-        assertEquals(true,objective.getStates());
-        //reset test :
-        objective.resetObj();
-        assertEquals(false,objective.getStates());
-    }
 
     @Test
     void objectivePatternCreationTest(){
