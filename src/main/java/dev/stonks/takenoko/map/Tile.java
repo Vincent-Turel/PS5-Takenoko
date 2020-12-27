@@ -3,6 +3,7 @@ package dev.stonks.takenoko.map;
 import dev.stonks.takenoko.IllegalEqualityExceptionGenerator;
 
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -131,12 +132,15 @@ public class Tile {
     }
 
     /**
-     * Decrease the size of the bamboo
+     * Decrease the size of the bamboo, returns the bamboo color which has been
+     * cut, if it exists.
      * Minimal size : 0
      */
-    public void cutBamboo(){
-        if (!isInitial())
-            bamboo.cut();
+    public Optional<TileKind> cutBamboo(){
+        if (!isInitial() && improvement != Improvement.Enclosure)
+            return bamboo.cut();
+
+        else return Optional.empty();
     }
 
     /**

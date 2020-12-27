@@ -6,7 +6,7 @@ package dev.stonks.takenoko.map;
  * @author The StonksDev team.
  */
 public enum Improvement {
-    // Enclosure,
+    Enclosure,
     // Fertilizer,
     Watershed,
     Empty,

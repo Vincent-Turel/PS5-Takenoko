@@ -25,6 +25,6 @@ public class Panda extends Pawn {
      */
     public Optional<TileKind> moveToAndAct(Tile tile) {
         super.moveTo(tile);
-        return tile.getBamboo().cut();
+        return tile.cutBamboo();
     }
 }
