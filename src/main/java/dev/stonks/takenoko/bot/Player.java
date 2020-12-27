@@ -330,7 +330,7 @@ public abstract class Player {
         for (Objective objective : playerObjectives) {
             switch (objective.getObjType()) {
                 case Pattern:
-                    IsValidObjectives.isValidPatternObjective((PatternObjective) objective, clonedMap);
+                    ((PatternObjective) objective).isValidPatternObjective(clonedMap);
                     break;
                 case Panda:
                     IsValidObjectives.isObjectivesPandaValid((PandaObjective) objective, player);

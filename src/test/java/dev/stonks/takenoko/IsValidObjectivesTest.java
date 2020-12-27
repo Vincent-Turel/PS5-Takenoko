@@ -37,11 +37,11 @@ public class IsValidObjectivesTest {
 
         //Test :
         assertEquals(false,objectiveWin.getStates());
-        IsValidObjectives.isValidPatternObjective(objectiveWin,map);
+        objectiveWin.isValidPatternObjective(map);
         assertEquals(true,objectiveWin.getStates());
 
         assertEquals(false,objectiveLose.getStates());
-        IsValidObjectives.isValidPatternObjective(objectiveLose,map);
+        objectiveLose.isValidPatternObjective(map);
         assertEquals(false,objectiveLose.getStates());
 
     }

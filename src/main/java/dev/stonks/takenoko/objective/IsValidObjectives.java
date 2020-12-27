@@ -21,18 +21,6 @@ import java.util.Set;
 public class IsValidObjectives {
 
     /**
-     * @param objective -> take an objectives to controlling if it's validate or not
-     * @param map -> map of the game (states of all tiles and placement)
-     * @return true if objectives complete, else false
-     */
-    public static void isValidPatternObjective(PatternObjective objective, Map map){
-        Set<MatchResult> result = objective.getLocalPattern().getMatchesOn(map);
-        if(result.size()!=0){
-            objective.UpdtateStates();
-        }
-    }
-
-    /**
      *Check if a panda objective are complete
      * @return the update of the inventory if objectives complete, else juste the old inventory
      */
