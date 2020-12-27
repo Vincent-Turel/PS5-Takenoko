@@ -21,7 +21,7 @@ public class PandaObjective extends Objective{
      * @param bambooPattern pattern for the objective
      */
     public PandaObjective(int nbPT, BambooPattern bambooPattern){
-        super(ObjectiveKind.Panda,nbPT);
+        super(ObjectiveKind.ObjectivePanda,nbPT);
         this.bambooPattern=bambooPattern;
     }
 
@@ -36,7 +36,7 @@ public class PandaObjective extends Objective{
      *Check if a panda objective are complete
      * @return the update of the inventory if objectives complete, else juste the old inventory
      */
-    public int[] isObjectivesPandaValid(Player player){
+    public int[] checkObjective(Player player){
         int[] bambooStock = player.getCollectedBamboo();
         if(bambooPattern.getOptionalColor1().isPresent()){
             bambooStock=checkForUpdateState(bambooStock);
@@ -60,7 +60,7 @@ public class PandaObjective extends Objective{
     private int[] checkForUpdateState(int[] stock,int id){
         int result = bambooPattern.getHeight()*bambooPattern.getNbBamboo();
         if(stock[id]>=result){
-            this.UpdtateStates();
+            this.updateStates();
             stock[id]-=result;
         }
         return stock;
@@ -73,7 +73,7 @@ public class PandaObjective extends Objective{
      */
     private int[] checkForUpdateState(int[] stock){
         if(stock[0]>=bambooPattern.getHeight() && stock[1]>=bambooPattern.getHeight() && stock[2]>=bambooPattern.getHeight()){
-            this.UpdtateStates();
+            this.updateStates();
             stock[0]-=bambooPattern.getHeight()*bambooPattern.getNbBamboo();
             stock[1]-=bambooPattern.getHeight()*bambooPattern.getNbBamboo();
             stock[2]-=bambooPattern.getHeight()*bambooPattern.getNbBamboo();

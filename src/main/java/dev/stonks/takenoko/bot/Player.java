@@ -329,14 +329,14 @@ public abstract class Player {
         int nbPoint = 0;
         for (Objective objective : playerObjectives) {
             switch (objective.getObjType()) {
-                case Pattern:
-                    ((PatternObjective) objective).isValidPatternObjective(clonedMap);
+                case ObjectivePattern:
+                    ((PatternObjective) objective).checkObjective(clonedMap);
                     break;
-                case Panda:
-                    ((PandaObjective)objective).isObjectivesPandaValid(player);
+                case ObjectivePanda:
+                    ((PandaObjective)objective).checkObjective(player);
                     break;
-                case Gardener:
-                    ((GardenerObjective)objective).isObjectivesGardenerValid(clonedMap);
+                case ObjectiveGardener:
+                    ((GardenerObjective)objective).checkObjective(clonedMap);
                     break;
                 default:
                     break;

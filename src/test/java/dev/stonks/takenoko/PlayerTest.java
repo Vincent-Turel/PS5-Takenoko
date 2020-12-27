@@ -61,31 +61,31 @@ public class PlayerTest {
     @Test
     public void chooseObjectiveKindTest(){
         ArrayList<ObjectiveKind> possibleObjectiveKinds = new ArrayList<>(Arrays.asList(ObjectiveKind.values()));
-        possibleObjectiveKinds.remove(ObjectiveKind.Emperor);
-        possibleObjectiveKinds.remove(ObjectiveKind.Panda);
+        possibleObjectiveKinds.remove(ObjectiveKind.ObjectiveEmperor);
+        possibleObjectiveKinds.remove(ObjectiveKind.ObjectivePanda);
 
         assertTrue(possibleObjectiveKinds.contains(randomPlayer.chooseObjectiveKind(possibleObjectiveKinds)));
 
         GardenerObjective gardenerObjective = mock(GardenerObjective.class);
-        when(gardenerObjective.getObjType()).thenReturn(ObjectiveKind.Gardener);
+        when(gardenerObjective.getObjType()).thenReturn(ObjectiveKind.ObjectiveGardener);
         PatternObjective patternObjective = mock(PatternObjective.class);
-        when(patternObjective.getObjType()).thenReturn(ObjectiveKind.Pattern, ObjectiveKind.Pattern);
+        when(patternObjective.getObjType()).thenReturn(ObjectiveKind.ObjectivePattern, ObjectiveKind.ObjectivePattern);
         dumbPlayer.addObjectives(gardenerObjective);
         dumbPlayer.addObjectives(patternObjective);
         dumbPlayer.addObjectives(patternObjective);
         assertTrue(possibleObjectiveKinds.contains(dumbPlayer.chooseObjectiveKind(possibleObjectiveKinds)));
-        assertEquals(ObjectiveKind.Gardener, dumbPlayer.chooseObjectiveKind(possibleObjectiveKinds));
+        assertEquals(ObjectiveKind.ObjectiveGardener, dumbPlayer.chooseObjectiveKind(possibleObjectiveKinds));
 
 
         GardenerObjective gardenerObjective2 = mock(GardenerObjective.class);
-        when(gardenerObjective2.getObjType()).thenReturn(ObjectiveKind.Gardener);
+        when(gardenerObjective2.getObjType()).thenReturn(ObjectiveKind.ObjectiveGardener);
         PatternObjective patternObjective2 = mock(PatternObjective.class);
-        when(patternObjective2.getObjType()).thenReturn(ObjectiveKind.Pattern, ObjectiveKind.Pattern);
+        when(patternObjective2.getObjType()).thenReturn(ObjectiveKind.ObjectivePattern, ObjectiveKind.ObjectivePattern);
         smartPlayer.addObjectives(gardenerObjective2);
         smartPlayer.addObjectives(patternObjective2);
         smartPlayer.addObjectives(patternObjective2);
         assertTrue(possibleObjectiveKinds.contains(smartPlayer.chooseObjectiveKind(possibleObjectiveKinds)));
-        assertEquals(ObjectiveKind.Gardener, smartPlayer.chooseObjectiveKind(possibleObjectiveKinds));
+        assertEquals(ObjectiveKind.ObjectiveGardener, smartPlayer.chooseObjectiveKind(possibleObjectiveKinds));
 
         possibleObjectiveKinds.clear();
         assertThrows(IllegalStateException.class, () -> randomPlayer.chooseObjectiveKind(possibleObjectiveKinds));

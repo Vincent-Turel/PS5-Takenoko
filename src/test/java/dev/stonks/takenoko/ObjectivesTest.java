@@ -1,7 +1,6 @@
 package dev.stonks.takenoko;
 
 import dev.stonks.takenoko.map.Improvement;
-import dev.stonks.takenoko.map.TileKind;
 import dev.stonks.takenoko.objective.GardenerObjective;
 import dev.stonks.takenoko.objective.Objective;
 import dev.stonks.takenoko.objective.ObjectiveKind;
@@ -9,7 +8,6 @@ import dev.stonks.takenoko.objective.PandaObjective;
 import dev.stonks.takenoko.pattern.BambooPattern;
 import dev.stonks.takenoko.pattern.Pattern;
 import dev.stonks.takenoko.objective.PatternObjective;
-import dev.stonks.takenoko.pawn.Gardener;
 import org.junit.jupiter.api.Test;
 import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -18,25 +16,25 @@ class ObjectivesTest {
   
     @Test
     void objectiveClassTest(){
-        Objective pattern = new Objective(ObjectiveKind.Pattern, 5);
-        Objective gardener = new Objective(ObjectiveKind.Gardener, 6);
-        Objective panda = new Objective(ObjectiveKind.Panda, 7);
+        Objective pattern = new Objective(ObjectiveKind.ObjectivePattern, 5);
+        Objective gardener = new Objective(ObjectiveKind.ObjectiveGardener, 6);
+        Objective panda = new Objective(ObjectiveKind.ObjectivePanda, 7);
         //nbPt test :
         assertEquals(5,pattern.getNbPt());
         assertEquals(6,gardener.getNbPt());
         assertEquals(7,panda.getNbPt());
         //type test :
-        assertEquals(ObjectiveKind.Pattern,pattern.getObjType());
-        assertEquals(ObjectiveKind.Gardener,gardener.getObjType());
-        assertEquals(ObjectiveKind.Panda,panda.getObjType());
+        assertEquals(ObjectiveKind.ObjectivePattern,pattern.getObjType());
+        assertEquals(ObjectiveKind.ObjectiveGardener,gardener.getObjType());
+        assertEquals(ObjectiveKind.ObjectivePanda,panda.getObjType());
         //objective value test :
         assertEquals(false,pattern.getStates());
         assertEquals(false,gardener.getStates());
         assertEquals(false,panda.getStates());
         //updateStates test :
-        pattern.UpdtateStates();
-        gardener.UpdtateStates();
-        panda.UpdtateStates();
+        pattern.updateStates();
+        gardener.updateStates();
+        panda.updateStates();
         assertEquals(true,pattern.getStates());
         assertEquals(true,gardener.getStates());
         assertEquals(true,panda.getStates());
@@ -63,9 +61,9 @@ class ObjectivesTest {
         assertEquals(7,panda.getNbPt());
 
         //test objType :
-        assertEquals(ObjectiveKind.Pattern,pattern.getObjType());
-        assertEquals(ObjectiveKind.Gardener,gardener.getObjType());
-        assertEquals(ObjectiveKind.Panda,panda.getObjType());
+        assertEquals(ObjectiveKind.ObjectivePattern,pattern.getObjType());
+        assertEquals(ObjectiveKind.ObjectiveGardener,gardener.getObjType());
+        assertEquals(ObjectiveKind.ObjectivePanda,panda.getObjType());
 
         //test objPattern :
         assertEquals(aBambooPattern,panda.getBambooPattern());

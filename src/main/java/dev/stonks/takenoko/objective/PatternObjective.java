@@ -24,7 +24,7 @@ public class PatternObjective extends Objective {
      */
 
     public PatternObjective(int nbPT, Pattern localPattern){
-        super(ObjectiveKind.Pattern,nbPT);
+        super(ObjectiveKind.ObjectivePattern,nbPT);
         this.localPattern=localPattern;
     }
 
@@ -37,10 +37,10 @@ public class PatternObjective extends Objective {
      * @param map -> map of the game (states of all tiles and placement)
      * @return true if objectives complete, else false
      */
-    public void isValidPatternObjective(Map map){
+    public void checkObjective(Map map){
         Set<MatchResult> result = localPattern.getMatchesOn(map);
         if(result.size()!=0){
-            this.UpdtateStates();
+            this.updateStates();
         }
     }
 

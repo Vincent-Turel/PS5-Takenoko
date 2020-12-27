@@ -125,7 +125,7 @@ public class SmartPlayer extends Player implements Cloneable {
     private Set<MultipleAnswer<TileKind, Improvement, Integer>> getInteristingGardenerBamboo() {
         Set<MultipleAnswer<TileKind, Improvement, Integer>> answers = new HashSet<>();
         objectives.stream()
-                .filter(o -> o.getObjType() == ObjectiveKind.Gardener)
+                .filter(o -> o.getObjType() == ObjectiveKind.ObjectiveGardener)
                 .map(objective -> (GardenerObjective) objective)
                 .forEach(gObj -> answers.add(new MultipleAnswer<>(
                         gObj.getBambooPattern().getColor(), gObj.getLocalImprovement(), gObj.getBambooPattern().getHeight())));
@@ -135,7 +135,7 @@ public class SmartPlayer extends Player implements Cloneable {
     private Set<TileKind> getInterestingPandaBamboo() {
         Set<TileKind> tileKinds = new HashSet<>();
         objectives.stream()
-                .filter(o -> o.getObjType() == ObjectiveKind.Panda)
+                .filter(o -> o.getObjType() == ObjectiveKind.ObjectivePanda)
                 .map(objective -> (PandaObjective) objective)
                 .map(PandaObjective::getBambooPattern)
                 .forEach(bambooPattern -> {

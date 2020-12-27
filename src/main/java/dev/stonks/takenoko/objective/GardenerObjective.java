@@ -25,7 +25,7 @@ public class GardenerObjective extends Objective {
      * @param bambooPattern pattern for the objective
      */
     public GardenerObjective(int nbPT, BambooPattern bambooPattern){
-        super(ObjectiveKind.Gardener,nbPT);
+        super(ObjectiveKind.ObjectiveGardener,nbPT);
         this.bambooPattern=bambooPattern;
         this.localImprovement=Improvement.Empty;
     }
@@ -37,7 +37,7 @@ public class GardenerObjective extends Objective {
      * @param improvement type of improvement
      */
     public GardenerObjective(int nbPT, BambooPattern bambooPattern,Improvement improvement){
-        super(ObjectiveKind.Gardener,nbPT);
+        super(ObjectiveKind.ObjectiveGardener,nbPT);
         this.bambooPattern=bambooPattern;
         this.localImprovement=improvement;
     }
@@ -53,19 +53,19 @@ public class GardenerObjective extends Objective {
      *Check if a gardener objective are complete
      * @return true if objectives complete, else false
      */
-    public void isObjectivesGardenerValid(Map map){
+    public void checkObjective(Map map){
         ArrayList<Tile> allTiles = new ArrayList<>();
         for(Optional<Tile> tile : map.getTiles()){
             tile.ifPresent(allTiles::add);
         }
         int nbMath = 0;
         for(Tile value : allTiles){
-            if(value.getBamboo().getColor().equals(bambooPattern.getColor())&&value.getBamboo().getSize()==bambooPattern.getHeight() && isImprovementValid(value)){
+            if(value.getBamboo().getColor().equals(bambooPattern.getColor())&&value.getBamboo().getSize()==bambooPattern.getHeight() && checkImprovement(value)){
                 nbMath++;
             }
         }
         if(nbMath>=bambooPattern.getNbBamboo()){
-            this.UpdtateStates();
+            this.updateStates();
         }
     }
 
@@ -74,7 +74,7 @@ public class GardenerObjective extends Objective {
      * @param tile -> current tile
      * @return True if the objective improvement correspond to the tile improvement otherwise false.
      */
-    private boolean isImprovementValid(Tile tile){
+    private boolean checkImprovement(Tile tile){
         if(localImprovement.equals(Improvement.Empty)){
             return true;
         }

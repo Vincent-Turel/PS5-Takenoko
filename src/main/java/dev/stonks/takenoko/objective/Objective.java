@@ -44,7 +44,7 @@ public class Objective {
     /**
      * Update the states of this objective :
      */
-    public void UpdtateStates(){isValid=true;}
+    public void updateStates(){isValid=true;}
 
     @Override
     public boolean equals(Object o) {
