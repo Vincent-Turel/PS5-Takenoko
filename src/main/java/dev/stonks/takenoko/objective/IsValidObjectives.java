@@ -19,7 +19,7 @@ import java.util.Set;
  */
 
 public class IsValidObjectives {
-    
+
     /**
      *Check if a gardener objective are complete
      * @return true if objectives complete, else false

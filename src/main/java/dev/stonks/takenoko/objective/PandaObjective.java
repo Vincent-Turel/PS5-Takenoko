@@ -39,36 +39,46 @@ public class PandaObjective extends Objective{
     public int[] isObjectivesPandaValid(Player player){
         int[] bambooStock = player.getCollectedBamboo();
         if(bambooPattern.getOptionalColor1().isPresent()){
-            if(bambooStock[0]>=bambooPattern.getHeight() && bambooStock[1]>=bambooPattern.getHeight() && bambooStock[2]>=bambooPattern.getHeight()){
-                this.UpdtateStates();
-                bambooStock[0]-=bambooPattern.getHeight()*bambooPattern.getNbBamboo();
-                bambooStock[1]-=bambooPattern.getHeight()*bambooPattern.getNbBamboo();
-                bambooStock[2]-=bambooPattern.getHeight()*bambooPattern.getNbBamboo();
-            }
+            bambooStock=checkForUpdateState(bambooStock);
         }
         else{
             switch (bambooPattern.getColor()){
-                case Pink:
-                    if(bambooStock[2]>=bambooPattern.getHeight()*bambooPattern.getNbBamboo()){
-                        this.UpdtateStates();
-                        bambooStock[2]-=bambooPattern.getHeight()*bambooPattern.getNbBamboo();
-                    }
-                    break;
-                case Yellow:
-                    if(bambooStock[1]>=bambooPattern.getHeight()*bambooPattern.getNbBamboo()){
-                        this.UpdtateStates();
-                        bambooStock[1]-=bambooPattern.getHeight()*bambooPattern.getNbBamboo();
-                    }
-                    break;
-                case Green:
-                    if(bambooStock[0]>=bambooPattern.getHeight()*bambooPattern.getNbBamboo()){
-                        this.UpdtateStates();
-                        bambooStock[0]-=bambooPattern.getHeight()*bambooPattern.getNbBamboo();
-                    }
-                    break;
+                case Pink:bambooStock=checkForUpdateState(bambooStock,2);break;
+                case Yellow:bambooStock=checkForUpdateState(bambooStock,1);break;
+                case Green:bambooStock=checkForUpdateState(bambooStock,0);break;
             }
         }
         return bambooStock;
+    }
+
+    /**
+     * Update the objective state if there are 1 color
+     * @param stock -> player bamboo inventory
+     * @param id -> bamboo position on the list
+     * @return the player bamboo inventory update
+     */
+    private int[] checkForUpdateState(int[] stock,int id){
+        int result = bambooPattern.getHeight()*bambooPattern.getNbBamboo();
+        if(stock[id]>=result){
+            this.UpdtateStates();
+            stock[id]-=result;
+        }
+        return stock;
+    }
+
+    /**
+     * Update the objective state if there are all color
+     * @param stock -> player bamboo inventory
+     * @return the player bamboo inventory update
+     */
+    private int[] checkForUpdateState(int[] stock){
+        if(stock[0]>=bambooPattern.getHeight() && stock[1]>=bambooPattern.getHeight() && stock[2]>=bambooPattern.getHeight()){
+            this.UpdtateStates();
+            stock[0]-=bambooPattern.getHeight()*bambooPattern.getNbBamboo();
+            stock[1]-=bambooPattern.getHeight()*bambooPattern.getNbBamboo();
+            stock[2]-=bambooPattern.getHeight()*bambooPattern.getNbBamboo();
+        }
+        return stock;
     }
 
     @Override
