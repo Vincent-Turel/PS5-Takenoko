@@ -330,13 +330,13 @@ public abstract class Player {
         for (Objective objective : playerObjectives) {
             switch (objective.getObjType()) {
                 case PatternObjective:
-                    ((PatternObjective) objective).checkObjective(clonedMap);
+                    ((PatternObjective) objective).checkObjective(clonedMap,player);
                     break;
                 case PandaObjective:
-                    ((PandaObjective)objective).checkObjective(player);
+                    ((PandaObjective)objective).checkObjective(clonedMap,player);
                     break;
                 case GardenerObjective:
-                    ((GardenerObjective)objective).checkObjective(clonedMap);
+                    ((GardenerObjective)objective).checkObjective(clonedMap,player);
                     break;
                 default:
                     break;

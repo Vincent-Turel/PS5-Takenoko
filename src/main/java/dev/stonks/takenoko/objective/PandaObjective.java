@@ -2,6 +2,7 @@ package dev.stonks.takenoko.objective;
 
 import dev.stonks.takenoko.IllegalEqualityExceptionGenerator;
 import dev.stonks.takenoko.bot.Player;
+import dev.stonks.takenoko.map.Map;
 import dev.stonks.takenoko.pattern.BambooPattern;
 
 import java.util.Objects;
@@ -36,7 +37,7 @@ public class PandaObjective extends Objective{
      *Check if a panda objective are complete
      * @return the update of the inventory if objectives complete, else juste the old inventory
      */
-    public int[] checkObjective(Player player){
+    public void checkObjective(Map map, Player player){
         int[] bambooStock = player.getCollectedBamboo();
         if(bambooPattern.getOptionalColor1().isPresent()){
             bambooStock=checkForUpdateState(bambooStock);
@@ -48,7 +49,7 @@ public class PandaObjective extends Objective{
                 case Green:bambooStock=checkForUpdateState(bambooStock,0);break;
             }
         }
-        return bambooStock;
+        player.upDateInventory(bambooStock);
     }
 
     /**

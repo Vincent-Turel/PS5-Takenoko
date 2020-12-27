@@ -1,5 +1,6 @@
 package dev.stonks.takenoko.objective;
 
+import dev.stonks.takenoko.bot.Player;
 import dev.stonks.takenoko.map.Improvement;
 import dev.stonks.takenoko.map.Map;
 import dev.stonks.takenoko.map.Tile;
@@ -53,7 +54,7 @@ public class GardenerObjective extends Objective {
      *Check if a gardener objective are complete
      * @return true if objectives complete, else false
      */
-    public void checkObjective(Map map){
+    public void checkObjective(Map map, Player player){
         ArrayList<Tile> allTiles = new ArrayList<>();
         for(Optional<Tile> tile : map.getTiles()){
             tile.ifPresent(allTiles::add);

@@ -1,6 +1,7 @@
 package dev.stonks.takenoko.objective;
 
 import dev.stonks.takenoko.IllegalEqualityExceptionGenerator;
+import dev.stonks.takenoko.bot.Player;
 import dev.stonks.takenoko.map.Map;
 import dev.stonks.takenoko.pattern.MatchResult;
 import dev.stonks.takenoko.pattern.Pattern;
@@ -37,7 +38,7 @@ public class PatternObjective extends Objective {
      * @param map -> map of the game (states of all tiles and placement)
      * @return true if objectives complete, else false
      */
-    public void checkObjective(Map map){
+    public void checkObjective(Map map, Player player){
         Set<MatchResult> result = localPattern.getMatchesOn(map);
         if(result.size()!=0){
             this.updateStates();

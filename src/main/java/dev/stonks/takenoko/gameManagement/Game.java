@@ -330,13 +330,13 @@ public class Game {
         for (Objective objective: playerObjectives) {
             switch (objective.getObjType()) {
                 case PatternObjective:
-                    ((PatternObjective) objective).checkObjective(map);
+                    ((PatternObjective) objective).checkObjective(map,player);
                     break;
                 case PandaObjective:
-                    player.upDateInventory(((PandaObjective)objective).checkObjective(player));
+                    ((PandaObjective)objective).checkObjective(map,player);
                     break;
                 case GardenerObjective:
-                    ((GardenerObjective)objective).checkObjective(map);
+                    ((GardenerObjective)objective).checkObjective(map,player);
                     break;
                 default:
                     break;

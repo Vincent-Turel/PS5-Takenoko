@@ -1,6 +1,8 @@
 package dev.stonks.takenoko.objective;
 
 import dev.stonks.takenoko.IllegalEqualityExceptionGenerator;
+import dev.stonks.takenoko.bot.Player;
+import dev.stonks.takenoko.map.Map;
 
 import java.util.Objects;
 
@@ -44,6 +46,8 @@ public abstract class Objective {
      * Update the states of this objective :
      */
     public void updateStates(){isValid=true;}
+
+    public abstract void checkObjective(Map map, Player player);
 
     @Override
     public boolean equals(Object o) {
