@@ -276,7 +276,7 @@ public abstract class Player {
         return new MultipleAnswer<>(chosenTile, chosenImprovement);
     }
 
-    public abstract void choseImprovement(List<Improvement> improvements);
+    public abstract Improvement choseImprovement(List<Improvement> improvements);
 
     /**
      * Set the current map state of the game

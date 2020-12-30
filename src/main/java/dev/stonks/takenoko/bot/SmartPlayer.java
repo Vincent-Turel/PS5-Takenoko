@@ -379,8 +379,10 @@ public class SmartPlayer extends Player implements Cloneable {
     }
 
     @Override
-    public void choseImprovement(List<Improvement> improvements) {
-        this.improvements.add(improvements.remove(random.nextInt(improvements.size())));
+    public Improvement choseImprovement(List<Improvement> improvements) {
+        Improvement chosen = improvements.remove(random.nextInt(improvements.size()));
+        this.improvements.add(chosen);
+        return chosen;
     }
 
     /**
