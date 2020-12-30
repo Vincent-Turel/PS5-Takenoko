@@ -43,20 +43,21 @@ public class Weather {
         upDateWeatherKind();
     }
 
-    /**
-     * For the moment : 1,2,6 = sun and 3,4,5 = rain.
-     */
-
     private void upDateWeatherKind(){
         switch (state){
             case 0:
-            case 1:
-            case 5:
-                weatherCondition=WeatherKind.Sun;break;
-            case 2:
-            case 3:
-            case 4:
                 weatherCondition=WeatherKind.Rain;break;
+            case 1:
+                weatherCondition=WeatherKind.Cloud;break;
+            case 2:
+                weatherCondition=WeatherKind.Sun;break;
+            case 3:
+                weatherCondition=WeatherKind.Thunderstorm;break;
+            case 4:
+                weatherCondition=WeatherKind.Wind;break;
+            case 5:
+                weatherCondition=WeatherKind.FreeChoice;break;
+            default:weatherCondition=WeatherKind.NoWeather;
         }
     }
 
@@ -65,6 +66,9 @@ public class Weather {
      * @param state -> the weather want by player
      */
     public void setWeather(int state){
+        if(state<0 || state>5){
+            state=6;
+        }
         this.state=state;
         upDateWeatherKind();
     }
@@ -75,8 +79,13 @@ public class Weather {
      */
     public void setWeather(WeatherKind newWeather){
         switch (newWeather.toString()){
-            case ("Sun") : this.state=0;break;
-            case ("Rain") : this.state=2;break;
+            case ("Rain") : this.state=0;break;
+            case ("Cloud") : this.state=1;break;
+            case ("Sun") : this.state=2;break;
+            case ("Thunderstorm") : this.state=3;break;
+            case ("Wind") : this.state=4;break;
+            case ("FreeChoice") : this.state=5;break;
+            default: this.state=6;
         }
         this.weatherCondition=newWeather;
     }
@@ -86,7 +95,7 @@ public class Weather {
      */
     public void resetWeather(){
         this.weatherCondition=WeatherKind.NoWeather;
-        this.state=0;
+        this.state=6;
     }
 
     @Override

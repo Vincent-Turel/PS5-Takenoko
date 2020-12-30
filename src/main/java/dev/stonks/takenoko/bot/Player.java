@@ -6,6 +6,7 @@ import dev.stonks.takenoko.map.Map;
 import dev.stonks.takenoko.objective.*;
 import dev.stonks.takenoko.pawn.Pawn;
 import dev.stonks.takenoko.gameManagement.Action;
+import dev.stonks.takenoko.weather.Weather;
 
 import java.util.*;
 import java.util.stream.Collectors;
