@@ -220,8 +220,6 @@ public class Game {
     private void playerPlay(Player player, ArrayList<Action> possibleActions) {
         Action chosenAction = player.decide(new ArrayList<>(possibleActions), map);
         LOG.info("Player n°" + player.getId() + " has chosen this action : " + chosenAction.toString());
-        if(gameWeather.getCondition() != WeatherKind.Wind)
-            possibleActions.remove(chosenAction);
         switch (chosenAction) {
             case PutTile:
                 ArrayList<AbstractTile> possiblesTiles = new ArrayList<>(3);
@@ -307,6 +305,13 @@ public class Game {
             }
             else
                 throw new IllegalStateException("This should never happen");
+        }
+        if(gameWeather.getCondition() != WeatherKind.Wind) {
+            possibleActions.remove(chosenAction);
+        }
+        else{
+            possibleActions.clear();
+            possibleActions.addAll(findPossibleActions(player));
         }
     }
 

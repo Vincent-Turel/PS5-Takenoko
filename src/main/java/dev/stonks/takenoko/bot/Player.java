@@ -105,8 +105,8 @@ public abstract class Player {
     public void addObjectives(Objective objective) {
         if (this.objectives.size() < 5) {
             this.objectives.add(objective);
-        } /*else
-            throw new IllegalCallerException("This should not be possible");*/
+        } else
+            throw new IllegalCallerException("This should not be possible");
     }
 
     /**
