@@ -25,7 +25,16 @@ public class ImprovementDeckTest {
     }
 
     @Test
-    void isAvailableOnlyThreeTimes() {
+    void canDrawEnclosureOnlyThreeTimes() {
+        assertDoesNotThrow(() -> deck.drawEnclosure().get());
+        assertDoesNotThrow(() -> deck.drawEnclosure().get());
+        assertDoesNotThrow(() -> deck.drawEnclosure().get());
+
+        assertTrue(deck.drawEnclosure().isEmpty());
+    }
+
+    @Test
+    void isWatershedAvailableOnlyThreeTimes() {
         // This test works because canDrawWatershedOnlyThreeTimes worked.
 
         // Three watershed available.
@@ -45,12 +54,34 @@ public class ImprovementDeckTest {
     }
 
     @Test
+    void isEnclosureAvailableOnlyThreeTimes() {
+        // This test works because canDrawWatershedOnlyThreeTimes worked.
+
+        // Three enclosure available.
+        assertTrue(deck.isEnclosureAvailable());
+
+        // Two enclosure available.
+        deck.drawEnclosure();
+        assertTrue(deck.isEnclosureAvailable());
+
+        // One enclosure available.
+        deck.drawEnclosure();
+        assertTrue(deck.isEnclosureAvailable());
+
+        // Drawing last enclosure.
+        deck.drawEnclosure();
+        assertFalse(deck.isEnclosureAvailable());
+    }
+
+    @Test
     void resetTest(){
         ImprovementDeck expected = new ImprovementDeck();
 
         assertEquals(expected,deck);
 
         deck.drawWatershed();
+        deck.drawEnclosure();
+        deck.drawEnclosure();
 
         assertNotEquals(expected,deck);
 

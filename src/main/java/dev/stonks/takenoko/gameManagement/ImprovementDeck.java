@@ -14,12 +14,14 @@ import java.util.Optional;
 public class ImprovementDeck {
     // INVARIANT: must be >= 0.
     private int remainingWatershed;
+    private int remainingEnclosusre;
 
     /**
      * Creates a new ImprovementDeck with the specified amount of each improvement.
      */
-    private ImprovementDeck(int watershed) {
+    private ImprovementDeck(int watershed, int enclosure) {
         remainingWatershed = watershed;
+        remainingEnclosusre = enclosure;
     }
 
     /**
@@ -28,7 +30,7 @@ public class ImprovementDeck {
      *   - 3 watersheds.
      */
     public ImprovementDeck() {
-        this(3);
+        this(3, 3);
     }
 
     /**
@@ -36,6 +38,13 @@ public class ImprovementDeck {
      */
     public boolean isWatershedAvailable() {
         return remainingWatershed > 0;
+    }
+
+    /**
+     * Returns whether if it is possible to draw an enclosure.
+     */
+    public boolean isEnclosureAvailable() {
+        return remainingEnclosusre > 0;
     }
 
     /**
@@ -51,8 +60,22 @@ public class ImprovementDeck {
         }
     }
 
+    /**
+     * Tries to draw an enclosure, returns it if it exists. Otherwise,
+     * returns empty.
+     */
+    public Optional<Improvement> drawEnclosure() {
+        if (remainingEnclosusre > 0) {
+            remainingEnclosusre--;
+            return Optional.of(Improvement.Enclosure);
+        } else {
+            return Optional.empty();
+        }
+    }
+
     public void reset(){
         remainingWatershed = 3;
+        remainingEnclosusre = 3;
     }
 
     @Override
@@ -62,12 +85,12 @@ public class ImprovementDeck {
         if(getClass() != o.getClass())
             throw IllegalEqualityExceptionGenerator.create(ImprovementDeck.class,o.getClass());
         ImprovementDeck that = (ImprovementDeck) o;
-        return remainingWatershed == that.remainingWatershed;
+        return remainingWatershed == that.remainingWatershed && remainingEnclosusre == that.remainingEnclosusre;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(remainingWatershed);
+        return Objects.hash(remainingWatershed, remainingEnclosusre);
     }
 
 }
