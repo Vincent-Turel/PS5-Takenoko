@@ -5,6 +5,7 @@ import dev.stonks.takenoko.map.Map;
 import dev.stonks.takenoko.pawn.Pawn;
 import dev.stonks.takenoko.gameManagement.Action;
 import dev.stonks.takenoko.objective.ObjectiveKind;
+import dev.stonks.takenoko.weather.WeatherKind;
 
 import java.util.*;
 
@@ -46,6 +47,11 @@ public class RandomPlayer extends Player{
         return getRandomInCollection(listPossibleKind);
     }
 
+    @Override
+    public WeatherKind chooseNewWeather(WeatherKind[] possiblesWeathers) {
+        return possiblesWeathers[random.nextInt(possiblesWeathers.length)];
+    }
+
     /**
      * @param tiles A liste of tiles
      * @return The coordinate and the tile the player has chosen
@@ -78,6 +84,17 @@ public class RandomPlayer extends Player{
             throw new IllegalStateException("This action shouldn't be possible if there the panda can't move anywhere");
 
         return getRandomInCollection(possiblePawnPlacements);
+    }
+
+    @Override
+    public Optional<Tile> chooseTileToMovePanda(Map map) {
+        this.currentMapState = map;
+        Set<Tile> possiblePawnPlacements = currentMapState.getPossiblePawnPlacements(map.getPanda());
+
+        if (possiblePawnPlacements.size() < 1)
+            return Optional.empty();
+
+        return Optional.of(getRandomInCollection(possiblePawnPlacements));
     }
 
     /**

@@ -5,6 +5,8 @@ import dev.stonks.takenoko.map.*;
 import dev.stonks.takenoko.objective.*;
 import dev.stonks.takenoko.pawn.Pawn;
 import dev.stonks.takenoko.gameManagement.Action;
+import dev.stonks.takenoko.weather.WeatherKind;
+
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -198,6 +200,17 @@ public class DumbPlayer extends Player {
         return possiblePawnPlacements.get(chosenAction.get(2));
     }
 
+    @Override
+    public Optional<Tile> chooseTileToMovePanda(Map map) {
+        this.currentMapState = map;
+        Set<Tile> possiblePawnPlacements = currentMapState.getPossiblePawnPlacements(map.getPanda());
+
+        if (possiblePawnPlacements.size() < 1)
+            return Optional.empty();
+
+        return Optional.of(getRandomInCollection(possiblePawnPlacements));
+    }
+
     /**
      * Return the action that the player want to do among [PutIrrigation, PutAmmenagment]
      * Return an empty optional if he doesn't want to play
@@ -245,6 +258,11 @@ public class DumbPlayer extends Player {
         return new MultipleAnswer<>(
                 irrigations.pop(),
                 chosenIrrigationCoordinate);
+    }
+
+    @Override
+    public WeatherKind chooseNewWeather(WeatherKind[] possiblesWeathers) {
+        return possiblesWeathers[random.nextInt(possiblesWeathers.length)];
     }
 
     @Override

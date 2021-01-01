@@ -7,6 +7,7 @@ import dev.stonks.takenoko.objective.*;
 import dev.stonks.takenoko.pawn.Pawn;
 import dev.stonks.takenoko.gameManagement.Action;
 import dev.stonks.takenoko.weather.Weather;
+import dev.stonks.takenoko.weather.WeatherKind;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -71,12 +72,28 @@ public abstract class Player {
     public abstract Tile choseWherePawnShouldGo(Pawn pawn);
 
     /**
+     * This method return the tile where the player want to move the panda with the weather effect
+     *
+     * @param map
+     * @return a optionnal tile if the player want to move the panda, or an empty optionnal if he doesn't want or can't
+     */
+    public abstract Optional<Tile> chooseTileToMovePanda(Map map);
+
+    /**
      * This method return the kind of objective the player wants to draw
      *
      * @param listPossibleKind a list of all objective kind the player can draw
      * @return the objective kind the player has chosen
      */
     public abstract ObjectiveKind chooseObjectiveKind(ArrayList<ObjectiveKind> listPossibleKind);
+
+    /**
+     * This method return a weather that the player want
+     *
+     * @param possiblesWeathers
+     * @return
+     */
+    public abstract WeatherKind chooseNewWeather(WeatherKind[] possiblesWeathers);
 
     /**
      * This method return the tile where the player want to grow bamboo
