@@ -149,7 +149,7 @@ public class Game {
                     LOG.info(possibleActions.toString());
                     while(!effectDone) {
                         //TODO: modifier le nombre d'aménagements restant une fois choisi par le joueur
-                        //TODO: Faire les fonctions chez les bots
+                        //TODO: mettre à jour les fonctions chez les bots(chooseNewWeather et chooseTileToMovePanda)
                         switch (gameWeather.getCondition()) {
                             case Cloud:
                                 List<Improvement> improvements = new ArrayList<>();
@@ -162,6 +162,7 @@ public class Game {
                                     switch(player.choseImprovement(improvements)){
                                         case Watershed:
                                             improvementDeck.drawWatershed();
+                                            LOG.info("Player n°"+player.getId()+" draw a watershed improvement");
                                             break;
                                         default:
                                             throw new RuntimeException("Improvement problem : this should not be possible");
@@ -177,6 +178,7 @@ public class Game {
                                 Optional<Tile> tileWhereGrow = player.chooseTileToGrow(new Map(map));
                                 if(tileWhereGrow.isPresent()) {
                                     if(tileWhereGrow.get().isIrrigated())
+                                        LOG.info("Player n°"+player.getId()+" grow the bamboo on a tile");
                                         tileWhereGrow.get().growBamboo();
                                 }
                                 effectDone = true;
@@ -184,11 +186,15 @@ public class Game {
                             case Thunderstorm:
                                 Optional<Tile> tileWhereMovePanda = player.chooseTileToMovePanda(new Map(map));
                                 if(tileWhereMovePanda.isPresent())
+                                    LOG.info("Player n°"+player.getId()+" move the panda pawn");
                                     map.getPanda().moveToAndAct(tileWhereMovePanda.get());
                                 effectDone = true;
                                 break;
                             case FreeChoice:
-                                gameWeather.setWeather(player.chooseNewWeather(WeatherKind.freeChoiceWeathers));
+                                WeatherKind newWeatherKind = player.chooseNewWeather(WeatherKind.freeChoiceWeathers);
+                                LOG.info("Player n°"+player.getId()+" choose a new weather : "+newWeatherKind);
+                                gameWeather.setWeather(newWeatherKind);
+                                break;
                             default:
                                 effectDone = true;
                         }
