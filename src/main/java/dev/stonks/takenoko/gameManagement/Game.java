@@ -182,7 +182,7 @@ public class Game {
                                 effectDone = true;
                                 break;
                             case Thunderstorm:
-                                Optional<Tile> tileWhereMovePanda = player.chooseTileToMovePanda(map);
+                                Optional<Tile> tileWhereMovePanda = player.chooseTileToMovePanda(new Map(map));
                                 if(tileWhereMovePanda.isPresent())
                                     map.getPanda().moveToAndAct(tileWhereMovePanda.get());
                                 effectDone = true;
