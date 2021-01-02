@@ -205,7 +205,7 @@ public class DumbPlayer extends Player {
         this.currentMapState = map;
         Set<Tile> possiblePawnPlacements = currentMapState.getPossiblePawnPlacements(map.getPanda());
 
-        if (possiblePawnPlacements.size() < 1)
+        if (possiblePawnPlacements.isEmpty())
             return Optional.empty();
 
         return Optional.of(getRandomInCollection(possiblePawnPlacements));
