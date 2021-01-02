@@ -5,6 +5,7 @@ import dev.stonks.takenoko.map.*;
 import dev.stonks.takenoko.objective.*;
 import dev.stonks.takenoko.pawn.Pawn;
 import dev.stonks.takenoko.gameManagement.Action;
+import dev.stonks.takenoko.weather.WeatherKind;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -320,6 +321,17 @@ public class SmartPlayer extends Player implements Cloneable {
         return possiblePawnPlacements.get(getResAction().get(1));
     }
 
+    @Override
+    public Optional<Tile> chooseTileToMovePanda(Map map) {
+        this.currentMapState = map;
+        Set<Tile> possiblePawnPlacements = currentMapState.getPossiblePawnPlacements(map.getPanda());
+
+        if (possiblePawnPlacements.isEmpty())
+            return Optional.empty();
+
+        return Optional.of(getRandomInCollection(possiblePawnPlacements));
+    }
+
     /**
      * Return the action that the player want to do among [PutIrrigation, PutAmmenagment]
      * Return an empty optional if he doesn't want to play
@@ -379,8 +391,15 @@ public class SmartPlayer extends Player implements Cloneable {
     }
 
     @Override
-    public void choseImprovement(List<Improvement> improvements) {
-        this.improvements.add(improvements.remove(random.nextInt(improvements.size())));
+    public WeatherKind chooseNewWeather(WeatherKind[] possiblesWeathers) {
+        return possiblesWeathers[random.nextInt(possiblesWeathers.length)];
+    }
+
+    @Override
+    public Improvement choseImprovement(List<Improvement> improvements) {
+        Improvement chosen = improvements.remove(random.nextInt(improvements.size()));
+        this.improvements.add(chosen);
+        return chosen;
     }
 
     /**
