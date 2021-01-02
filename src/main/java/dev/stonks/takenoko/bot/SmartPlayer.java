@@ -326,7 +326,7 @@ public class SmartPlayer extends Player implements Cloneable {
         this.currentMapState = map;
         Set<Tile> possiblePawnPlacements = currentMapState.getPossiblePawnPlacements(map.getPanda());
 
-        if (possiblePawnPlacements.size() < 1)
+        if (possiblePawnPlacements.isEmpty())
             return Optional.empty();
 
         return Optional.of(getRandomInCollection(possiblePawnPlacements));
