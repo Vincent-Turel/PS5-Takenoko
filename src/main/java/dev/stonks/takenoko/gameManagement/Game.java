@@ -267,24 +267,18 @@ public class Game {
                 int num;
                 if (objectiveKind == ObjectiveKind.PatternObjective) {
                     num = random.nextInt(tileObjectives.size());
-                    if (player.getObjectives().size()<6){
-                        player.addObjectives(tileObjectives.get(num));
-                        tileObjectives.remove(num);
-                    }
+                    player.addObjectives(tileObjectives.get(num));
+                    tileObjectives.remove(num);
                 }
                 if (objectiveKind == ObjectiveKind.PandaObjective) {
                     num = random.nextInt(pandaObjectives.size());
-                    if(player.getObjectives().size()<6){
-                        player.addObjectives(pandaObjectives.get(num));
-                        pandaObjectives.remove(num);
-                    }
+                    player.addObjectives(pandaObjectives.get(num));
+                    pandaObjectives.remove(num);
                 }
                 if(objectiveKind==ObjectiveKind.GardenerObjective) {
                     num = random.nextInt(gardenerObjectives.size());
-                    if(player.getObjectives().size()<6){
-                        player.addObjectives(gardenerObjectives.get(num));
-                        gardenerObjectives.remove(num);
-                    }
+                    player.addObjectives(gardenerObjectives.get(num));
+                    gardenerObjectives.remove(num);
                 }
                 break;
         }
