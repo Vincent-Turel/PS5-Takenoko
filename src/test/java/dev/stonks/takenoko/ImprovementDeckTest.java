@@ -1,6 +1,7 @@
 package dev.stonks.takenoko;
 
 import dev.stonks.takenoko.gameManagement.ImprovementDeck;
+import dev.stonks.takenoko.map.Improvement;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -16,9 +17,9 @@ public class ImprovementDeckTest {
 
     @Test
     void canDrawWatershedOnlyThreeTimes() {
-        assertDoesNotThrow(() -> deck.drawWatershed().get());
-        assertDoesNotThrow(() -> deck.drawWatershed().get());
-        assertDoesNotThrow(() -> deck.drawWatershed().get());
+        assertEquals(deck.drawWatershed().get(), Improvement.Watershed);
+        assertEquals(deck.drawWatershed().get(), Improvement.Watershed);
+        assertEquals(deck.drawWatershed().get(), Improvement.Watershed);
 
         assertTrue(deck.drawWatershed().isEmpty());
     }
