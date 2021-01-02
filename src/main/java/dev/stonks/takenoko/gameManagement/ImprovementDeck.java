@@ -17,6 +17,11 @@ public class ImprovementDeck {
     private int remainingEnclosure;
 
     /**
+     * The amount of improvements of a specific type at the beginning of the game.
+     */
+    private static final int defaultImprovementAmount = 3;
+
+    /**
      * Creates a new ImprovementDeck with the specified amount of each improvement.
      */
     private ImprovementDeck(int watershed, int enclosure) {
@@ -30,7 +35,7 @@ public class ImprovementDeck {
      *   - 3 watersheds.
      */
     public ImprovementDeck() {
-        this(3, 3);
+        this(defaultImprovementAmount, defaultImprovementAmount);
     }
 
     /**
@@ -74,8 +79,8 @@ public class ImprovementDeck {
     }
 
     public void reset(){
-        remainingWatershed = 3;
-        remainingEnclosure = 3;
+        remainingWatershed = defaultImprovementAmount;
+        remainingEnclosure = defaultImprovementAmount;
     }
 
     public boolean isEmpty() {
