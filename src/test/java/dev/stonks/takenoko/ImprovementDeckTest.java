@@ -1,7 +1,6 @@
 package dev.stonks.takenoko;
 
 import dev.stonks.takenoko.gameManagement.ImprovementDeck;
-import dev.stonks.takenoko.map.Improvement;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -88,5 +87,28 @@ public class ImprovementDeckTest {
         deck.reset();
 
         assertEquals(expected,deck);
+    }
+
+    @Test
+    void isEmpty() {
+        assertFalse(deck.isEmpty());
+
+        deck.drawWatershed().get();
+        assertFalse(deck.isEmpty());
+
+        deck.drawWatershed().get();
+        assertFalse(deck.isEmpty());
+
+        deck.drawWatershed().get();
+        assertFalse(deck.isEmpty());
+
+        deck.drawEnclosure().get();
+        assertFalse(deck.isEmpty());
+
+        deck.drawEnclosure().get();
+        assertFalse(deck.isEmpty());
+
+        deck.drawEnclosure().get();
+        assertTrue(deck.isEmpty());
     }
 }
