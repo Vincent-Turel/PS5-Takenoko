@@ -78,13 +78,13 @@ public class Weather {
      * @param newWeather -> the weather want by player
      */
     public void setWeather(WeatherKind newWeather){
-        switch (newWeather.toString()){
-            case ("Rain") : this.state=0;break;
-            case ("Cloud") : this.state=1;break;
-            case ("Sun") : this.state=2;break;
-            case ("Thunderstorm") : this.state=3;break;
-            case ("Wind") : this.state=4;break;
-            case ("FreeChoice") : this.state=5;break;
+        switch (newWeather){
+            case Rain:this.state=0;break;
+            case Cloud:this.state=1;break;
+            case Sun:this.state=2;break;
+            case Thunderstorm:this.state=3;break;
+            case Wind:this.state=4;break;
+            case FreeChoice:this.state=5;break;
             default: this.state=6;
         }
         this.weatherCondition=newWeather;
