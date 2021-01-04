@@ -15,6 +15,7 @@ public class ImprovementDeck {
     // INVARIANT: must be >= 0.
     private int remainingWatershed;
     private int remainingEnclosure;
+    private int remainingFertilizer;
 
     /**
      * The amount of improvements of a specific type at the beginning of the game.
@@ -24,9 +25,10 @@ public class ImprovementDeck {
     /**
      * Creates a new ImprovementDeck with the specified amount of each improvement.
      */
-    private ImprovementDeck(int watershed, int enclosure) {
+    private ImprovementDeck(int watershed, int enclosure, int fertilizer) {
         remainingWatershed = watershed;
         remainingEnclosure = enclosure;
+        remainingFertilizer = fertilizer;
     }
 
     /**
@@ -35,7 +37,7 @@ public class ImprovementDeck {
      *   - 3 watersheds.
      */
     public ImprovementDeck() {
-        this(defaultImprovementAmount, defaultImprovementAmount);
+        this(defaultImprovementAmount, defaultImprovementAmount, defaultImprovementAmount);
     }
 
     /**
@@ -50,6 +52,13 @@ public class ImprovementDeck {
      */
     public boolean isEnclosureAvailable() {
         return remainingEnclosure > 0;
+    }
+
+    /**
+     * Returns whether if it is possible to draw a fertilizer.
+     */
+    public boolean isFertilizerAvailable() {
+        return remainingFertilizer > 0;
     }
 
     /**
@@ -78,13 +87,27 @@ public class ImprovementDeck {
         }
     }
 
+    /**
+     * Tries to draw a fertilizer, returns it if it exists. Otherwise,
+     * returns empty.
+     */
+    public Optional<Improvement> drawFertilizer() {
+        if (remainingFertilizer > 0) {
+            remainingFertilizer--;
+            return Optional.of(Improvement.Fertilizer);
+        } else {
+            return Optional.empty();
+        }
+    }
+
     public void reset(){
         remainingWatershed = defaultImprovementAmount;
         remainingEnclosure = defaultImprovementAmount;
+        remainingFertilizer = defaultImprovementAmount;
     }
 
     public boolean isEmpty() {
-        return remainingWatershed == 0 && remainingEnclosure == 0;
+        return remainingWatershed == 0 && remainingEnclosure == 0 && remainingFertilizer == 0;
     }
 
     @Override
@@ -94,12 +117,13 @@ public class ImprovementDeck {
         if(getClass() != o.getClass())
             throw IllegalEqualityExceptionGenerator.create(ImprovementDeck.class,o.getClass());
         ImprovementDeck that = (ImprovementDeck) o;
-        return remainingWatershed == that.remainingWatershed && remainingEnclosure == that.remainingEnclosure;
+        return remainingWatershed == that.remainingWatershed
+                && remainingEnclosure == that.remainingEnclosure
+                && remainingFertilizer == that.remainingFertilizer;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(remainingWatershed, remainingEnclosure);
+        return Objects.hash(remainingWatershed, remainingEnclosure, remainingFertilizer);
     }
-
 }

@@ -60,4 +60,26 @@ public class BambooTest {
         // No more bamboo
         assertEquals(bamboo1.cut(), Optional.empty());
     }
+
+    @Test
+    void growTwiceAddsCorrectLength() {
+        bamboo1.growTwice();
+        assertEquals(4, bamboo1.getSize());
+    }
+
+    @Test
+    void growTwiceStopsAtFour() {
+        bamboo1.growTwice();
+        bamboo1.growTwice();
+        assertEquals(4, bamboo1.getSize());
+    }
+
+    @Test
+    void growTwiceSimilarToGrowTwoTimes() {
+        bamboo1.growTwice();
+        bamboo3.grow();
+        bamboo3.grow();
+
+        assertEquals(bamboo1, bamboo3);
+    }
 }

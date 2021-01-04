@@ -129,7 +129,10 @@ public class RandomPlayerTest {
     public void putImprovementTest() throws IllegalPlacementException {
         ArrayList<Improvement> improvements = new ArrayList<>(Arrays.asList(Improvement.Watershed, Improvement.Watershed, Improvement.Watershed));
         Map map = new Map(15);
-        map.setTile(map.initialTile().getCoordinate().moveWith(Direction.South), new AbstractTile(TileKind.Green));
+        Tile t = map.setTile(map.initialTile().getCoordinate().moveWith(Direction.South), new AbstractTile(TileKind.Green));
+
+        t.cutBamboo();
+
         randomPlayer.setCurrentMapState(map);
 
         randomPlayer.chooseImprovement(improvements);

@@ -13,28 +13,37 @@ public class GameResultsTest {
 
     @BeforeEach
     void initialises2games(){
-        res1 = new GameResults(5,4,3);
-        res2 = new GameResults(6,3,4);
+        res1 = new GameResults(5,35,4,3);
+        res2 = new GameResults(6,40,3,4);
     }
 
     @Test
     public void testEqualitiesResults(){
         assertTrue(res1.equals(res1));
-        assertFalse(res2.equals(new GameResults(2,2,3)));
+        assertFalse(res2.equals(new GameResults(2,40,2,3)));
     }
 
     @Test
     public void testId(){
-        assertTrue(res1.getId()!=res2.getId());
-        assertFalse(res2.getId()==0);
+        assertNotEquals(res1.getId(),res2.getId());
+        assertEquals(res2.getId(),6);
     }
 
     @Test
-    public void testResetRes(){
-        res1.reset();
-        assertTrue(res1.getRank()==0);
-        assertEquals(0,res1.getNbPandaObjectives());
-        assertTrue(res2.getRank()!=0);
-        assertTrue(res2.getNbPandaObjectives()!=0);
+    public void testRank(){
+        assertTrue(res1.getRank()>res2.getRank());
+        assertEquals(res2.getRank(),3);
+    }
+
+    @Test
+    public void testNbPandaObjectives(){
+        assertNotEquals(res1.getNbPandaObjectives(),5);
+        assertFalse(res2.getNbPandaObjectives()<res1.getNbPandaObjectives());
+    }
+
+    @Test
+    public void testScore(){
+        assertEquals(res1.getScore(),35);
+        assertFalse(res2.getScore()<res1.getScore());
     }
 }

@@ -49,19 +49,19 @@ public class ObjectivesBambooFactory {
         BambooPattern pinkPattern = new BambooPattern(TileKind.Pink,4,1);
         BambooPattern maxPinkPattern = new BambooPattern(TileKind.Pink,4,2);
 
-        newList.add(new GardenerObjective(3,greenPattern));
+        newList.add(new GardenerObjective(3,greenPattern,Improvement.Fertilizer));
         newList.add(new GardenerObjective(4,greenPattern,Improvement.Watershed));
         newList.add(new GardenerObjective(4,greenPattern,Improvement.Enclosure));
         newList.add(new GardenerObjective(5,greenPattern,Improvement.NoImprovementHere));
         newList.add(new GardenerObjective(8,maxGreenPattern));
 
-        newList.add(new GardenerObjective(4,yellowPattern));
+        newList.add(new GardenerObjective(4,yellowPattern,Improvement.Fertilizer));
         newList.add(new GardenerObjective(5,yellowPattern,Improvement.Watershed));
         newList.add(new GardenerObjective(5,yellowPattern,Improvement.Enclosure));
         newList.add(new GardenerObjective(6,yellowPattern,Improvement.NoImprovementHere));
         newList.add(new GardenerObjective(7,maxYellowPattern));
 
-        newList.add(new GardenerObjective(5,pinkPattern));
+        newList.add(new GardenerObjective(5,pinkPattern,Improvement.Fertilizer));
         newList.add(new GardenerObjective(6,pinkPattern,Improvement.Watershed));
         newList.add(new GardenerObjective(6,pinkPattern,Improvement.Enclosure));
         newList.add(new GardenerObjective(7,pinkPattern,Improvement.NoImprovementHere));

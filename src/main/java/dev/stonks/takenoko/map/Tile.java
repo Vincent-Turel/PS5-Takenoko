@@ -126,7 +126,13 @@ public class Tile {
      * Maximal size : 4
      */
     public void growBamboo(){
-        if (!isInitial()){
+        if (isInitial()) {
+            return;
+        }
+
+        if (improvement == Improvement.Fertilizer){
+            bamboo.growTwice();
+        } else {
             bamboo.grow();
         }
     }
@@ -196,14 +202,22 @@ public class Tile {
     }
 
     /**
+     * Returns whether if an improvement can be added to the tile.
+     */
+    boolean canReceiveImprovement() {
+        return bamboo.getSize() == 0 && improvement.isEmpty() && !isInitial();
+    }
+
+    /**
      * Adds an improvement to the tile
      * @param i the improvement to be added.
      * @throws IllegalPlacementException if there is already an improvement on
-     * the tile or if the tile is the initial tile.
+     * the tile or if the tile is the initial tile or if there are already some
+     * bamboos on the tile.
      */
     public void addImprovement(Improvement i) throws IllegalPlacementException {
-        if (!improvement.isEmpty()) {
-            throw new IllegalPlacementException("Attempt to add an improvement on a tile that already contains one");
+        if (!canReceiveImprovement()) {
+            throw new IllegalPlacementException("Attempt to add an improvement where it is forbidden");
         }
 
         if (isInitial()) {

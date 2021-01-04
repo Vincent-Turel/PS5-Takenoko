@@ -34,6 +34,15 @@ public class ImprovementDeckTest {
     }
 
     @Test
+    void canDrawFertilizerOnlyThreeTimes() {
+        assertDoesNotThrow(() -> deck.drawFertilizer().get());
+        assertDoesNotThrow(() -> deck.drawFertilizer().get());
+        assertDoesNotThrow(() -> deck.drawFertilizer().get());
+
+        assertTrue(deck.drawFertilizer().isEmpty());
+    }
+
+    @Test
     void isWatershedAvailableOnlyThreeTimes() {
         // This test works because canDrawWatershedOnlyThreeTimes worked.
 
@@ -74,6 +83,26 @@ public class ImprovementDeckTest {
     }
 
     @Test
+    void isFertilizerAvailableOnlyThreeTimes() {
+        // This test works because canDrawWatershedOnlyThreeTimes worked.
+
+        // Three enclosure available.
+        assertTrue(deck.isFertilizerAvailable());
+
+        // Two enclosure available.
+        deck.drawFertilizer();
+        assertTrue(deck.isFertilizerAvailable());
+
+        // One enclosure available.
+        deck.drawFertilizer();
+        assertTrue(deck.isFertilizerAvailable());
+
+        // Drawing last enclosure.
+        deck.drawFertilizer();
+        assertFalse(deck.isFertilizerAvailable());
+    }
+
+    @Test
     void resetTest(){
         ImprovementDeck expected = new ImprovementDeck();
 
@@ -82,6 +111,7 @@ public class ImprovementDeckTest {
         deck.drawWatershed();
         deck.drawEnclosure();
         deck.drawEnclosure();
+        deck.drawFertilizer();
 
         assertNotEquals(expected,deck);
 
@@ -110,6 +140,16 @@ public class ImprovementDeckTest {
         assertFalse(deck.isEmpty());
 
         deck.drawEnclosure().get();
+        assertFalse(deck.isEmpty());
+
+        deck.drawFertilizer().get();
+        assertFalse(deck.isEmpty());
+
+        deck.drawFertilizer().get();
+        assertFalse(deck.isEmpty());
+
+        deck.drawFertilizer().get();
         assertTrue(deck.isEmpty());
+
     }
 }
