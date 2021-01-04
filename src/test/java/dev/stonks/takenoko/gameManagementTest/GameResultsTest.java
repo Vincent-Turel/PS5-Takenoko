@@ -26,13 +26,13 @@ public class GameResultsTest {
     @Test
     public void testId(){
         assertNotEquals(res1.getId(),res2.getId());
-        assertEquals(res2.getId(),0);
+        assertEquals(res2.getId(),6);
     }
 
     @Test
     public void testRank(){
         assertTrue(res1.getRank()>res2.getRank());
-        assertEquals(res2.getRank(),10);
+        assertEquals(res2.getRank(),3);
     }
 
     @Test
