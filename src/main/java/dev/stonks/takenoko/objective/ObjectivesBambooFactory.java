@@ -51,19 +51,19 @@ public class ObjectivesBambooFactory {
 
         newList.add(new GardenerObjective(3,greenPattern));
         newList.add(new GardenerObjective(4,greenPattern,Improvement.Watershed));
-        newList.add(new GardenerObjective(4,greenPattern));
+        newList.add(new GardenerObjective(4,greenPattern,Improvement.Enclosure));
         newList.add(new GardenerObjective(5,greenPattern,Improvement.NoImprovementHere));
         newList.add(new GardenerObjective(8,maxGreenPattern));
 
         newList.add(new GardenerObjective(4,yellowPattern));
         newList.add(new GardenerObjective(5,yellowPattern,Improvement.Watershed));
-        newList.add(new GardenerObjective(5,yellowPattern));
+        newList.add(new GardenerObjective(5,yellowPattern,Improvement.Enclosure));
         newList.add(new GardenerObjective(6,yellowPattern,Improvement.NoImprovementHere));
         newList.add(new GardenerObjective(7,maxYellowPattern));
 
         newList.add(new GardenerObjective(5,pinkPattern));
         newList.add(new GardenerObjective(6,pinkPattern,Improvement.Watershed));
-        newList.add(new GardenerObjective(6,pinkPattern));
+        newList.add(new GardenerObjective(6,pinkPattern,Improvement.Enclosure));
         newList.add(new GardenerObjective(7,pinkPattern,Improvement.NoImprovementHere));
         newList.add(new GardenerObjective(6,maxPinkPattern));
 
