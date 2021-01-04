@@ -166,8 +166,11 @@ public class DumbPlayerTest {
         Map map = new Map(15);
         dumbPlayer.setCurrentMapState(map);
 
-        map.setTile(map.initialTile().getCoordinate().moveWith(Direction.South), new AbstractTile(TileKind.Green));
-        map.setTile(map.initialTile().getCoordinate().moveWith(Direction.North), new AbstractTile(TileKind.Green));
+        Tile t1 = map.setTile(map.initialTile().getCoordinate().moveWith(Direction.South), new AbstractTile(TileKind.Green));
+        Tile t2 = map.setTile(map.initialTile().getCoordinate().moveWith(Direction.North), new AbstractTile(TileKind.Green));
+
+        t1.cutBamboo();
+        t2.cutBamboo();
 
         dumbPlayer.choseImprovement(improvements);
         assertEquals(1, dumbPlayer.getImprovements().size());

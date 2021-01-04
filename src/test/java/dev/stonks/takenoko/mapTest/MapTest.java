@@ -359,6 +359,9 @@ public class MapTest {
         Coordinate center = map.initialTile().getCoordinate();
 
         Coordinate neighbor = map.setTile(center.moveWith(Direction.North), new AbstractTile(TileKind.Pink)).getCoordinate();
+
+        // The tile is irrigated, so its bamboo has grown. We need to cut it first.
+        map.getTile(neighbor).get().cutBamboo();
         map.setImprovement(neighbor, Improvement.Watershed);
 
         assertEquals(map.getTile(neighbor).get().getImprovement(), Improvement.Watershed);
@@ -393,11 +396,18 @@ public class MapTest {
                 new AbstractTile(TileKind.Pink).withImprovement(Improvement.Watershed)
         );
 
-        // Tile with no improvement on it.
-        Tile availableImprovement = m.setTile(
+        // Tile with no improvement on it but some bamboo.
+        m.setTile(
                 centerCoord.moveWith(Direction.North),
                 new AbstractTile(TileKind.Pink)
         );
+
+        // Tile with no improvement on it but some bamboo.
+        Tile availableImprovement = m.setTile(
+                centerCoord.moveWith(Direction.NorthEast),
+                new AbstractTile(TileKind.Pink)
+        );
+        availableImprovement.cutBamboo();
 
         Set<Tile> ts = m.getImprovementPlacements();
 

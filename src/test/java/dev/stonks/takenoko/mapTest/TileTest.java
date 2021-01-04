@@ -161,4 +161,12 @@ public class TileTest {
         Tile t = Tile.initialTile(new Coordinate(42, 42));
         assertThrows(IllegalPlacementException.class, () -> t.addImprovement(Improvement.Watershed));
     }
+
+    @Test
+    void addImprovementOnBamboo() {
+        Tile t = Tile.initialTile(new Coordinate(42, 42));
+        t.growBamboo();
+
+        assertThrows(IllegalPlacementException.class, () -> t.addImprovement(Improvement.Enclosure));
+    }
 }

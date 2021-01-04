@@ -196,6 +196,13 @@ public class Tile {
     }
 
     /**
+     * Returns whether if an improvement can be added to the tile.
+     */
+    boolean canReceiveImprovement() {
+        return bamboo.getSize() == 0 && improvement.isEmpty() && !isInitial();
+    }
+
+    /**
      * Adds an improvement to the tile
      * @param i the improvement to be added.
      * @throws IllegalPlacementException if there is already an improvement on
@@ -203,12 +210,8 @@ public class Tile {
      * bamboos on the tile.
      */
     public void addImprovement(Improvement i) throws IllegalPlacementException {
-        if (bamboo.getSize() != 0) {
-            throw new IllegalPlacementException("Attempt to place an improvement where there is already a bamboo");
-        }
-
-        if (!improvement.isEmpty()) {
-            throw new IllegalPlacementException("Attempt to add an improvement on a tile that already contains one");
+        if (!canReceiveImprovement()) {
+            throw new IllegalPlacementException("Attempt to add an improvement where it is forbidden");
         }
 
         if (isInitial()) {

@@ -265,7 +265,7 @@ public abstract class Player {
         if (improvements.size() < 1)
             throw new IllegalStateException("This action shouldn't be possible");
         if (improvementPlacements.size() < 1)
-            throw new IllegalStateException("There is nowhere I can put an irrigation");
+            throw new IllegalStateException("There is nowhere I can put an improvement");
 
         Tile chosenTile = getRandomInCollection(improvementPlacements);
         Improvement chosenImprovement = improvements.remove(random.nextInt(improvements.size()));

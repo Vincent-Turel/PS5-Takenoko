@@ -169,7 +169,8 @@ public class SmartPlayerTest {
         Map map = new Map(15);
         smartPlayer.setCurrentMapState(map);
 
-        map.setTile(map.initialTile().getCoordinate().moveWith(Direction.South), new AbstractTile(TileKind.Green));
+        Tile t = map.setTile(map.initialTile().getCoordinate().moveWith(Direction.South), new AbstractTile(TileKind.Green));
+        t.cutBamboo();
 
         smartPlayer.choseImprovement(improvements);
         assertEquals(1, smartPlayer.getImprovements().size());
