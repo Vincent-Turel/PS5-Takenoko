@@ -5,9 +5,7 @@ import dev.stonks.takenoko.bot.RandomPlayer;
 import dev.stonks.takenoko.gameManagement.Action;
 import dev.stonks.takenoko.map.*;
 import dev.stonks.takenoko.map.Map;
-import dev.stonks.takenoko.objective.GardenerObjective;
 import dev.stonks.takenoko.objective.ObjectiveKind;
-import dev.stonks.takenoko.objective.PatternObjective;
 import dev.stonks.takenoko.pawn.Panda;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -91,17 +89,17 @@ public class RandomPlayerTest {
         when(map.getPossiblePawnPlacements(panda)).thenReturn(placements,placements2);
         randomPlayer.setCurrentMapState(map);
 
-        assertTrue(placements.contains(randomPlayer.choseWherePawnShouldGo(panda)));
+        assertTrue(placements.contains(randomPlayer.chooseWherePawnShouldGo(panda)));
 
         placements.clear();
-        assertThrows(IllegalStateException.class, () -> randomPlayer.choseWherePawnShouldGo(panda));
+        assertThrows(IllegalStateException.class, () -> randomPlayer.chooseWherePawnShouldGo(panda));
     }
 
     @Test
     public void choseImprovementTest() {
         ArrayList<Improvement> improvements = new ArrayList<>(Arrays.asList(Improvement.Watershed, Improvement.Watershed));
         assertEquals(2, improvements.size());
-        randomPlayer.choseImprovement(improvements);
+        randomPlayer.chooseImprovement(improvements);
         assertEquals(1, improvements.size());
         improvements.addAll(Arrays.asList(Improvement.Watershed, Improvement.Watershed));
         assertEquals(3, improvements.size());
@@ -114,7 +112,7 @@ public class RandomPlayerTest {
         map.setTile(map.initialTile().getCoordinate().moveWith(Direction.South), new AbstractTile(TileKind.Green));
         randomPlayer.setCurrentMapState(map);
 
-        randomPlayer.choseImprovement(improvements);
+        randomPlayer.chooseImprovement(improvements);
         assertEquals(1, randomPlayer.getImprovements().size());
         var answer = randomPlayer.putImprovement();
         assertEquals(Improvement.Watershed, answer.getU());
