@@ -25,25 +25,25 @@ public class GameResultsTest {
 
     @Test
     public void testId(){
-        assertTrue(res1.getId()!=res2.getId());
-        assertFalse(res2.getId()==0);
+        assertNotEquals(res1.getId(),res2.getId());
+        assertEquals(res2.getId(),0);
     }
 
     @Test
     public void testRank(){
         assertTrue(res1.getRank()>res2.getRank());
-        assertFalse(res2.getRank()==10);
+        assertEquals(res2.getRank(),10);
     }
 
     @Test
     public void testNbPandaObjectives(){
-        assertTrue(res1.getNbPandaObjectives()!=5);
+        assertNotEquals(res1.getNbPandaObjectives(),5);
         assertFalse(res2.getNbPandaObjectives()<res1.getNbPandaObjectives());
     }
 
     @Test
     public void testScore(){
-        assertTrue(res1.getScore()==35);
+        assertEquals(res1.getScore(),35);
         assertFalse(res2.getScore()<res1.getScore());
     }
 }
