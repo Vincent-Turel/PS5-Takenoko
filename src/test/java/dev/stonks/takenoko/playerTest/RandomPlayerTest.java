@@ -7,10 +7,12 @@ import dev.stonks.takenoko.map.*;
 import dev.stonks.takenoko.map.Map;
 import dev.stonks.takenoko.objective.ObjectiveKind;
 import dev.stonks.takenoko.pawn.Panda;
+import dev.stonks.takenoko.weather.WeatherKind;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -18,16 +20,17 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class RandomPlayerTest {
+    Map map;
     RandomPlayer randomPlayer;
 
     @BeforeEach
     public void setup(){
         randomPlayer = new RandomPlayer(1);
+        map = new Map(25);
     }
 
     @Test
     public void decideTest(){
-        Map map = new Map(25);
         ArrayList<Action> possibleActions = new ArrayList<>(Arrays.asList(Action.values()));
         possibleActions.remove(Action.PutImprovement);
         possibleActions.remove(Action.PutIrrigation);
@@ -53,23 +56,31 @@ public class RandomPlayerTest {
     }
 
     @Test
-    public void choseTileToGrowTest(){
-
+    public void chooseTileToGrowTest() throws IllegalPlacementException {
+        assertTrue(randomPlayer.chooseTileToGrow(map).isEmpty());
+        map.setTile(map.initialTile().getCoordinate().moveWith(Direction.South), new AbstractTile(TileKind.Green));
+        List<Tile> tiles = Arrays.stream(map.getTiles())
+                .flatMap(Optional::stream)
+                .filter(tile -> (tile.isIrrigated() && !tile.isInitial())).collect(Collectors.toList());
+        assertTrue(tiles.contains(randomPlayer.chooseTileToGrow(map).get()));
     }
 
     @Test
-    public void chooseTileToMovePandaTest(){
-
+    public void chooseTileToMovePandaTest() throws IllegalPlacementException {
+        assertTrue(randomPlayer.chooseTileToMovePanda(map).isEmpty());
+        Tile t = map.setTile(map.initialTile().getCoordinate().moveWith(Direction.South), new AbstractTile(TileKind.Green));
+        assertEquals(t, randomPlayer.chooseTileToMovePanda(map).get());
     }
 
     @Test
     public void doYouWantToPutAnIrrigationOrAnImprovementTest(){
-
+        assertTrue(randomPlayer.doYouWantToPutAnIrrigationOrAnImprovement(map).isEmpty());
     }
 
     @Test
     public void chooseNewWeatherTest(){
-
+        Set<WeatherKind> weatherKinds = new HashSet<>(Set.of(WeatherKind.Cloud, WeatherKind.Rain));
+        assertTrue(weatherKinds.contains(randomPlayer.chooseNewWeather(weatherKinds)));
     }
 
     @Test
@@ -128,7 +139,6 @@ public class RandomPlayerTest {
     @Test
     public void putImprovementTest() throws IllegalPlacementException {
         ArrayList<Improvement> improvements = new ArrayList<>(Arrays.asList(Improvement.Watershed, Improvement.Watershed, Improvement.Watershed));
-        Map map = new Map(15);
         Tile t = map.setTile(map.initialTile().getCoordinate().moveWith(Direction.South), new AbstractTile(TileKind.Green));
 
         t.cutBamboo();
@@ -145,7 +155,6 @@ public class RandomPlayerTest {
 
     @Test
     public void putIrrigationTest() throws IllegalPlacementException {
-        Map map = new Map(15);
         map.setTile(map.initialTile().getCoordinate().moveWith(Direction.South), new AbstractTile(TileKind.Green));
         map.setTile(map.initialTile().getCoordinate().moveWith(Direction.SouthEast), new AbstractTile(TileKind.Pink));
         randomPlayer.setCurrentMapState(map);

@@ -260,8 +260,8 @@ public class DumbPlayer extends Player {
     }
 
     @Override
-    public WeatherKind chooseNewWeather(WeatherKind[] possiblesWeathers) {
-        return possiblesWeathers[random.nextInt(possiblesWeathers.length)];
+    public WeatherKind chooseNewWeather(Set<WeatherKind> possiblesWeathers) {
+        return getRandomInCollection(possiblesWeathers);
     }
 
     @Override

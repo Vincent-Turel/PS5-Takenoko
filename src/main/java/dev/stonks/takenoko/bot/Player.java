@@ -83,7 +83,7 @@ public abstract class Player {
      * @param possiblesWeathers an array of all possible weathers the player can chose
      * @return the weather kind he has chosen
      */
-    public abstract WeatherKind chooseNewWeather(WeatherKind[] possiblesWeathers);
+    public abstract WeatherKind chooseNewWeather(Set<WeatherKind> possiblesWeathers);
 
     /**
      * This method return the tile where the player want to grow bamboo

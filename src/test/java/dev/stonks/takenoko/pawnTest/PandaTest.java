@@ -32,7 +32,9 @@ public class PandaTest {
     @Test
     public void dontEatBambooWhenEnclosure() throws IllegalPlacementException {
         Tile t2 = map.setTile(map.initialTile().getCoordinate().moveWith(Direction.SouthWest), new AbstractTile(TileKind.Green));
+        t2.cutBamboo();
         t2.addImprovement(Improvement.Enclosure);
+        t2.growBamboo();
         t2.growBamboo();
 
         assertEquals(2, t2.getBamboo().getSize());

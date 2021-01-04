@@ -1,5 +1,7 @@
 package dev.stonks.takenoko.weather;
 
+import java.util.Set;
+
 /**
  * Represent the five weather possibility.
  * The sixth is a free choice, the player can choice between all five other weather condition.
@@ -19,23 +21,22 @@ public enum WeatherKind {
     /**
      * When the weather set to free choice is select :
      */
-    static public final WeatherKind[] freeChoiceWeathers = {
+    static public final Set<WeatherKind> freeChoiceWeathers = Set.of(
             Sun,
             Rain,
             Wind,
             Thunderstorm,
-            Cloud
-    };
+            Cloud);
 
     /**
      * When the weather set to cloud is select :
      */
-    static public final WeatherKind[] cloudWeathers = {
+    static public final Set<WeatherKind> cloudWeathers = Set.of(
             Sun,
             Rain,
             Wind,
             Thunderstorm
-    };
+    );
 
 
 }

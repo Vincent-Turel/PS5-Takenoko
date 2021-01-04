@@ -34,10 +34,11 @@ public class GardenerTest {
     @Test
     public void growTwiceWhenFertilizer() throws IllegalPlacementException {
         Tile t = map.setTile(map.initialTile().getCoordinate().moveWith(Direction.South), new AbstractTile(TileKind.Green));
-        t.addImprovement(Improvement.Empty);
-        assertEquals(1, t.getBamboo().getSize());
+        t.cutBamboo();
+        t.addImprovement(Improvement.Fertilizer);
+        assertEquals(0, t.getBamboo().getSize());
         map.getGardener().moveToAndAct(t, map);
         assertEquals(t.getCoordinate(), map.getGardener().getCurrentCoordinate());
-        assertEquals(3, t.getBamboo().getSize());
+        assertEquals(2, t.getBamboo().getSize());
     }
 }

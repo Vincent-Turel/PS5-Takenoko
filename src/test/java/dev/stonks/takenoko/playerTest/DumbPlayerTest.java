@@ -10,10 +10,12 @@ import dev.stonks.takenoko.objective.ObjectiveKind;
 import dev.stonks.takenoko.objective.PatternObjective;
 import dev.stonks.takenoko.pattern.Pattern;
 import dev.stonks.takenoko.pawn.Panda;
+import dev.stonks.takenoko.weather.WeatherKind;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -21,16 +23,17 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class DumbPlayerTest {
+    Map map;
     DumbPlayer dumbPlayer;
 
     @BeforeEach
     public void setup(){
+        map = new Map(20);
         dumbPlayer = new DumbPlayer(2);
     }
 
     @Test
     public void decideTest(){
-        Map map = new Map(25);
         ArrayList<Action> possibleActions = new ArrayList<>(Arrays.asList(Action.values()));
         possibleActions.remove(Action.PutImprovement);
         possibleActions.remove(Action.PutIrrigation);
@@ -63,23 +66,31 @@ public class DumbPlayerTest {
     }
 
     @Test
-    public void choseTileToGrowTest(){
-
+    public void chooseTileToGrowTest() throws IllegalPlacementException {
+        assertTrue(dumbPlayer.chooseTileToGrow(map).isEmpty());
+        map.setTile(map.initialTile().getCoordinate().moveWith(Direction.South), new AbstractTile(TileKind.Green));
+        List<Tile> tiles = Arrays.stream(map.getTiles())
+                .flatMap(Optional::stream)
+                .filter(tile -> (tile.isIrrigated() && !tile.isInitial())).collect(Collectors.toList());
+        assertTrue(tiles.contains(dumbPlayer.chooseTileToGrow(map).get()));
     }
 
     @Test
-    public void chooseTileToMovePandaTest(){
-
+    public void chooseTileToMovePandaTest() throws IllegalPlacementException {
+        assertTrue(dumbPlayer.chooseTileToMovePanda(map).isEmpty());
+        Tile t = map.setTile(map.initialTile().getCoordinate().moveWith(Direction.South), new AbstractTile(TileKind.Green));
+        assertEquals(t, dumbPlayer.chooseTileToMovePanda(map).get());
     }
 
     @Test
     public void doYouWantToPutAnIrrigationOrAnImprovementTest(){
-
+        assertTrue(dumbPlayer.doYouWantToPutAnIrrigationOrAnImprovement(map).isEmpty());
     }
 
     @Test
     public void chooseNewWeatherTest(){
-
+        Set<WeatherKind> weatherKinds = new HashSet<>(Set.of(WeatherKind.Cloud, WeatherKind.Rain));
+        assertTrue(weatherKinds.contains(dumbPlayer.chooseNewWeather(weatherKinds)));
     }
 
     @Test
@@ -115,7 +126,7 @@ public class DumbPlayerTest {
                 new Tile(new Coordinate(1,1), TileKind.Pink),
                 new Tile(new Coordinate(2,2), TileKind.Green)));
         Set<Tile> placements2 = new HashSet<>();
-        dev.stonks.takenoko.map.Map map = mock(Map.class);
+        Map map = mock(Map.class);
         Panda panda = new Panda(new Coordinate(1,1));
         when(map.getPossiblePawnPlacements(panda)).thenReturn(placements, placements, placements, placements2, placements2, placements2);
         dumbPlayer.setCurrentMapState(map);
@@ -136,9 +147,6 @@ public class DumbPlayerTest {
 
         PatternObjective objectiveWin = new PatternObjective(5,pattern);
         dumbPlayer.addObjectives(objectiveWin);
-
-        //Making a map :
-        Map map = new Map(42);
 
         map.setTile(map.initialTile().getCoordinate().moveWith(Direction.South), new AbstractTile(TileKind.Green));
 
@@ -183,7 +191,6 @@ public class DumbPlayerTest {
     @Test
     public void putImprovementTest() throws IllegalPlacementException {
         ArrayList<Improvement> improvements = new ArrayList<>(Arrays.asList(Improvement.Watershed, Improvement.Watershed, Improvement.Watershed));
-        Map map = new Map(15);
         dumbPlayer.setCurrentMapState(map);
 
         Tile t1 = map.setTile(map.initialTile().getCoordinate().moveWith(Direction.South), new AbstractTile(TileKind.Green));
@@ -202,7 +209,6 @@ public class DumbPlayerTest {
 
     @Test
     public void putIrrigationTest() throws IllegalPlacementException {
-        Map map = new Map(15);
         map.setTile(map.initialTile().getCoordinate().moveWith(Direction.South), new AbstractTile(TileKind.Green));
         map.setTile(map.initialTile().getCoordinate().moveWith(Direction.SouthEast), new AbstractTile(TileKind.Pink));
 
