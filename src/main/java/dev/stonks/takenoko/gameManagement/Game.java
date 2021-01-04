@@ -42,6 +42,7 @@ public class Game {
     private Set<MatchResult> patternMatchs;
     private EmperorObjective emperor;
     private final Random random;
+    private ObjectiveDeck deck;
     public ArrayList<GameResults> gamePlayersResults;
 
 
@@ -49,7 +50,7 @@ public class Game {
         map = new Map(28);
         initialiseTileDeck();
         initialiseIrrigationDeck();
-        initialisesObjectives();
+        deck = new ObjectiveDeck();
         gameWeather = initialiseWeather();
         patternMatchs = new HashSet<>();
         this.players = players;
@@ -60,7 +61,7 @@ public class Game {
     }
 
     /**
-     * Initialise a deck of irrigations (the irrigations players will draw)
+     * Initialise a deck of irrigation (the irrigation players will draw)
      */
     private void initialiseIrrigationDeck() {
         irrigationDeck = new Stack<>();
@@ -82,17 +83,6 @@ public class Game {
      */
     private Weather initialiseWeather(){Weather weather = new Weather();weather.resetWeather();return weather;}
 
-    /**
-     * Initialise the objectives (here, it's 10 tile objectives)
-     */
-    private void initialisesObjectives() {
-        //ObjectiveKind : Pattern, Gardener, Panda, Emperor
-        tileObjectives = PatternObjectiveFactory.validPatternObjectives();
-        gardenerObjectives = ObjectivesBambooFactory.gardenerObjectiveList();
-        pandaObjectives = ObjectivesBambooFactory.pandaObjectiveList();
-        emperor = new EmperorObjective();
-    }
-
     public ArrayList<Action> findPossibleActions(Player player){
         ArrayList<Action> possibleAction = new ArrayList<>();
         if (map.getPossiblePawnPlacements(map.getGardener()).size() > 0)
@@ -103,7 +93,7 @@ public class Game {
             possibleAction.add(Action.PutTile);
         if (irrigationDeck.size() > 0)
             possibleAction.add(Action.DrawIrrigation);
-        if((player.getObjectives().size() < 5) && (tileObjectives.size()>0 || pandaObjectives.size()>0 || gardenerObjectives.size()>0)){
+        if((player.getObjectives().size() < 5) && (deck.deckImpty())){
             possibleAction.add(Action.DrawObjective);
         }
         return possibleAction;
