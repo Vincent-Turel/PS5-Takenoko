@@ -25,7 +25,6 @@ public class DumbPlayer extends Player {
         super(id);
         this.chosenAction = new ArrayList<>(Arrays.asList(0, null));
         this.chosenOptionalAction = new ArrayList<>(Arrays.asList(0, null));
-        this.playerType = PlayerType.DumbPlayer;
     }
 
     /**
@@ -40,7 +39,7 @@ public class DumbPlayer extends Player {
                     for (int i = 0;i < possiblePandaPlacements.size();i++){
                         Map usedCloneMap = new Map(currentMapState);
                         usedCloneMap.getPanda().moveToAndAct(possiblePandaPlacements.get(i));
-                        updateChosenAction(checkObjectives(this, usedCloneMap), action.ordinal(), i, null);
+                        updateChosenAction(getScoreForAction(this, usedCloneMap), action.ordinal(), i, null);
                     }
                     break;
                 case MoveGardener:
@@ -48,7 +47,7 @@ public class DumbPlayer extends Player {
                     for (int i = 0;i < possibleGardenerPlacements.size();i++){
                         Map usedCloneMap = new Map(currentMapState);
                         usedCloneMap.getGardener().moveToAndAct(possibleGardenerPlacements.get(i), usedCloneMap);
-                        updateChosenAction(checkObjectives(this, usedCloneMap), action.ordinal(), i, null);
+                        updateChosenAction(getScoreForAction(this, usedCloneMap), action.ordinal(), i, null);
                     }
                     break;
                 case PutTile:
@@ -62,7 +61,7 @@ public class DumbPlayer extends Player {
                                 e.printStackTrace();
                                 System.exit(1);
                             }
-                            updateChosenAction(checkObjectives(this, usedCloneMap), action.ordinal(), i, j);
+                            updateChosenAction(getScoreForAction(this, usedCloneMap), action.ordinal(), i, j);
                         }
                     }
                     break;
@@ -72,9 +71,9 @@ public class DumbPlayer extends Player {
         }
     }
 
-    private void updateChosenAction(Integer checkObjectives, Integer actionOrdinal, Integer i, Integer kind) {
-        if (checkObjectives > chosenAction.get(0)) {
-            this.chosenAction = new ArrayList<>(Arrays.asList(checkObjectives, actionOrdinal, i, kind));
+    private void updateChosenAction(Integer actionScore, Integer actionOrdinal, Integer i, Integer kind) {
+        if (actionScore > chosenAction.get(0)) {
+            this.chosenAction = new ArrayList<>(Arrays.asList(actionScore, actionOrdinal, i, kind));
         }
     }
 
@@ -90,7 +89,7 @@ public class DumbPlayer extends Player {
                 e.printStackTrace();
                 System.exit(1);
             }
-            updateOptionalChosenAction(checkObjectives(this, usedCloneMap), i);
+            updateOptionalChosenAction(getScoreForAction(this, usedCloneMap), i);
         }
     }
 
@@ -286,5 +285,10 @@ public class DumbPlayer extends Player {
      */
     public void setChosenAction(List<Integer> chosenAction) {
         this.chosenAction = chosenAction;
+    }
+
+    @Override
+    public Player getNewInstance() {
+        return new DumbPlayer(this.id);
     }
 }

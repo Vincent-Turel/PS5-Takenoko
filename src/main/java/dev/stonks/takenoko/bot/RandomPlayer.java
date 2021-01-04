@@ -18,7 +18,6 @@ public class RandomPlayer extends Player{
 
     public RandomPlayer(int id) {
         super(id);
-        this.playerType = PlayerType.RandomPlayer;
     }
 
     /**
@@ -144,5 +143,10 @@ public class RandomPlayer extends Player{
         Improvement chosen = improvements.remove(random.nextInt(improvements.size()));
         this.improvements.add(chosen);
         return chosen;
+    }
+
+    @Override
+    public Player getNewInstance() {
+        return new RandomPlayer(this.id);
     }
 }

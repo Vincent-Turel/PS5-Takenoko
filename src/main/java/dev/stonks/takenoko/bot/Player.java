@@ -6,7 +6,6 @@ import dev.stonks.takenoko.map.Map;
 import dev.stonks.takenoko.objective.*;
 import dev.stonks.takenoko.pawn.Pawn;
 import dev.stonks.takenoko.gameManagement.Action;
-import dev.stonks.takenoko.weather.Weather;
 import dev.stonks.takenoko.weather.WeatherKind;
 
 import java.util.*;
@@ -17,15 +16,6 @@ import java.util.stream.Collectors;
  */
 public abstract class Player {
 
-    public enum PlayerType {
-        RandomPlayer,
-        DumbPlayer,
-        SmartPlayer,
-        SmartPlayer3,
-        SmartPlayer4
-    }
-
-    protected PlayerType playerType;
     protected int id;
     protected ArrayList<Objective> objectives;
     protected int[] collectedBamboo;
@@ -74,7 +64,7 @@ public abstract class Player {
     /**
      * This method return the tile where the player want to move the panda with the weather effect
      *
-     * @param map
+     * @param map the current map state
      * @return a optionnal tile if the player want to move the panda, or an empty optionnal if he doesn't want or can't
      */
     public abstract Optional<Tile> chooseTileToMovePanda(Map map);
@@ -90,8 +80,8 @@ public abstract class Player {
     /**
      * This method return a weather that the player want
      *
-     * @param possiblesWeathers
-     * @return
+     * @param possiblesWeathers an array of all possible weathers the player can chose
+     * @return the weather kind he has chosen
      */
     public abstract WeatherKind chooseNewWeather(WeatherKind[] possiblesWeathers);
 
@@ -151,16 +141,6 @@ public abstract class Player {
      */
     public Stack<AbstractIrrigation> getIrrigations() {
         return irrigations;
-    }
-
-    /**
-     * Get the type of the player
-     *
-     * @return playerType
-     * @see PlayerType
-     */
-    public PlayerType getPlayerType() {
-        return playerType;
     }
 
     /**
@@ -314,7 +294,6 @@ public abstract class Player {
                 getNbObjectivesAchieved() == player.getNbObjectivesAchieved() &&
                 getNbPandaObjectivesAchieved() == player.getNbPandaObjectivesAchieved() &&
                 getScore() == player.getScore() &&
-                getPlayerType() == player.getPlayerType() &&
                 Objects.equals(getObjectives(), player.getObjectives()) &&
                 Arrays.equals(getCollectedBamboo(), player.getCollectedBamboo()) &&
                 Objects.equals(getIrrigations(), player.getIrrigations()) &&
@@ -325,7 +304,7 @@ public abstract class Player {
 
     @Override
     public int hashCode() {
-        int result = Objects.hash(playerType, id, objectives, irrigations, nbObjectivesAchieved, currentMapState, score, random);
+        int result = Objects.hash(id, objectives, irrigations, nbObjectivesAchieved, currentMapState, score, random);
         result = 31 * result + Arrays.hashCode(collectedBamboo);
         return result;
     }
@@ -342,7 +321,7 @@ public abstract class Player {
      * @param clonedMap the map on which we tried the action
      * @return the number of point of the achieved objective. 0 if no objective achieved
      */
-    protected int checkObjectives(Player player, Map clonedMap) {
+    protected int getScoreForAction(Player player, Map clonedMap) {
         ArrayList<Objective> playerObjectives = player.getObjectives();
         int nbPoint = 0;
         for (Objective objective : playerObjectives) {
@@ -354,4 +333,6 @@ public abstract class Player {
         }
         return nbPoint;
     }
+
+    public abstract Player getNewInstance();
 }
