@@ -1,6 +1,5 @@
 package dev.stonks.takenoko.pawn;
 
-import dev.stonks.takenoko.map.Bamboo;
 import dev.stonks.takenoko.map.Coordinate;
 import dev.stonks.takenoko.map.Tile;
 import dev.stonks.takenoko.map.TileKind;
