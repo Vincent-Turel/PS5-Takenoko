@@ -31,7 +31,6 @@ public class Map {
      * Creates an initial map. It contains the single initial tile.
      * @param tileNumber the number of tiles that will be placed during the
      *                   game.
-     * @return the initial map.
      */
     public Map(int tileNumber) {
         sideLen = tileNumber * 2 + 1;
@@ -313,11 +312,9 @@ public class Map {
                 .map(Optional::get)
                 .flatMap(irrigation -> irrigation.getCoordinate().neighbors().stream());
 
-        Set<IrrigationCoordinate> tmp = Stream.concat(neighborOfInitial, neighborsOfAll)
-                .filter(coord -> isLegalIrrigationPlacement(coord))
+        return Stream.concat(neighborOfInitial, neighborsOfAll)
+                .filter(this::isLegalIrrigationPlacement)
                 .collect(Collectors.toSet());
-
-        return tmp;
     }
 
     /**
@@ -395,12 +392,10 @@ public class Map {
         }
 
         // Second step: removing coordinates that cannot be placed on.
-        Set<Coordinate> trimmedCandidates = candidates
+        return candidates
                 .stream()
                 .filter(this::tileCanBePlacedAt)
                 .collect(Collectors.toSet());
-
-        return trimmedCandidates;
     }
 
     private boolean tileCanBePlacedAt(Coordinate c) {
@@ -431,8 +426,8 @@ public class Map {
     private boolean isNeighborOfInitial(Coordinate c) {
         return Arrays.stream(c.neighbors())
                 .anyMatch(neighborCoord -> {
-                    Optional concernedTile = getTile(neighborCoord);
-                    return concernedTile.isPresent() && ((Tile) concernedTile.get()).isInitial();
+                    Optional<Tile> concernedTile = getTile(neighborCoord);
+                    return concernedTile.isPresent() && concernedTile.get().isInitial();
                 });
     }
 
@@ -454,13 +449,13 @@ public class Map {
      */
     public Stream<Coordinate> placedTilesCoordinates() {
         return Arrays.stream(tiles)
-                .filter(ot -> ot.isPresent())
+                .filter(Optional::isPresent)
                 .map(ot -> ot.get().getCoordinate());
     }
 
     /**
      * Return all tiles for objective verify
-     * @return
+     * @return the tiles contained in the map.
      */
     public Optional<Tile>[] getTiles() {
         return tiles;

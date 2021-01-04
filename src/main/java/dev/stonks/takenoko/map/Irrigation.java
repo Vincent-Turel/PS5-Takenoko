@@ -2,11 +2,6 @@ package dev.stonks.takenoko.map;
 
 import dev.stonks.takenoko.IllegalEqualityExceptionGenerator;
 
-import java.util.NoSuchElementException;
-import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
 /**
  * Represents an irrigation, which has been placed on the map.
  *

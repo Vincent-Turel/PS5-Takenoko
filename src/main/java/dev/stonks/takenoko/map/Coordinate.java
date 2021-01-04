@@ -9,8 +9,8 @@ import java.util.stream.Collectors;
  * Represents a (x;y) coordinate.
  */
 public class Coordinate {
-    private int x;
-    private int y;
+    private final int x;
+    private final int y;
 
     /**
      * Creates a new coordinate.
@@ -100,7 +100,7 @@ public class Coordinate {
      * assumed that this array contains six elements.
      */
     public Coordinate[] neighbors() {
-        Coordinate[] neighbors = {
+        return new Coordinate[]{
             moveWith(Direction.North),
             moveWith(Direction.NorthEast),
             moveWith(Direction.SouthEast),
@@ -108,8 +108,6 @@ public class Coordinate {
             moveWith(Direction.SouthWest),
             moveWith(Direction.NorthWest)
         };
-
-        return neighbors;
     }
 
     /**
@@ -166,7 +164,7 @@ public class Coordinate {
      * converging to the current coordinate.
      */
     Set<IrrigationCoordinate> getConvertingIrrigationCoordinate() {
-        Set<IrrigationCoordinate> cs = new HashSet<IrrigationCoordinate>();
+        Set<IrrigationCoordinate> cs = new HashSet<>();
 
         Coordinate[] neighbors = neighbors();
 

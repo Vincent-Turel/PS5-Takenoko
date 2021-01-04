@@ -15,8 +15,8 @@ import java.util.stream.Stream;
  * @author the StonksDev team
  */
 public class AbstractTile {
-    TileKind kind;
-    Improvement improvement;
+    private final TileKind kind;
+    private Improvement improvement;
 
     public AbstractTile(TileKind tk, Improvement i) {
         kind = tk;

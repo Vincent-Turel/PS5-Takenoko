@@ -61,7 +61,7 @@ public class Pattern {
         }
 
         return rhs.rotations()
-                .anyMatch(rotatedRhs -> equalsNeighborsNoRotate(rotatedRhs));
+                .anyMatch(this::equalsNeighborsNoRotate);
     }
 
     private boolean equalsNeighborsNoRotate(Pattern rhs) {
@@ -83,9 +83,9 @@ public class Pattern {
     @Override
     public int hashCode() {
         int currHash = current.hashCode();
-        int neighHash = Arrays.stream(neighbors).map(n -> n.hashCode()).reduce(1, (a, b) -> a * b);
+        int neighHash = Arrays.stream(neighbors).map(Optional::hashCode).reduce(1, (a, b) -> a * b);
 
-        return neighHash;
+        return neighHash * currHash;
     }
 
     /**
@@ -156,8 +156,6 @@ public class Pattern {
             return Stream.empty();
         }
 
-        Optional<Tile> t = m.getTile(c);
-
         return rotations()
                 .filter(r -> r.matchesAtNoRotate(m, c))
                 .map(match -> match.withCoordinate(c));
@@ -169,7 +167,7 @@ public class Pattern {
      * on the properties of the initial pattern properties, contain duplicates.
      */
     public Stream<Pattern> rotations() {
-        return Arrays.stream(Direction.values()).map(d -> rotateWith(d));
+        return Arrays.stream(Direction.values()).map(this::rotateWith);
     }
 
     /**

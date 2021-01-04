@@ -10,8 +10,8 @@ import java.util.Objects;
  * @author the StonksDev team
  */
 public class DirectionnedTile {
-    private Tile t;
-    private Direction d;
+    private final Tile t;
+    private final Direction d;
 
     /**
      * Constructs a new <code>DirectionnedTile</code>

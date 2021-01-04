@@ -46,8 +46,7 @@ public class Tile {
      * Creates the initial tile.
      */
     public static Tile initialTile(Coordinate c) {
-        Tile t = new Tile(c, TileKind.Initial);
-        return t;
+        return new Tile(c, TileKind.Initial);
     }
 
     /**
@@ -70,8 +69,7 @@ public class Tile {
      */
     public static Tile neighborOf(TileKind kind, DirectionnedTile... neighbors) throws IllegalPlacementException {
         Coordinate tileCoord = Coordinate.validFromNeighbor(neighbors);
-        Tile t = new Tile(tileCoord, kind);
-        return t;
+        return new Tile(tileCoord, kind);
     }
 
     /**

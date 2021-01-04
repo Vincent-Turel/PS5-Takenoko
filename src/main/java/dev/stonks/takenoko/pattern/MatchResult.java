@@ -16,8 +16,8 @@ import java.util.stream.Stream;
  * @author the StonksDev team
  */
 public class MatchResult {
-    private Pattern p;
-    private Coordinate c;
+    private final Pattern p;
+    private final Coordinate c;
 
     public MatchResult(Pattern pa, Coordinate co) {
         p = pa;
