@@ -1,9 +1,6 @@
 package dev.stonks.takenoko.gameManagement;
 
-import dev.stonks.takenoko.bot.DumbPlayer;
 import dev.stonks.takenoko.bot.Player;
-import dev.stonks.takenoko.bot.Player.PlayerType;
-import dev.stonks.takenoko.bot.RandomPlayer;
 import dev.stonks.takenoko.bot.SmartPlayer;
 
 import java.text.DecimalFormat;
@@ -46,7 +43,7 @@ public class GameManager {
     private void initialisesStats() {
         stats = new ArrayList<>();
         for (Player player : players) {
-            stats.add(new FinalResults(player.getId(), player.getPlayerType()));
+            stats.add(new FinalResults(player));
         }
     }
 
@@ -55,21 +52,9 @@ public class GameManager {
      *
      * @return an arraysList of all the players
      */
-    private ArrayList<Player> createPlayers() {
+    private ArrayList<Player> getNewPlayers() {
         ArrayList<Player> players = new ArrayList<>();
-        this.players.forEach(player -> {
-            switch (player.getPlayerType()) {
-                case RandomPlayer:
-                    players.add(new RandomPlayer(player.getId()));
-                    break;
-                case DumbPlayer:
-                    players.add(new DumbPlayer(player.getId()));
-                    break;
-                case SmartPlayer:
-                    players.add(new SmartPlayer(player.getId(), ((SmartPlayer) player).getDepth()));
-                    break;
-            }
-        });
+        this.players.forEach(player -> players.add(player.getNewInstance()));
         return players;
     }
 
@@ -85,13 +70,13 @@ public class GameManager {
         AtomicInteger count = new AtomicInteger(0);
         if (!sequential) {
             updateProgressBar(n, 0);
-            IntStream.range(0, n).parallel().mapToObj(x -> new Game(createPlayers())).forEach(game -> {
+            IntStream.range(0, n).parallel().mapToObj(x -> new Game(getNewPlayers())).forEach(game -> {
                 simulate(game);
                 updateProgressBar(n, count.incrementAndGet());
             });
             System.out.print("\n");
         } else {
-            IntStream.range(0, n).sequential().mapToObj(x -> new Game(createPlayers())).forEach(game -> {
+            IntStream.range(0, n).sequential().mapToObj(x -> new Game(getNewPlayers())).forEach(game -> {
                 LOG.severe("Starting game n°" + count.incrementAndGet());
                 simulate(game);
             });
@@ -234,7 +219,7 @@ public class GameManager {
         }
         System.out.print("\n" + " ".repeat(smallWidth + 1) + vLine);
         for (FinalResults result : stats) {
-            if (result.getPlayerType() == PlayerType.SmartPlayer) {
+            if (result.getPlayerType().equals("SmartPlayer")) {
                 SmartPlayer smartPlayer = (SmartPlayer) players.stream().filter(player -> player.getId() == result.getId()).findAny().orElseThrow(NoSuchElementException::new);
                 System.out.print(StringUtils.center("IA : " + result.getPlayerType() + " (" + smartPlayer.getDepth() + ")", width) + vLine);
             } else
@@ -286,9 +271,9 @@ public class GameManager {
      * @param id         the player's id
      * @param playerType the player's type
      */
-    private void displayWhoItIs(int id, PlayerType playerType) {
+    private void displayWhoItIs(int id, String playerType) {
         SmartPlayer smartPlayer = null;
-        if (playerType == PlayerType.SmartPlayer)
+        if (playerType.equals("SmartPlayer"))
             smartPlayer = (SmartPlayer) players.stream().filter(player -> player.getId() == id).findAny().orElseThrow(NoSuchElementException::new);
 
         System.out.println("Bot n°" + id + " - IA level : " + playerType + (smartPlayer != null ? " - Depth : " + smartPlayer.getDepth() : ""));

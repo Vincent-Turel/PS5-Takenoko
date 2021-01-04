@@ -27,7 +27,6 @@ public class SmartPlayer extends Player implements Cloneable {
     public SmartPlayer(int id) {
         super(id);
         this.depth = 2;
-        this.playerType = PlayerType.SmartPlayer;
         this.chosenAction = new ArrayList<>(Arrays.asList(
                 new ArrayList<>(Collections.singletonList(null)),
                 new ArrayList<>(Arrays.asList(null, null))));
@@ -36,7 +35,6 @@ public class SmartPlayer extends Player implements Cloneable {
     public SmartPlayer(int id, int depth) {
         super(id);
         this.depth = depth;
-        this.playerType = PlayerType.SmartPlayer;
         this.chosenAction = new ArrayList<>(Arrays.asList(
                 new ArrayList<>(Collections.singletonList(null)),
                 new ArrayList<>(Arrays.asList(null, null))));
@@ -166,7 +164,7 @@ public class SmartPlayer extends Player implements Cloneable {
         else
             actions.set(actions.size() - 1, newAction);
 
-        int score = checkObjectives(this, usedCloneMap);
+        int score = getScoreForAction(this, usedCloneMap);
 
         if (score == 0 && (action == Action.MovePanda || action == Action.MoveGardener)) {
             score = 1;
@@ -429,5 +427,10 @@ public class SmartPlayer extends Player implements Cloneable {
      */
     public int getDepth() {
         return depth;
+    }
+
+    @Override
+    public Player getNewInstance() {
+        return new SmartPlayer(this.id, this.depth);
     }
 }
