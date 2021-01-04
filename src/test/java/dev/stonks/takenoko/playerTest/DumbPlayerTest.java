@@ -63,6 +63,26 @@ public class DumbPlayerTest {
     }
 
     @Test
+    public void choseTileToGrowTest(){
+
+    }
+
+    @Test
+    public void chooseTileToMovePandaTest(){
+
+    }
+
+    @Test
+    public void doYouWantToPutAnIrrigationOrAnImprovementTest(){
+
+    }
+
+    @Test
+    public void chooseNewWeatherTest(){
+
+    }
+
+    @Test
     public void putTileTest(){
         Set<Coordinate> placements = new HashSet<>(Arrays.asList(new Coordinate(1,1),new Coordinate(2,2)));
         Set<Coordinate> placements2 = new HashSet<>();
