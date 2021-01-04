@@ -130,7 +130,6 @@ public class Game {
         int gameTurn = 1;
         boolean aPlayerWin = false;
         boolean remainingLastTurn = true;
-        boolean effectDone;
         int nbActions;
         Optional<Integer> idWinner = Optional.empty();
         objectivesDistribution();
@@ -140,68 +139,13 @@ public class Game {
             }
             LOG.info("Turn n°"+gameTurn+" :");
             for (Player player : players) {
-                effectDone = false;
                 nbActions = 2;
                 updateGameWeather(gameWeather, gameTurn);
                 if (idWinner.isEmpty() || player.getId() != idWinner.get()) {
-                    var possibleActions = findPossibleActions(player);
+                    ArrayList<Action> possibleActions = findPossibleActions(player);
                     LOG.info("Possibles actions  : ");
                     LOG.info(possibleActions.toString());
-                    while(!effectDone) {
-                        //TODO: modifier le nombre d'aménagements restant une fois choisi par le joueur
-                        //TODO: mettre à jour les fonctions chez les bots(chooseNewWeather et chooseTileToMovePanda)
-                        switch (gameWeather.getCondition()) {
-                            case Cloud:
-                                List<Improvement> improvements = new ArrayList<>();
-                                if(improvementDeck.isWatershedAvailable()){
-                                    improvements.add(Improvement.Watershed);
-                                }
-                                if (!improvementDeck.isWatershedAvailable()) {
-                                    gameWeather.setWeather(player.chooseNewWeather(WeatherKind.cloudWeathers));
-                                } else {
-                                    switch(player.choseImprovement(improvements)){
-                                        case Watershed:
-                                            improvementDeck.drawWatershed();
-                                            LOG.info("Player n°"+player.getId()+" draw a watershed improvement");
-                                            break;
-                                        default:
-                                            throw new RuntimeException("Improvement problem : this should not be possible");
-                                    }
-                                    effectDone = true;
-                                }
-                                break;
-                            case Sun:
-                                nbActions = Math.min(possibleActions.size(), 3);
-                                effectDone = true;
-                                break;
-                            case Rain:
-                                Optional<Tile> tileWhereGrow = player.chooseTileToGrow(new Map(map));
-                                if(tileWhereGrow.isPresent()) {
-                                    if(tileWhereGrow.get().isIrrigated()) {
-                                        LOG.info("Player n°" + player.getId() + " grow the bamboo on a tile");
-                                        tileWhereGrow.get().growBamboo();
-                                    }
-                                }
-                                effectDone = true;
-                                break;
-                            case Thunderstorm:
-                                Optional<Tile> tileWhereMovePanda = player.chooseTileToMovePanda(new Map(map));
-                                if(tileWhereMovePanda.isPresent()) {
-                                    LOG.info("Player n°" + player.getId() + " move the panda pawn");
-                                    map.getPanda().moveToAndAct(tileWhereMovePanda.get());
-                                }
-                                effectDone = true;
-                                break;
-                            case FreeChoice:
-                                WeatherKind newWeatherKind = player.chooseNewWeather(WeatherKind.freeChoiceWeathers);
-                                LOG.info("Player n°"+player.getId()+" choose a new weather : "+newWeatherKind);
-                                gameWeather.setWeather(newWeatherKind);
-                                break;
-                            default:
-                                effectDone = true;
-                        }
-                    }
-
+                    weatherActions(player,nbActions,possibleActions);
                     for (int j = 0; j < nbActions; j++) {
                         if (gameTurn > 2000) {
                             LOG.info("Party ended due to player playing more than 5000 actions (endless game)\n");
@@ -223,6 +167,70 @@ public class Game {
             gameTurn++;
         }
         fillTheFinalScore();
+    }
+
+    private int weatherActions(Player player, int nbActions, ArrayList<Action> possibleActions) {
+        boolean effectDone = false;
+        while(!effectDone) {
+            //TODO: modifier le nombre d'aménagements restant une fois choisi par le joueur
+            //TODO: mettre à jour les fonctions chez les bots(chooseNewWeather et chooseTileToMovePanda)
+            switch (gameWeather.getCondition()) {
+                case Cloud:
+                    if (improvementDeck.isEmpty()) {
+                        gameWeather.setWeather(player.chooseNewWeather(WeatherKind.cloudWeathers));
+                    } else {
+                        List<Improvement> improvements = new ArrayList<>();
+                        if(improvementDeck.isWatershedAvailable()){
+                            improvements.add(Improvement.Watershed);
+                        }
+                        if(improvementDeck.isEnclosureAvailable()){
+                            improvements.add(Improvement.Enclosure);
+                        }
+                        switch(player.choseImprovement(improvements)){
+                            case Watershed:
+                                improvementDeck.drawWatershed();
+                                LOG.info("Player n°"+player.getId()+" draw a watershed improvement");
+                                break;
+                            case Enclosure:
+                                improvementDeck.drawEnclosure();
+                                LOG.info("Player n°"+player.getId()+" draw an enclosure improvement");
+                                break;
+                            default:
+                                throw new RuntimeException("Improvement problem : this should not be possible");
+                        }
+                        effectDone = true;
+                    }
+                    break;
+                case Sun:
+                    nbActions = Math.min(possibleActions.size(), 3);
+                    effectDone = true;
+                    break;
+                case Rain:
+                    Optional<Tile> tileWhereGrow = player.chooseTileToGrow(new Map(map));
+                    if(tileWhereGrow.isPresent()) {
+                        if(tileWhereGrow.get().isIrrigated())
+                            LOG.info("Player n°"+player.getId()+" grow the bamboo on a tile");
+                        tileWhereGrow.get().growBamboo();
+                    }
+                    effectDone = true;
+                    break;
+                case Thunderstorm:
+                    Optional<Tile> tileWhereMovePanda = player.chooseTileToMovePanda(new Map(map));
+                    if(tileWhereMovePanda.isPresent())
+                        LOG.info("Player n°"+player.getId()+" move the panda pawn");
+                    map.getPanda().moveToAndAct(tileWhereMovePanda.get());
+                    effectDone = true;
+                    break;
+                case FreeChoice:
+                    WeatherKind newWeatherKind = player.chooseNewWeather(WeatherKind.freeChoiceWeathers);
+                    LOG.info("Player n°"+player.getId()+" choose a new weather : "+newWeatherKind);
+                    gameWeather.setWeather(newWeatherKind);
+                    break;
+                default:
+                    effectDone = true;
+            }
+        }
+        return nbActions;
     }
 
     private void playerPlay(Player player, ArrayList<Action> possibleActions) {
