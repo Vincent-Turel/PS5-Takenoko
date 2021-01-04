@@ -5,7 +5,6 @@ import dev.stonks.takenoko.bot.Player;
 import dev.stonks.takenoko.map.*;
 import dev.stonks.takenoko.map.Map;
 import dev.stonks.takenoko.pattern.MatchResult;
-import dev.stonks.takenoko.objective.PatternObjective;
 import dev.stonks.takenoko.pawn.Gardener;
 import dev.stonks.takenoko.pawn.Panda;
 import dev.stonks.takenoko.objective.*;
@@ -28,18 +27,13 @@ import java.util.stream.IntStream;
  */
 public class Game {
     private final static Logger LOG = Logger.getLogger(Game.class.getSimpleName());
-    private final int nbObjectivesToWIn;
     private final dev.stonks.takenoko.map.Map map;
     private final ArrayList<Player> players;
     private final Weather gameWeather;
     private List<AbstractTile> tileDeck;
-    private ArrayList<PatternObjective> tileObjectives;
     private Stack<AbstractIrrigation> irrigationDeck;
     private final ImprovementDeck improvementDeck;
-    private ArrayList<PandaObjective> pandaObjectives;
-    private ArrayList<GardenerObjective> gardenerObjectives;
-    private Set<MatchResult> patternMatchs;
-    private EmperorObjective emperor;
+    private final Set<MatchResult> patternMatches;
     private final Random random;
     private ObjectiveDeck deck;
     public ArrayList<GameResults> gamePlayersResults;
@@ -51,12 +45,12 @@ public class Game {
         initialiseIrrigationDeck();
         deck = new ObjectiveDeck();
         gameWeather = initialiseWeather();
-        patternMatchs = new HashSet<>();
+        patternMatches = new HashSet<>();
         this.players = players;
         random = new Random();
         gamePlayersResults = new ArrayList<>();
         improvementDeck = new ImprovementDeck();
-        nbObjectivesToWIn = players.size() == 2 ? 9 : players.size() == 3 ? 8 : 7;
+        deck.setNbObjectiveToWin(players);
     }
 
     /**
@@ -121,7 +115,7 @@ public class Game {
         boolean remainingLastTurn = true;
         int nbActions;
         Optional<Integer> idWinner = Optional.empty();
-        objectivesDistribution();
+        deck.objectivesDistribution(players);
         while(!aPlayerWin || remainingLastTurn) {
             if(idWinner.isPresent()){
                 remainingLastTurn = false;
@@ -261,30 +255,7 @@ public class Game {
                 player.addIrrigation(drawnIrrigation);
                 break;
             case DrawObjective:
-                ArrayList<ObjectiveKind> listPossibleKind = new ArrayList<>();
-                if (deck.deckSize(ObjectiveKind.PatternObjective)>0) {
-                    listPossibleKind.add(ObjectiveKind.PatternObjective);
-                }
-                if (deck.deckSize(ObjectiveKind.PandaObjective)>0) {
-                    listPossibleKind.add(ObjectiveKind.PandaObjective);
-                }
-                if (deck.deckSize(ObjectiveKind.GardenerObjective)>0) {
-                    listPossibleKind.add(ObjectiveKind.GardenerObjective);
-                }
-                ObjectiveKind objectiveKind = player.chooseObjectiveKind(listPossibleKind);
-                int num;
-                if (objectiveKind == ObjectiveKind.PatternObjective) {
-                    num = random.nextInt(deck.deckSize(ObjectiveKind.PatternObjective));
-                    player.addObjectives(deck.getAnPatternObjective(num));
-                }
-                if (objectiveKind == ObjectiveKind.PandaObjective) {
-                    num = random.nextInt(deck.deckSize(ObjectiveKind.PandaObjective));
-                    player.addObjectives(deck.getAnPandaObjective(num));
-                }
-                if(objectiveKind==ObjectiveKind.GardenerObjective) {
-                    num = random.nextInt(deck.deckSize(ObjectiveKind.GardenerObjective));
-                    player.addObjectives(deck.getAnGardenerObjective(num));
-                }
+                deck.addAnObjectiveForPlayer(player);
                 break;
         }
         Optional<Action> decision;
@@ -320,20 +291,6 @@ public class Game {
         }
     }
 
-
-    private void objectivesDistribution() {
-        int index;
-        for (Player player: players) {
-            index = random.nextInt(tileObjectives.size());
-            player.addObjectives(tileObjectives.remove(index));
-            //TODO:changer la méthode du bot pour ajouter un objectif
-            index = random.nextInt(pandaObjectives.size());
-            player.addObjectives(pandaObjectives.remove(index));
-            index = random.nextInt(gardenerObjectives.size());
-            player.addObjectives(gardenerObjectives.remove(index));
-        }
-    }
-
     /**
      * Check players' objectives and put them in the achievedObjectives
      * when they are completed.
@@ -361,11 +318,11 @@ public class Game {
      */
     private boolean checkIfWinner() {
         for (Player player : players) {
-            if(player.getNbObjectivesAchieved() >= nbObjectivesToWIn){
+            if(player.getNbObjectivesAchieved() >= deck.getNbObjectiveToWin()){
 
                 LOG.warning("LAST TURN !");
-                player.addObjectives(emperor);
-                player.newObjectivesAchieved(emperor);
+                player.addObjectives(deck.getEmperor());
+                player.newObjectivesAchieved(deck.getEmperor());
                 return true;
             }
         }
@@ -414,11 +371,7 @@ public class Game {
                 tileDeck.containsAll(game.tileDeck) && game.tileDeck.containsAll(tileDeck) &&
                 Objects.equals(irrigationDeck, game.irrigationDeck) &&
                 Objects.equals(players, game.players) &&
-                tileObjectives.containsAll(game.tileObjectives) && game.tileObjectives.containsAll(tileObjectives) &&
-                pandaObjectives.containsAll(game.pandaObjectives) && game.pandaObjectives.containsAll(pandaObjectives) &&
-                gardenerObjectives.containsAll(game.gardenerObjectives) && game.gardenerObjectives.containsAll(gardenerObjectives) &&
-                Objects.equals(patternMatchs, game.patternMatchs) &&
-                Objects.equals(emperor, game.emperor) &&
+                Objects.equals(patternMatches, game.patternMatches) &&
                 Objects.equals(gamePlayersResults, game.gamePlayersResults) &&
                 gameWeather.equals(game.gameWeather) &&
                 improvementDeck.equals(game.improvementDeck);
@@ -426,6 +379,6 @@ public class Game {
 
     @Override
     public int hashCode() {
-        return Objects.hash(map, tileDeck, irrigationDeck, players, tileObjectives, pandaObjectives, gardenerObjectives, patternMatchs, emperor, random, gamePlayersResults,improvementDeck);
+        return Objects.hash(map, tileDeck, irrigationDeck, players, deck, patternMatches, random, gamePlayersResults,improvementDeck);
     }
 }
