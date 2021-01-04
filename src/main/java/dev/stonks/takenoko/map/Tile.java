@@ -199,9 +199,14 @@ public class Tile {
      * Adds an improvement to the tile
      * @param i the improvement to be added.
      * @throws IllegalPlacementException if there is already an improvement on
-     * the tile or if the tile is the initial tile.
+     * the tile or if the tile is the initial tile or if there are already some
+     * bamboos on the tile.
      */
     public void addImprovement(Improvement i) throws IllegalPlacementException {
+        if (bamboo.getSize() != 0) {
+            throw new IllegalPlacementException("Attempt to place an improvement where there is already a bamboo");
+        }
+
         if (!improvement.isEmpty()) {
             throw new IllegalPlacementException("Attempt to add an improvement on a tile that already contains one");
         }
