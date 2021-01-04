@@ -62,7 +62,7 @@ public class ObjectiveDeck {
      * check if an objective type is available
      * @return the objective available for a player
      */
-    private ArrayList<ObjectiveKind> PossibleKind(){
+    private ArrayList<ObjectiveKind> possibleKind(){
         ArrayList<ObjectiveKind> listPossibleKind = new ArrayList<>();
         if (patternDeck.size()>0) {
             listPossibleKind.add(ObjectiveKind.PatternObjective);
@@ -81,7 +81,7 @@ public class ObjectiveDeck {
      * @param player the player who want to have an objective
      */
     public void addAnObjectiveForPlayer(Player player){
-        ObjectiveKind objectiveKind = player.chooseObjectiveKind(PossibleKind());
+        ObjectiveKind objectiveKind = player.chooseObjectiveKind(possibleKind());
         if (objectiveKind == ObjectiveKind.PatternObjective) {
             setAnPatternObjective(player);
         }
