@@ -11,12 +11,12 @@ import java.util.Random;
 
 public class ObjectiveDeck {
 
-    private ArrayList<GardenerObjective> gardenerDeck;
-    private ArrayList<PatternObjective> patternDeck;
-    private ArrayList<PandaObjective> pandaDeck;
-    private EmperorObjective emperor;
+    private final ArrayList<GardenerObjective> gardenerDeck;
+    private final ArrayList<PatternObjective> patternDeck;
+    private final ArrayList<PandaObjective> pandaDeck;
+    private final EmperorObjective emperor;
     private int nbObjectiveToWin;
-    private Random random;
+    private final Random random;
 
     /**
      * Constructor to make an objective deck :
