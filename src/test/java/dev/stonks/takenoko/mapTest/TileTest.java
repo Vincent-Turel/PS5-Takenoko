@@ -169,4 +169,14 @@ public class TileTest {
 
         assertThrows(IllegalPlacementException.class, () -> t.addImprovement(Improvement.Enclosure));
     }
+
+    @Test
+    void fertilizerGrowsTwice() {
+        Tile t = new AbstractTile(TileKind.Green)
+                .withImprovement(Improvement.Fertilizer)
+                .withCoordinate(new Coordinate(42, 42));
+
+        t.growBamboo();
+        assertEquals(t.getBamboo().getSize(), 2);
+    }
 }

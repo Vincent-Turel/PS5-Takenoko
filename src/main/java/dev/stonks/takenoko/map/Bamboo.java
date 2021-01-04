@@ -29,6 +29,16 @@ public class Bamboo {
     }
 
     /**
+     * Increase the size of the bamboo two times.
+     *
+     * Maximal size: 4.
+     */
+    public void growTwice() {
+        grow();
+        grow();
+    }
+
+    /**
      * Decrease the size of the bamboo and returns the cut section, if it
      * exists.
      * Minimal size : 0

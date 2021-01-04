@@ -126,7 +126,13 @@ public class Tile {
      * Maximal size : 4
      */
     public void growBamboo(){
-        if (!isInitial()){
+        if (isInitial()) {
+            return;
+        }
+
+        if (improvement == Improvement.Fertilizer){
+            bamboo.growTwice();
+        } else {
             bamboo.grow();
         }
     }
