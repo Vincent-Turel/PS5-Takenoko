@@ -15,27 +15,19 @@ public class ObjectiveDeck {
     private final ArrayList<PatternObjective> patternDeck;
     private final ArrayList<PandaObjective> pandaDeck;
     private final EmperorObjective emperor;
-    private int nbObjectiveToWin;
+    private final int nbObjectiveToWin;
     private final Random random;
 
     /**
      * Constructor to make an objective deck :
       */
-    public ObjectiveDeck(){
+    public ObjectiveDeck(ArrayList<Player> players){
         this.gardenerDeck = ObjectivesBambooFactory.gardenerObjectiveList();
         this.patternDeck = PatternObjectiveFactory.validPatternObjectives();
         this.pandaDeck = ObjectivesBambooFactory.pandaObjectiveList();
         this.emperor = new EmperorObjective();
-        this.nbObjectiveToWin = 0;
-        this.random = new Random();
-    }
-
-    /**
-     * Set the number of objectives to end the game
-     * @param players all players on the game
-     */
-    public void setNbObjectiveToWin(ArrayList players){
         this.nbObjectiveToWin = players.size() == 2 ? 9 : players.size() == 3 ? 8 : 7;
+        this.random = new Random();
     }
 
     /**
@@ -50,8 +42,8 @@ public class ObjectiveDeck {
      * Check if the deck is empty or not
      * @return the deck state
      */
-    public boolean deckEmpty(){
-        return gardenerDeck.size()>0 || patternDeck.size()>0 || pandaDeck.size()>0;
+    public boolean deckIsNotEmpty(){
+        return !gardenerDeck.isEmpty() || !patternDeck.isEmpty() || !pandaDeck.isEmpty();
     }
 
     public EmperorObjective getEmperor(){
@@ -64,13 +56,13 @@ public class ObjectiveDeck {
      */
     private ArrayList<ObjectiveKind> possibleKind(){
         ArrayList<ObjectiveKind> listPossibleKind = new ArrayList<>();
-        if (patternDeck.size()>0) {
+        if (!patternDeck.isEmpty()) {
             listPossibleKind.add(ObjectiveKind.PatternObjective);
         }
-        if (pandaDeck.size()>0) {
+        if (!pandaDeck.isEmpty()) {
             listPossibleKind.add(ObjectiveKind.PandaObjective);
         }
-        if (gardenerDeck.size()>0) {
+        if (!gardenerDeck.isEmpty()) {
             listPossibleKind.add(ObjectiveKind.GardenerObjective);
         }
         return listPossibleKind;
@@ -83,13 +75,13 @@ public class ObjectiveDeck {
     public void addAnObjectiveForPlayer(Player player){
         ObjectiveKind objectiveKind = player.chooseObjectiveKind(possibleKind());
         if (objectiveKind == ObjectiveKind.PatternObjective) {
-            setAnPatternObjective(player);
+            setAPatternObjective(player);
         }
         if (objectiveKind == ObjectiveKind.PandaObjective) {
-            setAnPandaObjective(player);
+            setAPandaObjective(player);
         }
         if(objectiveKind==ObjectiveKind.GardenerObjective) {
-            setAnGardenerObjective(player);
+            setAGardenerObjective(player);
         }
     }
 
@@ -99,23 +91,23 @@ public class ObjectiveDeck {
      */
     public void objectivesDistribution(ArrayList<Player> players) {
         for (Player player: players) {
-            setAnPatternObjective(player);
-            setAnPandaObjective(player);
-            setAnGardenerObjective(player);
+            setAPatternObjective(player);
+            setAPandaObjective(player);
+            setAGardenerObjective(player);
         }
     }
 
-    private void setAnPatternObjective(Player player){
+    private void setAPatternObjective(Player player){
         int index = random.nextInt(patternDeck.size());
         player.addObjectives(patternDeck.remove(index));
     }
 
-    private void setAnPandaObjective(Player player){
+    private void setAPandaObjective(Player player){
         int index = random.nextInt(pandaDeck.size());
         player.addObjectives(pandaDeck.remove(index));
     }
 
-    private void setAnGardenerObjective(Player player){
+    private void setAGardenerObjective(Player player){
         int index = random.nextInt(gardenerDeck.size());
         player.addObjectives(gardenerDeck.remove(index));
     }

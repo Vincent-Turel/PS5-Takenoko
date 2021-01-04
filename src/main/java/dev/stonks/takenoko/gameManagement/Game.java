@@ -35,7 +35,7 @@ public class Game {
     private final ImprovementDeck improvementDeck;
     private final Set<MatchResult> patternMatches;
     private final Random random;
-    private ObjectiveDeck deck;
+    private final ObjectiveDeck deck;
     public ArrayList<GameResults> gamePlayersResults;
 
 
@@ -43,14 +43,13 @@ public class Game {
         map = new Map(28);
         initialiseTileDeck();
         initialiseIrrigationDeck();
-        deck = new ObjectiveDeck();
+        deck = new ObjectiveDeck(players);
         gameWeather = initialiseWeather();
         patternMatches = new HashSet<>();
         this.players = players;
         random = new Random();
         gamePlayersResults = new ArrayList<>();
         improvementDeck = new ImprovementDeck();
-        deck.setNbObjectiveToWin(players);
     }
 
     /**
@@ -86,7 +85,7 @@ public class Game {
             possibleAction.add(Action.PutTile);
         if (irrigationDeck.size() > 0)
             possibleAction.add(Action.DrawIrrigation);
-        if((player.getObjectives().size() < 5) && (deck.deckEmpty())){
+        if((player.getObjectives().size() < 5) && (deck.deckIsNotEmpty())){
             possibleAction.add(Action.DrawObjective);
         }
         return possibleAction;
@@ -128,7 +127,7 @@ public class Game {
                     ArrayList<Action> possibleActions = findPossibleActions(player);
                     LOG.info("Possibles actions  : ");
                     LOG.info(possibleActions.toString());
-                    weatherActions(player,nbActions,possibleActions);
+                    nbActions = weatherActions(player,nbActions,possibleActions);
                     for (int j = 0; j < nbActions; j++) {
                         if (gameTurn > 2000) {
                             LOG.info("Party ended due to player playing more than 5000 actions (endless game)\n");
