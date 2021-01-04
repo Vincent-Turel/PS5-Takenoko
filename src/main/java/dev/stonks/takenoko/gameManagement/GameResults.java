@@ -11,11 +11,13 @@ import java.util.Objects;
  */
 public class GameResults {
     private int id;
+    private int score;
     private int rank;
     private int nbPandaObjectives;
 
-    public GameResults(int id,int rank,int nbPandaObjectives) {
+    public GameResults(int id,int score,int rank,int nbPandaObjectives) {
         this.id = id;
+        this.score = score;
         this.rank = rank;
         this.nbPandaObjectives = nbPandaObjectives;
     }
@@ -28,12 +30,9 @@ public class GameResults {
         return rank;
     }
 
-    public int getNbPandaObjectives(){return nbPandaObjectives;}
+    public int getScore(){return score;}
 
-    public void reset(){
-        rank = 0;
-        nbPandaObjectives = 0;
-    }
+    public int getNbPandaObjectives(){return nbPandaObjectives;}
 
     @Override
     public boolean equals(Object o) {
