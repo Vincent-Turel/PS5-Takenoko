@@ -208,17 +208,19 @@ public class Game {
                 case Rain:
                     Optional<Tile> tileWhereGrow = player.chooseTileToGrow(new Map(map));
                     if(tileWhereGrow.isPresent()) {
-                        if(tileWhereGrow.get().isIrrigated())
-                            LOG.info("Player n°"+player.getId()+" grow the bamboo on a tile");
-                        tileWhereGrow.get().growBamboo();
+                        if(tileWhereGrow.get().isIrrigated()) {
+                            LOG.info("Player n°" + player.getId() + " grow the bamboo on a tile");
+                            tileWhereGrow.get().growBamboo();
+                        }
                     }
                     effectDone = true;
                     break;
                 case Thunderstorm:
                     Optional<Tile> tileWhereMovePanda = player.chooseTileToMovePanda(new Map(map));
-                    if(tileWhereMovePanda.isPresent())
-                        LOG.info("Player n°"+player.getId()+" move the panda pawn");
-                    map.getPanda().moveToAndAct(tileWhereMovePanda.get());
+                    if(tileWhereMovePanda.isPresent()) {
+                        LOG.info("Player n°" + player.getId() + " move the panda pawn");
+                        map.getPanda().moveToAndAct(tileWhereMovePanda.get());
+                    }
                     effectDone = true;
                     break;
                 case FreeChoice:
