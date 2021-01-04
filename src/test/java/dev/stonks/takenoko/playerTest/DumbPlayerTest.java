@@ -101,10 +101,10 @@ public class DumbPlayerTest {
         dumbPlayer.setCurrentMapState(map);
         dumbPlayer.setChosenAction(Arrays.asList(5, Action.MovePanda.ordinal(), 1, null));
 
-        assertTrue(placements.contains(dumbPlayer.choseWherePawnShouldGo(panda)));
+        assertTrue(placements.contains(dumbPlayer.chooseWherePawnShouldGo(panda)));
 
         placements.clear();
-        assertThrows(IllegalStateException.class, () -> dumbPlayer.choseWherePawnShouldGo(panda));
+        assertThrows(IllegalStateException.class, () -> dumbPlayer.chooseWherePawnShouldGo(panda));
     }
 
     @Test
@@ -154,7 +154,7 @@ public class DumbPlayerTest {
     public void choseImprovementTest() {
         ArrayList<Improvement> improvements = new ArrayList<>(Arrays.asList(Improvement.Watershed, Improvement.Watershed));
         assertEquals(2, improvements.size());
-        dumbPlayer.choseImprovement(improvements);
+        dumbPlayer.chooseImprovement(improvements);
         assertEquals(1, improvements.size());
         improvements.addAll(Arrays.asList(Improvement.Watershed, Improvement.Watershed));
         assertEquals(3, improvements.size());
@@ -172,7 +172,7 @@ public class DumbPlayerTest {
         t1.cutBamboo();
         t2.cutBamboo();
 
-        dumbPlayer.choseImprovement(improvements);
+        dumbPlayer.chooseImprovement(improvements);
         assertEquals(1, dumbPlayer.getImprovements().size());
         var answer = dumbPlayer.putImprovement();
         assertEquals(Improvement.Watershed, answer.getU());

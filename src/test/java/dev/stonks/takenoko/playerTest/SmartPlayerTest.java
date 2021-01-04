@@ -64,6 +64,26 @@ public class SmartPlayerTest {
     }
 
     @Test
+    public void choseTileToGrowTest(){
+
+    }
+
+    @Test
+    public void chooseTileToMovePandaTest(){
+
+    }
+
+    @Test
+    public void doYouWantToPutAnIrrigationOrAnImprovementTest(){
+
+    }
+
+    @Test
+    public void chooseNewWeatherTest(){
+
+    }
+
+    @Test
     public void putTileTest(){
         Set<Coordinate> placements = new HashSet<>(Arrays.asList(new Coordinate(1,1),new Coordinate(2,2)));
         Set<Coordinate> placements2 = new HashSet<>();
@@ -102,10 +122,10 @@ public class SmartPlayerTest {
         smartPlayer.setCurrentMapState(map);
         smartPlayer.setChosenAction(List.of(new ArrayList<>(Collections.singletonList(5)), new ArrayList<>(Arrays.asList(Action.MovePanda.ordinal(), 1, null))));
 
-        assertTrue(placements.contains(smartPlayer.choseWherePawnShouldGo(panda)));
+        assertTrue(placements.contains(smartPlayer.chooseWherePawnShouldGo(panda)));
 
         placements.clear();
-        assertThrows(IllegalStateException.class, () -> smartPlayer.choseWherePawnShouldGo(panda));
+        assertThrows(IllegalStateException.class, () -> smartPlayer.chooseWherePawnShouldGo(panda));
     }
 
     @Test
@@ -154,10 +174,10 @@ public class SmartPlayerTest {
     }
 
     @Test
-    public void choseImprovementTest() {
+    public void chooseImprovementTest() {
         ArrayList<Improvement> improvements = new ArrayList<>(Arrays.asList(Improvement.Watershed, Improvement.Watershed));
         assertEquals(2, improvements.size());
-        smartPlayer.choseImprovement(improvements);
+        smartPlayer.chooseImprovement(improvements);
         assertEquals(1, improvements.size());
         improvements.addAll(Arrays.asList(Improvement.Watershed, Improvement.Watershed));
         assertEquals(3, improvements.size());
@@ -172,7 +192,7 @@ public class SmartPlayerTest {
         Tile t = map.setTile(map.initialTile().getCoordinate().moveWith(Direction.South), new AbstractTile(TileKind.Green));
         t.cutBamboo();
 
-        smartPlayer.choseImprovement(improvements);
+        smartPlayer.chooseImprovement(improvements);
         assertEquals(1, smartPlayer.getImprovements().size());
         var answer = smartPlayer.putImprovement();
         assertEquals(Improvement.Watershed, answer.getU());
