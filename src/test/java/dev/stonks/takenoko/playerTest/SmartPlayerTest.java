@@ -8,12 +8,15 @@ import dev.stonks.takenoko.map.Map;
 import dev.stonks.takenoko.objective.GardenerObjective;
 import dev.stonks.takenoko.objective.ObjectiveKind;
 import dev.stonks.takenoko.objective.PatternObjective;
+import dev.stonks.takenoko.pattern.BambooPattern;
 import dev.stonks.takenoko.pattern.Pattern;
 import dev.stonks.takenoko.pawn.Panda;
+import dev.stonks.takenoko.weather.WeatherKind;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -21,16 +24,17 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class SmartPlayerTest {
+    Map map;
     SmartPlayer smartPlayer;
 
     @BeforeEach
     public void setup(){
+        map = new Map(20);
         smartPlayer = new SmartPlayer(3);
     }
 
     @Test
     public void decideTest(){
-        Map map = new Map(25);
         ArrayList<Action> possibleActions = new ArrayList<>(Arrays.asList(Action.values()));
         possibleActions.remove(Action.PutImprovement);
         possibleActions.remove(Action.PutIrrigation);
@@ -61,6 +65,37 @@ public class SmartPlayerTest {
 
         possibleObjectiveKinds.clear();
         assertThrows(IllegalStateException.class, () -> smartPlayer.chooseObjectiveKind(possibleObjectiveKinds));
+    }
+
+
+    @Test
+    public void chooseTileToGrowTest() throws IllegalPlacementException {
+        assertTrue(smartPlayer.chooseTileToGrow(map).isEmpty());
+        map.setTile(map.initialTile().getCoordinate().moveWith(Direction.South), new AbstractTile(TileKind.Green));
+        List<Tile> tiles = Arrays.stream(map.getTiles())
+                .flatMap(Optional::stream)
+                .filter(tile -> (tile.isIrrigated() && !tile.isInitial())).collect(Collectors.toList());
+        assertTrue(smartPlayer.chooseTileToGrow(map).isEmpty());
+        smartPlayer.addObjectives(new GardenerObjective(2, new BambooPattern(TileKind.Green, 2)));
+        assertTrue(tiles.contains(smartPlayer.chooseTileToGrow(map).get()));
+    }
+
+    @Test
+    public void chooseTileToMovePandaTest() throws IllegalPlacementException {
+        assertTrue(smartPlayer.chooseTileToMovePanda(map).isEmpty());
+        Tile t = map.setTile(map.initialTile().getCoordinate().moveWith(Direction.South), new AbstractTile(TileKind.Green));
+        assertEquals(t, smartPlayer.chooseTileToMovePanda(map).get());
+    }
+
+    @Test
+    public void doYouWantToPutAnIrrigationOrAnImprovementTest(){
+        assertTrue(smartPlayer.doYouWantToPutAnIrrigationOrAnImprovement(map).isEmpty());
+    }
+
+    @Test
+    public void chooseNewWeatherTest(){
+        Set<WeatherKind> weatherKinds = new HashSet<>(Set.of(WeatherKind.Cloud, WeatherKind.Rain));
+        assertTrue(weatherKinds.contains(smartPlayer.chooseNewWeather(weatherKinds)));
     }
 
     @Test
@@ -102,10 +137,10 @@ public class SmartPlayerTest {
         smartPlayer.setCurrentMapState(map);
         smartPlayer.setChosenAction(List.of(new ArrayList<>(Collections.singletonList(5)), new ArrayList<>(Arrays.asList(Action.MovePanda.ordinal(), 1, null))));
 
-        assertTrue(placements.contains(smartPlayer.choseWherePawnShouldGo(panda)));
+        assertTrue(placements.contains(smartPlayer.chooseWherePawnShouldGo(panda)));
 
         placements.clear();
-        assertThrows(IllegalStateException.class, () -> smartPlayer.choseWherePawnShouldGo(panda));
+        assertThrows(IllegalStateException.class, () -> smartPlayer.chooseWherePawnShouldGo(panda));
     }
 
     @Test
@@ -121,9 +156,6 @@ public class SmartPlayerTest {
         PatternObjective objectiveWin2 = new PatternObjective(10,pattern2);
         smartPlayer.addObjectives(objectiveWin);
         smartPlayer.addObjectives(objectiveWin2);
-
-        //Making a map :
-        Map map = new Map(42);
 
         map.setTile(map.initialTile().getCoordinate().moveWith(Direction.South), new AbstractTile(TileKind.Green));
         map.getTile(map.initialTile().getCoordinate().moveWith(Direction.South)).get().setIrrigated(false);
@@ -154,10 +186,10 @@ public class SmartPlayerTest {
     }
 
     @Test
-    public void choseImprovementTest() {
+    public void chooseImprovementTest() {
         ArrayList<Improvement> improvements = new ArrayList<>(Arrays.asList(Improvement.Watershed, Improvement.Watershed));
         assertEquals(2, improvements.size());
-        smartPlayer.choseImprovement(improvements);
+        smartPlayer.chooseImprovement(improvements);
         assertEquals(1, improvements.size());
         improvements.addAll(Arrays.asList(Improvement.Watershed, Improvement.Watershed));
         assertEquals(3, improvements.size());
@@ -166,13 +198,12 @@ public class SmartPlayerTest {
     @Test
     public void putImprovementTest() throws IllegalPlacementException {
         ArrayList<Improvement> improvements = new ArrayList<>(Arrays.asList(Improvement.Watershed, Improvement.Watershed, Improvement.Watershed));
-        Map map = new Map(15);
         smartPlayer.setCurrentMapState(map);
 
         Tile t = map.setTile(map.initialTile().getCoordinate().moveWith(Direction.South), new AbstractTile(TileKind.Green));
         t.cutBamboo();
 
-        smartPlayer.choseImprovement(improvements);
+        smartPlayer.chooseImprovement(improvements);
         assertEquals(1, smartPlayer.getImprovements().size());
         var answer = smartPlayer.putImprovement();
         assertEquals(Improvement.Watershed, answer.getU());
@@ -182,7 +213,6 @@ public class SmartPlayerTest {
 
     @Test
     public void putIrrigationTest() throws IllegalPlacementException {
-        Map map = new Map(15);
         map.setTile(map.initialTile().getCoordinate().moveWith(Direction.South), new AbstractTile(TileKind.Green));
         map.setTile(map.initialTile().getCoordinate().moveWith(Direction.SouthEast), new AbstractTile(TileKind.Pink));
 

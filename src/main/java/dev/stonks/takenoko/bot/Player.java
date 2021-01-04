@@ -59,7 +59,7 @@ public abstract class Player {
      * @param pawn the pawn that has to be moved
      * @return Tile the tile that the player has chosen
      */
-    public abstract Tile choseWherePawnShouldGo(Pawn pawn);
+    public abstract Tile chooseWherePawnShouldGo(Pawn pawn);
 
     /**
      * This method return the tile where the player want to move the panda with the weather effect
@@ -83,7 +83,7 @@ public abstract class Player {
      * @param possiblesWeathers an array of all possible weathers the player can chose
      * @return the weather kind he has chosen
      */
-    public abstract WeatherKind chooseNewWeather(WeatherKind[] possiblesWeathers);
+    public abstract WeatherKind chooseNewWeather(Set<WeatherKind> possiblesWeathers);
 
     /**
      * This method return the tile where the player want to grow bamboo
@@ -273,7 +273,7 @@ public abstract class Player {
         return new MultipleAnswer<>(chosenTile, chosenImprovement);
     }
 
-    public abstract Improvement choseImprovement(List<Improvement> improvements);
+    public abstract Improvement chooseImprovement(List<Improvement> improvements);
 
     /**
      * Set the current map state of the game

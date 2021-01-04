@@ -47,8 +47,8 @@ public class RandomPlayer extends Player{
     }
 
     @Override
-    public WeatherKind chooseNewWeather(WeatherKind[] possiblesWeathers) {
-        return possiblesWeathers[random.nextInt(possiblesWeathers.length)];
+    public WeatherKind chooseNewWeather(Set<WeatherKind> possiblesWeathers) {
+        return getRandomInCollection(possiblesWeathers);
     }
 
     /**
@@ -76,7 +76,7 @@ public class RandomPlayer extends Player{
      * @return Tile the tile that the player has chosen
      */
     @Override
-    public Tile choseWherePawnShouldGo(Pawn pawn) {
+    public Tile chooseWherePawnShouldGo(Pawn pawn) {
         Set<Tile> possiblePawnPlacements = currentMapState.getPossiblePawnPlacements(pawn);
 
         if (possiblePawnPlacements.size() < 1)
@@ -139,7 +139,7 @@ public class RandomPlayer extends Player{
     }
 
     @Override
-    public Improvement choseImprovement(List<Improvement> improvements) {
+    public Improvement chooseImprovement(List<Improvement> improvements) {
         Improvement chosen = improvements.remove(random.nextInt(improvements.size()));
         this.improvements.add(chosen);
         return chosen;

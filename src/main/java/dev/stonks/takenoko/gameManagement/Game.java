@@ -171,7 +171,7 @@ public class Game {
                         if (improvementDeck.isFertilizerAvailable()) {
                             improvements.add(Improvement.Fertilizer);
                         }
-                        switch(player.choseImprovement(improvements)){
+                        switch(player.chooseImprovement(improvements)){
                             case Watershed:
                                 improvementDeck.drawWatershed();
                                 LOG.info("Player n°"+player.getId()+" draw a watershed improvement");
@@ -242,11 +242,11 @@ public class Game {
                 break;
             case MoveGardener:
                 Gardener gardener = map.getGardener();
-                gardener.moveToAndAct(player.choseWherePawnShouldGo(gardener), map);
+                gardener.moveToAndAct(player.chooseWherePawnShouldGo(gardener), map);
                 break;
             case MovePanda:
                 Panda panda = map.getPanda();
-                Optional<TileKind> bamboo = panda.moveToAndAct(player.choseWherePawnShouldGo(panda));
+                Optional<TileKind> bamboo = panda.moveToAndAct(player.chooseWherePawnShouldGo(panda));
                 bamboo.ifPresent(player::addCollectedBamboo);
                 break;
             case DrawIrrigation:

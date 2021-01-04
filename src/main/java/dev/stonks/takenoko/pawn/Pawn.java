@@ -17,7 +17,7 @@ public abstract class Pawn {
      * Build a pawn
      * @param initialTileCoord the initial tile's coordinate
      */
-    public Pawn(Coordinate initialTileCoord){
+    protected Pawn(Coordinate initialTileCoord){
         this.currentCoordinate = initialTileCoord;
     }
 
@@ -25,7 +25,7 @@ public abstract class Pawn {
      * Move the pawn and do the action he is supposed to.
      * @param tile the tile where he is supposed to go.
      */
-    public void moveTo(Tile tile){
+    protected void moveTo(Tile tile){
         currentCoordinate = tile.getCoordinate();
     }
 
