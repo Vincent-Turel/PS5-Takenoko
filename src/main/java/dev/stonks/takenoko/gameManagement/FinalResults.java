@@ -2,7 +2,6 @@ package dev.stonks.takenoko.gameManagement;
 
 import dev.stonks.takenoko.bot.Player;
 
-import java.util.ArrayList;
 import java.util.Optional;
 
 //[bot1[nbWinGame,nbLoseGame,nbDrawGame,summOfTheScore],...,botN[]]
@@ -14,16 +13,16 @@ import java.util.Optional;
 public class FinalResults {
     private static int isAWin = 1;
     private static int isALoose = 0;
-    private Player.PlayerType playerType;
+    private String playerType;
     private int id;
     private int nbWin;
     private int nbLoose;
     private int nbDraw;
     private int finalScore;
 
-    public FinalResults(int id,Player.PlayerType playerType) {
-        this.playerType = playerType;
-        this.id = id;
+    public FinalResults(Player player) {
+        this.playerType = player.getClass().getSimpleName();
+        this.id = player.getId();
         nbWin = 0;
         nbLoose = 0;
         nbDraw = 0;
@@ -71,7 +70,7 @@ public class FinalResults {
         return finalScore;
     }
 
-    public Player.PlayerType getPlayerType() {
+    public String getPlayerType() {
         return playerType;
     }
 }
