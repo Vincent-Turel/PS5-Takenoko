@@ -1,4 +1,4 @@
-package dev.stonks.takenoko;
+package dev.stonks.takenoko.mapTest;
 
 import dev.stonks.takenoko.map.Coordinate;
 import dev.stonks.takenoko.map.Direction;

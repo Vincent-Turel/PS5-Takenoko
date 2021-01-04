@@ -1,4 +1,4 @@
-package dev.stonks.takenoko;
+package dev.stonks.takenoko.objectiveTest;
 
 import dev.stonks.takenoko.map.Improvement;
 import dev.stonks.takenoko.objective.GardenerObjective;

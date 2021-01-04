@@ -1,4 +1,4 @@
-package dev.stonks.takenoko;
+package dev.stonks.takenoko.objectiveTest;
 
 import dev.stonks.takenoko.bot.Player;
 import dev.stonks.takenoko.map.*;
