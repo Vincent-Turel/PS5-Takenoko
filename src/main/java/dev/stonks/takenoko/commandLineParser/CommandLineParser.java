@@ -1,18 +1,10 @@
 package dev.stonks.takenoko.commandLineParser;
 
-import dev.stonks.takenoko.bot.DumbPlayer;
 import dev.stonks.takenoko.bot.Player;
-import dev.stonks.takenoko.bot.RandomPlayer;
-import dev.stonks.takenoko.bot.SmartPlayer;
 import dev.stonks.takenoko.gameManagement.GameManager;
 import picocli.CommandLine;
 
-import java.util.ArrayList;
-import dev.stonks.takenoko.bot.Player;
-import dev.stonks.takenoko.gameManagement.GameManager;
-import picocli.CommandLine;
 import java.util.Arrays;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
@@ -33,7 +25,7 @@ public class CommandLineParser implements Runnable {
             converter = PlayerParserHelper.class,
             arity = "2..4"
     )
-    private Player.PlayerType[] playersType;
+    private Player[] players;
 
     @CommandLine.Option(
             required = true,
@@ -74,8 +66,6 @@ public class CommandLineParser implements Runnable {
     )
     private Level level;
 
-    private static int count = 1;
-
     @Override
     public void run() {
         System.out.println("\nWelcome in the famous game of Takenoko !\n");
@@ -87,7 +77,7 @@ public class CommandLineParser implements Runnable {
 
         setLogConfig(level);
 
-        GameManager gameManager = new GameManager(getPlayers(), fullResult, ugly);
+        GameManager gameManager = new GameManager(Arrays.asList(players), fullResult, ugly);
 
         LOG.severe("Starting program...\n");
 
@@ -101,28 +91,5 @@ public class CommandLineParser implements Runnable {
     public static void setLogConfig(Level level) {
         System.setProperty("java.util.logging.SimpleFormatter.format", "%1$tF %1$tT - [%4$s] %3$s : %5$s%n");
         Arrays.stream(LogManager.getLogManager().getLogger("").getHandlers()).forEach(h -> h.setLevel(level));
-    }
-
-    private List<Player> getPlayers(){
-        List<Player> players= new ArrayList<>();
-         Arrays.stream(playersType).forEach(playerType -> {
-            switch (playerType) {
-                case RandomPlayer:
-                    players.add(new RandomPlayer(count++));
-                    break;
-                case DumbPlayer:
-                    players.add(new DumbPlayer(count++));
-                    break;
-                case SmartPlayer:
-                    players.add(new SmartPlayer(count++));
-                    break;
-                case SmartPlayer3:
-                    players.add(new SmartPlayer(count++, 3));
-                    break;
-                case SmartPlayer4:
-                    players.add(new SmartPlayer(count++, 4));
-            }
-        });
-         return players;
     }
 }
