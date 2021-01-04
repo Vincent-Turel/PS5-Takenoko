@@ -40,8 +40,9 @@ public class GameResults {
         if (o == null || getClass() != o.getClass()) throw IllegalEqualityExceptionGenerator.create(GameResults.class,o.getClass());;
         GameResults that = (GameResults) o;
         return id == that.id &&
-                rank == that.rank
-                && nbPandaObjectives == that.nbPandaObjectives;
+                rank == that.rank &&
+                score == that.score &&
+                nbPandaObjectives == that.nbPandaObjectives;
     }
 
     @Override
