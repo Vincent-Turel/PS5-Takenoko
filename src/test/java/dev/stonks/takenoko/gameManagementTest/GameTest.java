@@ -49,16 +49,12 @@ public class GameTest {
     }
 
     @Test
-    void testThePlayMethod(){
+    void testThePlayMethod() throws IllegalPlacementException {
         Arrays.stream(LogManager.getLogManager().getLogger("").getHandlers()).forEach(h -> h.setLevel(Level.OFF));
         Game emptyGame = new Game(players);
-        try {
-            game.play();
-            assertFalse(game.equals(emptyGame));
-        } catch (Exception e) {
-            e.printStackTrace();
-            assertTrue(e.getClass()==IllegalPlacementException.class);
-        }
+
+        game.play();
+        assertFalse(game.equals(emptyGame));
     }
 
     @Test
