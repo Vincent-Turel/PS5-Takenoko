@@ -347,7 +347,7 @@ public class SmartPlayer extends Player implements Cloneable {
             if (getResScore() > 0)
                 return Optional.of(Action.PutIrrigation);
         }
-        if (improvements.size() > 0)
+        if (improvements.size() > 0 && new ArrayList<>(currentMapState.getImprovementPlacements()).size() > 0)
             return Optional.of(Action.PutImprovement);
 
         return Optional.empty();
@@ -380,7 +380,7 @@ public class SmartPlayer extends Player implements Cloneable {
         if (improvements.size() < 1)
             throw new IllegalStateException("This action shouldn't be possible");
         if (improvementPlacements.size() < 1)
-            throw new IllegalStateException("There is nowhere I can put an irrigation");
+            throw new IllegalStateException("There is nowhere I can put an improvement");
 
         Tile chosenTile = getRandomInCollection(improvementPlacements);
         Improvement chosenImprovement = improvements.remove(random.nextInt(improvements.size()));
