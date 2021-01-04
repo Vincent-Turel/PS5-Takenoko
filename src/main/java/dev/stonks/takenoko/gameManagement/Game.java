@@ -184,7 +184,7 @@ public class Game {
                             improvements.add(Improvement.Watershed);
                         }
                         if(improvementDeck.isEnclosureAvailable()){
-                            improvements.add(Improvement.Watershed);
+                            improvements.add(Improvement.Enclosure);
                         }
                         switch(player.choseImprovement(improvements)){
                             case Watershed:
