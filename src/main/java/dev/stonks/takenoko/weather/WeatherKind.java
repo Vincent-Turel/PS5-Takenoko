@@ -14,7 +14,7 @@ public enum WeatherKind {
     Wind,           //4
     FreeChoice,     //5
     //Initial value (first tour):
-    NoWeather; //6
+    NoWeather;      //6
 
     /**
      * When the weather set to free choice is select :
