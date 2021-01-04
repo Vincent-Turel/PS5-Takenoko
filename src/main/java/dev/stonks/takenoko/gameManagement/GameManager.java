@@ -126,9 +126,10 @@ public class GameManager {
     private void changeStats(Game game) {
         ArrayList<GameResults> results = game.getResults();
         for (Player player : players) {
+            int score = results.stream().filter(x -> x.getId() == player.getId()).findFirst().get().getScore();
             stats.stream()
                     .filter(result -> result.getId() == player.getId())
-                    .forEach(x -> x.change(gameStateOf(player.getId(), results), player.getScore()));
+                    .forEach(x -> x.change(gameStateOf(player.getId(), results), score));
         }
     }
 
