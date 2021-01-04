@@ -194,6 +194,7 @@ public class Game {
                             case Enclosure:
                                 improvementDeck.drawEnclosure();
                                 LOG.info("Player n°"+player.getId()+" draw an enclosure improvement");
+                                break;
                             default:
                                 throw new RuntimeException("Improvement problem : this should not be possible");
                         }
