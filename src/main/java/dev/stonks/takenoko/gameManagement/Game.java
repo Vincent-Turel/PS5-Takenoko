@@ -6,7 +6,6 @@ import dev.stonks.takenoko.map.*;
 import dev.stonks.takenoko.map.Map;
 import dev.stonks.takenoko.pattern.MatchResult;
 import dev.stonks.takenoko.objective.PatternObjective;
-import dev.stonks.takenoko.objective.PatternObjectiveFactory;
 import dev.stonks.takenoko.pawn.Gardener;
 import dev.stonks.takenoko.pawn.Panda;
 import dev.stonks.takenoko.objective.*;
@@ -93,7 +92,7 @@ public class Game {
             possibleAction.add(Action.PutTile);
         if (irrigationDeck.size() > 0)
             possibleAction.add(Action.DrawIrrigation);
-        if((player.getObjectives().size() < 5) && (deck.deckImpty())){
+        if((player.getObjectives().size() < 5) && (deck.deckEmpty())){
             possibleAction.add(Action.DrawObjective);
         }
         return possibleAction;
@@ -263,31 +262,28 @@ public class Game {
                 break;
             case DrawObjective:
                 ArrayList<ObjectiveKind> listPossibleKind = new ArrayList<>();
-                if (tileObjectives.size() > 0) {
+                if (deck.deckSize(ObjectiveKind.PatternObjective)>0) {
                     listPossibleKind.add(ObjectiveKind.PatternObjective);
                 }
-                if (pandaObjectives.size() > 0) {
+                if (deck.deckSize(ObjectiveKind.PandaObjective)>0) {
                     listPossibleKind.add(ObjectiveKind.PandaObjective);
                 }
-                if (gardenerObjectives.size() > 0) {
+                if (deck.deckSize(ObjectiveKind.GardenerObjective)>0) {
                     listPossibleKind.add(ObjectiveKind.GardenerObjective);
                 }
                 ObjectiveKind objectiveKind = player.chooseObjectiveKind(listPossibleKind);
                 int num;
                 if (objectiveKind == ObjectiveKind.PatternObjective) {
-                    num = random.nextInt(tileObjectives.size());
-                    player.addObjectives(tileObjectives.get(num));
-                    tileObjectives.remove(num);
+                    num = random.nextInt(deck.deckSize(ObjectiveKind.PatternObjective));
+                    player.addObjectives(deck.getAnPatternObjective(num));
                 }
                 if (objectiveKind == ObjectiveKind.PandaObjective) {
-                    num = random.nextInt(pandaObjectives.size());
-                    player.addObjectives(pandaObjectives.get(num));
-                    pandaObjectives.remove(num);
+                    num = random.nextInt(deck.deckSize(ObjectiveKind.PandaObjective));
+                    player.addObjectives(deck.getAnPandaObjective(num));
                 }
                 if(objectiveKind==ObjectiveKind.GardenerObjective) {
-                    num = random.nextInt(gardenerObjectives.size());
-                    player.addObjectives(gardenerObjectives.get(num));
-                    gardenerObjectives.remove(num);
+                    num = random.nextInt(deck.deckSize(ObjectiveKind.GardenerObjective));
+                    player.addObjectives(deck.getAnGardenerObjective(num));
                 }
                 break;
         }
