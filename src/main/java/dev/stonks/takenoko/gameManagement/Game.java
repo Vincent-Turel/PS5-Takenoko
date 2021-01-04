@@ -176,18 +176,24 @@ public class Game {
             //TODO: mettre à jour les fonctions chez les bots(chooseNewWeather et chooseTileToMovePanda)
             switch (gameWeather.getCondition()) {
                 case Cloud:
-                    List<Improvement> improvements = new ArrayList<>();
-                    if(improvementDeck.isWatershedAvailable()){
-                        improvements.add(Improvement.Watershed);
-                    }
-                    if (!improvementDeck.isWatershedAvailable()) {
+                    if (improvementDeck.isEmpty()) {
                         gameWeather.setWeather(player.chooseNewWeather(WeatherKind.cloudWeathers));
                     } else {
+                        List<Improvement> improvements = new ArrayList<>();
+                        if(improvementDeck.isWatershedAvailable()){
+                            improvements.add(Improvement.Watershed);
+                        }
+                        if(improvementDeck.isEnclosureAvailable()){
+                            improvements.add(Improvement.Watershed);
+                        }
                         switch(player.choseImprovement(improvements)){
                             case Watershed:
                                 improvementDeck.drawWatershed();
                                 LOG.info("Player n°"+player.getId()+" draw a watershed improvement");
                                 break;
+                            case Enclosure:
+                                improvementDeck.drawEnclosure();
+                                LOG.info("Player n°"+player.getId()+" draw an enclosure improvement");
                             default:
                                 throw new RuntimeException("Improvement problem : this should not be possible");
                         }
