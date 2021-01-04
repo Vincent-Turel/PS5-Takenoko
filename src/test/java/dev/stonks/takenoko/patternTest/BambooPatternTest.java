@@ -1,4 +1,4 @@
-package dev.stonks.takenoko;
+package dev.stonks.takenoko.patternTest;
 
 import dev.stonks.takenoko.map.TileKind;
 import dev.stonks.takenoko.pattern.BambooPattern;

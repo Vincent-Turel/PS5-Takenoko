@@ -1,4 +1,4 @@
-package dev.stonks.takenoko;
+package dev.stonks.takenoko.gameManagementTest;
 
 import dev.stonks.takenoko.gameManagement.GameResults;
 import org.junit.jupiter.api.BeforeEach;

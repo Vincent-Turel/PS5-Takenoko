@@ -1,4 +1,4 @@
-package dev.stonks.takenoko;
+package dev.stonks.takenoko.gameManagementTest;
 
 import dev.stonks.takenoko.bot.DumbPlayer;
 import dev.stonks.takenoko.bot.RandomPlayer;
