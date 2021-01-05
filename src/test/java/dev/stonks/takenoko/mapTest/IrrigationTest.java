@@ -6,7 +6,7 @@ import dev.stonks.takenoko.map.IllegalPlacementException;
 import dev.stonks.takenoko.map.Irrigation;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class IrrigationTest {
     @Test

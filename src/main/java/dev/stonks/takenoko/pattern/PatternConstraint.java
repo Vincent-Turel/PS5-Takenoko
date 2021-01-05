@@ -7,8 +7,8 @@ import dev.stonks.takenoko.map.TileKind;
 import java.util.Optional;
 
 public class PatternConstraint {
-    private TileKind kind;
-    private Coordinate coord;
+    private final TileKind kind;
+    private final Coordinate coord;
 
     PatternConstraint(TileKind k, Coordinate c) {
         kind = k;
@@ -26,7 +26,7 @@ public class PatternConstraint {
         }
 
         if (!(other instanceof PatternConstraint)) {
-            throw IllegalEqualityExceptionGenerator.create(PatternConstraint.class, other.getClass());
+            throw IllegalEqualityExceptionGenerator.create(PatternConstraint.class, other);
         }
 
         PatternConstraint rhs = (PatternConstraint) other;

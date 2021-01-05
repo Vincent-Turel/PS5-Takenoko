@@ -11,7 +11,7 @@ public class PandaTest {
     static Map map;
 
     @BeforeAll
-    public static void setup(){
+    public static void setup() {
         map = new Map(25);
     }
 

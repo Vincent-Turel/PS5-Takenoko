@@ -103,21 +103,21 @@ public class ImprovementDeckTest {
     }
 
     @Test
-    void resetTest(){
+    void resetTest() {
         ImprovementDeck expected = new ImprovementDeck();
 
-        assertEquals(expected,deck);
+        assertEquals(expected, deck);
 
         deck.drawWatershed();
         deck.drawEnclosure();
         deck.drawEnclosure();
         deck.drawFertilizer();
 
-        assertNotEquals(expected,deck);
+        assertNotEquals(expected, deck);
 
         deck.reset();
 
-        assertEquals(expected,deck);
+        assertEquals(expected, deck);
     }
 
     @Test

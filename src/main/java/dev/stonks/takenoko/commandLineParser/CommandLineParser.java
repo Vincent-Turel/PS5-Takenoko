@@ -66,6 +66,16 @@ public class CommandLineParser implements Runnable {
     )
     private Level level;
 
+    /**
+     * Configure the level of the logger for every logger created
+     *
+     * @param level the level (default :severe)
+     */
+    public static void setLogConfig(Level level) {
+        System.setProperty("java.util.logging.SimpleFormatter.format", "%1$tF %1$tT - [%4$s] %3$s : %5$s%n");
+        Arrays.stream(LogManager.getLogManager().getLogger("").getHandlers()).forEach(h -> h.setLevel(level));
+    }
+
     @Override
     public void run() {
         System.out.println("\nWelcome in the famous game of Takenoko !\n");
@@ -82,14 +92,5 @@ public class CommandLineParser implements Runnable {
         LOG.severe("Starting program...\n");
 
         gameManager.playNTime(numGames, sequential);
-    }
-
-    /**
-     * Configure the level of the logger for every logger created
-     * @param level the level (default :severe)
-     */
-    public static void setLogConfig(Level level) {
-        System.setProperty("java.util.logging.SimpleFormatter.format", "%1$tF %1$tT - [%4$s] %3$s : %5$s%n");
-        Arrays.stream(LogManager.getLogManager().getLogger("").getHandlers()).forEach(h -> h.setLevel(level));
     }
 }

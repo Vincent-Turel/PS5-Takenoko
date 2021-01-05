@@ -3,8 +3,8 @@ package dev.stonks.takenoko.playerTest;
 import dev.stonks.takenoko.bot.MultipleAnswer;
 import dev.stonks.takenoko.bot.RandomPlayer;
 import dev.stonks.takenoko.gameManagement.Action;
-import dev.stonks.takenoko.map.*;
 import dev.stonks.takenoko.map.Map;
+import dev.stonks.takenoko.map.*;
 import dev.stonks.takenoko.objective.ObjectiveKind;
 import dev.stonks.takenoko.pawn.Panda;
 import dev.stonks.takenoko.weather.WeatherKind;
@@ -15,7 +15,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -24,13 +23,13 @@ public class RandomPlayerTest {
     RandomPlayer randomPlayer;
 
     @BeforeEach
-    public void setup(){
+    public void setup() {
         randomPlayer = new RandomPlayer(1);
         map = new Map(25);
     }
 
     @Test
-    public void decideTest(){
+    public void decideTest() {
         ArrayList<Action> possibleActions = new ArrayList<>(Arrays.asList(Action.values()));
         possibleActions.remove(Action.PutImprovement);
         possibleActions.remove(Action.PutIrrigation);
@@ -44,7 +43,7 @@ public class RandomPlayerTest {
     }
 
     @Test
-    public void chooseObjectiveKindTest(){
+    public void chooseObjectiveKindTest() {
         ArrayList<ObjectiveKind> possibleObjectiveKinds = new ArrayList<>(Arrays.asList(ObjectiveKind.values()));
         possibleObjectiveKinds.remove(ObjectiveKind.PandaObjective);
 
@@ -73,25 +72,25 @@ public class RandomPlayerTest {
     }
 
     @Test
-    public void doYouWantToPutAnIrrigationOrAnImprovementTest(){
+    public void doYouWantToPutAnIrrigationOrAnImprovementTest() {
         assertTrue(randomPlayer.doYouWantToPutAnIrrigationOrAnImprovement(map).isEmpty());
     }
 
     @Test
-    public void chooseNewWeatherTest(){
+    public void chooseNewWeatherTest() {
         Set<WeatherKind> weatherKinds = new HashSet<>(Set.of(WeatherKind.Cloud, WeatherKind.Rain));
         assertTrue(weatherKinds.contains(randomPlayer.chooseNewWeather(weatherKinds)));
     }
 
     @Test
-    public void putTileTest(){
-        Set<Coordinate> placements = new HashSet<>(Arrays.asList(new Coordinate(1,1),new Coordinate(2,2)));
+    public void putTileTest() {
+        Set<Coordinate> placements = new HashSet<>(Arrays.asList(new Coordinate(1, 1), new Coordinate(2, 2)));
         Set<Coordinate> placements2 = new HashSet<>();
         List<Coordinate> placementsList = new ArrayList<>(placements);
         Map map = mock(Map.class);
         when(map.getTilePlacements()).thenReturn(placements, placements2, placements);
 
-        ArrayList<AbstractTile> tiles = new ArrayList<>(Arrays.asList(new AbstractTile(TileKind.Green),new AbstractTile(TileKind.Pink), new AbstractTile(TileKind.Pink)));
+        ArrayList<AbstractTile> tiles = new ArrayList<>(Arrays.asList(new AbstractTile(TileKind.Green), new AbstractTile(TileKind.Pink), new AbstractTile(TileKind.Pink)));
         ArrayList<MultipleAnswer<AbstractTile, Coordinate, ?>> res = new ArrayList<>(Arrays.asList(
                 new MultipleAnswer<>(tiles.get(0), placementsList.get(0)),
                 new MultipleAnswer<>(tiles.get(0), placementsList.get(1)),
@@ -110,14 +109,14 @@ public class RandomPlayerTest {
     }
 
     @Test
-    public void choseWherePawnShouldGoTest(){
+    public void choseWherePawnShouldGoTest() {
         Set<Tile> placements = new HashSet<>(Arrays.asList(
-                new Tile(new Coordinate(1,1), TileKind.Pink),
-                new Tile(new Coordinate(2,2), TileKind.Green)));
+                new Tile(new Coordinate(1, 1), TileKind.Pink),
+                new Tile(new Coordinate(2, 2), TileKind.Green)));
         Set<Tile> placements2 = new HashSet<>();
         dev.stonks.takenoko.map.Map map = mock(Map.class);
-        Panda panda = new Panda(new Coordinate(1,1));
-        when(map.getPossiblePawnPlacements(panda)).thenReturn(placements,placements2);
+        Panda panda = new Panda(new Coordinate(1, 1));
+        when(map.getPossiblePawnPlacements(panda)).thenReturn(placements, placements2);
         randomPlayer.setCurrentMapState(map);
 
         assertTrue(placements.contains(randomPlayer.chooseWherePawnShouldGo(panda)));

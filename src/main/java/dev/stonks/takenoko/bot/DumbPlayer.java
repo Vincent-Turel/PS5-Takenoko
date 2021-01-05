@@ -1,10 +1,11 @@
 package dev.stonks.takenoko.bot;
 
+import dev.stonks.takenoko.gameManagement.Action;
 import dev.stonks.takenoko.map.Map;
 import dev.stonks.takenoko.map.*;
-import dev.stonks.takenoko.objective.*;
+import dev.stonks.takenoko.objective.Objective;
+import dev.stonks.takenoko.objective.ObjectiveKind;
 import dev.stonks.takenoko.pawn.Pawn;
-import dev.stonks.takenoko.gameManagement.Action;
 import dev.stonks.takenoko.weather.WeatherKind;
 
 import java.util.*;
@@ -29,14 +30,15 @@ public class DumbPlayer extends Player {
 
     /**
      * This method try every single possible action that the player can do and find which one is the best.
+     *
      * @param possibleAction every action that the player can do.
      */
     private void explore(ArrayList<Action> possibleAction) {
-        for (Action action : possibleAction){
-            switch (action){
+        for (Action action : possibleAction) {
+            switch (action) {
                 case MovePanda:
                     var possiblePandaPlacements = new ArrayList<>(currentMapState.getPossiblePawnPlacements(currentMapState.getPanda()));
-                    for (int i = 0;i < possiblePandaPlacements.size();i++){
+                    for (int i = 0; i < possiblePandaPlacements.size(); i++) {
                         Map usedCloneMap = new Map(currentMapState);
                         usedCloneMap.getPanda().moveToAndAct(possiblePandaPlacements.get(i));
                         updateChosenAction(getScoreForAction(this, usedCloneMap), action.ordinal(), i, null);
@@ -44,7 +46,7 @@ public class DumbPlayer extends Player {
                     break;
                 case MoveGardener:
                     var possibleGardenerPlacements = new ArrayList<>(currentMapState.getPossiblePawnPlacements(currentMapState.getGardener()));
-                    for (int i = 0;i < possibleGardenerPlacements.size();i++){
+                    for (int i = 0; i < possibleGardenerPlacements.size(); i++) {
                         Map usedCloneMap = new Map(currentMapState);
                         usedCloneMap.getGardener().moveToAndAct(possibleGardenerPlacements.get(i), usedCloneMap);
                         updateChosenAction(getScoreForAction(this, usedCloneMap), action.ordinal(), i, null);
@@ -52,8 +54,8 @@ public class DumbPlayer extends Player {
                     break;
                 case PutTile:
                     var tilePlacements = new ArrayList<>(currentMapState.getTilePlacements());
-                    for (int i = 0;i < tilePlacements.size();i++){
-                        for (int j = 0; j < TileKind.values().length-1; j++) {
+                    for (int i = 0; i < tilePlacements.size(); i++) {
+                        for (int j = 0; j < TileKind.values().length - 1; j++) {
                             Map usedCloneMap = new Map(currentMapState);
                             try {
                                 usedCloneMap.setTile(new AbstractTile(TileKind.values()[j]).withCoordinate(tilePlacements.get(i)));
@@ -77,10 +79,10 @@ public class DumbPlayer extends Player {
         }
     }
 
-    private void explore_irrigations(){
+    private void explore_irrigations() {
         Map usedCloneMap;
         var irrigationPlacements = new ArrayList<>(currentMapState.getIrrigationPlacements());
-        for (int i = 0;i < irrigationPlacements.size();i++){
+        for (int i = 0; i < irrigationPlacements.size(); i++) {
             var coordinates = irrigationPlacements.get(i).getDirectlyIrrigatedCoordinates().toArray(Coordinate[]::new);
             usedCloneMap = new Map(currentMapState);
             try {
@@ -100,7 +102,6 @@ public class DumbPlayer extends Player {
     }
 
     /**
-     *
      * @param map the game's map
      * @return the action the player has decided to do
      */
@@ -115,7 +116,7 @@ public class DumbPlayer extends Player {
             return Action.values()[chosenAction.get(1)];
         if (possibleAction.contains(Action.DrawObjective))
             return Action.DrawObjective;
-        if (possibleAction.contains(Action.DrawIrrigation)){
+        if (possibleAction.contains(Action.DrawIrrigation)) {
             if (this.irrigations.size() < 4)
                 return Action.DrawIrrigation;
             else if (possibleAction.size() > 1)
@@ -131,21 +132,22 @@ public class DumbPlayer extends Player {
 
     /**
      * Chose the kind of objective the player wanna draw.
+     *
      * @param listPossibleKind a list of all objective kind the player can draw
      * @return the objective kind
      */
     @Override
     public ObjectiveKind chooseObjectiveKind(ArrayList<ObjectiveKind> listPossibleKind) {
-        if(listPossibleKind.size() < 1){
+        if (listPossibleKind.size() < 1) {
             throw new IllegalStateException("There is no more objectives");
         }
         HashMap<ObjectiveKind, Integer> nbObjective = new HashMap<>();
-        for (ObjectiveKind objectiveKind : listPossibleKind){
+        for (ObjectiveKind objectiveKind : listPossibleKind) {
             nbObjective.putIfAbsent(objectiveKind, 0);
         }
 
         for (Objective objective : objectives)
-            nbObjective.computeIfPresent(objective.getObjType(), (k, v) -> v+1);
+            nbObjective.computeIfPresent(objective.getObjType(), (k, v) -> v + 1);
 
         return Collections.min(nbObjective.entrySet(), java.util.Map.Entry.comparingByValue()).getKey();
     }
@@ -183,6 +185,7 @@ public class DumbPlayer extends Player {
 
     /**
      * This method return the tile where the player want to move the pawn (Panda or Gardener)
+     *
      * @param pawn the pawn that has to be moved
      * @return Tile the tile that the player has chosen
      */
@@ -213,16 +216,17 @@ public class DumbPlayer extends Player {
     /**
      * Return the action that the player want to do among [PutIrrigation, PutAmmenagment]
      * Return an empty optional if he doesn't want to play
+     *
      * @param map the map state
      * @return an optional of an action
      */
     @Override
     public Optional<Action> doYouWantToPutAnIrrigationOrAnImprovement(Map map) {
         this.currentMapState = map;
-        if (improvements.size() > 0 && new HashSet<>(currentMapState.getImprovementPlacements()).size() > 0){
+        if (improvements.size() > 0 && new HashSet<>(currentMapState.getImprovementPlacements()).size() > 0) {
             return Optional.of(Action.PutImprovement);
         }
-        if (irrigations.size() > 0 && new ArrayList<>(currentMapState.getIrrigationPlacements()).size() > 0){
+        if (irrigations.size() > 0 && new ArrayList<>(currentMapState.getIrrigationPlacements()).size() > 0) {
             resetAction(chosenOptionalAction);
             explore_irrigations();
             if (chosenOptionalAction.get(0) > 0)
@@ -231,14 +235,14 @@ public class DumbPlayer extends Player {
                 int x = random.nextInt(2);
                 return x == 0 ? Optional.of(Action.PutIrrigation) : Optional.empty();
             }
-        }
-        else
+        } else
             return Optional.empty();
     }
 
 
     /**
      * Chose where the player wanna put his irrigation and return it.
+     *
      * @return the an irrigation
      */
     @Override
@@ -273,6 +277,7 @@ public class DumbPlayer extends Player {
 
     /**
      * ONLY FOR TESTING
+     *
      * @return the chosen action
      */
     public List<Integer> getChosenAction() {
@@ -281,6 +286,7 @@ public class DumbPlayer extends Player {
 
     /**
      * ONLY FOR TESTING
+     *
      * @param chosenAction a fake chosen action in order to do some test.
      */
     public void setChosenAction(List<Integer> chosenAction) {

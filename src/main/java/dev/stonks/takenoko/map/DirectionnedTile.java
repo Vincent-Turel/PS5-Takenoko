@@ -10,12 +10,12 @@ import java.util.Objects;
  * @author the StonksDev team
  */
 public class DirectionnedTile {
-    private Tile t;
-    private Direction d;
+    private final Tile t;
+    private final Direction d;
 
     /**
      * Constructs a new <code>DirectionnedTile</code>
-     *
+     * <p>
      * This method should not called directly. <code>Tile:withDirection</code>
      * should be used instead.
      *
@@ -44,7 +44,7 @@ public class DirectionnedTile {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) throw IllegalEqualityExceptionGenerator.create(DirectionnedTile.class,o.getClass());
+        if (!(o instanceof DirectionnedTile)) throw IllegalEqualityExceptionGenerator.create(DirectionnedTile.class, o);
         DirectionnedTile that = (DirectionnedTile) o;
         return Objects.equals(t, that.t) &&
                 d == that.d;

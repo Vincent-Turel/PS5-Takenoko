@@ -16,41 +16,43 @@ public class BambooPattern {
 
     /**
      * Make a bamboo pattern :
-     * @param color color of the bamboo
+     *
+     * @param color  color of the bamboo
      * @param height the height of the bamboo (int between 1-4)
      */
-    public BambooPattern(TileKind color, int height){
-        this.color=color;
-        this.height=height;
-        this.nbBamboo=1;
-        this.optionalColor1=Optional.empty();
-        this.optionalColor2=Optional.empty();
+    public BambooPattern(TileKind color, int height) {
+        this.color = color;
+        this.height = height;
+        this.nbBamboo = 1;
+        this.optionalColor1 = Optional.empty();
+        this.optionalColor2 = Optional.empty();
     }
 
     /**
      * Make a bamboo pattern :
-     * @param color color of the bamboo
-     * @param height the height of the bamboo (int between 1-4)
+     *
+     * @param color    color of the bamboo
+     * @param height   the height of the bamboo (int between 1-4)
      * @param nbBamboo the number of different bamboo
      */
-    public BambooPattern(TileKind color, int height, int nbBamboo){
-        this.color=color;
-        this.height=height;
-        this.nbBamboo=nbBamboo;
-        this.optionalColor1=Optional.empty();
-        this.optionalColor2=Optional.empty();
+    public BambooPattern(TileKind color, int height, int nbBamboo) {
+        this.color = color;
+        this.height = height;
+        this.nbBamboo = nbBamboo;
+        this.optionalColor1 = Optional.empty();
+        this.optionalColor2 = Optional.empty();
     }
 
-    public BambooPattern(TileKind color, TileKind optionalColor1, TileKind optionalColor2, int height, int nbBamboo){
-        this.color=color;
-        this.optionalColor1= Optional.of(optionalColor1);
-        this.optionalColor2= Optional.of(optionalColor2);
-        this.height=height;
-        this.nbBamboo=nbBamboo;
+    public BambooPattern(TileKind color, TileKind optionalColor1, TileKind optionalColor2, int height, int nbBamboo) {
+        this.color = color;
+        this.optionalColor1 = Optional.of(optionalColor1);
+        this.optionalColor2 = Optional.of(optionalColor2);
+        this.height = height;
+        this.nbBamboo = nbBamboo;
     }
 
     /**
-     *GETTER FOR ALL @param :
+     * GETTER FOR ALL @param :
      */
 
     public int getHeight() {
@@ -77,7 +79,7 @@ public class BambooPattern {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof BambooPattern))
-            throw IllegalEqualityExceptionGenerator.create(BambooPattern.class,o.getClass());
+            throw IllegalEqualityExceptionGenerator.create(BambooPattern.class, o);
         BambooPattern that = (BambooPattern) o;
         return getHeight() == that.getHeight() &&
                 getNbBamboo() == that.getNbBamboo() &&

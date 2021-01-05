@@ -2,13 +2,14 @@ package dev.stonks.takenoko.mapTest;
 
 import dev.stonks.takenoko.map.Direction;
 import org.junit.jupiter.api.Test;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class DirectionTest {
     @Test
     void directionIndexNonOverlap() {
         int i = 0;
-        for (Direction d: Direction.values()) {
+        for (Direction d : Direction.values()) {
             assertEquals(d.index(), i);
             i++;
         }
