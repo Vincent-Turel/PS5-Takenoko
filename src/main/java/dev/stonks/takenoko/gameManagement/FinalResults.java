@@ -6,10 +6,8 @@ import java.util.Optional;
 
 /**
  * Final result of a player with his statistics
- *
  */
 public class FinalResults {
-
     private final String playerType;
     private final int id;
     private int nbWin;
@@ -32,15 +30,14 @@ public class FinalResults {
      * @param victory is an optionnal boolean who tell if it's a victory
      * @param score is the score of the player at the end of the game
      */
-    public void change(Optional<Boolean> victory, int score){
-        if(victory.isEmpty()){
+    public void change(Optional<Boolean> victory, int score) {
+        if (victory.isEmpty()) {
             nbDraw++;
-        }
-        else{
-            if(victory.get()==Boolean.TRUE){
+        } else {
+            if (victory.get() == Boolean.TRUE) {
                 nbWin++;
             }
-            if (victory.get()==Boolean.FALSE){
+            if (victory.get() == Boolean.FALSE) {
                 nbLoose++;
             }
         }

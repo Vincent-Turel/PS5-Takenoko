@@ -14,6 +14,7 @@ public class Coordinate {
 
     /**
      * Creates a new coordinate.
+     *
      * @param x the x position
      * @param y the y position
      */
@@ -28,7 +29,93 @@ public class Coordinate {
     }
 
     /**
+     * Returns which Coordinate is suited for irrigation storage.
+     * <p>
+     * The suited irrigation storage is defined as the south-west-most
+     * coordinate.
+     *
+     * @throws java.util.NoSuchElementException if ca and cb are not neighbors.
+     */
+    static Coordinate getIrrigationStorage(Coordinate ca, Coordinate cb) {
+        Direction displacement = ca.displacementFor(cb).get();
+
+        return displacement.index() < 3 ? ca : cb;
+    }
+
+    /**
+     * Returns the secondary Coordinate is suited for irrigation storage.
+     * <p>
+     * This coordinate is defined as: the inverse of what getIrrigationStorage
+     * gives.
+     */
+    static Coordinate getSecondaryIrrigationStorage(Coordinate ca, Coordinate cb) {
+        Direction displacement = ca.displacementFor(cb).get();
+
+        return displacement.index() < 3 ? cb : ca;
+    }
+
+    /**
+     * Returns, given a group of neighbors, the position of the corresponding
+     * tile.
+     *
+     * @param neighbors the tile neighbors
+     * @return the tile direction
+     * @throws IllegalPlacementException thrown when the provided direction
+     *                                   and tile coordinates does not
+     *                                   match each other.
+     */
+    static Coordinate fromNeighbors(DirectionnedTile... neighbors) throws IllegalPlacementException {
+        Coordinate tileCoord = null;
+
+        for (DirectionnedTile neighbor : neighbors) {
+            Direction d = neighbor.direction();
+            Coordinate c = neighbor.tile().getCoordinate();
+
+            if (tileCoord == null) {
+                tileCoord = c.moveWith(d.reverse());
+            } else if (!tileCoord.moveWith(d).equals(c)) {
+                throw new IllegalPlacementException("Tiles can not be neighbor");
+            }
+        }
+
+        boolean neighborOfInitial = Arrays.stream(neighbors).anyMatch(dt -> dt.tile().isInitial());
+        boolean hasTwoNeighbors = neighbors.length >= 2;
+
+        if (!neighborOfInitial && !hasTwoNeighbors) {
+            throw new IllegalPlacementException("Tile don't have required neighbors");
+        }
+
+        return tileCoord;
+    }
+
+    /**
+     * Returns, given a group of neighbors, the position of the corresponding
+     * tile.
+     *
+     * @param neighbors the tile neighbors
+     * @return the tile direction
+     * @throws IllegalPlacementException thrown when the provided direction
+     *                                   and tile coordinates does not
+     *                                   match each other or when the
+     *                                   computed coordinate don't have
+     *                                   the correct neighbors.
+     */
+    static Coordinate validFromNeighbor(DirectionnedTile... neighbors) throws IllegalPlacementException {
+        Coordinate c = fromNeighbors(neighbors);
+
+        boolean neighborOfInitial = Arrays.stream(neighbors).anyMatch(dt -> dt.tile().isInitial());
+        boolean hasTwoNeighbors = neighbors.length >= 2;
+
+        if (!neighborOfInitial && !hasTwoNeighbors) {
+            throw new IllegalPlacementException("Tile don't have required neighbors");
+        }
+
+        return c;
+    }
+
+    /**
      * Returns the integer offset corresponding to the coordinate.
+     *
      * @param mapSideLength how much tiles at maximum the map has on each side
      */
     public int toOffset(int mapSideLength) {
@@ -38,6 +125,7 @@ public class Coordinate {
     /**
      * Returns a new coordinate pointing a displacement of one tile in the
      * provided direction.
+     *
      * @param d the direction in which we should move
      * @return the new direction
      */
@@ -71,6 +159,7 @@ public class Coordinate {
 
     /**
      * Tests for equality.
+     *
      * @param o if <code>o</code> is a <code>Coordinate</code>, then the x and
      *          y position are compared. Otherwise, <code>false</code> is
      *          returned.
@@ -101,12 +190,12 @@ public class Coordinate {
      */
     public Coordinate[] neighbors() {
         return new Coordinate[]{
-            moveWith(Direction.North),
-            moveWith(Direction.NorthEast),
-            moveWith(Direction.SouthEast),
-            moveWith(Direction.South),
-            moveWith(Direction.SouthWest),
-            moveWith(Direction.NorthWest)
+                moveWith(Direction.North),
+                moveWith(Direction.NorthEast),
+                moveWith(Direction.SouthEast),
+                moveWith(Direction.South),
+                moveWith(Direction.SouthWest),
+                moveWith(Direction.NorthWest)
         };
     }
 
@@ -121,32 +210,6 @@ public class Coordinate {
                     return tmp.equals(rhs);
                 })
                 .findFirst();
-    }
-
-    /**
-     * Returns which Coordinate is suited for irrigation storage.
-     *
-     * The suited irrigation storage is defined as the south-west-most
-     * coordinate.
-     *
-     * @throws java.util.NoSuchElementException if ca and cb are not neighbors.
-     */
-    static Coordinate getIrrigationStorage(Coordinate ca, Coordinate cb) {
-        Direction displacement = ca.displacementFor(cb).get();
-
-        return displacement.index() < 3 ? ca : cb;
-    }
-
-    /**
-     * Returns the secondary Coordinate is suited for irrigation storage.
-     *
-     * This coordinate is defined as: the inverse of what getIrrigationStorage
-     * gives.
-     */
-    static Coordinate getSecondaryIrrigationStorage(Coordinate ca, Coordinate cb) {
-        Direction displacement = ca.displacementFor(cb).get();
-
-        return displacement.index() < 3 ? cb : ca;
     }
 
     /**
@@ -180,62 +243,5 @@ public class Coordinate {
         } catch (IllegalPlacementException e) {
             throw new IllegalStateException("Neighbors should only generate neighbors");
         }
-    }
-
-    /**
-     * Returns, given a group of neighbors, the position of the corresponding
-     * tile.
-     * @param neighbors the tile neighbors
-     * @return the tile direction
-     * @throws IllegalPlacementException thrown when the provided direction
-     *                                       and tile coordinates does not
-     *                                       match each other.
-     */
-    static Coordinate fromNeighbors(DirectionnedTile... neighbors) throws IllegalPlacementException {
-        Coordinate tileCoord = null;
-
-        for (DirectionnedTile neighbor: neighbors) {
-            Direction d = neighbor.direction();
-            Coordinate c = neighbor.tile().getCoordinate();
-
-            if (tileCoord == null) {
-                tileCoord = c.moveWith(d.reverse());
-            } else if (!tileCoord.moveWith(d).equals(c)) {
-                throw new IllegalPlacementException("Tiles can not be neighbor");
-            }
-        }
-
-        boolean neighborOfInitial = Arrays.stream(neighbors).anyMatch(dt -> dt.tile().isInitial());
-        boolean hasTwoNeighbors = neighbors.length >= 2;
-
-        if (!neighborOfInitial && !hasTwoNeighbors) {
-            throw new IllegalPlacementException("Tile don't have required neighbors");
-        }
-
-        return tileCoord;
-    }
-
-    /**
-     * Returns, given a group of neighbors, the position of the corresponding
-     * tile.
-     * @param neighbors the tile neighbors
-     * @return the tile direction
-     * @throws IllegalPlacementException thrown when the provided direction
-     *                                       and tile coordinates does not
-     *                                       match each other or when the
-     *                                       computed coordinate don't have
-     *                                       the correct neighbors.
-     */
-    static Coordinate validFromNeighbor(DirectionnedTile... neighbors) throws IllegalPlacementException {
-        Coordinate c = fromNeighbors(neighbors);
-
-        boolean neighborOfInitial = Arrays.stream(neighbors).anyMatch(dt -> dt.tile().isInitial());
-        boolean hasTwoNeighbors = neighbors.length >= 2;
-
-        if (!neighborOfInitial && !hasTwoNeighbors) {
-            throw new IllegalPlacementException("Tile don't have required neighbors");
-        }
-
-        return c;
     }
 }

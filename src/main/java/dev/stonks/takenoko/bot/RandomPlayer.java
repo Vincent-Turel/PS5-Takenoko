@@ -1,27 +1,29 @@
 package dev.stonks.takenoko.bot;
 
-import dev.stonks.takenoko.map.*;
-import dev.stonks.takenoko.map.Map;
-import dev.stonks.takenoko.pawn.Pawn;
 import dev.stonks.takenoko.gameManagement.Action;
+import dev.stonks.takenoko.map.*;
 import dev.stonks.takenoko.objective.ObjectiveKind;
+import dev.stonks.takenoko.pawn.Pawn;
 import dev.stonks.takenoko.weather.WeatherKind;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 /**
  * This player plays randomly every time.
  * He is the most basic player we can do.
+ *
  * @see Player
  */
-public class RandomPlayer extends Player{
+public class RandomPlayer extends Player {
 
     public RandomPlayer(int id) {
         super(id);
     }
 
     /**
-     *
      * @param map the game's map
      * @return the action the player has decided to do
      */
@@ -35,12 +37,13 @@ public class RandomPlayer extends Player{
 
     /**
      * This method return the kind of objective the player wants to draw
+     *
      * @param listPossibleKind a list of all objective kind the player can draw
      * @return the objective kind the player has chosen
      */
     @Override
     public ObjectiveKind chooseObjectiveKind(ArrayList<ObjectiveKind> listPossibleKind) {
-        if(listPossibleKind.size()<1){
+        if (listPossibleKind.size() < 1) {
             throw new IllegalStateException("There is no more objectives");
         }
         return getRandomInCollection(listPossibleKind);
@@ -72,6 +75,7 @@ public class RandomPlayer extends Player{
 
     /**
      * This method return the tile where the player want to move the pawn (Panda or Gardener)
+     *
      * @param pawn the pawn that has to be moved
      * @return Tile the tile that the player has chosen
      */
@@ -99,6 +103,7 @@ public class RandomPlayer extends Player{
     /**
      * Return the action that the player want to do among [PutIrrigation, PutAmmenagment]
      * Return an empty optional if he doesn't want to play
+     *
      * @param map the map state
      * @return an optional of an action
      */
@@ -106,24 +111,22 @@ public class RandomPlayer extends Player{
     public Optional<Action> doYouWantToPutAnIrrigationOrAnImprovement(Map map) {
         this.currentMapState = map;
         int x = random.nextInt(2);
-        if (irrigations.size() > 0 && currentMapState.getIrrigationPlacements().size() > 0){
-            if (improvements.size() > 0 && currentMapState.getImprovementPlacements().size() > 0){
+        if (irrigations.size() > 0 && currentMapState.getIrrigationPlacements().size() > 0) {
+            if (improvements.size() > 0 && currentMapState.getImprovementPlacements().size() > 0) {
                 x = random.nextInt(3);
-                return x ==  0 ? Optional.of(Action.PutIrrigation) : x == 1 ? Optional.of(Action.PutImprovement) : Optional.empty();
+                return x == 0 ? Optional.of(Action.PutIrrigation) : x == 1 ? Optional.of(Action.PutImprovement) : Optional.empty();
+            } else {
+                return x == 0 ? Optional.of(Action.PutIrrigation) : Optional.empty();
             }
-            else {
-                return x ==  0 ? Optional.of(Action.PutIrrigation) : Optional.empty();
-            }
-        }
-        else if (improvements.size() > 0 && currentMapState.getImprovementPlacements().size() > 0){
-            return x ==  0 ? Optional.of(Action.PutImprovement) : Optional.empty();
-        }
-        else
+        } else if (improvements.size() > 0 && currentMapState.getImprovementPlacements().size() > 0) {
+            return x == 0 ? Optional.of(Action.PutImprovement) : Optional.empty();
+        } else
             return Optional.empty();
     }
 
     /**
      * Chose where the player wanna put his irrigation and return it.
+     *
      * @return the an irrigation
      */
     @Override

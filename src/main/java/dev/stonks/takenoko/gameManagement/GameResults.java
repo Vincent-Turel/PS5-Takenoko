@@ -14,7 +14,7 @@ public class GameResults {
     private final int rank;
     private final int nbPandaObjectives;
 
-    public GameResults(int id,int score,int rank,int nbPandaObjectives) {
+    public GameResults(int id, int score, int rank, int nbPandaObjectives) {
         this.id = id;
         this.score = score;
         this.rank = rank;
@@ -29,14 +29,21 @@ public class GameResults {
         return rank;
     }
 
-    public int getScore(){return score;}
+    public int getScore() {
+        return score;
+    }
 
-    public int getNbPandaObjectives(){return nbPandaObjectives;}
+    public int getNbPandaObjectives() {
+        return nbPandaObjectives;
+    }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) throw IllegalEqualityExceptionGenerator.create(GameResults.class,o.getClass());
+
+        if (o == null || getClass() != o.getClass())
+            throw IllegalEqualityExceptionGenerator.create(GameResults.class, o.getClass());
+      
         GameResults that = (GameResults) o;
         return id == that.id &&
                 rank == that.rank &&

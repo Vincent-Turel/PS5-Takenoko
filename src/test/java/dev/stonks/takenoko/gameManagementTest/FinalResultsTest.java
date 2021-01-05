@@ -17,38 +17,38 @@ public class FinalResultsTest {
     FinalResults res3;
 
     @BeforeEach
-    void initialises2games(){
+    void initialises2games() {
         res1 = new FinalResults(new RandomPlayer(1));
         res2 = new FinalResults(new RandomPlayer(2));
         res3 = new FinalResults(new DumbPlayer(3));
     }
-    
+
     @Test
-    public void testEqualitiesResults(){
+    public void testEqualitiesResults() {
         assertEquals(res1, res1);
         assertNotEquals(new FinalResults(new RandomPlayer(2)), res2);
         assertNotEquals(new FinalResults(new RandomPlayer(3)), res3);
     }
 
     @Test
-    public void testPlayerType(){
+    public void testPlayerType() {
         assertEquals(RandomPlayer.class.getSimpleName(), res1.getPlayerType());
         assertNotEquals(DumbPlayer.class.getSimpleName(), res1.getPlayerType());
         assertEquals(DumbPlayer.class.getSimpleName(), res3.getPlayerType());
     }
 
     @Test
-    public void testId(){
-        assertTrue(res1.getId()!=res2.getId());
+    public void testId() {
+        assertTrue(res1.getId() != res2.getId());
         assertEquals(res2.getId(), 2);
         assertEquals(res3.getId(), 3);
     }
 
     @Test
-    public void testChange(){
+    public void testChange() {
         res1.change(Optional.of(true), 20);
         res2.change(Optional.of(false), 15);
-        res3.change(Optional.empty(),14);
+        res3.change(Optional.empty(), 14);
 
         assertEquals(res1.getFinalScore(), 20);
 
@@ -58,8 +58,8 @@ public class FinalResultsTest {
         assertEquals(res1.getNbWin(), 2);
 
         assertEquals(res2.getNbDraw(), 0);
-        assertTrue(res2.getNbLoose()!=0);
-        assertFalse(res2.getFinalScore()!=15);
+        assertTrue(res2.getNbLoose() != 0);
+        assertFalse(res2.getFinalScore() != 15);
 
         assertEquals(res3.getFinalScore(), 14);
         assertEquals(res3.getNbDraw(), 1);

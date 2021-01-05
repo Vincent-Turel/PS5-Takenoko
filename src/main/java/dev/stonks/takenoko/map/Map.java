@@ -29,6 +29,7 @@ public class Map {
 
     /**
      * Creates an initial map. It contains the single initial tile.
+     *
      * @param tileNumber the number of tiles that will be placed during the
      *                   game.
      */
@@ -52,14 +53,14 @@ public class Map {
         this.delta = map.delta;
         this.sideLen = map.sideLen;
         this.tiles = new Optional[map.tiles.length];
-        for (int i = 0; i<tiles.length;i++){
+        for (int i = 0; i < tiles.length; i++) {
             if (map.tiles[i].isPresent())
                 tiles[i] = Optional.of(new Tile(map.tiles[i].get()));
             else
                 tiles[i] = Optional.empty();
         }
         this.irrigations = new Optional[map.irrigations.length];
-        for (int i = 0; i<irrigations.length;i++){
+        for (int i = 0; i < irrigations.length; i++) {
             if (map.irrigations[i].isPresent())
                 irrigations[i] = Optional.of(new Irrigation(map.irrigations[i].get()));
             else
@@ -69,7 +70,7 @@ public class Map {
 
     /**
      * Resets the map.
-     *
+     * <p>
      * This method removes every tile from the map and puts a fresh initial
      * tile it its center.
      */
@@ -102,6 +103,7 @@ public class Map {
 
     /**
      * Get the gardener
+     *
      * @return gardener
      */
     public Gardener getGardener() {
@@ -110,15 +112,16 @@ public class Map {
 
     /**
      * Get all the tiles where a pawn can go according to his current position on the map
+     *
      * @param pawn (panda or gardener)
      * @return a set of all the tiles where the pawn can go
      */
-    public Set<Tile> getPossiblePawnPlacements(Pawn pawn){
+    public Set<Tile> getPossiblePawnPlacements(Pawn pawn) {
         Set<Tile> allPossiblePawnPlacements = new HashSet<>();
         Tile currentPawnTile = getTile(pawn.getCurrentCoordinate()).get();
-        for (Direction direction : Direction.values()){
+        for (Direction direction : Direction.values()) {
             Optional<Tile> tileOptional = Optional.of(currentPawnTile);
-            while((tileOptional = getNeighborOf(tileOptional.get(), direction)).isPresent()){
+            while ((tileOptional = getNeighborOf(tileOptional.get(), direction)).isPresent()) {
                 allPossiblePawnPlacements.add(tileOptional.get());
             }
         }
@@ -139,10 +142,11 @@ public class Map {
 
     /**
      * Writes a tile at given coordinate.
+     *
      * @param coord the coordinate at which the tile must be written
-     * @param t the tile to be written
+     * @param t     the tile to be written
      * @throws IllegalPlacementException thrown if a tile is already
-     *                                       present.
+     *                                   present.
      */
     Tile setTile(Coordinate coord, Tile t) throws IllegalPlacementException {
         int offset = coord.toOffset(sideLen);
@@ -167,10 +171,11 @@ public class Map {
 
     /**
      * Creates and writes a tile at given coordinates.
+     *
      * @param co the coordinate at which the tile must be written
-     * @param t the tile to be written
+     * @param t  the tile to be written
      * @throws IllegalPlacementException thrown if a tile is already
-     *                                       present.
+     *                                   present.
      */
     public Tile setTile(Coordinate co, AbstractTile t) throws IllegalPlacementException {
         return setTile(t.withCoordinate(co));
@@ -178,9 +183,10 @@ public class Map {
 
     /**
      * Creates and writes a tile at its coordinates
+     *
      * @param t the tile to be written
      * @throws IllegalPlacementException thrown if a tile is already
-     *                                       present.
+     *                                   present.
      */
     public Tile setTile(Tile t) throws IllegalPlacementException {
         return setTile(t.getCoordinate(), t);
@@ -260,11 +266,11 @@ public class Map {
     /**
      * Returns whether if placing an irrigation at its coordinate is legal or
      * not.
-     *
+     * <p>
      * If the irrigation points to the initial tile, then it is automatically
      * legal. Similarly, if it is placed against the initial tile, then it is
      * automatically illegal.
-     *
+     * <p>
      * Otherwise, placing an irrigation somewhere is legal if the irrigation is
      * linked with at least one other irrigation and if no irrigation is already
      * present.
@@ -275,7 +281,7 @@ public class Map {
         }
 
         Set<Coordinate> irrigatedCoordinates = i.getDirectlyIrrigatedCoordinates();
-        for (Coordinate c: irrigatedCoordinates) {
+        for (Coordinate c : irrigatedCoordinates) {
             Optional<Tile> t = getTile(c);
 
             if (t.isEmpty() || t.get().isInitial()) {
@@ -284,7 +290,7 @@ public class Map {
         }
 
         Set<Coordinate> pointedCoordinates = i.getCoordinatesOfPointedTiles();
-        for (Coordinate c: pointedCoordinates) {
+        for (Coordinate c : pointedCoordinates) {
             Optional<Tile> t = getTile(c);
 
             if (t.isPresent() && t.get().isInitial()) {
@@ -319,6 +325,7 @@ public class Map {
 
     /**
      * Returns the tile at given coordinate.
+     *
      * @param coord the coordinate of the said tile.
      * @return the tile, if it exists.
      */
@@ -329,6 +336,7 @@ public class Map {
     /**
      * Returns the tile at given offset. This offset must be a valid tile
      * index.
+     *
      * @param offset the offset of the said tile.
      * @return the tile, if it exists.
      */
@@ -348,20 +356,20 @@ public class Map {
 
     /**
      * Adds a new tile to the <code>Map</code>.
-     *
+     * <p>
      * The `DirectionnedTile` class is used here because it allows to group
      * both a tile and a direction together.
-     *
+     * <p>
      * This function updates the tiles passed as argument in order to add
      * the correct neighbor.
-     *
+     * <p>
      * The direction is the direction relative to the newly created tile. For
      * instance, the following code : <br>
      *
      * <code>
      * Tile b = Tile.neighborOf(a.withDirection(Direction.North));
      * </code> <br>
-     *
+     * <p>
      * Will place <code>a</code> on top of <code>b</code>.
      */
     public Tile addNeighborOf(TileKind kind, DirectionnedTile... tiles) throws IllegalPlacementException {
@@ -378,13 +386,14 @@ public class Map {
     /**
      * Returns all the coordinates at which a tile can be placed. These
      * positions are guaranteed to be allowed by the game rules.
+     *
      * @return every available position.
      */
     public Set<Coordinate> getTilePlacements() {
         // First step: getting all neighbors of all set tiles.
         Set<Coordinate> candidates = new HashSet<>();
 
-        for (Optional<Tile> maybeTile: tiles) {
+        for (Optional<Tile> maybeTile : tiles) {
             if (maybeTile.isPresent()) {
                 Tile t = maybeTile.get();
                 candidates.addAll(Arrays.asList(t.getCoordinate().neighbors()));
@@ -414,7 +423,7 @@ public class Map {
         Coordinate[] neighbors = c.neighbors();
 
         int neighborCount = 0;
-        for (Coordinate neighborCoord: neighbors) {
+        for (Coordinate neighborCoord : neighbors) {
             if (tileAt(neighborCoord)) {
                 neighborCount++;
             }
@@ -455,6 +464,7 @@ public class Map {
 
     /**
      * Return all tiles for objective verify
+     *
      * @return the tiles contained in the map.
      */
     public Optional<Tile>[] getTiles() {
@@ -484,11 +494,12 @@ public class Map {
 
     /**
      * Adds an improvement at a given coordinate on the map.
+     *
      * @param c the coordinate at which the improvement must be added.
      * @param i the improvement to be added
      * @throws IllegalPlacementException if there is no tile at such
-     * coordinate, or if there is already an improvement on the said tile, or
-     * if the tile is the initial tile.
+     *                                   coordinate, or if there is already an improvement on the said tile, or
+     *                                   if the tile is the initial tile.
      */
     public void setImprovement(Coordinate c, Improvement i) throws IllegalPlacementException {
         Optional<Tile> maybeTile = getTile(c);

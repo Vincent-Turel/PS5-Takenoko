@@ -10,11 +10,12 @@ import java.util.Optional;
 
 /**
  * Represente a Gardener
+ *
  * @see Pawn
  */
 public class Gardener extends Pawn {
 
-    public Gardener(Coordinate initialTileCoord){
+    public Gardener(Coordinate initialTileCoord) {
         super(initialTileCoord);
     }
 
@@ -27,11 +28,12 @@ public class Gardener extends Pawn {
      * - the neighbor is present
      * - the neighbor's kind is the same as the tile
      * - the neighbor is irrigated
+     *
      * @param tile the tile where he is supposed to go.
      */
     public void moveToAndAct(Tile tile, Map map) {
         super.moveTo(tile);
-        if(tile.isIrrigated())
+        if (tile.isIrrigated())
             tile.growBamboo();
         Arrays.stream(Direction.values())
                 .map(d -> map.getNeighborOf(tile, d))

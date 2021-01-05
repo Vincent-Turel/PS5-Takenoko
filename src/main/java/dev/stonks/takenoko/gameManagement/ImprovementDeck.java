@@ -12,15 +12,14 @@ import java.util.Optional;
  * @author the StonksDev team.
  */
 public class ImprovementDeck {
-    // INVARIANT: must be >= 0.
-    private int remainingWatershed;
-    private int remainingEnclosure;
-    private int remainingFertilizer;
-
     /**
      * The amount of improvements of a specific type at the beginning of the game.
      */
     private static final int defaultImprovementAmount = 3;
+    // INVARIANT: must be >= 0.
+    private int remainingWatershed;
+    private int remainingEnclosure;
+    private int remainingFertilizer;
 
     /**
      * Creates a new ImprovementDeck with the specified amount of each improvement.
@@ -34,7 +33,7 @@ public class ImprovementDeck {
     /**
      * Creates a new ImprovementDeck with the correct number of improvement,
      * that is:
-     *   - 3 watersheds.
+     * - 3 watersheds.
      */
     public ImprovementDeck() {
         this(defaultImprovementAmount, defaultImprovementAmount, defaultImprovementAmount);
@@ -100,7 +99,7 @@ public class ImprovementDeck {
         }
     }
 
-    public void reset(){
+    public void reset() {
         remainingWatershed = defaultImprovementAmount;
         remainingEnclosure = defaultImprovementAmount;
         remainingFertilizer = defaultImprovementAmount;
@@ -113,9 +112,9 @@ public class ImprovementDeck {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null ) return false;
-        if(getClass() != o.getClass())
-            throw IllegalEqualityExceptionGenerator.create(ImprovementDeck.class,o.getClass());
+        if (o == null) return false;
+        if (getClass() != o.getClass())
+            throw IllegalEqualityExceptionGenerator.create(ImprovementDeck.class, o.getClass());
         ImprovementDeck that = (ImprovementDeck) o;
         return remainingWatershed == that.remainingWatershed
                 && remainingEnclosure == that.remainingEnclosure

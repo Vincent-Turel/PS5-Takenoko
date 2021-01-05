@@ -1,10 +1,12 @@
 package dev.stonks.takenoko.bot;
 
+import dev.stonks.takenoko.gameManagement.Action;
 import dev.stonks.takenoko.map.Map;
 import dev.stonks.takenoko.map.*;
-import dev.stonks.takenoko.objective.*;
+import dev.stonks.takenoko.objective.GardenerObjective;
+import dev.stonks.takenoko.objective.ObjectiveKind;
+import dev.stonks.takenoko.objective.PandaObjective;
 import dev.stonks.takenoko.pawn.Pawn;
-import dev.stonks.takenoko.gameManagement.Action;
 import dev.stonks.takenoko.weather.WeatherKind;
 
 import java.util.*;
@@ -174,8 +176,7 @@ public class SmartPlayer extends Player implements Cloneable {
         if (chosenAction.size() == 0) {
             chosenAction = new ArrayList<>(actions);
             System.out.println("Vire pas ca");
-        }
-        else {
+        } else {
             if (actions.get(0).get(0).equals(chosenAction.get(0).get(0))) {
                 if (actions.size() < chosenAction.size())
                     this.chosenAction = new ArrayList<>(actions);
@@ -266,7 +267,7 @@ public class SmartPlayer extends Player implements Cloneable {
 
     private boolean uselessTile(Tile tile) {
         return getInteristingGardenerBamboo().stream().noneMatch(answer ->
-                        tile.getBamboo().getColor() == answer.getT() &&
+                tile.getBamboo().getColor() == answer.getT() &&
                         tile.getImprovement() == answer.getU() &&
                         tile.getBamboo().getSize() < answer.getV().orElseThrow(NoSuchElementException::new));
     }
@@ -404,7 +405,7 @@ public class SmartPlayer extends Player implements Cloneable {
      * ONLY FOR TESTING
      *
      * @return the chosen action
-     *            TODO : replace by reflection
+     * TODO : replace by reflection
      */
     public List<ArrayList<Integer>> getChosenAction() {
         return chosenAction;

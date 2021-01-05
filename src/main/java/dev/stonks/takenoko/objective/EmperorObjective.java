@@ -4,7 +4,7 @@ import dev.stonks.takenoko.bot.Player;
 import dev.stonks.takenoko.map.Map;
 
 public class EmperorObjective extends Objective {
-    public EmperorObjective(){
+    public EmperorObjective() {
         super(2);
     }
 

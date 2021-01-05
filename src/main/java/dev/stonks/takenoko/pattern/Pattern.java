@@ -1,25 +1,23 @@
 package dev.stonks.takenoko.pattern;
 
 import dev.stonks.takenoko.IllegalEqualityExceptionGenerator;
-import dev.stonks.takenoko.map.Coordinate;
-import dev.stonks.takenoko.map.Direction;
-import dev.stonks.takenoko.map.Map;
-import dev.stonks.takenoko.map.Tile;
-import dev.stonks.takenoko.map.TileKind;
+import dev.stonks.takenoko.map.*;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
  * Represents a pattern.
- *
+ * <p>
  * A pattern is represented as a set of constraints on one tile and its six
  * direct neighbors. The matching system observes the following guarantees:
- *   - If a match occurs on a group of tiles, then it must be present only
- *   once,
- *   - If a match can be done in more than one way, then it must be present
- *   only once.
+ * - If a match occurs on a group of tiles, then it must be present only
+ * once,
+ * - If a match can be done in more than one way, then it must be present
+ * only once.
  *
  * @author the StonksDev team
  */
@@ -37,7 +35,97 @@ public class Pattern {
     // its initial form.
     private Direction angle = Direction.North;
 
-    public Pattern() {}
+    public Pattern() {
+    }
+
+    /**
+     * Returns whether if a tile from the map matches a requirement specified
+     * in the pattern.
+     *
+     * @param requirement the color specified in the pattern
+     * @param tile        the tile from the map.
+     * @return whether if the two kinds are compatible.
+     */
+    public static boolean matchesTile(Optional<TileKind> requirement, Optional<Tile> tile) {
+        if (requirement.isEmpty()) {
+            return true;
+        }
+
+        if (tile.isEmpty()) {
+            return false;
+        }
+
+        TileKind required = requirement.get();
+        Tile givenTile = tile.get();
+
+        return required.equals(givenTile.kind()) && givenTile.isIrrigated();
+    }
+
+    /**
+     * Creates a triangular-shaped pattern with the specified color.
+     *
+     * @param c the color used for the pattern
+     * @return a triangular pattern with the correct color.
+     */
+    static public Pattern triangleShaped(TileKind c) {
+        return new Pattern()
+                .withCenter(c)
+                .withNeighbor(Direction.North, c)
+                .withNeighbor(Direction.NorthEast, c);
+    }
+
+    /**
+     * Creates a diamond-shaped pattern with the following color. Adjacent
+     * tiles have the same color.
+     *
+     * @param c the first color to be used.
+     * @return a pattern with the correct requirements.
+     */
+    static public Pattern diamondShaped(TileKind c) {
+        return diamondShaped(c, c);
+    }
+
+    /**
+     * Creates a diamond-shaped pattern with the following two colors. Adjacent
+     * tiles have the same color.
+     *
+     * @param c1 the first color to be used.
+     * @param c2 the second color to be used.
+     * @return a pattern with the correct requirements.
+     */
+    static public Pattern diamondShaped(TileKind c1, TileKind c2) {
+        return new Pattern()
+                .withCenter(c1)
+                .withNeighbor(Direction.North, c1)
+                .withNeighbor(Direction.NorthEast, c2)
+                .withNeighbor(Direction.SouthEast, c2);
+    }
+
+    /**
+     * Creates an I-shaped pattern with a single color.
+     *
+     * @param c the expected tile kind.
+     * @return the correct pattern.
+     */
+    static public Pattern iShaped(TileKind c) {
+        return new Pattern()
+                .withCenter(c)
+                .withNeighbor(Direction.North, c)
+                .withNeighbor(Direction.South, c);
+    }
+
+    /**
+     * Creates an C-shaped pattern with a single color.
+     *
+     * @param c the expected tile kind.
+     * @return the correct pattern.
+     */
+    static public Pattern cShaped(TileKind c) {
+        return new Pattern()
+                .withCenter(c)
+                .withNeighbor(Direction.North, c)
+                .withNeighbor(Direction.SouthEast, c);
+    }
 
     @Override
     public boolean equals(Object other) {
@@ -65,7 +153,7 @@ public class Pattern {
     }
 
     private boolean equalsNeighborsNoRotate(Pattern rhs) {
-        for (Direction d: Direction.values()) {
+        for (Direction d : Direction.values()) {
             Direction lhsLookupDir = angle.addWith(d);
             Direction rhsLookupDir = rhs.angle.addWith(d);
 
@@ -90,7 +178,7 @@ public class Pattern {
 
     /**
      * Returns the expected tile for the pattern to match in a given direction.
-     *
+     * <p>
      * If no specific tile color is expected, then
      * <code>Optional.empty()</code> is returned.
      */
@@ -100,6 +188,7 @@ public class Pattern {
 
     /**
      * Sets a tile kind for the current tile (eg: the pattern center).
+     *
      * @param k the kind of tile that is expected for the pattern to match.
      * @throws IllegalStateException if the center kind has already been set.
      */
@@ -124,6 +213,7 @@ public class Pattern {
 
     /**
      * Sets a tile kind for a neighbor
+     *
      * @param d the direction on which the tile should be checked
      * @param k the kind of tile
      * @throws IllegalStateException if a kind is already set for the specified
@@ -188,95 +278,13 @@ public class Pattern {
     }
 
     /**
-     * Returns whether if a tile from the map matches a requirement specified
-     * in the pattern.
-     * @param requirement the color specified in the pattern
-     * @param tile the tile from the map.
-     * @return whether if the two kinds are compatible.
-     */
-    public static boolean matchesTile(Optional<TileKind> requirement, Optional<Tile> tile) {
-        if (requirement.isEmpty()) {
-            return true;
-        }
-
-        if (tile.isEmpty()) {
-            return false;
-        }
-
-        TileKind required = requirement.get();
-        Tile givenTile = tile.get();
-
-        return required.equals(givenTile.kind()) && givenTile.isIrrigated();
-    }
-
-    /**
      * Allows to create a <code>MatchResult</code>, once we know where a
      * pattern matched on the map.
+     *
      * @param c the coordinate at which the pattern matched.
      * @return a MatchResult representing a specific match.
      */
     MatchResult withCoordinate(Coordinate c) {
         return new MatchResult(this, c);
-    }
-
-    /**
-     * Creates a triangular-shaped pattern with the specified color.
-     * @param c the color used for the pattern
-     * @return a triangular pattern with the correct color.
-     */
-    static public Pattern triangleShaped(TileKind c) {
-        return new Pattern()
-                .withCenter(c)
-                .withNeighbor(Direction.North, c)
-                .withNeighbor(Direction.NorthEast, c);
-    }
-
-    /**
-     * Creates a diamond-shaped pattern with the following color. Adjacent
-     * tiles have the same color.
-     * @param c the first color to be used.
-     * @return a pattern with the correct requirements.
-     */
-    static public Pattern diamondShaped(TileKind c) {
-        return diamondShaped(c, c);
-    }
-
-    /**
-     * Creates a diamond-shaped pattern with the following two colors. Adjacent
-     * tiles have the same color.
-     * @param c1 the first color to be used.
-     * @param c2 the second color to be used.
-     * @return a pattern with the correct requirements.
-     */
-    static public Pattern diamondShaped(TileKind c1, TileKind c2) {
-        return new Pattern()
-                .withCenter(c1)
-                .withNeighbor(Direction.North, c1)
-                .withNeighbor(Direction.NorthEast, c2)
-                .withNeighbor(Direction.SouthEast, c2);
-    }
-
-    /**
-     * Creates an I-shaped pattern with a single color.
-     * @param c the expected tile kind.
-     * @return the correct pattern.
-     */
-    static public Pattern iShaped(TileKind c) {
-        return new Pattern()
-                .withCenter(c)
-                .withNeighbor(Direction.North, c)
-                .withNeighbor(Direction.South, c);
-    }
-
-    /**
-     * Creates an C-shaped pattern with a single color.
-     * @param c the expected tile kind.
-     * @return the correct pattern.
-     */
-    static public Pattern cShaped(TileKind c) {
-        return new Pattern()
-                .withCenter(c)
-                .withNeighbor(Direction.North, c)
-                .withNeighbor(Direction.SouthEast, c);
     }
 }
