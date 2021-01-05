@@ -5,9 +5,7 @@ import dev.stonks.takenoko.bot.RandomPlayer;
 import dev.stonks.takenoko.objective.EmperorObjective;
 import dev.stonks.takenoko.objective.ObjectiveDeck;
 import org.junit.Test;
-
 import java.util.ArrayList;
-import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
