@@ -7,6 +7,7 @@ import dev.stonks.takenoko.map.Map;
 import dev.stonks.takenoko.map.*;
 import dev.stonks.takenoko.objective.GardenerObjective;
 import dev.stonks.takenoko.objective.ObjectiveKind;
+import dev.stonks.takenoko.objective.PandaObjective;
 import dev.stonks.takenoko.objective.PatternObjective;
 import dev.stonks.takenoko.pattern.BambooPattern;
 import dev.stonks.takenoko.pattern.Pattern;
@@ -83,6 +84,7 @@ public class SmartPlayerTest {
     public void chooseTileToMovePandaTest() throws IllegalPlacementException {
         assertTrue(smartPlayer.chooseTileToMovePanda(map).isEmpty());
         Tile t = map.setTile(map.initialTile().getCoordinate().moveWith(Direction.South), new AbstractTile(TileKind.Green));
+        smartPlayer.addObjectives(new PandaObjective(5,new BambooPattern(TileKind.Green,1)));
         assertEquals(t, smartPlayer.chooseTileToMovePanda(map).get());
     }
 
