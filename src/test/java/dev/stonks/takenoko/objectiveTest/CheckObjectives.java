@@ -61,17 +61,9 @@ public class CheckObjectives {
         //Test isValid Objective simple green
         objective.checkObjective(map, winPlayer);
         assertEquals(true, objective.getStates());
-        int[] valExpected = new int[]{0, 3, 5};
-        for (int i = 0; i < 3; i++) {
-            assertEquals(valExpected[i], winPlayer.getCollectedBamboo()[i]);
-        }
         //Test isValid Objective multicolor
         objMultiColor.checkObjective(map, winPlayer2);
         assertEquals(true, objMultiColor.getStates());
-        valExpected = new int[]{6, 4, 3};
-        for (int i = 0; i < 3; i++) {
-            assertEquals(valExpected[i], winPlayer2.getCollectedBamboo()[i]);
-        }
     }
 
     @Test
@@ -99,10 +91,6 @@ public class CheckObjectives {
         //Test isValid Objective multicolor
         objMultiColor.checkObjective(map, losePlayer);
         assertEquals(false, objMultiColor.getStates());
-        valExpected = new int[]{1, 1, 1};
-        for (int i = 0; i < 3; i++) {
-            assertEquals(valExpected[i], losePlayer.getCollectedBamboo()[i]);
-        }
     }
 
     @Test
@@ -117,10 +105,6 @@ public class CheckObjectives {
         //Test isValid Objective simple yellow
         objective.checkObjective(map, winPlayer);
         assertEquals(true, objective.getStates());
-        int[] valExpected = new int[]{3, 1, 5};
-        for (int i = 0; i < 3; i++) {
-            assertEquals(valExpected[i], winPlayer.getCollectedBamboo()[i]);
-        }
     }
 
     @Test
@@ -135,10 +119,6 @@ public class CheckObjectives {
         //Test isValid Objective simple yellow
         objective.checkObjective(map, winPlayer);
         assertEquals(true, objective.getStates());
-        int[] valExpected = new int[]{3, 6, 0};
-        for (int i = 0; i < 3; i++) {
-            assertEquals(valExpected[i], winPlayer.getCollectedBamboo()[i]);
-        }
     }
 
     @Test

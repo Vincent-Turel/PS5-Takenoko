@@ -7,6 +7,7 @@ import dev.stonks.takenoko.map.Map;
 import dev.stonks.takenoko.map.*;
 import dev.stonks.takenoko.objective.Objective;
 import dev.stonks.takenoko.objective.ObjectivesDeck;
+import dev.stonks.takenoko.objective.PandaObjective;
 import dev.stonks.takenoko.pattern.MatchResult;
 import dev.stonks.takenoko.pawn.Gardener;
 import dev.stonks.takenoko.pawn.Panda;
@@ -326,6 +327,9 @@ public class Game {
             if (objective.getStates()) {
                 LOG.info("Player n°" + player.getId() + " has achieved a " + objective.getClass().getSimpleName());
                 player.newObjectivesAchieved(objective);
+                if(objective.getClass().equals(PandaObjective.class)){
+                    //here
+                }
             }
         }
     }
