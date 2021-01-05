@@ -36,14 +36,57 @@ public class AbstractTile {
         // complete list of every available abstract tile.
 
         // TODO: once more improvements are added, edit the ranges here.
-        Stream<AbstractTile> emptyGreen = IntStream.range(0, 10).mapToObj(i -> new AbstractTile(TileKind.Green));
-        Stream<AbstractTile> emptyPink = IntStream.range(0, 6).mapToObj(i -> new AbstractTile(TileKind.Pink));
-        Stream<AbstractTile> emptyYellow = IntStream.range(0, 8).mapToObj(i -> new AbstractTile(TileKind.Yellow));
+        Stream<AbstractTile> emptyGreen = IntStream.range(0, 6).mapToObj(i -> new AbstractTile(TileKind.Green));
+        Stream<AbstractTile> emptyPink = IntStream.range(0, 4).mapToObj(i -> new AbstractTile(TileKind.Pink));
+        Stream<AbstractTile> emptyYellow = IntStream.range(0, 6).mapToObj(i -> new AbstractTile(TileKind.Yellow));
 
-        Stream<AbstractTile> waterSheds = Stream.of(TileKind.Green, TileKind.Pink, TileKind.Yellow)
-                .map(kind -> new AbstractTile(kind, Improvement.Watershed));
+        // Green tiles with improvements
+        Stream<AbstractTile> watershedGreen = IntStream.range(0, 2)
+                .mapToObj(i -> new AbstractTile(TileKind.Green))
+                .map(AbstractTile::addWatershed);
 
-        List<AbstractTile> ats = Stream.of(emptyGreen, emptyPink, emptyYellow, waterSheds)
+        Stream<AbstractTile> enclosureGreen = IntStream.range(0, 2)
+                .mapToObj(i -> new AbstractTile(TileKind.Green))
+                .map(AbstractTile::addEnclosure);
+
+        Stream<AbstractTile> fertilizerGreen = Stream.of(new AbstractTile(TileKind.Green))
+                .map(AbstractTile::addFertilizer);
+
+        // Pink tiles with improvements
+        Stream<AbstractTile> watershedPink = Stream.of(new AbstractTile(TileKind.Pink))
+                .map(AbstractTile::addWatershed);
+
+        Stream<AbstractTile> enclosurePink = Stream.of(new AbstractTile(TileKind.Pink))
+                .map(AbstractTile::addEnclosure);
+
+        Stream<AbstractTile> fertilizerPink = Stream.of(new AbstractTile(TileKind.Pink))
+                .map(AbstractTile::addFertilizer);
+
+        // Yellow tiles with improvements
+        Stream<AbstractTile> watershedYellow = Stream.of(new AbstractTile(TileKind.Yellow))
+                .map(AbstractTile::addWatershed);
+
+        Stream<AbstractTile> enclosureYellow = Stream.of(new AbstractTile(TileKind.Yellow))
+                .map(AbstractTile::addEnclosure);
+
+        Stream<AbstractTile> fertilizerYellow = Stream.of(new AbstractTile(TileKind.Yellow))
+                .map(AbstractTile::addFertilizer);
+
+
+        List<AbstractTile> ats = Stream.of(
+                emptyGreen,
+                emptyPink,
+                emptyYellow,
+                watershedGreen,
+                enclosureGreen,
+                fertilizerGreen,
+                watershedPink,
+                enclosurePink,
+                fertilizerPink,
+                watershedYellow,
+                enclosureYellow,
+                fertilizerYellow
+        )
                 .flatMap(s -> s) // This is good code™️
                 .collect(Collectors.toList());
 
@@ -54,6 +97,18 @@ public class AbstractTile {
         }
 
         return ats;
+    }
+
+    private static AbstractTile addEnclosure(AbstractTile at) {
+        return at.withImprovement(Improvement.Enclosure);
+    }
+
+    private static AbstractTile addWatershed(AbstractTile at) {
+        return at.withImprovement(Improvement.Watershed);
+    }
+
+    private static AbstractTile addFertilizer(AbstractTile at) {
+        return at.withImprovement(Improvement.Fertilizer);
     }
 
     /**
