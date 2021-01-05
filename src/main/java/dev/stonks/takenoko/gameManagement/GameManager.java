@@ -62,7 +62,7 @@ public class GameManager {
      * Play n time the same game with the same bots,
      * and display statistics at the end.
      *
-     * @param n the numnber of games that are going to be played
+     * @param n          the numnber of games that are going to be played
      * @param sequential a boolean which indicates weither or not the game should be played in parallel.
      */
     public void playNTime(int n, boolean sequential) {
@@ -103,8 +103,8 @@ public class GameManager {
         if (LogManager.getLogManager().getLogger("").getHandlers()[0].getLevel().intValue() >= Level.SEVERE.intValue()) {
             float pourcentDone = actualCount / (float) n * 100;
             System.out.print("\r" + "Progression : " + String.format("%4s", (int) pourcentDone + "%")
-                    + (ugly ? " [": " 〈") + "═".repeat((int) (pourcentDone / 100f * 70f))
-                    + " ".repeat(70 - (int) (pourcentDone / 100f * 70f)) + (ugly ? "] ": "〉 ") + actualCount + "/" + n);
+                    + (ugly ? " [" : " 〈") + "═".repeat((int) (pourcentDone / 100f * 70f))
+                    + " ".repeat(70 - (int) (pourcentDone / 100f * 70f)) + (ugly ? "] " : "〉 ") + actualCount + "/" + n);
         }
     }
 
@@ -162,7 +162,7 @@ public class GameManager {
                     }
                 }
             }
-            if(!isDraw && victory.isEmpty()){
+            if (!isDraw && victory.isEmpty()) {
                 victory = Optional.of(Boolean.TRUE);
             }
         } else {
@@ -188,11 +188,11 @@ public class GameManager {
             if (ugly) {
                 printResultInArray("┌", "└", "┐", "┘", "─",
                         "│", "├", "┤", "┴", "┬",
-                        "┼", 25, 12 , new DecimalFormat("0.00"), n);
+                        "┼", 25, 12, new DecimalFormat("0.00"), n);
             } else {
                 printResultInArray("╭", "╰", "╮", "╯", "─",
                         "│", "├", "┤", "┴", "┬",
-                        "┼", 25, 12 , new DecimalFormat("0.00"), n);
+                        "┼", 25, 12, new DecimalFormat("0.00"), n);
             }
         }
 
@@ -207,7 +207,7 @@ public class GameManager {
                                     int width, int smallWidth, DecimalFormat df, int numberOfGames) {
 
         System.out.println(" ");
-        System.out.println(" ".repeat(smallWidth+2) + StringUtils.center("FINAL SCORE", players.size()*(width)+players.size()-1));
+        System.out.println(" ".repeat(smallWidth + 2) + StringUtils.center("FINAL SCORE", players.size() * (width) + players.size() - 1));
         System.out.println(" ");
         System.out.print(" ".repeat(smallWidth + 1) + leftUpAngle);
         for (int i = 1; i < players.size(); i++) {

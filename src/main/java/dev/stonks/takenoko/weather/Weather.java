@@ -1,13 +1,13 @@
 package dev.stonks.takenoko.weather;
 
 import dev.stonks.takenoko.IllegalEqualityExceptionGenerator;
-import dev.stonks.takenoko.map.AbstractTile;
 
 import java.util.Objects;
 import java.util.Random;
 
 /**
  * Weather for the game :
+ *
  * @author the StonksDev team
  */
 
@@ -18,11 +18,11 @@ public class Weather {
      * weatherCondition is for the LOG info
      */
     private WeatherKind weatherCondition;
-    private Random r;
+    private final Random r;
 
-    public Weather(){
+    public Weather() {
         r = new Random();
-        weatherCondition=WeatherKind.NoWeather;
+        weatherCondition = WeatherKind.NoWeather;
     }
 
     public WeatherKind getCondition() {
@@ -32,31 +32,32 @@ public class Weather {
     /**
      * Updating the game weather between all possible condition
      */
-    public void upDateWeather(){
+    public void upDateWeather() {
         int newWeather = r.nextInt(6);
         this.weatherCondition = WeatherKind.values()[newWeather];
     }
 
     /**
      * Function when the player has to choice his weather (FreeChoice in WeatherKind) :
+     *
      * @param newWeather -> the weather want by player
      */
-    public void setWeather(WeatherKind newWeather){
-        this.weatherCondition=newWeather;
+    public void setWeather(WeatherKind newWeather) {
+        this.weatherCondition = newWeather;
     }
 
     /**
      * Reset weather to its initial value (NoWeather)
      */
-    public void resetWeather(){
-        this.weatherCondition=WeatherKind.NoWeather;
+    public void resetWeather() {
+        this.weatherCondition = WeatherKind.NoWeather;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Weather))
-            throw IllegalEqualityExceptionGenerator.create(Weather.class, o.getClass());
+            throw IllegalEqualityExceptionGenerator.create(Weather.class, o);
         Weather weather = (Weather) o;
         return weatherCondition == weather.weatherCondition;
     }

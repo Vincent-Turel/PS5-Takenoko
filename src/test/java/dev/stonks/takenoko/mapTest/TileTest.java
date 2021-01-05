@@ -129,13 +129,13 @@ public class TileTest {
 
     @Test
     void equalsTest() {
-        Tile t1 = new Tile(new Coordinate(25,25), TileKind.Pink);
-        Tile t2 = new Tile(new Coordinate(25,25), TileKind.Pink);
-        Tile t3 = new Tile(new Coordinate(25,25), TileKind.Green);
-        Tile t4 = new Tile(new Coordinate(25,21), TileKind.Pink);
-        assertEquals(t1,t2);
-        assertNotEquals(t1,t3);
-        assertNotEquals(t1,t4);
+        Tile t1 = new Tile(new Coordinate(25, 25), TileKind.Pink);
+        Tile t2 = new Tile(new Coordinate(25, 25), TileKind.Pink);
+        Tile t3 = new Tile(new Coordinate(25, 25), TileKind.Green);
+        Tile t4 = new Tile(new Coordinate(25, 21), TileKind.Pink);
+        assertEquals(t1, t2);
+        assertNotEquals(t1, t3);
+        assertNotEquals(t1, t4);
     }
 
     @Test

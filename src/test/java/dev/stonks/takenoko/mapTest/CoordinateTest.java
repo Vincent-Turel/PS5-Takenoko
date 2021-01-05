@@ -17,7 +17,7 @@ public class CoordinateTest {
     void moveWithThenOpposite() {
         Coordinate c = initialCoord();
         Coordinate initial = initialCoord();
-        for (Direction d: Direction.values()) {
+        for (Direction d : Direction.values()) {
             assertEquals(c.moveWith(d).moveWith(d.reverse()), initial);
         }
     }

@@ -6,10 +6,10 @@ import java.util.Objects;
 import java.util.Optional;
 
 public class Bamboo {
-    private int size;
     private final TileKind color;
+    private int size;
 
-    public Bamboo(TileKind color){
+    public Bamboo(TileKind color) {
         this.size = 0;
         this.color = color;
     }
@@ -23,14 +23,14 @@ public class Bamboo {
      * Increase the size of the bamboo
      * Maximal size : 4
      */
-    public void grow(){
+    public void grow() {
         if (this.size < 4)
             this.size++;
     }
 
     /**
      * Increase the size of the bamboo two times.
-     *
+     * <p>
      * Maximal size: 4.
      */
     public void growTwice() {
@@ -61,6 +61,7 @@ public class Bamboo {
 
     /**
      * Get the color of the bamboo
+     *
      * @return color
      */
     public TileKind getColor() {
@@ -72,7 +73,7 @@ public class Bamboo {
         if (this == o) return true;
 
         if (!(o instanceof Bamboo)) {
-            throw IllegalEqualityExceptionGenerator.create(Bamboo.class, o.getClass());
+            throw IllegalEqualityExceptionGenerator.create(Bamboo.class, o);
         }
 
         Bamboo bamboo = (Bamboo) o;

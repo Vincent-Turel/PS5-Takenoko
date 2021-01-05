@@ -11,6 +11,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * For grow and cut test,
+ *
  * @see TileTest
  */
 public class BambooTest {
@@ -21,7 +22,7 @@ public class BambooTest {
     private Bamboo bamboo4;
 
     @BeforeEach
-    void  setup(){
+    void setup() {
         bamboo1 = new Bamboo(TileKind.Green);
         bamboo1.grow();
         bamboo1.grow();

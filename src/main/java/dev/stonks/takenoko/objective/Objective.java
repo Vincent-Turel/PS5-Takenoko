@@ -8,6 +8,7 @@ import java.util.Objects;
 
 /**
  * Initial class to make all objectives
+ *
  * @author the StonksDev team
  */
 
@@ -20,40 +21,55 @@ public abstract class Objective {
      * Constructor for 1 objective
      *
      * @param nbPT n° of point
-     *
      * @author the StonksDev team
      */
-    public Objective(int nbPT){
+    public Objective(int nbPT) {
         this.nbPt = nbPT;
-        this.isValid=false;
+        this.isValid = false;
     }
 
-    public Boolean getStates() {return isValid;}
+    public Boolean getStates() {
+        return isValid;
+    }
 
-    public void resetObj(){this.isValid=false;}
+    public void resetObj() {
+        this.isValid = false;
+    }
 
     /**
      * getter for the number of point
+     *
      * @return the number of point
      */
-    public int getNbPt(){return nbPt;}
+    public int getNbPt() {
+        return nbPt;
+    }
 
-    public ObjectiveKind getObjType(){
+    public ObjectiveKind getObjType() {
         return ObjectiveKind.valueOf(this.getClass().getSimpleName());
     }
 
     /**
      * Update the states of this objective :
      */
-    public void updateStates(){isValid=true;}
+    public void updateStates() {
+        isValid = true;
+    }
 
     public abstract void checkObjective(Map map, Player player);
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null) return false;
-        if(o.getClass()!= Objective.class && o.getClass()!= GardenerObjective.class && o.getClass()!= PatternObjective.class && o.getClass()!= PandaObjective.class) throw IllegalEqualityExceptionGenerator.create(Objective.class,o.getClass());
+        if (Objects.isNull(o)) throw IllegalEqualityExceptionGenerator.create(Objective.class, null);
+        if(
+                o.getClass() != Objective.class &&
+                        o.getClass() != GardenerObjective.class &&
+                        o.getClass() != PatternObjective.class &&
+                        o.getClass() != PandaObjective.class &&
+                        o.getClass() != EmperorObjective.class
+        ) throw IllegalEqualityExceptionGenerator.create(Objective.class, o);
+
         Objective objective = (Objective) o;
         return nbPt == objective.nbPt &&
                 this.getClass().getSimpleName().equals(objective.getClass().getSimpleName()) &&
@@ -62,6 +78,6 @@ public abstract class Objective {
 
     @Override
     public int hashCode() {
-        return Objects.hash(nbPt,this.getClass().getSimpleName(), isValid);
+        return Objects.hash(nbPt, this.getClass().getSimpleName(), isValid);
     }
 }

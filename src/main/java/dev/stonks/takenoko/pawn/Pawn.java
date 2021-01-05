@@ -15,32 +15,35 @@ public abstract class Pawn {
 
     /**
      * Build a pawn
+     *
      * @param initialTileCoord the initial tile's coordinate
      */
-    protected Pawn(Coordinate initialTileCoord){
+    protected Pawn(Coordinate initialTileCoord) {
         this.currentCoordinate = initialTileCoord;
     }
 
     /**
      * Move the pawn and do the action he is supposed to.
+     *
      * @param tile the tile where he is supposed to go.
      */
-    protected void moveTo(Tile tile){
+    protected void moveTo(Tile tile) {
         currentCoordinate = tile.getCoordinate();
     }
 
     /**
      * Get the current coordinate of the pawn
+     *
      * @return currentCoordinate
      */
-    public Coordinate getCurrentCoordinate(){
+    public Coordinate getCurrentCoordinate() {
         return currentCoordinate;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) throw IllegalEqualityExceptionGenerator.create(Pawn.class,o.getClass());
+        if (!(o instanceof Pawn)) throw IllegalEqualityExceptionGenerator.create(Pawn.class, o);
         Pawn pawn = (Pawn) o;
         return Objects.equals(currentCoordinate, pawn.currentCoordinate);
     }
