@@ -11,7 +11,7 @@ public class GardenerTest {
     Map map;
 
     @BeforeEach
-    public void setup(){
+    public void setup() {
         map = new Map(25);
     }
 

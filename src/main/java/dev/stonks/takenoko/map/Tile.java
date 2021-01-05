@@ -13,9 +13,9 @@ import java.util.Set;
  */
 public class Tile {
     private final Coordinate coord;
-    private boolean irrigated;
     private final Bamboo bamboo;
     private final TileKind kind;
+    private boolean irrigated;
     private Improvement improvement;
 
     public Tile(Coordinate c, TileKind k, Improvement i) {
@@ -51,17 +51,17 @@ public class Tile {
 
     /**
      * Creates a tile with given neighbors.
-     *
+     * <p>
      * The `DirectionnedTile` class is used here because it allows to group
      * both a tile and a direction together.
-     *
+     * <p>
      * The direction is the direction relative to the newly created tile. For
      * instance, the following code : <br>
      *
      * <code>
      * Tile b = Tile.neighborOf(a.withDirection(Direction.North));
      * </code> <br>
-     *
+     * <p>
      * Will place <code>a</code> on top of <code>b</code>.
      *
      * @param neighbors The neighbors of the tile.
@@ -74,6 +74,7 @@ public class Tile {
 
     /**
      * Creates a DirectionnedTile, with a given direction.
+     *
      * @param d the direction associated to the current <code>Tile</code>.
      * @return a <code>DirectionnedTile</code> storing both <code>d</code> and
      * the current <code>Tile</code>.
@@ -97,6 +98,17 @@ public class Tile {
     }
 
     /**
+     * This method is usefull for the players because it allows
+     * him to irrigate a tile without growing the bamboo.
+     * Also usefull for test
+     *
+     * @param irrigated boolean which specifies weither or not the tile should be irrigated.
+     */
+    public void setIrrigated(boolean irrigated) {
+        this.irrigated = irrigated;
+    }
+
+    /**
      * Irrigate the tile, meaning (isIrrigated == true)
      */
     public void irrigate() {
@@ -113,6 +125,7 @@ public class Tile {
 
     /**
      * Get the bamboo which is on the tile
+     *
      * @return bamboo
      */
     public Bamboo getBamboo() {
@@ -123,12 +136,12 @@ public class Tile {
      * Increase the size of the bamboo
      * Maximal size : 4
      */
-    public void growBamboo(){
+    public void growBamboo() {
         if (isInitial()) {
             return;
         }
 
-        if (improvement == Improvement.Fertilizer){
+        if (improvement == Improvement.Fertilizer) {
             bamboo.growTwice();
         } else {
             bamboo.grow();
@@ -140,7 +153,7 @@ public class Tile {
      * cut, if it exists.
      * Minimal size : 0
      */
-    public Optional<TileKind> cutBamboo(){
+    public Optional<TileKind> cutBamboo() {
         if (!isInitial() && improvement != Improvement.Enclosure)
             return bamboo.cut();
 
@@ -167,7 +180,7 @@ public class Tile {
             return true;
         }
 
-        if(o == null) return false;
+        if (o == null) return false;
 
         if (!(o instanceof Tile)) {
             throw IllegalEqualityExceptionGenerator.create(Tile.class, o.getClass());
@@ -208,10 +221,11 @@ public class Tile {
 
     /**
      * Adds an improvement to the tile
+     *
      * @param i the improvement to be added.
      * @throws IllegalPlacementException if there is already an improvement on
-     * the tile or if the tile is the initial tile or if there are already some
-     * bamboos on the tile.
+     *                                   the tile or if the tile is the initial tile or if there are already some
+     *                                   bamboos on the tile.
      */
     public void addImprovement(Improvement i) throws IllegalPlacementException {
         if (!canReceiveImprovement()) {
@@ -223,15 +237,5 @@ public class Tile {
         }
 
         improvement = i;
-    }
-
-    /**
-     * This method is usefull for the players because it allows
-     * him to irrigate a tile without growing the bamboo.
-     * Also usefull for test
-     * @param irrigated boolean which specifies weither or not the tile should be irrigated.
-     */
-    public void setIrrigated(boolean irrigated) {
-        this.irrigated = irrigated;
     }
 }

@@ -3,8 +3,8 @@ package dev.stonks.takenoko.playerTest;
 import dev.stonks.takenoko.bot.MultipleAnswer;
 import dev.stonks.takenoko.bot.SmartPlayer;
 import dev.stonks.takenoko.gameManagement.Action;
-import dev.stonks.takenoko.map.*;
 import dev.stonks.takenoko.map.Map;
+import dev.stonks.takenoko.map.*;
 import dev.stonks.takenoko.objective.GardenerObjective;
 import dev.stonks.takenoko.objective.ObjectiveKind;
 import dev.stonks.takenoko.objective.PatternObjective;
@@ -19,7 +19,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -28,13 +27,13 @@ public class SmartPlayerTest {
     SmartPlayer smartPlayer;
 
     @BeforeEach
-    public void setup(){
+    public void setup() {
         map = new Map(20);
         smartPlayer = new SmartPlayer(3);
     }
 
     @Test
-    public void decideTest(){
+    public void decideTest() {
         ArrayList<Action> possibleActions = new ArrayList<>(Arrays.asList(Action.values()));
         possibleActions.remove(Action.PutImprovement);
         possibleActions.remove(Action.PutIrrigation);
@@ -49,7 +48,7 @@ public class SmartPlayerTest {
     }
 
     @Test
-    public void chooseObjectiveKindTest(){
+    public void chooseObjectiveKindTest() {
         ArrayList<ObjectiveKind> possibleObjectiveKinds = new ArrayList<>(Arrays.asList(ObjectiveKind.values()));
         possibleObjectiveKinds.remove(ObjectiveKind.PandaObjective);
 
@@ -88,25 +87,25 @@ public class SmartPlayerTest {
     }
 
     @Test
-    public void doYouWantToPutAnIrrigationOrAnImprovementTest(){
+    public void doYouWantToPutAnIrrigationOrAnImprovementTest() {
         assertTrue(smartPlayer.doYouWantToPutAnIrrigationOrAnImprovement(map).isEmpty());
     }
 
     @Test
-    public void chooseNewWeatherTest(){
+    public void chooseNewWeatherTest() {
         Set<WeatherKind> weatherKinds = new HashSet<>(Set.of(WeatherKind.Cloud, WeatherKind.Rain));
         assertTrue(weatherKinds.contains(smartPlayer.chooseNewWeather(weatherKinds)));
     }
 
     @Test
-    public void putTileTest(){
-        Set<Coordinate> placements = new HashSet<>(Arrays.asList(new Coordinate(1,1),new Coordinate(2,2)));
+    public void putTileTest() {
+        Set<Coordinate> placements = new HashSet<>(Arrays.asList(new Coordinate(1, 1), new Coordinate(2, 2)));
         Set<Coordinate> placements2 = new HashSet<>();
         List<Coordinate> placementsList = new ArrayList<>(placements);
         Map map = mock(Map.class);
         when(map.getTilePlacements()).thenReturn(placements, placements2, placements);
 
-        ArrayList<AbstractTile> tiles = new ArrayList<>(Arrays.asList(new AbstractTile(TileKind.Green),new AbstractTile(TileKind.Pink), new AbstractTile(TileKind.Pink)));
+        ArrayList<AbstractTile> tiles = new ArrayList<>(Arrays.asList(new AbstractTile(TileKind.Green), new AbstractTile(TileKind.Pink), new AbstractTile(TileKind.Pink)));
         ArrayList<MultipleAnswer<AbstractTile, Coordinate, ?>> res = new ArrayList<>(Arrays.asList(
                 new MultipleAnswer<>(tiles.get(0), placementsList.get(0)),
                 new MultipleAnswer<>(tiles.get(0), placementsList.get(1)),
@@ -126,13 +125,13 @@ public class SmartPlayerTest {
     }
 
     @Test
-    public void choseWherePawnShouldGoTest(){
+    public void choseWherePawnShouldGoTest() {
         Set<Tile> placements = new HashSet<>(Arrays.asList(
-                new Tile(new Coordinate(1,1), TileKind.Pink),
-                new Tile(new Coordinate(2,2), TileKind.Green)));
+                new Tile(new Coordinate(1, 1), TileKind.Pink),
+                new Tile(new Coordinate(2, 2), TileKind.Green)));
         Set<Tile> placements2 = new HashSet<>();
         dev.stonks.takenoko.map.Map map = mock(Map.class);
-        Panda panda = new Panda(new Coordinate(1,1));
+        Panda panda = new Panda(new Coordinate(1, 1));
         when(map.getPossiblePawnPlacements(panda)).thenReturn(placements, placements, placements, placements2, placements2, placements2);
         smartPlayer.setCurrentMapState(map);
         smartPlayer.setChosenAction(List.of(new ArrayList<>(Collections.singletonList(5)), new ArrayList<>(Arrays.asList(Action.MovePanda.ordinal(), 1, null))));
@@ -152,8 +151,8 @@ public class SmartPlayerTest {
         Pattern pattern2 = new Pattern()
                 .withCenter(TileKind.Pink)
                 .withNeighbor(Direction.SouthWest, TileKind.Green);
-        PatternObjective objectiveWin = new PatternObjective(5,pattern);
-        PatternObjective objectiveWin2 = new PatternObjective(10,pattern2);
+        PatternObjective objectiveWin = new PatternObjective(5, pattern);
+        PatternObjective objectiveWin2 = new PatternObjective(10, pattern2);
         smartPlayer.addObjectives(objectiveWin);
         smartPlayer.addObjectives(objectiveWin2);
 
@@ -220,7 +219,7 @@ public class SmartPlayerTest {
 
         smartPlayer.addIrrigation(new AbstractIrrigation());
         assertEquals(1, smartPlayer.getIrrigations().size());
-        smartPlayer.setChosenAction(List.of(new ArrayList<>(Collections.singletonList(2)), new ArrayList<>(Arrays.asList(3,0))));
+        smartPlayer.setChosenAction(List.of(new ArrayList<>(Collections.singletonList(2)), new ArrayList<>(Arrays.asList(3, 0))));
         MultipleAnswer<AbstractIrrigation, IrrigationCoordinate, ?> answer3 = smartPlayer.putIrrigation();
         Irrigation irrigation3 = answer3.getT().withCoordinate(answer3.getU());
         assertEquals(0, smartPlayer.getIrrigations().size());

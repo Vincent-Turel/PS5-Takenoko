@@ -5,6 +5,7 @@ import java.util.Set;
 /**
  * Represent the five weather possibility.
  * The sixth is a free choice, the player can choice between all five other weather condition.
+ *
  * @author the StonksDev team
  */
 

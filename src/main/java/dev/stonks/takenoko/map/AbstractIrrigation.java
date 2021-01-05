@@ -9,6 +9,7 @@ public class AbstractIrrigation {
 
     /**
      * A modifier selon implémentation irrigation
+     *
      * @param c the irrigation's coordinate
      * @return a brand new Irrigation
      */

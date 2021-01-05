@@ -8,13 +8,12 @@ import java.util.Optional;
 
 /**
  * Final result of a player with his statistics
- *
  */
 public class FinalResults {
-    private static int isAWin = 1;
-    private static int isALoose = 0;
-    private String playerType;
-    private int id;
+    private static final int isAWin = 1;
+    private static final int isALoose = 0;
+    private final String playerType;
+    private final int id;
     private int nbWin;
     private int nbLoose;
     private int nbDraw;
@@ -35,15 +34,14 @@ public class FinalResults {
      * @param victory is an optionnal boolean who tell if it's a victory
      * @param score
      */
-    public void change(Optional<Boolean> victory, int score){
-        if(victory.isEmpty()){
+    public void change(Optional<Boolean> victory, int score) {
+        if (victory.isEmpty()) {
             nbDraw++;
-        }
-        else{
-            if(victory.get()==Boolean.TRUE){
+        } else {
+            if (victory.get() == Boolean.TRUE) {
                 nbWin++;
             }
-            if (victory.get()==Boolean.FALSE){
+            if (victory.get() == Boolean.FALSE) {
                 nbLoose++;
             }
         }

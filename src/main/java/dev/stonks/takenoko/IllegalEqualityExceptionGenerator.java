@@ -14,9 +14,10 @@ public abstract class IllegalEqualityExceptionGenerator {
 
     /**
      * Generates an exception with a correct message.
+     *
      * @param expectedClass the class that should have been provided when
      *                      calling equals
-     * @param gotClass the class that was got by the callee
+     * @param gotClass      the class that was got by the callee
      * @return an IllegalCallerException with a proper error message.
      */
     public static IllegalCallerException create(Class expectedClass, Class gotClass) {

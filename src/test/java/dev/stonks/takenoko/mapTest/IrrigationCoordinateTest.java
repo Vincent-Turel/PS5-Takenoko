@@ -12,7 +12,7 @@ public class IrrigationCoordinateTest {
     void constructorDoesNotThrowOnNeighborEvenX() throws IllegalPlacementException {
         Coordinate a = new Coordinate(42, 42);
 
-        for (Direction d: Direction.values()) {
+        for (Direction d : Direction.values()) {
             Coordinate b = a.moveWith(d);
 
             IrrigationCoordinate i1 = new IrrigationCoordinate(a, b);
@@ -24,7 +24,7 @@ public class IrrigationCoordinateTest {
     void constructorDoesNotThrowOnNeighborOddX() throws IllegalPlacementException {
         Coordinate a = new Coordinate(43, 42);
 
-        for (Coordinate b: a.neighbors()) {
+        for (Coordinate b : a.neighbors()) {
             IrrigationCoordinate i1 = new IrrigationCoordinate(a, b);
             IrrigationCoordinate i2 = new IrrigationCoordinate(b, a);
         }
@@ -74,21 +74,21 @@ public class IrrigationCoordinateTest {
     @Test
     void directlyIrrigatedMatchesProvided() throws IllegalPlacementException {
         Coordinate a = new Coordinate(42, 41);
-        for (Coordinate b: a.neighbors()) {
+        for (Coordinate b : a.neighbors()) {
             IrrigationCoordinate i = new IrrigationCoordinate(a, b);
 
             Set<Coordinate> cs = i.getDirectlyIrrigatedCoordinates();
-            assert(cs.contains(a));
-            assert(cs.contains(b));
+            assert (cs.contains(a));
+            assert (cs.contains(b));
         }
 
         Coordinate c = new Coordinate(101, 69);
-        for (Coordinate d: c.neighbors()) {
+        for (Coordinate d : c.neighbors()) {
             IrrigationCoordinate i = new IrrigationCoordinate(c, d);
 
             Set<Coordinate> cs = i.getDirectlyIrrigatedCoordinates();
-            assert(cs.contains(c));
-            assert(cs.contains(d));
+            assert (cs.contains(c));
+            assert (cs.contains(d));
         }
     }
 

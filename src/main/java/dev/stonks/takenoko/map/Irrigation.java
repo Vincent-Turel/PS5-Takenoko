@@ -4,11 +4,11 @@ import dev.stonks.takenoko.IllegalEqualityExceptionGenerator;
 
 /**
  * Represents an irrigation, which has been placed on the map.
- *
+ * <p>
  * Internally, irrigations are represented as a combinaison of a coordinate
  * and a direction, such that { coord, coord.moveWith(dir) } is the set of
  * the two tiles that are irrigated.
- *
+ * <p>
  * Privileging one of the two coordinates allows us to determine, for each
  * irrigation, where is has to be stored on the map.
  */
@@ -18,8 +18,9 @@ public class Irrigation {
     /**
      * Creates a new Irrigation from the two two tile coordinates that are on
      * each side of the irrigation.
+     *
      * @throws IllegalPlacementException if the two coordinates are not next to
-     * each other.
+     *                                   each other.
      */
     public Irrigation(Coordinate ca, Coordinate cb) throws IllegalPlacementException {
         coord = new IrrigationCoordinate(ca, cb);

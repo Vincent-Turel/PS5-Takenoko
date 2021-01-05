@@ -11,37 +11,38 @@ import java.util.Set;
 
 /**
  * Class for the pattern objective
+ *
  * @author the StonksDev team
  */
 
 public class PatternObjective extends Objective {
 
-    private Pattern localPattern;
+    private final Pattern localPattern;
 
     /**
-     *
-     * @param nbPT n° of point
+     * @param nbPT         n° of point
      * @param localPattern pattern for the objective
      */
 
-    public PatternObjective(int nbPT, Pattern localPattern){
+    public PatternObjective(int nbPT, Pattern localPattern) {
         super(nbPT);
-        this.localPattern=localPattern;
+        this.localPattern = localPattern;
     }
 
     /**
-     * @return local pattern for the classe isValideObjectives
+     * @return local pattern for the class isValidObjectives
      */
-    public Pattern getLocalPattern(){return localPattern;}
+    public Pattern getLocalPattern() {
+        return localPattern;
+    }
 
     /**
      * @param map -> map of the game (states of all tiles and placement)
-     * @return true if objectives complete, else false
      */
     @Override
-    public void checkObjective(Map map, Player player){
+    public void checkObjective(Map map, Player player) {
         Set<MatchResult> result = localPattern.getMatchesOn(map);
-        if(result.size()!=0){
+        if (result.size() != 0) {
             this.updateStates();
         }
     }
@@ -50,7 +51,8 @@ public class PatternObjective extends Objective {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!super.equals(o)) return false;
-        if (getClass() != o.getClass()) throw IllegalEqualityExceptionGenerator.create(PatternObjective.class,o.getClass());
+        if (getClass() != o.getClass())
+            throw IllegalEqualityExceptionGenerator.create(PatternObjective.class, o.getClass());
         PatternObjective that = (PatternObjective) o;
         return Objects.equals(localPattern, that.localPattern);
     }

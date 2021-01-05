@@ -10,11 +10,11 @@ import java.util.stream.Stream;
 /**
  * Represents an the coordinate of a potential irrigation. Note that this does
  * not represent the irrigation itself, but its position.
- *
+ * <p>
  * Internally, irrigations are represented as a combinaison of a coordinate
  * and a direction, such that { coord, coord.moveWith(dir) } is the set of
  * the two tiles that are irrigated.
- *
+ * <p>
  * Privileging one of the two coordinates allows us to determine, for each
  * irrigation, where is has to be stored on the map.
  */
@@ -29,8 +29,9 @@ public class IrrigationCoordinate {
     /**
      * Creates a new IrrigationCoordinate from the two two tile coordinates
      * that are on each side of the irrigation.
+     *
      * @throws IllegalPlacementException if the two coordinates are not next to
-     * each other.
+     *                                   each other.
      */
     public IrrigationCoordinate(Coordinate ca, Coordinate cb) throws IllegalPlacementException {
         try {
@@ -69,6 +70,7 @@ public class IrrigationCoordinate {
      * Returns whether if an IrrigationCoordinate is equal to another object.
      * If <code>o</code> is not an <code>Irrigation</code>, then returns false.
      * Otherwise, returns true if the two coordinates match, in any order.
+     *
      * @param o the other object to test equality for
      * @return whether if the two objects are equals.
      */
@@ -89,7 +91,7 @@ public class IrrigationCoordinate {
 
     /**
      * Returns the hashcode of an IrrigationCoordinate.
-     *
+     * <p>
      * Two tiles have the same hash code if they have the same directly
      * irrigated tiles.
      */

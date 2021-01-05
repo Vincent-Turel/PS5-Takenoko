@@ -1,16 +1,15 @@
 package dev.stonks.takenoko.mapTest;
 
-import dev.stonks.takenoko.map.*;
 import dev.stonks.takenoko.map.Map;
+import dev.stonks.takenoko.map.*;
 import dev.stonks.takenoko.pawn.Panda;
-import dev.stonks.takenoko.map.IllegalPlacementException;
 import org.junit.jupiter.api.Test;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.when;
 
 public class MapTest {
     @Test
@@ -118,23 +117,23 @@ public class MapTest {
     }
 
     @Test
-    void getPossiblePawnPlacementsTest(){
+    void getPossiblePawnPlacementsTest() {
         dev.stonks.takenoko.map.Map map = spy(new dev.stonks.takenoko.map.Map(50));
-        Coordinate c = new Coordinate(1,1);
+        Coordinate c = new Coordinate(1, 1);
         Panda panda = new Panda(c);
 
-        Tile t1 = new Tile(new Coordinate(2,13), TileKind.Green);
-        Tile t2 = new Tile(new Coordinate(3,12), TileKind.Pink);
-        Tile t3 = new Tile(new Coordinate(4,11), TileKind.Green);
-        Tile t4 = new Tile(new Coordinate(5,10), TileKind.Pink);
-        Tile t5 = new Tile(new Coordinate(6,9), TileKind.Yellow);
-        Tile t6 = new Tile(new Coordinate(7,8), TileKind.Pink);
-        Tile t7 = new Tile(new Coordinate(8,7), TileKind.Green);
-        Tile t8 = new Tile(new Coordinate(9,6), TileKind.Yellow);
-        Tile t9 = new Tile(new Coordinate(10,5), TileKind.Green);
-        Tile t10 = new Tile(new Coordinate(11,4), TileKind.Green);
-        Tile t11 = new Tile(new Coordinate(12,3), TileKind.Green);
-        Tile t12 = new Tile(new Coordinate(13,2), TileKind.Pink);
+        Tile t1 = new Tile(new Coordinate(2, 13), TileKind.Green);
+        Tile t2 = new Tile(new Coordinate(3, 12), TileKind.Pink);
+        Tile t3 = new Tile(new Coordinate(4, 11), TileKind.Green);
+        Tile t4 = new Tile(new Coordinate(5, 10), TileKind.Pink);
+        Tile t5 = new Tile(new Coordinate(6, 9), TileKind.Yellow);
+        Tile t6 = new Tile(new Coordinate(7, 8), TileKind.Pink);
+        Tile t7 = new Tile(new Coordinate(8, 7), TileKind.Green);
+        Tile t8 = new Tile(new Coordinate(9, 6), TileKind.Yellow);
+        Tile t9 = new Tile(new Coordinate(10, 5), TileKind.Green);
+        Tile t10 = new Tile(new Coordinate(11, 4), TileKind.Green);
+        Tile t11 = new Tile(new Coordinate(12, 3), TileKind.Green);
+        Tile t12 = new Tile(new Coordinate(13, 2), TileKind.Pink);
 
         when(map.getTile(panda.getCurrentCoordinate())).thenReturn(Optional.of(new Tile(c, TileKind.Green)));
 
@@ -176,10 +175,18 @@ public class MapTest {
                 .thenReturn(Optional.empty());
 
         Set<Tile> res = new HashSet<>();
-        res.add(t1); res.add(t2); res.add(t3);
-        res.add(t4); res.add(t5); res.add(t6);
-        res.add(t7); res.add(t8); res.add(t9);
-        res.add(t10); res.add(t11); res.add(t12);
+        res.add(t1);
+        res.add(t2);
+        res.add(t3);
+        res.add(t4);
+        res.add(t5);
+        res.add(t6);
+        res.add(t7);
+        res.add(t8);
+        res.add(t9);
+        res.add(t10);
+        res.add(t11);
+        res.add(t12);
 
         assertEquals(res, map.getPossiblePawnPlacements(panda));
     }

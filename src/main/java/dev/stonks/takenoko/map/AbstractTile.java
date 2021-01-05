@@ -12,6 +12,7 @@ import java.util.stream.Stream;
  * Represents a tile which is in a deck (ie: has not been placed in the map).
  * This class must NOT be used to represent the initial tile, as it is
  * automatically added when the map is created.
+ *
  * @author the StonksDev team
  */
 public class AbstractTile {
@@ -57,10 +58,11 @@ public class AbstractTile {
 
     /**
      * Adds an improvement to the abstract tile.
+     *
      * @param i the improvement to be added
      * @return an AbstractTile with the correct improvement.
      * @throws IllegalCallerException if there is already an improvement and i
-     * is not an empty improvement.
+     *                                is not an empty improvement.
      */
     public AbstractTile withImprovement(Improvement i) {
         if (!improvement.isEmpty() && !i.isEmpty()) {

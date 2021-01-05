@@ -21,7 +21,7 @@ public class AbstractTileTest {
                 new Coordinate(3, 2)
         };
 
-        for(Coordinate c: cs) {
+        for (Coordinate c : cs) {
             assertEquals(at.withCoordinate(c).getCoordinate(), c);
         }
     }

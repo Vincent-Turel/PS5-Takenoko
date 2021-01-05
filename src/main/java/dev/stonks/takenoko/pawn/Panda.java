@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public class Panda extends Pawn {
 
-    public Panda(Coordinate initialTileCoord){
+    public Panda(Coordinate initialTileCoord) {
         super(initialTileCoord);
     }
 
@@ -19,6 +19,7 @@ public class Panda extends Pawn {
     /**
      * Moves the panda to a specific tile, returns the bamboo it eats, if it
      * exists.
+     *
      * @param tile the tile on which the panda goes
      * @return the bamboo color eaten by the panda, if it exists.
      */

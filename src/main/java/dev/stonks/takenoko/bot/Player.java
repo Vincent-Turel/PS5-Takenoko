@@ -1,11 +1,13 @@
 package dev.stonks.takenoko.bot;
 
 import dev.stonks.takenoko.IllegalEqualityExceptionGenerator;
-import dev.stonks.takenoko.map.*;
-import dev.stonks.takenoko.map.Map;
-import dev.stonks.takenoko.objective.*;
-import dev.stonks.takenoko.pawn.Pawn;
 import dev.stonks.takenoko.gameManagement.Action;
+import dev.stonks.takenoko.map.Map;
+import dev.stonks.takenoko.map.*;
+import dev.stonks.takenoko.objective.Objective;
+import dev.stonks.takenoko.objective.ObjectiveKind;
+import dev.stonks.takenoko.objective.PandaObjective;
+import dev.stonks.takenoko.pawn.Pawn;
 import dev.stonks.takenoko.weather.WeatherKind;
 
 import java.util.*;
@@ -243,6 +245,15 @@ public abstract class Player {
         return currentMapState;
     }
 
+    /**
+     * Set the current map state of the game
+     *
+     * @param currentMapState the current map state
+     */
+    public void setCurrentMapState(Map currentMapState) {
+        this.currentMapState = currentMapState;
+    }
+
     public List<Improvement> getImprovements() {
         return improvements;
     }
@@ -274,15 +285,6 @@ public abstract class Player {
     }
 
     public abstract Improvement chooseImprovement(List<Improvement> improvements);
-
-    /**
-     * Set the current map state of the game
-     *
-     * @param currentMapState the current map state
-     */
-    public void setCurrentMapState(Map currentMapState) {
-        this.currentMapState = currentMapState;
-    }
 
     @Override
     public boolean equals(Object o) {
@@ -325,7 +327,7 @@ public abstract class Player {
         ArrayList<Objective> playerObjectives = player.getObjectives();
         int nbPoint = 0;
         for (Objective objective : playerObjectives) {
-            objective.checkObjective(clonedMap,player);
+            objective.checkObjective(clonedMap, player);
             if (objective.getStates()) {
                 objective.resetObj();
                 nbPoint += objective.getNbPt();

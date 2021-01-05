@@ -42,14 +42,14 @@ public class MatchResult {
 
     /**
      * Tests for equality with an other object. <br>
-     *
+     * <p>
      * There are plenty of ways to encode a pattern. For instance, a pattern
      * must be equal to one of its rotated versions. It must also handles
      * translations, where possible. <br>
-     *
+     * <p>
      * In order to guarantee such rules, a set of constraints are generated
      * from both object, and they are then compared. <br>
-     *
+     * <p>
      * TLDR: if two patterns matched on the same group of tiles, then they are
      * guaranteed to be equals.
      */
