@@ -60,7 +60,7 @@ public class MatchResult {
         }
 
         if (!(other instanceof MatchResult)) {
-            throw IllegalEqualityExceptionGenerator.create(MatchResult.class, other.getClass());
+            throw IllegalEqualityExceptionGenerator.create(MatchResult.class, other);
         }
 
         MatchResult rhs = (MatchResult) other;

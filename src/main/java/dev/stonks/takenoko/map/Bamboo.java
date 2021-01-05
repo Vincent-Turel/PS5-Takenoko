@@ -73,7 +73,7 @@ public class Bamboo {
         if (this == o) return true;
 
         if (!(o instanceof Bamboo)) {
-            throw IllegalEqualityExceptionGenerator.create(Bamboo.class, o.getClass());
+            throw IllegalEqualityExceptionGenerator.create(Bamboo.class, o);
         }
 
         Bamboo bamboo = (Bamboo) o;

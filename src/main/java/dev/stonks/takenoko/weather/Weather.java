@@ -57,7 +57,7 @@ public class Weather {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Weather))
-            throw IllegalEqualityExceptionGenerator.create(Weather.class, o.getClass());
+            throw IllegalEqualityExceptionGenerator.create(Weather.class, o);
         Weather weather = (Weather) o;
         return weatherCondition == weather.weatherCondition;
     }

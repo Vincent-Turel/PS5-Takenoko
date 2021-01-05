@@ -43,8 +43,7 @@ public abstract class Pawn {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass())
-            throw IllegalEqualityExceptionGenerator.create(Pawn.class, o.getClass());
+        if (!(o instanceof Pawn)) throw IllegalEqualityExceptionGenerator.create(Pawn.class, o);
         Pawn pawn = (Pawn) o;
         return Objects.equals(currentCoordinate, pawn.currentCoordinate);
     }

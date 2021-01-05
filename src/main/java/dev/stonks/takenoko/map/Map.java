@@ -1,5 +1,6 @@
 package dev.stonks.takenoko.map;
 
+import dev.stonks.takenoko.IllegalEqualityExceptionGenerator;
 import dev.stonks.takenoko.pawn.Gardener;
 import dev.stonks.takenoko.pawn.Panda;
 import dev.stonks.takenoko.pawn.Pawn;
@@ -474,7 +475,7 @@ public class Map {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof Map)) throw IllegalEqualityExceptionGenerator.create(Map.class, o);
         Map map = (Map) o;
         return delta == map.delta &&
                 sideLen == map.sideLen &&

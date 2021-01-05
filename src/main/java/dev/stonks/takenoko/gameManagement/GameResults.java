@@ -40,10 +40,7 @@ public class GameResults {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-
-        if (o == null || getClass() != o.getClass())
-            throw IllegalEqualityExceptionGenerator.create(GameResults.class, o.getClass());
-      
+        if (!(o instanceof GameResults)) throw IllegalEqualityExceptionGenerator.create(GameResults.class, o);
         GameResults that = (GameResults) o;
         return id == that.id &&
                 rank == that.rank &&

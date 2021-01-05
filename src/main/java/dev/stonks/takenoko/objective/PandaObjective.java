@@ -95,9 +95,9 @@ public class PandaObjective extends Objective {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
+        if (Objects.isNull(o)) throw IllegalEqualityExceptionGenerator.create(PandaObjective.class, null);
         if (!super.equals(o)) return false;
-        if (getClass() != o.getClass())
-            throw IllegalEqualityExceptionGenerator.create(PandaObjective.class, o.getClass());
+        if (!(o instanceof PandaObjective)) throw IllegalEqualityExceptionGenerator.create(PandaObjective.class, o);
         PandaObjective that = (PandaObjective) o;
         return Objects.equals(bambooPattern, that.bambooPattern);
     }

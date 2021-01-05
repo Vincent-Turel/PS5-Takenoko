@@ -61,9 +61,14 @@ public abstract class Objective {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null) return false;
-        if (o.getClass() != GardenerObjective.class && o.getClass() != PatternObjective.class && o.getClass() != PandaObjective.class)
-            throw IllegalEqualityExceptionGenerator.create(Objective.class, o.getClass());
+        if (Objects.isNull(o)) throw IllegalEqualityExceptionGenerator.create(Objective.class, null);
+        if(
+                o.getClass() != Objective.class &&
+                        o.getClass() != GardenerObjective.class &&
+                        o.getClass()!= PatternObjective.class &&
+                        o.getClass()!= PandaObjective.class
+        ) throw IllegalEqualityExceptionGenerator.create(Objective.class,o.getClass());
+
         Objective objective = (Objective) o;
         return nbPt == objective.nbPt &&
                 this.getClass().getSimpleName().equals(objective.getClass().getSimpleName()) &&

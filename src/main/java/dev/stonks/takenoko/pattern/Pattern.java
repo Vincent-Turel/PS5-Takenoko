@@ -134,7 +134,7 @@ public class Pattern {
         }
 
         if (!(other instanceof Pattern)) {
-            throw IllegalEqualityExceptionGenerator.create(Pattern.class, other.getClass());
+            throw IllegalEqualityExceptionGenerator.create(Pattern.class, other);
         }
 
         Pattern rhs = (Pattern) other;

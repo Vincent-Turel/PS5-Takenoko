@@ -81,7 +81,7 @@ public class IrrigationCoordinate {
         }
 
         if (!(o instanceof IrrigationCoordinate)) {
-            throw IllegalEqualityExceptionGenerator.create(IrrigationCoordinate.class, o.getClass());
+            throw IllegalEqualityExceptionGenerator.create(IrrigationCoordinate.class, o);
         }
 
         IrrigationCoordinate rhs = (IrrigationCoordinate) o;

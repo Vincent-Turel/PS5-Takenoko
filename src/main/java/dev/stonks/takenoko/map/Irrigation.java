@@ -45,7 +45,7 @@ public class Irrigation {
         }
 
         if (!(other instanceof Irrigation)) {
-            throw IllegalEqualityExceptionGenerator.create(Irrigation.class, other.getClass());
+            throw IllegalEqualityExceptionGenerator.create(Irrigation.class, other);
         }
 
         Irrigation rhs = (Irrigation) other;
