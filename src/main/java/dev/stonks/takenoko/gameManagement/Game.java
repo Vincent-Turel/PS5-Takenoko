@@ -20,7 +20,7 @@ import java.util.stream.IntStream;
  * Represents a game.
  * It is responsible to create a map, a deck of pile, players, objectives,
  * and a deck where put achieved objective.
- * <p>
+ *
  * finalState is the state at the end of the game,
  * it contains the rank of each player in order.
  *
@@ -80,6 +80,12 @@ public class Game {
         return weather;
     }
 
+    /**
+     * this method give the possibles actions compared to the current state of the game
+     *
+     * @param player who is playing
+     * @return an array of the actions the player can choose
+     */
     public ArrayList<Action> findPossibleActions(Player player) {
         ArrayList<Action> possibleAction = new ArrayList<>();
         if (map.getPossiblePawnPlacements(map.getGardener()).size() > 0)
@@ -157,11 +163,17 @@ public class Game {
         fillTheFinalScore();
     }
 
+    /**
+     * this method is the application of the weather during a turn
+     *
+     * @param player who is concerned by the weather
+     * @param nbActions can change because of the sun Weather kind
+     * @param possibleActions have to be update during weather because of weather's changes
+     * @return nbActions at 3 with Sun, else at 2
+     */
     private int weatherActions(Player player, int nbActions, ArrayList<Action> possibleActions) {
         boolean effectDone = false;
         while (!effectDone) {
-            //TODO: modifier le nombre d'aménagements restant une fois choisi par le joueur
-            //TODO: mettre à jour les fonctions chez les bots(chooseNewWeather et chooseTileToMovePanda)
             switch (gameWeather.getCondition()) {
                 case Cloud:
                     if (improvementDeck.isEmpty()) {
@@ -230,6 +242,12 @@ public class Game {
         return nbActions;
     }
 
+    /**
+     * a player play his turn
+     *
+     * @param player who is playing
+     * @param possibleActions the player can choose
+     */
     private void playerPlay(Player player, ArrayList<Action> possibleActions) {
         Action chosenAction = player.decide(new ArrayList<>(possibleActions), map);
         LOG.info("Player n°" + player.getId() + " has chosen this action : " + chosenAction.toString());
@@ -344,6 +362,12 @@ public class Game {
         }
     }
 
+    /**
+     * this method calcul the rank of the player with the score
+     *
+     * @param id of the player
+     * @return the rank of the player in the game
+     */
     private int rankOf(int id) {
         int rank = 1;
         int score = 0;
