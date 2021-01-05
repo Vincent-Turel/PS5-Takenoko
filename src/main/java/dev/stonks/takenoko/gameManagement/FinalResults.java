@@ -4,14 +4,10 @@ import dev.stonks.takenoko.bot.Player;
 
 import java.util.Optional;
 
-//[bot1[nbWinGame,nbLoseGame,nbDrawGame,summOfTheScore],...,botN[]]
-
 /**
  * Final result of a player with his statistics
  */
 public class FinalResults {
-    private static final int isAWin = 1;
-    private static final int isALoose = 0;
     private final String playerType;
     private final int id;
     private int nbWin;
@@ -32,7 +28,7 @@ public class FinalResults {
      * Change the final statistics of a player
      *
      * @param victory is an optionnal boolean who tell if it's a victory
-     * @param score
+     * @param score is the score of the player at the end of the game
      */
     public void change(Optional<Boolean> victory, int score) {
         if (victory.isEmpty()) {
