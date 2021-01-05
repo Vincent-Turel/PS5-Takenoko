@@ -196,6 +196,37 @@ public abstract class Player {
     }
 
     /**
+     * Remove the bamboo if an panda objective valid :
+     *
+     * @param nb -> nb bamboo to remove
+     * @param color -> color of bamboo to remove
+     */
+    public void removeCollectedBamboo(int nb,TileKind color){
+        switch (color) {
+            case Green:
+                collectedBamboo[0]-=nb;
+                break;
+            case Yellow:
+                collectedBamboo[1]-=nb;
+                break;
+            case Pink:
+                collectedBamboo[2]-=nb;
+                break;
+        }
+    }
+
+    /**
+     * Remove the bamboo if an panda objective valid (for all bamboo) :
+     *
+     * @param nb -> nb bamboo to remove
+     */
+    public void removeCollectedBamboo(int nb){
+        collectedBamboo[0]-=nb;
+        collectedBamboo[1]-=nb;
+        collectedBamboo[2]-=nb;
+    }
+
+    /**
      * Get a list of all bamboo the player has collected with the panda
      *
      * @return collectedBamboo

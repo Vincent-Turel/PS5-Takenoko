@@ -8,7 +8,9 @@ import dev.stonks.takenoko.map.*;
 import dev.stonks.takenoko.objective.Objective;
 import dev.stonks.takenoko.objective.ObjectivesDeck;
 import dev.stonks.takenoko.objective.PandaObjective;
+import dev.stonks.takenoko.pattern.BambooPattern;
 import dev.stonks.takenoko.pattern.MatchResult;
+import dev.stonks.takenoko.pattern.Pattern;
 import dev.stonks.takenoko.pawn.Gardener;
 import dev.stonks.takenoko.pawn.Panda;
 import dev.stonks.takenoko.weather.Weather;
@@ -328,7 +330,13 @@ public class Game {
                 LOG.info("Player n°" + player.getId() + " has achieved a " + objective.getClass().getSimpleName());
                 player.newObjectivesAchieved(objective);
                 if(objective.getClass().equals(PandaObjective.class)){
-                    //here
+                    BambooPattern localCheck = ((PandaObjective)objective).getBambooPattern();
+                    if(localCheck.getOptionalColor1().isPresent()){
+                        player.removeCollectedBamboo(localCheck.getHeight()*localCheck.getNbBamboo());
+                    }
+                    else{
+                        player.removeCollectedBamboo(localCheck.getHeight()*localCheck.getNbBamboo(),localCheck.getColor());
+                    }
                 }
             }
         }
