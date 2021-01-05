@@ -182,17 +182,7 @@ public abstract class Player {
      * @param color the bamboo color that has been collected thanks to the panda
      */
     public void addCollectedBamboo(TileKind color) {
-        switch (color) {
-            case Green:
-                collectedBamboo[0]++;
-                break;
-            case Yellow:
-                collectedBamboo[1]++;
-                break;
-            case Pink:
-                collectedBamboo[2]++;
-                break;
-        }
+        collectedBamboo[color.ordinal()]++;
     }
 
     /**
@@ -202,17 +192,7 @@ public abstract class Player {
      * @param color -> color of bamboo to remove
      */
     public void removeCollectedBamboo(int nb,TileKind color){
-        switch (color) {
-            case Green:
-                collectedBamboo[0]-=nb;
-                break;
-            case Yellow:
-                collectedBamboo[1]-=nb;
-                break;
-            case Pink:
-                collectedBamboo[2]-=nb;
-                break;
-        }
+        collectedBamboo[color.ordinal()]-=nb;
     }
 
     /**
@@ -221,9 +201,7 @@ public abstract class Player {
      * @param nb -> nb bamboo to remove
      */
     public void removeCollectedBamboo(int nb){
-        collectedBamboo[0]-=nb;
-        collectedBamboo[1]-=nb;
-        collectedBamboo[2]-=nb;
+        for(int i=0;i<3;i++){collectedBamboo[i]-=nb;}
     }
 
     /**
@@ -233,15 +211,6 @@ public abstract class Player {
      */
     public int[] getCollectedBamboo() {
         return collectedBamboo;
-    }
-
-    /**
-     * Update the player inventory with the new stock of bamboo
-     *
-     * @param newInventory the updated inventory of all bamboo the player got
-     */
-    public void upDateInventory(int[] newInventory) {
-        this.collectedBamboo = newInventory;
     }
 
     /**
