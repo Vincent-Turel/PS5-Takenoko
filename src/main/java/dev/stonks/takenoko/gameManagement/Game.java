@@ -323,7 +323,7 @@ public class Game {
         ArrayList<Objective> playerObjectives = player.getObjectives();
 
         for (Objective objective : playerObjectives) {
-            objective.checkObjective(map, player);
+            objective.checkObjectiveValid(map, player);
             if (objective.getStates()) {
                 LOG.info("Player n°" + player.getId() + " has achieved a " + objective.getClass().getSimpleName());
                 player.newObjectivesAchieved(objective);

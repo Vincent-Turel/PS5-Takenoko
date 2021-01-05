@@ -327,7 +327,7 @@ public abstract class Player {
         ArrayList<Objective> playerObjectives = player.getObjectives();
         int nbPoint = 0;
         for (Objective objective : playerObjectives) {
-            objective.checkObjective(clonedMap, player);
+            objective.checkObjectiveValid(clonedMap, player);
             if (objective.getStates()) {
                 objective.resetObj();
                 nbPoint += objective.getNbPt();
