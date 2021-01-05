@@ -131,6 +131,17 @@ public class SmartPlayer extends Player implements Cloneable {
         return answers;
     }
 
+    private Set<MultipleAnswer<TileKind, Improvement, ?>> getNeededImprovement() {
+        Set<MultipleAnswer<TileKind, Improvement, ?>> answers = new HashSet<>();
+        objectives.stream()
+                .filter(o -> o.getObjType() == ObjectiveKind.GardenerObjective)
+                .map(objective -> (GardenerObjective) objective)
+                .filter(o -> o.getLocalImprovement() == Improvement.Fertilizer || o.getLocalImprovement() == Improvement.Enclosure || o.getLocalImprovement() == Improvement.Watershed)
+                .forEach(gObj -> answers.add(new MultipleAnswer<>(
+                        gObj.getBambooPattern().getColor(), gObj.getLocalImprovement())));
+        return answers;
+    }
+
     private Set<TileKind> getInterestingPandaBamboo() {
         Set<TileKind> tileKinds = new HashSet<>();
         objectives.stream()
@@ -171,17 +182,11 @@ public class SmartPlayer extends Player implements Cloneable {
         }
 
         actions.add(0, new ArrayList<>(Collections.singletonList(score)));
-        if (chosenAction.size() == 0) {
-            chosenAction = new ArrayList<>(actions);
-            System.out.println("Vire pas ca");
-        }
-        else {
-            if (actions.get(0).get(0).equals(chosenAction.get(0).get(0))) {
-                if (actions.size() < chosenAction.size())
-                    this.chosenAction = new ArrayList<>(actions);
-            } else if (actions.get(0).get(0) > chosenAction.get(0).get(0)) {
+        if (actions.get(0).get(0).equals(chosenAction.get(0).get(0))) {
+            if (actions.size() < chosenAction.size())
                 this.chosenAction = new ArrayList<>(actions);
-            }
+        } else if (actions.get(0).get(0) > chosenAction.get(0).get(0)) {
+            this.chosenAction = new ArrayList<>(actions);
         }
 
         actions.remove(0);
@@ -266,7 +271,7 @@ public class SmartPlayer extends Player implements Cloneable {
 
     private boolean uselessTile(Tile tile) {
         return getInteristingGardenerBamboo().stream().noneMatch(answer ->
-                        tile.getBamboo().getColor() == answer.getT() &&
+                tile.getBamboo().getColor() == answer.getT() &&
                         tile.getImprovement() == answer.getU() &&
                         tile.getBamboo().getSize() < answer.getV().orElseThrow(NoSuchElementException::new));
     }
@@ -382,9 +387,29 @@ public class SmartPlayer extends Player implements Cloneable {
         if (improvementPlacements.size() < 1)
             throw new IllegalStateException("There is nowhere I can put an improvement");
 
-        Tile chosenTile = getRandomInCollection(improvementPlacements);
-        Improvement chosenImprovement = improvements.remove(random.nextInt(improvements.size()));
-
+        List<Improvement> possibleImprovements = new ArrayList<>(improvements);
+        var neededImpovement = getNeededImprovement().stream().map(MultipleAnswer::getU).collect(Collectors.toCollection(HashSet::new));
+        possibleImprovements.retainAll(neededImpovement);
+        Improvement chosenImprovement;
+        if (possibleImprovements.isEmpty()) {
+            chosenImprovement = improvements.remove(random.nextInt(improvements.size()));
+        } else {
+            chosenImprovement = getRandomInCollection(possibleImprovements);
+            improvements.remove(chosenImprovement);
+        }
+        if (chosenImprovement == Improvement.Watershed) {
+            improvementPlacements.removeIf(tile -> !getNeededImprovement().contains(new MultipleAnswer<>(tile.getBamboo().getColor(), Improvement.Watershed)));
+        } else if (chosenImprovement == Improvement.Enclosure) {
+            improvementPlacements.removeIf(tile -> !getNeededImprovement().contains(new MultipleAnswer<>(tile.getBamboo().getColor(), Improvement.Enclosure)));
+        } else if (chosenImprovement == Improvement.Fertilizer) {
+            improvementPlacements.removeIf(tile -> !getNeededImprovement().contains(new MultipleAnswer<>(tile.getBamboo().getColor(), Improvement.Fertilizer)));
+        }
+        Tile chosenTile;
+        if (improvementPlacements.isEmpty()) {
+            chosenTile = getRandomInCollection(currentMapState.getImprovementPlacements());
+        } else {
+            chosenTile = getRandomInCollection(improvementPlacements);
+        }
         return new MultipleAnswer<>(chosenTile, chosenImprovement);
     }
 
@@ -404,7 +429,7 @@ public class SmartPlayer extends Player implements Cloneable {
      * ONLY FOR TESTING
      *
      * @return the chosen action
-     *            TODO : replace by reflection
+     * TODO : replace by reflection
      */
     public List<ArrayList<Integer>> getChosenAction() {
         return chosenAction;
