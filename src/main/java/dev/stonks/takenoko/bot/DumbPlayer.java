@@ -269,7 +269,7 @@ public class DumbPlayer extends Player {
     @Override
     public WeatherKind chooseNewWeather(Set<WeatherKind> possiblesWeathers) {
         List<WeatherKind> list = new ArrayList<>(possiblesWeathers);
-        if(!improvements.isEmpty()){
+        if(improvements.size()>3){
                 list.remove(WeatherKind.Cloud);
         }
         if(objectives.stream().noneMatch(objective -> objective.getObjType() == ObjectiveKind.PandaObjective)){
@@ -284,7 +284,19 @@ public class DumbPlayer extends Player {
 
     @Override
     public Improvement chooseImprovement(List<Improvement> improvements) {
-        Improvement chosen = improvements.remove(random.nextInt(improvements.size()));
+        List<Improvement> copy = new ArrayList<>(improvements.stream().collect(Collectors.toSet()));
+        this.improvements.forEach(improvement -> copy.remove(improvement));
+
+        Improvement chosen;
+
+        if(copy.isEmpty()){
+            chosen = getRandomInCollection(improvements);
+        }
+        else{
+            chosen = getRandomInCollection(copy);
+        }
+
+        improvements.remove(chosen);
         this.improvements.add(chosen);
         return chosen;
     }

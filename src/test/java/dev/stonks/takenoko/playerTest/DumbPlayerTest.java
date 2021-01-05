@@ -183,8 +183,10 @@ public class DumbPlayerTest {
         assertEquals(2, improvements.size());
         dumbPlayer.chooseImprovement(improvements);
         assertEquals(1, improvements.size());
-        improvements.addAll(Arrays.asList(Improvement.Watershed, Improvement.Watershed));
-        assertEquals(3, improvements.size());
+
+        ArrayList<Improvement> improvements2 = new ArrayList<>(Arrays.asList(Improvement.Watershed, Improvement.Enclosure));
+        dumbPlayer.chooseImprovement(improvements2);
+        assertTrue(dumbPlayer.getImprovements().contains(Improvement.Enclosure));
     }
 
     @Test
