@@ -6,7 +6,7 @@ import dev.stonks.takenoko.bot.Player;
 import dev.stonks.takenoko.map.Map;
 import dev.stonks.takenoko.map.*;
 import dev.stonks.takenoko.objective.Objective;
-import dev.stonks.takenoko.objective.ObjectiveDeck;
+import dev.stonks.takenoko.objective.ObjectivesDeck;
 import dev.stonks.takenoko.pattern.MatchResult;
 import dev.stonks.takenoko.pawn.Gardener;
 import dev.stonks.takenoko.pawn.Panda;
@@ -35,7 +35,7 @@ public class Game {
     private final ImprovementDeck improvementDeck;
     private final Set<MatchResult> patternMatches;
     private final Random random;
-    private final ObjectiveDeck deck;
+    private final ObjectivesDeck objectivesDeck;
     public ArrayList<GameResults> gamePlayersResults;
     private List<AbstractTile> tileDeck;
     private Stack<AbstractIrrigation> irrigationDeck;
@@ -45,7 +45,7 @@ public class Game {
         map = new Map(28);
         initialiseTileDeck();
         initialiseIrrigationDeck();
-        deck = new ObjectiveDeck(players);
+        objectivesDeck = new ObjectivesDeck(players);
         gameWeather = initialiseWeather();
         patternMatches = new HashSet<>();
         this.players = players;
@@ -91,7 +91,7 @@ public class Game {
             possibleAction.add(Action.PutTile);
         if (irrigationDeck.size() > 0)
             possibleAction.add(Action.DrawIrrigation);
-        if ((player.getObjectives().size() < 5) && (deck.deckIsNotEmpty())) {
+        if ((player.getObjectives().size() < 5) && (objectivesDeck.deckIsNotEmpty())) {
             possibleAction.add(Action.DrawObjective);
         }
         return possibleAction;
@@ -121,7 +121,7 @@ public class Game {
         boolean remainingLastTurn = true;
         int nbActions;
         Optional<Integer> idWinner = Optional.empty();
-        deck.objectivesDistribution(players);
+        objectivesDeck.objectivesDistribution(players);
         while (!aPlayerWin || remainingLastTurn) {
             if (idWinner.isPresent()) {
                 remainingLastTurn = false;
@@ -261,7 +261,7 @@ public class Game {
                 player.addIrrigation(drawnIrrigation);
                 break;
             case DrawObjective:
-                deck.addAnObjectiveForPlayer(player);
+                objectivesDeck.addAnObjectiveForPlayer(player);
                 break;
         }
         Optional<Action> decision;
@@ -321,11 +321,11 @@ public class Game {
      */
     private boolean checkIfWinner() {
         for (Player player : players) {
-            if (player.getNbObjectivesAchieved() >= deck.getNbObjectiveToWin()) {
+            if (player.getNbObjectivesAchieved() >= objectivesDeck.getNbObjectiveToWin()) {
 
                 LOG.warning("LAST TURN !");
-                player.addObjectives(deck.getEmperor());
-                player.newObjectivesAchieved(deck.getEmperor());
+                player.addObjectives(objectivesDeck.getEmperor());
+                player.newObjectivesAchieved(objectivesDeck.getEmperor());
                 return true;
             }
         }
@@ -382,6 +382,6 @@ public class Game {
 
     @Override
     public int hashCode() {
-        return Objects.hash(map, tileDeck, irrigationDeck, players, deck, patternMatches, random, gamePlayersResults, improvementDeck);
+        return Objects.hash(map, tileDeck, irrigationDeck, players, objectivesDeck, patternMatches, random, gamePlayersResults, improvementDeck);
     }
 }
