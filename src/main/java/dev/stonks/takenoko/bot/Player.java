@@ -182,17 +182,26 @@ public abstract class Player {
      * @param color the bamboo color that has been collected thanks to the panda
      */
     public void addCollectedBamboo(TileKind color) {
-        switch (color) {
-            case Green:
-                collectedBamboo[0]++;
-                break;
-            case Yellow:
-                collectedBamboo[1]++;
-                break;
-            case Pink:
-                collectedBamboo[2]++;
-                break;
-        }
+        collectedBamboo[color.ordinal()]++;
+    }
+
+    /**
+     * Remove the bamboo if an panda objective valid :
+     *
+     * @param nb -> nb bamboo to remove
+     * @param color -> color of bamboo to remove
+     */
+    public void removeCollectedBamboo(int nb,TileKind color){
+        collectedBamboo[color.ordinal()]-=nb;
+    }
+
+    /**
+     * Remove the bamboo if an panda objective valid (for all bamboo) :
+     *
+     * @param nb -> nb bamboo to remove
+     */
+    public void removeCollectedBamboo(int nb){
+        for(int i=0;i<3;i++){collectedBamboo[i]-=nb;}
     }
 
     /**
@@ -202,15 +211,6 @@ public abstract class Player {
      */
     public int[] getCollectedBamboo() {
         return collectedBamboo;
-    }
-
-    /**
-     * Update the player inventory with the new stock of bamboo
-     *
-     * @param newInventory the updated inventory of all bamboo the player got
-     */
-    public void upDateInventory(int[] newInventory) {
-        this.collectedBamboo = newInventory;
     }
 
     /**
@@ -327,7 +327,7 @@ public abstract class Player {
         ArrayList<Objective> playerObjectives = player.getObjectives();
         int nbPoint = 0;
         for (Objective objective : playerObjectives) {
-            objective.checkObjective(clonedMap, player);
+            objective.checkObjectiveValid(clonedMap, player);
             if (objective.getStates()) {
                 objective.resetObj();
                 nbPoint += objective.getNbPt();

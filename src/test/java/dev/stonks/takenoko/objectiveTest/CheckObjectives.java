@@ -32,11 +32,11 @@ public class CheckObjectives {
 
         //Test :
         assertEquals(false, objectiveWin.getStates());
-        objectiveWin.checkObjective(map, player);
+        objectiveWin.checkObjectiveValid(map, player);
         assertEquals(true, objectiveWin.getStates());
 
         assertEquals(false, objectiveLose.getStates());
-        objectiveLose.checkObjective(map, player);
+        objectiveLose.checkObjectiveValid(map, player);
         assertEquals(false, objectiveLose.getStates());
 
     }
@@ -59,19 +59,11 @@ public class CheckObjectives {
         PandaObjective objMultiColor = new PandaObjective(5, multicolor);
 
         //Test isValid Objective simple green
-        objective.checkObjective(map, winPlayer);
+        objective.checkObjectiveValid(map, winPlayer);
         assertEquals(true, objective.getStates());
-        int[] valExpected = new int[]{0, 3, 5};
-        for (int i = 0; i < 3; i++) {
-            assertEquals(valExpected[i], winPlayer.getCollectedBamboo()[i]);
-        }
         //Test isValid Objective multicolor
-        objMultiColor.checkObjective(map, winPlayer2);
+        objMultiColor.checkObjectiveValid(map, winPlayer2);
         assertEquals(true, objMultiColor.getStates());
-        valExpected = new int[]{6, 4, 3};
-        for (int i = 0; i < 3; i++) {
-            assertEquals(valExpected[i], winPlayer2.getCollectedBamboo()[i]);
-        }
     }
 
     @Test
@@ -90,19 +82,15 @@ public class CheckObjectives {
         PandaObjective objMultiColor = new PandaObjective(5, multicolor);
 
         //Test isValid Objective simple green
-        objective.checkObjective(map, losePlayer);
+        objective.checkObjectiveValid(map, losePlayer);
         assertEquals(false, objective.getStates());
         int[] valExpected = new int[]{1, 1, 1};
         for (int i = 0; i < 3; i++) {
             assertEquals(valExpected[i], losePlayer.getCollectedBamboo()[i]);
         }
         //Test isValid Objective multicolor
-        objMultiColor.checkObjective(map, losePlayer);
+        objMultiColor.checkObjectiveValid(map, losePlayer);
         assertEquals(false, objMultiColor.getStates());
-        valExpected = new int[]{1, 1, 1};
-        for (int i = 0; i < 3; i++) {
-            assertEquals(valExpected[i], losePlayer.getCollectedBamboo()[i]);
-        }
     }
 
     @Test
@@ -115,12 +103,8 @@ public class CheckObjectives {
         PandaObjective objective = new PandaObjective(5, yellowPattern);
 
         //Test isValid Objective simple yellow
-        objective.checkObjective(map, winPlayer);
+        objective.checkObjectiveValid(map, winPlayer);
         assertEquals(true, objective.getStates());
-        int[] valExpected = new int[]{3, 1, 5};
-        for (int i = 0; i < 3; i++) {
-            assertEquals(valExpected[i], winPlayer.getCollectedBamboo()[i]);
-        }
     }
 
     @Test
@@ -133,12 +117,8 @@ public class CheckObjectives {
         PandaObjective objective = new PandaObjective(5, pinkPattern);
 
         //Test isValid Objective simple yellow
-        objective.checkObjective(map, winPlayer);
+        objective.checkObjectiveValid(map, winPlayer);
         assertEquals(true, objective.getStates());
-        int[] valExpected = new int[]{3, 6, 0};
-        for (int i = 0; i < 3; i++) {
-            assertEquals(valExpected[i], winPlayer.getCollectedBamboo()[i]);
-        }
     }
 
     @Test
@@ -194,13 +174,13 @@ public class CheckObjectives {
         GardenerObjective objectiveLoseImprovementNoHere = new GardenerObjective(5, pinkPattern, Improvement.Watershed);
 
         //Test function :
-        objectiveWin.checkObjective(map, player);
-        objectiveLose.checkObjective(map, player);
-        pinkObjective.checkObjective(map, player);
-        objectiveWinWithImprovement.checkObjective(map, player);
-        objectiveLoseWithImprovement.checkObjective(map, player);
-        objectiveWinWithNoImprovement.checkObjective(map, player);
-        objectiveLoseImprovementNoHere.checkObjective(map, player);
+        objectiveWin.checkObjectiveValid(map, player);
+        objectiveLose.checkObjectiveValid(map, player);
+        pinkObjective.checkObjectiveValid(map, player);
+        objectiveWinWithImprovement.checkObjectiveValid(map, player);
+        objectiveLoseWithImprovement.checkObjectiveValid(map, player);
+        objectiveWinWithNoImprovement.checkObjectiveValid(map, player);
+        objectiveLoseImprovementNoHere.checkObjectiveValid(map, player);
 
         assertEquals(true, objectiveWin.getStates());
         assertEquals(false, objectiveLose.getStates());

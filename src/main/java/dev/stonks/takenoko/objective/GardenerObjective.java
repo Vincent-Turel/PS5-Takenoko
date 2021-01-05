@@ -58,7 +58,7 @@ public class GardenerObjective extends Objective {
      * Check if a gardener objective are complete
      */
     @Override
-    public void checkObjective(Map map, Player player) {
+    public void checkObjectiveValid(Map map, Player player) {
         ArrayList<Tile> allTiles = new ArrayList<>();
         for (Optional<Tile> tile : map.getTiles()) {
             tile.ifPresent(allTiles::add);

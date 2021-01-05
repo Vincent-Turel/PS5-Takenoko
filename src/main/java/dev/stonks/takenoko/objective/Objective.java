@@ -56,7 +56,7 @@ public abstract class Objective {
         isValid = true;
     }
 
-    public abstract void checkObjective(Map map, Player player);
+    public abstract void checkObjectiveValid(Map map, Player player);
 
     @Override
     public boolean equals(Object o) {

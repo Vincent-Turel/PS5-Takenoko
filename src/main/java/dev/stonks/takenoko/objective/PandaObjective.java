@@ -40,24 +40,13 @@ public class PandaObjective extends Objective {
      * Update the inventory if objectives complete
      */
     @Override
-    public void checkObjective(Map map, Player player) {
+    public void checkObjectiveValid(Map map, Player player) {
         int[] bambooStock = player.getCollectedBamboo();
         if (bambooPattern.getOptionalColor1().isPresent()) {
-            bambooStock = checkForUpdateState(bambooStock);
+            checkForUpdateState(bambooStock);
         } else {
-            switch (bambooPattern.getColor()) {
-                case Pink:
-                    bambooStock = checkForUpdateState(bambooStock, 2);
-                    break;
-                case Yellow:
-                    bambooStock = checkForUpdateState(bambooStock, 1);
-                    break;
-                case Green:
-                    bambooStock = checkForUpdateState(bambooStock, 0);
-                    break;
-            }
+            checkForUpdateState(bambooStock,bambooPattern.getColor().ordinal());
         }
-        player.upDateInventory(bambooStock);
     }
 
     /**
@@ -65,31 +54,23 @@ public class PandaObjective extends Objective {
      *
      * @param stock -> player bamboo inventory
      * @param id    -> bamboo position on the list
-     * @return the player bamboo inventory update
      */
-    private int[] checkForUpdateState(int[] stock, int id) {
+    private void checkForUpdateState(int[] stock, int id) {
         int result = bambooPattern.getHeight() * bambooPattern.getNbBamboo();
         if (stock[id] >= result) {
             this.updateStates();
-            stock[id] -= result;
         }
-        return stock;
     }
 
     /**
      * Update the objective state if there are all color
      *
      * @param stock -> player bamboo inventory
-     * @return the player bamboo inventory update
      */
-    private int[] checkForUpdateState(int[] stock) {
+    private void checkForUpdateState(int[] stock) {
         if (stock[0] >= bambooPattern.getHeight() && stock[1] >= bambooPattern.getHeight() && stock[2] >= bambooPattern.getHeight()) {
             this.updateStates();
-            stock[0] -= bambooPattern.getHeight() * bambooPattern.getNbBamboo();
-            stock[1] -= bambooPattern.getHeight() * bambooPattern.getNbBamboo();
-            stock[2] -= bambooPattern.getHeight() * bambooPattern.getNbBamboo();
         }
-        return stock;
     }
 
     @Override
