@@ -87,4 +87,12 @@ public class GameTest {
         assertEquals(expected, results);
         assertNotEquals(initialResults, results);
     }
+
+    @Test
+    void equals() {
+        Game g1 = game;
+        Game g2 = new Game(players);
+
+        assertEquals(g1, g2);
+    }
 }

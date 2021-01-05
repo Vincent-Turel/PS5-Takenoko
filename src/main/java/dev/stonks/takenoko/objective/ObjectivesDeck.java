@@ -1,5 +1,6 @@
 package dev.stonks.takenoko.objective;
 
+import dev.stonks.takenoko.IllegalEqualityExceptionGenerator;
 import dev.stonks.takenoko.bot.Player;
 
 import java.util.ArrayList;
@@ -119,4 +120,20 @@ public class ObjectivesDeck {
         player.addObjectives(gardenerDeck.remove(index));
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof ObjectivesDeck)) {
+            throw IllegalEqualityExceptionGenerator.create(ObjectivesDeck.class, o);
+        }
+
+        ObjectivesDeck rhs = (ObjectivesDeck) o;
+
+        // Note: we don't compare random here.
+
+        return gardenerDeck.equals(rhs.gardenerDeck) &&
+                patternDeck.equals(rhs.patternDeck) &&
+                pandaDeck.equals(rhs.pandaDeck) &&
+                emperor.equals(rhs.emperor) &&
+                nbObjectiveToWin == rhs.nbObjectiveToWin;
+    }
 }

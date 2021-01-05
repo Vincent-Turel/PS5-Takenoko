@@ -1,16 +1,28 @@
 package dev.stonks.takenoko.objectiveTest;
 
+import dev.stonks.takenoko.bot.DumbPlayer;
 import dev.stonks.takenoko.bot.Player;
 import dev.stonks.takenoko.bot.RandomPlayer;
+import dev.stonks.takenoko.bot.SmartPlayer;
 import dev.stonks.takenoko.objective.EmperorObjective;
 import dev.stonks.takenoko.objective.ObjectivesDeck;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.BeforeEach;
+
 import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 
 public class ObjectivesDeckTest {
+    ArrayList<Player> players;
+
+    @BeforeEach
+    void init() {
+        players = new ArrayList<>();
+        players.add(new DumbPlayer(0));
+        players.add(new SmartPlayer(1));
+    }
 
     @Test
     public void nbObjectiveToWinTest() {
@@ -61,4 +73,11 @@ public class ObjectivesDeckTest {
         assertNotEquals(0,players.get(1).getObjectives().size());
     }
 
+    @Test
+    void equalsAfterNew() {
+        ObjectivesDeck d1 = new ObjectivesDeck(players);
+        ObjectivesDeck d2 = new ObjectivesDeck(players);
+
+        assertEquals(d1, d2);
+    }
 }

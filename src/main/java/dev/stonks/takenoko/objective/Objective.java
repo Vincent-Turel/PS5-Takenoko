@@ -65,9 +65,10 @@ public abstract class Objective {
         if(
                 o.getClass() != Objective.class &&
                         o.getClass() != GardenerObjective.class &&
-                        o.getClass()!= PatternObjective.class &&
-                        o.getClass()!= PandaObjective.class
-        ) throw IllegalEqualityExceptionGenerator.create(Objective.class,o.getClass());
+                        o.getClass() != PatternObjective.class &&
+                        o.getClass() != PandaObjective.class &&
+                        o.getClass() != EmperorObjective.class
+        ) throw IllegalEqualityExceptionGenerator.create(Objective.class, o);
 
         Objective objective = (Objective) o;
         return nbPt == objective.nbPt &&

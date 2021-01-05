@@ -401,6 +401,7 @@ public class Game {
                 Objects.equals(patternMatches, game.patternMatches) &&
                 Objects.equals(gamePlayersResults, game.gamePlayersResults) &&
                 gameWeather.equals(game.gameWeather) &&
+                Objects.equals(objectivesDeck, game.objectivesDeck) &&
                 improvementDeck.equals(game.improvementDeck);
     }
 
