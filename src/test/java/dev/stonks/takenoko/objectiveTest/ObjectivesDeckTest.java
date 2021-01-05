@@ -3,8 +3,8 @@ package dev.stonks.takenoko.objectiveTest;
 import dev.stonks.takenoko.bot.Player;
 import dev.stonks.takenoko.bot.RandomPlayer;
 import dev.stonks.takenoko.objective.EmperorObjective;
-import dev.stonks.takenoko.objective.ObjectiveDeck;
-import org.junit.Test;
+import dev.stonks.takenoko.objective.ObjectivesDeck;
+import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -18,11 +18,11 @@ public class ObjectivesDeckTest {
         ArrayList<Player> players = new ArrayList<>();
         players.add(player);
         players.add(player);
-        ObjectiveDeck deck1 = new ObjectiveDeck(players);
+        ObjectivesDeck deck1 = new ObjectivesDeck(players);
         players.add(player);
-        ObjectiveDeck deck2 = new ObjectiveDeck(players);
+        ObjectivesDeck deck2 = new ObjectivesDeck(players);
         players.add(player);
-        ObjectiveDeck deck3 = new ObjectiveDeck(players);
+        ObjectivesDeck deck3 = new ObjectivesDeck(players);
         EmperorObjective emperor = new EmperorObjective();
 
         assertEquals(9, deck1.getNbObjectiveToWin());
@@ -39,7 +39,7 @@ public class ObjectivesDeckTest {
         ArrayList<Player> players = new ArrayList<>();
         players.add(player1);
         players.add(player2);
-        ObjectiveDeck deck = new ObjectiveDeck(players);
+        ObjectivesDeck deck = new ObjectivesDeck(players);
         deck.objectivesDistribution(players);
 
         assertNotEquals(0,players.get(0).getObjectives().size());
@@ -53,7 +53,7 @@ public class ObjectivesDeckTest {
         ArrayList<Player> players = new ArrayList<>();
         players.add(player1);
         players.add(player2);
-        ObjectiveDeck deck = new ObjectiveDeck(players);
+        ObjectivesDeck deck = new ObjectivesDeck(players);
         deck.addAnObjectiveForPlayer(player1);
         deck.addAnObjectiveForPlayer(player2);
 

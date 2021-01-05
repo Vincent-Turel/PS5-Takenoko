@@ -11,7 +11,7 @@ import java.util.Random;
  * @author the StonksDev team
  */
 
-public class ObjectiveDeck {
+public class ObjectivesDeck {
 
     private final ArrayList<GardenerObjective> gardenerDeck;
     private final ArrayList<PatternObjective> patternDeck;
@@ -23,7 +23,7 @@ public class ObjectiveDeck {
     /**
      * Constructor to make an objective deck :
      */
-    public ObjectiveDeck(ArrayList<Player> players) {
+    public ObjectivesDeck(ArrayList<Player> players) {
         this.gardenerDeck = ObjectivesBambooFactory.gardenerObjectiveList();
         this.patternDeck = PatternObjectiveFactory.validPatternObjectives();
         this.pandaDeck = ObjectivesBambooFactory.pandaObjectiveList();
