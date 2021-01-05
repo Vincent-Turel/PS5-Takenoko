@@ -1,14 +1,15 @@
 package dev.stonks.takenoko.objectiveTest;
 
 import dev.stonks.takenoko.bot.Player;
+import dev.stonks.takenoko.bot.RandomPlayer;
 import dev.stonks.takenoko.objective.EmperorObjective;
 import dev.stonks.takenoko.objective.ObjectiveDeck;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.Random;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 
 public class ObjectivesDeckTest {
@@ -32,4 +33,34 @@ public class ObjectivesDeckTest {
         assertTrue(deck1.deckIsNotEmpty());
         assertEquals(emperor.getClass(), deck1.getEmperor().getClass());
     }
+
+    @Test
+    public void objDistributionTest(){
+        RandomPlayer player1 = new RandomPlayer(1);
+        RandomPlayer player2 = new RandomPlayer(1);
+        ArrayList<Player> players = new ArrayList<>();
+        players.add(player1);
+        players.add(player2);
+        ObjectiveDeck deck = new ObjectiveDeck(players);
+        deck.objectivesDistribution(players);
+
+        assertNotEquals(0,players.get(0).getObjectives().size());
+        assertNotEquals(0,players.get(1).getObjectives().size());
+    }
+
+    @Test
+    public void addAnObjTest(){
+        RandomPlayer player1 = new RandomPlayer(1);
+        RandomPlayer player2 = new RandomPlayer(1);
+        ArrayList<Player> players = new ArrayList<>();
+        players.add(player1);
+        players.add(player2);
+        ObjectiveDeck deck = new ObjectiveDeck(players);
+        deck.addAnObjectiveForPlayer(player1);
+        deck.addAnObjectiveForPlayer(player2);
+
+        assertNotEquals(0,players.get(0).getObjectives().size());
+        assertNotEquals(0,players.get(1).getObjectives().size());
+    }
+
 }
