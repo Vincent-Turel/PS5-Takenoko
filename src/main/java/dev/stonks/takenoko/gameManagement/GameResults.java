@@ -1,7 +1,6 @@
 package dev.stonks.takenoko.gameManagement;
 
 import dev.stonks.takenoko.IllegalEqualityExceptionGenerator;
-import dev.stonks.takenoko.bot.Player;
 
 import java.util.Objects;
 
@@ -10,10 +9,10 @@ import java.util.Objects;
  * the player's id and his rank
  */
 public class GameResults {
-    private int id;
-    private int score;
-    private int rank;
-    private int nbPandaObjectives;
+    private final int id;
+    private final int score;
+    private final int rank;
+    private final int nbPandaObjectives;
 
     public GameResults(int id,int score,int rank,int nbPandaObjectives) {
         this.id = id;
@@ -37,7 +36,7 @@ public class GameResults {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) throw IllegalEqualityExceptionGenerator.create(GameResults.class,o.getClass());;
+        if (o == null || getClass() != o.getClass()) throw IllegalEqualityExceptionGenerator.create(GameResults.class,o.getClass());
         GameResults that = (GameResults) o;
         return id == that.id &&
                 rank == that.rank &&
