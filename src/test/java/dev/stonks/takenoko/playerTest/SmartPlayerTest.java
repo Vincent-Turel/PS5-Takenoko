@@ -96,6 +96,7 @@ public class SmartPlayerTest {
     @Test
     public void chooseNewWeatherTest() {
         Set<WeatherKind> weatherKinds = new HashSet<>(Set.of(WeatherKind.Cloud, WeatherKind.Rain));
+        smartPlayer.setCurrentMapState(map);
         assertTrue(weatherKinds.contains(smartPlayer.chooseNewWeather(weatherKinds)));
     }
 

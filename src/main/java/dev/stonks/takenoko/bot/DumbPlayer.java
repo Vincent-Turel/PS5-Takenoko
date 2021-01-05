@@ -5,7 +5,9 @@ import dev.stonks.takenoko.map.Map;
 import dev.stonks.takenoko.map.*;
 import dev.stonks.takenoko.objective.Objective;
 import dev.stonks.takenoko.objective.ObjectiveKind;
+import dev.stonks.takenoko.pawn.Gardener;
 import dev.stonks.takenoko.pawn.Pawn;
+import dev.stonks.takenoko.weather.Weather;
 import dev.stonks.takenoko.weather.WeatherKind;
 
 import java.util.*;
@@ -266,7 +268,18 @@ public class DumbPlayer extends Player {
 
     @Override
     public WeatherKind chooseNewWeather(Set<WeatherKind> possiblesWeathers) {
-        return getRandomInCollection(possiblesWeathers);
+        List<WeatherKind> list = new ArrayList<>(possiblesWeathers);
+        if(!improvements.isEmpty()){
+                list.remove(WeatherKind.Cloud);
+        }
+        if(objectives.stream().noneMatch(objective -> objective.getObjType() == ObjectiveKind.PandaObjective)){
+                list.remove(WeatherKind.Thunderstorm);
+        }
+
+        if(objectives.stream().noneMatch(objective -> objective.getObjType() == ObjectiveKind.GardenerObjective)){
+            list.remove(WeatherKind.Rain);
+        }
+        return getRandomInCollection(list);
     }
 
     @Override
