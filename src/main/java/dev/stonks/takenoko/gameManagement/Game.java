@@ -332,7 +332,7 @@ public class Game {
                 if(objective.getClass().equals(PandaObjective.class)){
                     BambooPattern localCheck = ((PandaObjective)objective).getBambooPattern();
                     if(localCheck.getOptionalColor1().isPresent()){
-                        player.removeCollectedBamboo(localCheck.getHeight()*localCheck.getNbBamboo());
+                        player.removeCollectedBamboo(localCheck.getHeight());
                     }
                     else{
                         player.removeCollectedBamboo(localCheck.getHeight()*localCheck.getNbBamboo(),localCheck.getColor());
