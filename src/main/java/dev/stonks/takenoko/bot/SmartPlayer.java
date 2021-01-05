@@ -330,11 +330,12 @@ public class SmartPlayer extends Player implements Cloneable {
     @Override
     public Optional<Tile> chooseTileToMovePanda(Map map) {
         this.currentMapState = map;
-        Set<Tile> possiblePawnPlacements = currentMapState.getPossiblePawnPlacements(map.getPanda());
+        Set<Tile> possiblePawnPlacements = Arrays.stream(currentMapState.getTiles()).flatMap(Optional::stream).filter(tile -> !tile.isInitial()).collect(Collectors.toSet());
 
-        if (possiblePawnPlacements.isEmpty())
+        possiblePawnPlacements.removeIf(tile -> !getInterestingPandaBamboo().contains(tile.getBamboo().getColor()) || tile.getImprovement()==Improvement.Enclosure);
+        if(possiblePawnPlacements.isEmpty()){
             return Optional.empty();
-
+        }
         return Optional.of(getRandomInCollection(possiblePawnPlacements));
     }
 

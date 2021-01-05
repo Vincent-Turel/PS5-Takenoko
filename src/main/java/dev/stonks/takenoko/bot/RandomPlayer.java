@@ -2,14 +2,13 @@ package dev.stonks.takenoko.bot;
 
 import dev.stonks.takenoko.gameManagement.Action;
 import dev.stonks.takenoko.map.*;
+import dev.stonks.takenoko.map.Map;
 import dev.stonks.takenoko.objective.ObjectiveKind;
 import dev.stonks.takenoko.pawn.Pawn;
 import dev.stonks.takenoko.weather.WeatherKind;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * This player plays randomly every time.
@@ -92,7 +91,7 @@ public class RandomPlayer extends Player {
     @Override
     public Optional<Tile> chooseTileToMovePanda(Map map) {
         this.currentMapState = map;
-        Set<Tile> possiblePawnPlacements = currentMapState.getPossiblePawnPlacements(map.getPanda());
+        Set<Tile> possiblePawnPlacements = Arrays.stream(currentMapState.getTiles()).flatMap(Optional::stream).filter(tile -> !tile.isInitial()).collect(Collectors.toSet());
 
         if (possiblePawnPlacements.isEmpty())
             return Optional.empty();
