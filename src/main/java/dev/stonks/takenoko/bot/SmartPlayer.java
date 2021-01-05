@@ -330,12 +330,18 @@ public class SmartPlayer extends Player implements Cloneable {
     @Override
     public Optional<Tile> chooseTileToMovePanda(Map map) {
         this.currentMapState = map;
-        Set<Tile> possiblePawnPlacements = currentMapState.getPossiblePawnPlacements(map.getPanda());
-
-        if (possiblePawnPlacements.isEmpty())
+        Set<Tile> possiblePawnPlacements = getInterestingPandaPlacements();
+        if(possiblePawnPlacements.isEmpty()){
             return Optional.empty();
-
+        }
         return Optional.of(getRandomInCollection(possiblePawnPlacements));
+    }
+
+    private Set<Tile> getInterestingPandaPlacements() {
+        Set<Tile> possiblePawnPlacements = Arrays.stream(currentMapState.getTiles()).flatMap(Optional::stream).filter(tile -> !tile.isInitial()).collect(Collectors.toSet());
+
+        possiblePawnPlacements.removeIf(tile -> !getInterestingPandaBamboo().contains(tile.getBamboo().getColor()) || tile.getImprovement()==Improvement.Enclosure);
+        return possiblePawnPlacements;
     }
 
     /**
@@ -418,7 +424,30 @@ public class SmartPlayer extends Player implements Cloneable {
 
     @Override
     public WeatherKind chooseNewWeather(Set<WeatherKind> possiblesWeathers) {
-        return getRandomInCollection(possiblesWeathers);
+        List<WeatherKind> list = new ArrayList<>(possiblesWeathers);
+
+        Set<MultipleAnswer<TileKind, Improvement, Integer>> multipleAnswer = getInteristingGardenerBamboo();
+        Set<Improvement> improvements = multipleAnswer.stream().map(MultipleAnswer::getU).collect(Collectors.toSet());
+        Set<TileKind> colors = multipleAnswer.stream().map(MultipleAnswer::getT).collect(Collectors.toSet());
+
+        Set<Tile> allTiles = Arrays.stream(currentMapState.getTiles()).flatMap(Optional::stream).filter(tile -> !tile.isInitial()).collect(Collectors.toSet());
+        allTiles.removeIf(tile -> !colors.contains(tile.getBamboo().getColor()) || !improvements.contains(tile.getImprovement()));
+
+        if (allTiles.isEmpty()) {
+            list.remove(WeatherKind.Cloud);
+        }
+
+        if(getInterestingPandaPlacements().isEmpty()){
+            list.remove(WeatherKind.Thunderstorm);
+        }
+
+        if(objectives.stream().noneMatch(objective -> objective.getObjType() == ObjectiveKind.GardenerObjective)){
+            list.remove(WeatherKind.Rain);
+        }
+        if(list.isEmpty()){
+            return getRandomInCollection(possiblesWeathers);
+        }
+        return getRandomInCollection(list);
     }
 
     @Override

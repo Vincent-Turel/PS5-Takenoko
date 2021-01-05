@@ -5,7 +5,9 @@ import dev.stonks.takenoko.map.Map;
 import dev.stonks.takenoko.map.*;
 import dev.stonks.takenoko.objective.Objective;
 import dev.stonks.takenoko.objective.ObjectiveKind;
+import dev.stonks.takenoko.pawn.Gardener;
 import dev.stonks.takenoko.pawn.Pawn;
+import dev.stonks.takenoko.weather.Weather;
 import dev.stonks.takenoko.weather.WeatherKind;
 
 import java.util.*;
@@ -205,11 +207,12 @@ public class DumbPlayer extends Player {
     @Override
     public Optional<Tile> chooseTileToMovePanda(Map map) {
         this.currentMapState = map;
-        Set<Tile> possiblePawnPlacements = currentMapState.getPossiblePawnPlacements(map.getPanda());
+        Set<Tile> possiblePawnPlacements = Arrays.stream(currentMapState.getTiles()).flatMap(Optional::stream).filter(tile -> !tile.isInitial()).collect(Collectors.toSet());
 
-        if (possiblePawnPlacements.isEmpty())
+        possiblePawnPlacements.removeIf(tile -> tile.getBamboo().getSize()==0 || tile.getImprovement()==Improvement.Enclosure);
+        if(possiblePawnPlacements.isEmpty()){
             return Optional.empty();
-
+        }
         return Optional.of(getRandomInCollection(possiblePawnPlacements));
     }
 
@@ -265,12 +268,35 @@ public class DumbPlayer extends Player {
 
     @Override
     public WeatherKind chooseNewWeather(Set<WeatherKind> possiblesWeathers) {
-        return getRandomInCollection(possiblesWeathers);
+        List<WeatherKind> list = new ArrayList<>(possiblesWeathers);
+        if(improvements.size()>3){
+                list.remove(WeatherKind.Cloud);
+        }
+        if(objectives.stream().noneMatch(objective -> objective.getObjType() == ObjectiveKind.PandaObjective)){
+                list.remove(WeatherKind.Thunderstorm);
+        }
+
+        if(objectives.stream().noneMatch(objective -> objective.getObjType() == ObjectiveKind.GardenerObjective)){
+            list.remove(WeatherKind.Rain);
+        }
+        return getRandomInCollection(list);
     }
 
     @Override
     public Improvement chooseImprovement(List<Improvement> improvements) {
-        Improvement chosen = improvements.remove(random.nextInt(improvements.size()));
+        List<Improvement> copy = new ArrayList<>(improvements.stream().collect(Collectors.toSet()));
+        this.improvements.forEach(improvement -> copy.remove(improvement));
+
+        Improvement chosen;
+
+        if(copy.isEmpty()){
+            chosen = getRandomInCollection(improvements);
+        }
+        else{
+            chosen = getRandomInCollection(copy);
+        }
+
+        improvements.remove(chosen);
         this.improvements.add(chosen);
         return chosen;
     }
