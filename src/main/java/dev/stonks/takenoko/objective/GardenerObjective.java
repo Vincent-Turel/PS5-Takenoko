@@ -1,5 +1,6 @@
 package dev.stonks.takenoko.objective;
 
+import dev.stonks.takenoko.IllegalEqualityExceptionGenerator;
 import dev.stonks.takenoko.bot.Player;
 import dev.stonks.takenoko.map.Improvement;
 import dev.stonks.takenoko.map.Map;
@@ -99,8 +100,9 @@ public class GardenerObjective extends Objective {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!super.equals(o)) return false;
-        if (getClass() != o.getClass()) return false;
+        if (Objects.isNull(o)) throw IllegalEqualityExceptionGenerator.create(GardenerObjective.class, null);
+        if(!super.equals(o)) return false;
+        if (!(o instanceof GardenerObjective)) throw IllegalEqualityExceptionGenerator.create(GardenerObjective.class, o);
         GardenerObjective that = (GardenerObjective) o;
         return Objects.equals(bambooPattern, that.bambooPattern);
     }

@@ -26,7 +26,7 @@ public class PatternConstraint {
         }
 
         if (!(other instanceof PatternConstraint)) {
-            throw IllegalEqualityExceptionGenerator.create(PatternConstraint.class, other.getClass());
+            throw IllegalEqualityExceptionGenerator.create(PatternConstraint.class, other);
         }
 
         PatternConstraint rhs = (PatternConstraint) other;

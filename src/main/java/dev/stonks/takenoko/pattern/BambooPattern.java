@@ -79,7 +79,7 @@ public class BambooPattern {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof BambooPattern))
-            throw IllegalEqualityExceptionGenerator.create(BambooPattern.class, o.getClass());
+            throw IllegalEqualityExceptionGenerator.create(BambooPattern.class, o);
         BambooPattern that = (BambooPattern) o;
         return getHeight() == that.getHeight() &&
                 getNbBamboo() == that.getNbBamboo() &&

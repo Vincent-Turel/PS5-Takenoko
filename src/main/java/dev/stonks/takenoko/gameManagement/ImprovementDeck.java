@@ -112,9 +112,8 @@ public class ImprovementDeck {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null) return false;
-        if (getClass() != o.getClass())
-            throw IllegalEqualityExceptionGenerator.create(ImprovementDeck.class, o.getClass());
+        if(!(o instanceof ImprovementDeck))
+            throw IllegalEqualityExceptionGenerator.create(ImprovementDeck.class, o);
         ImprovementDeck that = (ImprovementDeck) o;
         return remainingWatershed == that.remainingWatershed
                 && remainingEnclosure == that.remainingEnclosure

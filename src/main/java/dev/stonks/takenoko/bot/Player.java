@@ -290,7 +290,7 @@ public abstract class Player {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Player))
-            throw IllegalEqualityExceptionGenerator.create(Player.class, o.getClass());
+            throw IllegalEqualityExceptionGenerator.create(Player.class, o);
         Player player = (Player) o;
         return getId() == player.getId() &&
                 getNbObjectivesAchieved() == player.getNbObjectivesAchieved() &&

@@ -23,8 +23,8 @@ public class AbstractIrrigation {
 
     @Override
     public boolean equals(Object obj) {
-        if (obj == null || getClass() != obj.getClass())
-            throw IllegalEqualityExceptionGenerator.create(AbstractIrrigation.class, obj.getClass());
+        if (!(obj instanceof AbstractIrrigation))
+            throw IllegalEqualityExceptionGenerator.create(AbstractIrrigation.class, obj);
         return true;
     }
 }

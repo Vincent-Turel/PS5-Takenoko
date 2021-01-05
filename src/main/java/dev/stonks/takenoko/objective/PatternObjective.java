@@ -50,9 +50,9 @@ public class PatternObjective extends Objective {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
+        if (Objects.isNull(o)) throw IllegalEqualityExceptionGenerator.create(PatternObjective.class, o);
         if (!super.equals(o)) return false;
-        if (getClass() != o.getClass())
-            throw IllegalEqualityExceptionGenerator.create(PatternObjective.class, o.getClass());
+        if (!(o instanceof PatternObjective)) throw IllegalEqualityExceptionGenerator.create(PatternObjective.class, o);
         PatternObjective that = (PatternObjective) o;
         return Objects.equals(localPattern, that.localPattern);
     }

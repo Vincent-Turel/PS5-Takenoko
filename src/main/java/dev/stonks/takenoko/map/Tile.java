@@ -183,7 +183,7 @@ public class Tile {
         if (o == null) return false;
 
         if (!(o instanceof Tile)) {
-            throw IllegalEqualityExceptionGenerator.create(Tile.class, o.getClass());
+            throw IllegalEqualityExceptionGenerator.create(Tile.class, o);
         }
 
         Tile tile = (Tile) o;

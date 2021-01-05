@@ -172,7 +172,7 @@ public class Coordinate {
         }
 
         if (!(o instanceof Coordinate)) {
-            throw IllegalEqualityExceptionGenerator.create(Coordinate.class, o.getClass());
+            throw IllegalEqualityExceptionGenerator.create(Coordinate.class, o);
         }
 
         Coordinate rhs = (Coordinate) o;
