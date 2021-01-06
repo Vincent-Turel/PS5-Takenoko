@@ -2,8 +2,10 @@ package dev.stonks.takenoko.objective;
 
 import dev.stonks.takenoko.IllegalEqualityExceptionGenerator;
 import dev.stonks.takenoko.bot.Player;
+import dev.stonks.takenoko.map.Map;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -56,7 +58,7 @@ public class ObjectivesDeck {
     }
 
     /**
-     * check if an objective type is available
+     * check if an objective type is available.
      *
      * @return the objective available for a player
      */
@@ -74,21 +76,41 @@ public class ObjectivesDeck {
         return listPossibleKind;
     }
 
+    private void removeValidatedObjectives(Map m, Player p) {
+        removeValidatedObjectivesInList(pandaDeck, m, p);
+        removeValidatedObjectivesInList(gardenerDeck, m, p);
+        removeValidatedObjectivesInList(patternDeck, m, p);
+    }
+
+    private <T extends Objective> void removeValidatedObjectivesInList(List<T> objs, Map m, Player p) {
+        objs.removeIf(o -> {
+            o.checkObjectiveValid(m, p);
+            return o.getStates();
+        });
+    }
+
     /**
-     * Set an objective to a player
+     * Set an objective to a player.
+     *
+     * Note: this function effectively removes the objectives that have been
+     * validated from the deck.
      *
      * @param player the player who want to have an objective
      */
-    public void addAnObjectiveForPlayer(Player player) {
+    public void addAnObjectiveForPlayer(Map map, Player player) {
+        removeValidatedObjectives(map, player);
         ObjectiveKind objectiveKind = player.chooseObjectiveKind(possibleKind());
-        if (objectiveKind == ObjectiveKind.PatternObjective) {
-            setAPatternObjective(player);
-        }
-        if (objectiveKind == ObjectiveKind.PandaObjective) {
-            setAPandaObjective(player);
-        }
-        if (objectiveKind == ObjectiveKind.GardenerObjective) {
-            setAGardenerObjective(player);
+
+        switch (objectiveKind) {
+            case PatternObjective:
+                setAPatternObjective(player);
+                break;
+            case PandaObjective:
+                setAPandaObjective(player);
+                break;
+            case GardenerObjective:
+                setAGardenerObjective(player);
+                break;
         }
     }
 
@@ -98,6 +120,10 @@ public class ObjectivesDeck {
      * @param players in the game
      */
     public void objectivesDistribution(ArrayList<Player> players) {
+        // We don't remove objectives that are already validated because this
+        // method is supposed to be called at the beginning of the game
+        // (eg: when no objective is validated).
+
         for (Player player : players) {
             setAPatternObjective(player);
             setAPandaObjective(player);
@@ -106,18 +132,20 @@ public class ObjectivesDeck {
     }
 
     private void setAPatternObjective(Player player) {
-        int index = random.nextInt(patternDeck.size());
-        player.addObjectives(patternDeck.remove(index));
+        player.addObjectives(removeRandomFromList(patternDeck));
     }
 
     private void setAPandaObjective(Player player) {
-        int index = random.nextInt(pandaDeck.size());
-        player.addObjectives(pandaDeck.remove(index));
+        player.addObjectives(removeRandomFromList(pandaDeck));
     }
 
     private void setAGardenerObjective(Player player) {
-        int index = random.nextInt(gardenerDeck.size());
-        player.addObjectives(gardenerDeck.remove(index));
+        player.addObjectives(removeRandomFromList(gardenerDeck));
+    }
+
+    private <T> T removeRandomFromList(List<T> obs) {
+        int index = random.nextInt(obs.size());
+        return obs.remove(index);
     }
 
     @Override

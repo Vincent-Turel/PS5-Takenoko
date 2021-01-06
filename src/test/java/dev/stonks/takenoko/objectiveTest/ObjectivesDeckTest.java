@@ -4,6 +4,7 @@ import dev.stonks.takenoko.bot.DumbPlayer;
 import dev.stonks.takenoko.bot.Player;
 import dev.stonks.takenoko.bot.RandomPlayer;
 import dev.stonks.takenoko.bot.SmartPlayer;
+import dev.stonks.takenoko.map.Map;
 import dev.stonks.takenoko.objective.EmperorObjective;
 import dev.stonks.takenoko.objective.ObjectivesDeck;
 import org.junit.jupiter.api.Test;
@@ -66,8 +67,8 @@ public class ObjectivesDeckTest {
         players.add(player1);
         players.add(player2);
         ObjectivesDeck deck = new ObjectivesDeck(players);
-        deck.addAnObjectiveForPlayer(player1);
-        deck.addAnObjectiveForPlayer(player2);
+        deck.addAnObjectiveForPlayer(new Map(42), player1);
+        deck.addAnObjectiveForPlayer(new Map(42), player2);
 
         assertNotEquals(0,players.get(0).getObjectives().size());
         assertNotEquals(0,players.get(1).getObjectives().size());

@@ -282,7 +282,7 @@ public class Game {
                 player.addIrrigation(drawnIrrigation);
                 break;
             case DrawObjective:
-                objectivesDeck.addAnObjectiveForPlayer(player);
+                objectivesDeck.addAnObjectiveForPlayer(map, player);
                 break;
         }
         Optional<Action> decision;
