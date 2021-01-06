@@ -84,7 +84,7 @@ public class SmartPlayer extends Player implements Cloneable {
                         usedCloneMap = new Map(map);
                         TileKind kind = TileKind.values()[j];
                         try {
-                            Tile t = usedCloneMap.setTile(new AbstractTile(kind).withCoordinate(tilePlacements.get(i)));
+                            Tile t = usedCloneMap.setTile(tilePlacements.get(i), new AbstractTile(kind));
                             t.setIrrigated(true);
                         } catch (IllegalPlacementException e) {
                             e.printStackTrace();

@@ -60,7 +60,7 @@ public class DumbPlayer extends Player {
                         for (int j = 0; j < TileKind.values().length - 1; j++) {
                             Map usedCloneMap = new Map(currentMapState);
                             try {
-                                usedCloneMap.setTile(new AbstractTile(TileKind.values()[j]).withCoordinate(tilePlacements.get(i)));
+                                usedCloneMap.setTile(tilePlacements.get(i), new AbstractTile(TileKind.values()[j]));
                             } catch (IllegalPlacementException e) {
                                 e.printStackTrace();
                                 System.exit(1);
