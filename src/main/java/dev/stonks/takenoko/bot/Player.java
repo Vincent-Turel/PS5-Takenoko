@@ -96,8 +96,7 @@ public abstract class Player {
      */
     public Optional<Tile> chooseTileToGrow(Map map) {
         currentMapState = map;
-        List<Tile> tiles = Arrays.stream(currentMapState.getTiles())
-                .flatMap(Optional::stream)
+        List<Tile> tiles = currentMapState.placedTiles()
                 .filter(tile -> (tile.isIrrigated() && !tile.isInitial())).collect(Collectors.toList());
 
         if (tiles.size() > 0) {

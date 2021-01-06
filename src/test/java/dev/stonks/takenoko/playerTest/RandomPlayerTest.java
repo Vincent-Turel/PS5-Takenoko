@@ -58,8 +58,7 @@ public class RandomPlayerTest {
     public void chooseTileToGrowTest() throws IllegalPlacementException {
         assertTrue(randomPlayer.chooseTileToGrow(map).isEmpty());
         map.setTile(map.initialTile().getCoordinate().moveWith(Direction.South), new AbstractTile(TileKind.Green));
-        List<Tile> tiles = Arrays.stream(map.getTiles())
-                .flatMap(Optional::stream)
+        List<Tile> tiles = map.placedTiles()
                 .filter(tile -> (tile.isIrrigated() && !tile.isInitial())).collect(Collectors.toList());
         assertTrue(tiles.contains(randomPlayer.chooseTileToGrow(map).get()));
     }

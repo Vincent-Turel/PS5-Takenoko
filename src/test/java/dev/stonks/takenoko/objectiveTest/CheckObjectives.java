@@ -9,11 +9,13 @@ import dev.stonks.takenoko.pattern.BambooPattern;
 import dev.stonks.takenoko.pattern.Pattern;
 import org.junit.jupiter.api.Test;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class CheckObjectives {
 
@@ -146,19 +148,12 @@ public class CheckObjectives {
         when(tilePink2.getBamboo()).thenReturn(pinkBamboo);
         when(tilePink2.getImprovement()).thenReturn(Improvement.Empty);
 
-        //Making the tab tiles for map :
-        Optional<Tile>[] tiles = new Optional[4];
-        Optional<Tile> convert1 = Optional.of(tileGreen);
-        Optional<Tile> convert2 = Optional.of(tilePink1);
-        Optional<Tile> convert3 = Optional.of(tilePink2);
-        tiles[0] = convert3;
-        tiles[1] = convert1;
-        tiles[2] = convert2;
-        tiles[3] = Optional.empty();
+        // Creating a fake stream of placed tiles.
+        List<Tile> tiles = List.of(tileGreen, tilePink1, tilePink2);
 
         //Making the map :
         Map map = mock(Map.class);
-        when(map.getTiles()).thenReturn(tiles);
+        when(map.placedTiles()).thenAnswer(m -> tiles.stream());
 
         //Create the objectives :
         BambooPattern winPattern = new BambooPattern(TileKind.Green, 3);

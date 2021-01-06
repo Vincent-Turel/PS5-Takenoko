@@ -453,15 +453,6 @@ public class Map {
                 .flatMap(Optional::stream);
     }
 
-    /**
-     * Return all tiles for objective verify
-     *
-     * @return the tiles contained in the map.
-     */
-    public Optional<Tile>[] getTiles() {
-        return tiles;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

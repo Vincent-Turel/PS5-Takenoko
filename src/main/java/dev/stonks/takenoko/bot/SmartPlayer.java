@@ -74,7 +74,7 @@ public class SmartPlayer extends Player implements Cloneable {
                 }
                 break;
             case PutTile:
-                Arrays.stream(map.getTiles()).flatMap(Optional::stream).forEach(tile -> tile.setIrrigated(true));
+                map.placedTiles().forEach(tile -> tile.setIrrigated(true));
                 List<Coordinate> tilePlacements = new ArrayList<>(map.getTilePlacements());
                 if (nb > 1) {
                     tilePlacements.retainAll(List.of(coordinate.neighbors()));
@@ -259,8 +259,7 @@ public class SmartPlayer extends Player implements Cloneable {
     @Override
     public Optional<Tile> chooseTileToGrow(Map map) {
         currentMapState = map;
-        List<Tile> tiles = Arrays.stream(currentMapState.getTiles())
-                .flatMap(Optional::stream)
+        List<Tile> tiles = currentMapState.placedTiles()
                 .filter(tile -> (tile.isIrrigated() && !tile.isInitial()))
                 .collect(Collectors.toList());
 
@@ -338,7 +337,7 @@ public class SmartPlayer extends Player implements Cloneable {
     }
 
     private Set<Tile> getInterestingPandaPlacements() {
-        Set<Tile> possiblePawnPlacements = Arrays.stream(currentMapState.getTiles()).flatMap(Optional::stream).filter(tile -> !tile.isInitial()).collect(Collectors.toSet());
+        Set<Tile> possiblePawnPlacements = currentMapState.placedTiles().filter(tile -> !tile.isInitial()).collect(Collectors.toSet());
 
         possiblePawnPlacements.removeIf(tile -> !getInterestingPandaBamboo().contains(tile.getBamboo().getColor()) || tile.getImprovement()==Improvement.Enclosure);
         return possiblePawnPlacements;
@@ -430,7 +429,7 @@ public class SmartPlayer extends Player implements Cloneable {
         Set<Improvement> improvements = multipleAnswer.stream().map(MultipleAnswer::getU).collect(Collectors.toSet());
         Set<TileKind> colors = multipleAnswer.stream().map(MultipleAnswer::getT).collect(Collectors.toSet());
 
-        Set<Tile> allTiles = Arrays.stream(currentMapState.getTiles()).flatMap(Optional::stream).filter(tile -> !tile.isInitial()).collect(Collectors.toSet());
+        Set<Tile> allTiles = currentMapState.placedTiles().filter(tile -> !tile.isInitial()).collect(Collectors.toSet());
         allTiles.removeIf(tile -> !colors.contains(tile.getBamboo().getColor()) || !improvements.contains(tile.getImprovement()));
 
         if (allTiles.isEmpty()) {
