@@ -18,15 +18,15 @@ import java.util.stream.Stream;
 public class Map {
     // Tiles are stored in the tiles attribute. Each coordinate is mapped to a
     // unique offset.
-    private Optional<Tile>[] tiles;
+    private final Optional<Tile>[] tiles;
     // Irrigations are stored in the irrigations attribute. Each tile slot can
     // hold up to three irrigations, which correspond to the north, north-east
     // and south-east sides.
-    private Optional<Irrigation>[] irrigations;
-    private int delta;
-    private int sideLen;
-    private Panda panda;
-    private Gardener gardener;
+    private final Optional<Irrigation>[] irrigations;
+    private final int delta;
+    private final int sideLen;
+    private final Panda panda;
+    private final Gardener gardener;
 
     /**
      * Creates an initial map. It contains the single initial tile.
@@ -45,6 +45,10 @@ public class Map {
         unsetAllTiles();
         unsetAllIrrigations();
         setInitialTile();
+
+        Coordinate initialPawnChord = new Coordinate(delta, delta);
+        panda = new Panda(initialPawnChord);
+        gardener = new Gardener(initialPawnChord);
     }
 
 
@@ -137,8 +141,7 @@ public class Map {
         } catch (IllegalPlacementException e) {
             throw new RuntimeException("Initial tile placement should not fail");
         }
-        panda = new Panda(initialTileCoord);
-        gardener = new Gardener(initialTileCoord);
+
     }
 
     /**
