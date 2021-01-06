@@ -441,17 +441,16 @@ public class Map {
         // least the initial tile.
         //
         // TODO: investigate if the function can return a long instead.
-        return (int) placedTilesCoordinates().count() - 1;
+        return (int) placedTiles().count() - 1;
     }
 
     /**
      * Returns all the coordinates at which a tile is placed in the map. The
      * returned stream is guaranteed to return unique values only.
      */
-    public Stream<Coordinate> placedTilesCoordinates() {
+    public Stream<Tile> placedTiles() {
         return Arrays.stream(tiles)
-                .filter(Optional::isPresent)
-                .map(ot -> ot.get().getCoordinate());
+                .flatMap(Optional::stream);
     }
 
     /**

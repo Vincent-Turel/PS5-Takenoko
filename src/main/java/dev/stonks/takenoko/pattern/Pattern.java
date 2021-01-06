@@ -236,7 +236,8 @@ public class Pattern {
      * Returns all the matches that occur on a specific map.
      */
     public Set<MatchResult> getMatchesOn(Map m) {
-        return m.placedTilesCoordinates()
+        return m.placedTiles()
+                .map(Tile::getCoordinate)
                 .flatMap(c -> matchesAt(m, c))
                 .collect(Collectors.toSet());
     }
