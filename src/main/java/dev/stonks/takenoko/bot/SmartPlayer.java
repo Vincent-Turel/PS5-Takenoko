@@ -426,12 +426,11 @@ public class SmartPlayer extends Player implements Cloneable {
     public WeatherKind chooseNewWeather(Set<WeatherKind> possiblesWeathers) {
         List<WeatherKind> list = new ArrayList<>(possiblesWeathers);
 
-        Set<MultipleAnswer<TileKind, Improvement, Integer>> multipleAnswer = getInteristingGardenerBamboo();
-        Set<Improvement> improvements = multipleAnswer.stream().map(MultipleAnswer::getU).collect(Collectors.toSet());
-        Set<TileKind> colors = multipleAnswer.stream().map(MultipleAnswer::getT).collect(Collectors.toSet());
-
         Set<Tile> allTiles = Arrays.stream(currentMapState.getTiles()).flatMap(Optional::stream).filter(tile -> !tile.isInitial()).collect(Collectors.toSet());
-        allTiles.removeIf(tile -> !colors.contains(tile.getBamboo().getColor()) || !improvements.contains(tile.getImprovement()));
+
+        allTiles.removeIf(tile -> getInteristingGardenerBamboo().stream().noneMatch(answer ->
+                tile.getBamboo().getColor() == answer.getT() &&
+                tile.getImprovement() == answer.getU()));
 
         if (allTiles.isEmpty()) {
             list.remove(WeatherKind.Cloud);
@@ -452,9 +451,29 @@ public class SmartPlayer extends Player implements Cloneable {
 
     @Override
     public Improvement chooseImprovement(List<Improvement> improvements) {
-        Improvement chosen = improvements.remove(random.nextInt(improvements.size()));
-        this.improvements.add(chosen);
-        return chosen;
+        
+        List<Improvement> copy = new ArrayList<>(improvements);
+
+        Set<Tile> allTiles = Arrays.stream(currentMapState.getTiles()).flatMap(Optional::stream).filter(tile -> !tile.isInitial()).collect(Collectors.toSet());
+
+        allTiles.removeIf(tile -> getInteristingGardenerBamboo().stream().noneMatch(answer ->
+                tile.getBamboo().getColor() == answer.getT() &&
+                tile.getImprovement() == answer.getU()));
+
+        if(allTiles.isEmpty()){
+            for (Improvement wantedImprovement:getInteristingGardenerBamboo().stream().map(MultipleAnswer::getU).collect(Collectors.toSet())) {
+                if(improvements.contains(wantedImprovement) && !this.improvements.contains(wantedImprovement)){
+                    return wantedImprovement;
+                }
+            }
+        }
+        else {
+            copy.removeAll(allTiles.stream().map(Tile::getImprovement).collect(Collectors.toSet()));
+            if(!copy.isEmpty()){
+                return getRandomInCollection(copy);
+            }
+        }
+        return getRandomInCollection(improvements);
     }
 
     /**
