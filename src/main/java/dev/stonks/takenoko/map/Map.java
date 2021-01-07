@@ -5,6 +5,7 @@ import dev.stonks.takenoko.pawn.Gardener;
 import dev.stonks.takenoko.pawn.Panda;
 import dev.stonks.takenoko.pawn.Pawn;
 
+import javax.swing.text.html.Option;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -16,9 +17,8 @@ import java.util.stream.Stream;
  * @author the StonksDev team
  */
 public class Map {
-    private final List<Tile> tiles;
-    private List<Irrigation> irrigations;
-    private Set<Coordinate> alreadyPlacedCoordinates;
+    private final List<Irrigation> irrigations;
+    private final HashMap<Coordinate, Tile> tiles;
 
     private final int delta;
     private final Panda panda;
@@ -33,13 +33,12 @@ public class Map {
     public Map(int tileNumber) {
         delta = tileNumber + 1;
 
-        tiles = new ArrayList<>(27);
+        tiles = new HashMap<>(27);
         irrigations = new ArrayList<>(20);
-        alreadyPlacedCoordinates = new HashSet<>(27);
 
         unsetAllTiles();
         unsetAllIrrigations();
-        setInitialTile(delta);
+        setInitialTile();
 
         Coordinate initialPawnChord = new Coordinate(delta, delta);
         panda = new Panda(initialPawnChord);
@@ -52,23 +51,13 @@ public class Map {
         this.gardener = new Gardener(map.getGardener());
         this.delta = map.delta;
 
-        this.tiles = map
-                .tiles
-                .stream()
-                .map(t -> new Tile(t))
-                .collect(Collectors.toList());
+        this.tiles = (HashMap<Coordinate, Tile>) map.tiles.clone();
 
         this.irrigations = map
                 .irrigations
                 .stream()
-                .map(i -> new Irrigation(i))
+                .map(Irrigation::new)
                 .collect(Collectors.toList());
-
-        this.alreadyPlacedCoordinates = map
-                .alreadyPlacedCoordinates
-                .stream()
-                .map(c -> new Coordinate(c))
-                .collect(Collectors.toSet());
     }
 
     private void unsetAllTiles() {
@@ -115,7 +104,7 @@ public class Map {
         return allPossiblePawnPlacements;
     }
 
-    private void setInitialTile(int delta) {
+    private void setInitialTile() {
         Coordinate initialTileCoord = new Coordinate(delta, delta);
 
         if (!tiles.isEmpty()) {
@@ -154,8 +143,7 @@ public class Map {
             }
         }
 
-        tiles.add(t);
-        alreadyPlacedCoordinates.add(t.getCoordinate());
+        tiles.put(t.getCoordinate(), t);
         return t;
     }
 
@@ -303,17 +291,19 @@ public class Map {
      * @return the tile, if it exists.
      */
     public Optional<Tile> getTile(Coordinate coord) {
-        return tiles
-                .stream()
-                .filter(t -> t.getCoordinate().equals(coord))
-                .findFirst();
+        if (!tiles.containsKey(coord)) {
+            return Optional.empty();
+        }
+
+        return Optional.of(tiles.get(coord));
     }
 
     /**
      * Returns the initial tile of the map.
      */
     public Tile initialTile() {
-        return tiles.get(0);
+        Coordinate c = new Coordinate(delta, delta);
+        return tiles.get(c);
     }
 
     /**
@@ -353,8 +343,9 @@ public class Map {
      */
     public Set<Coordinate> getTilePlacements() {
         return tiles
+                .entrySet()
                 .stream()
-                .flatMap(t -> Arrays.stream(t.getCoordinate().neighbors()))
+                .flatMap(entry -> Arrays.stream(entry.getKey().neighbors()))
                 .filter(this::tileCanBePlacedAt)
                 .collect(Collectors.toSet());
     }
@@ -368,7 +359,7 @@ public class Map {
     }
 
     private boolean tileAt(Coordinate c) {
-        return alreadyPlacedCoordinates.contains(c);
+        return tiles.containsKey(c);
     }
 
     private int amountOfNeighborsAt(Coordinate c) {
@@ -405,7 +396,7 @@ public class Map {
      * returned stream is guaranteed to return unique values only.
      */
     public Stream<Tile> placedTiles() {
-        return tiles.stream();
+        return tiles.entrySet().stream().map(java.util.Map.Entry::getValue);
     }
 
     @Override
@@ -448,8 +439,10 @@ public class Map {
 
     public Set<Tile> getImprovementPlacements() {
         return tiles                                        // The whole map...
-                .stream()
-                .filter(Tile::canReceiveImprovement)        // ... Except the tiles where no improvement can be added
+                .entrySet()                                 //
+                .stream()                                   // ... as a stream...
+                .map(java.util.Map.Entry::getValue)         // ... but only the tiles...
+                .filter(Tile::canReceiveImprovement)        // ... Except the tiles where no improvement can be added...
                 .collect(Collectors.toSet());               // ... In a Set.
     }
 }
