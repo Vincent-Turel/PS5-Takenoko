@@ -1,9 +1,7 @@
 package dev.stonks.takenoko.objectiveTest;
 
-import dev.stonks.takenoko.bot.DumbPlayer;
-import dev.stonks.takenoko.bot.Player;
-import dev.stonks.takenoko.bot.RandomPlayer;
-import dev.stonks.takenoko.bot.SmartPlayer;
+import dev.stonks.takenoko.bot.*;
+import dev.stonks.takenoko.bot.smartBot.EquivalentObjectivePlayer;
 import dev.stonks.takenoko.map.Map;
 import dev.stonks.takenoko.objective.EmperorObjective;
 import dev.stonks.takenoko.objective.ObjectivesDeck;
@@ -22,7 +20,7 @@ public class ObjectivesDeckTest {
     void init() {
         players = new ArrayList<>();
         players.add(new DumbPlayer(0));
-        players.add(new SmartPlayer(1));
+        players.add(new EquivalentObjectivePlayer(1));
     }
 
     @Test

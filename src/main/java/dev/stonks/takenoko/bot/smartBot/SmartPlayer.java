@@ -1,5 +1,7 @@
-package dev.stonks.takenoko.bot;
+package dev.stonks.takenoko.bot.smartBot;
 
+import dev.stonks.takenoko.bot.MultipleAnswer;
+import dev.stonks.takenoko.bot.Player;
 import dev.stonks.takenoko.gameManagement.Action;
 import dev.stonks.takenoko.map.Map;
 import dev.stonks.takenoko.map.*;
@@ -24,7 +26,7 @@ public abstract class SmartPlayer extends Player implements Cloneable {
     private Coordinate coordinate;
     private IrrigationCoordinate irrigationCoordinate;
 
-    public SmartPlayer(int id) {
+    protected SmartPlayer(int id) {
         super(id);
         this.chosenAction = new ArrayList<>(Arrays.asList(
                 new ArrayList<>(Collections.singletonList(null)),
@@ -199,6 +201,7 @@ public abstract class SmartPlayer extends Player implements Cloneable {
         return chosenAction.get(1);
     }
 
+    public abstract void filterActionToTry(ArrayList<Action> possibleAction);
     /**
      * @param map the game's map
      * @return the action the player has decided to do
@@ -210,6 +213,12 @@ public abstract class SmartPlayer extends Player implements Cloneable {
 
         this.currentMapState = map;
         resetResScore();
+
+        if (objectives.stream().noneMatch(objective -> objective.getObjType() == ObjectiveKind.PatternObjective))
+            possibleAction.remove(Action.PutTile);
+
+        if (objectives.stream().noneMatch(objective -> objective.getObjType() == ObjectiveKind.PandaObjective))
+            possibleAction.remove(Action.MovePanda);
 
         for (Action action : possibleAction) {
             explore(action, new Map(currentMapState), 1, 2, new ArrayList<>());
@@ -232,15 +241,6 @@ public abstract class SmartPlayer extends Player implements Cloneable {
     private void resetResScore() {
         chosenAction.get(0).set(0, 0);
     }
-
-    /**
-     * Chose the kind of objective the player wanna draw.
-     *
-     * @param listPossibleKind a list of all objective kind the player can draw
-     * @return the objective kind
-     */
-    @Override
-    public abstract ObjectiveKind chooseObjectiveKind(ArrayList<ObjectiveKind> listPossibleKind);
 
     @Override
     public Optional<Tile> chooseTileToGrow(Map map) {
@@ -490,10 +490,13 @@ public abstract class SmartPlayer extends Player implements Cloneable {
     }
 
     /**
-     * Get the depth to which the player look for best action
+     * Chose the kind of objective the player wanna draw.
      *
-     * @return depth
+     * @param listPossibleKind a list of all objective kind the player can draw
+     * @return the objective kind
      */
+    @Override
+    public abstract ObjectiveKind chooseObjectiveKind(ArrayList<ObjectiveKind> listPossibleKind);
 
     @Override
     public abstract Player getNewInstance();
