@@ -149,7 +149,10 @@ public class Game {
                             fillTheFinalScore();
                             return;
                         }
-                        playerPlay(player, possibleActions);
+                        if(!playerPlay(player, possibleActions)){
+                            LOG.info("No more possibles actions");
+                            break;
+                        }
                     }
                     checkObjectives(player);
                     if (!aPlayerWin) {
@@ -253,14 +256,16 @@ public class Game {
      * @param player who is playing
      * @param possibleActions the player can choose
      */
-    private void playerPlay(Player player, ArrayList<Action> possibleActions) {
+    private Boolean playerPlay(Player player, ArrayList<Action> possibleActions) {
         // Note: when an action fails, possibleActions must be updated, so that
         // there is no infinite loop.
         //
         // Similarly, chosenAction must be updated too.
 
         boolean actionDone = false;
-
+        if(possibleActions.isEmpty()){
+            return false;
+        }
         Action chosenAction = player.decide(new ArrayList<>(possibleActions), new Map(map));
 
         while (!actionDone) {
@@ -306,9 +311,14 @@ public class Game {
                     boolean successfulObjectiveDrawn = objectivesDeck.addAnObjectiveForPlayer(map, player);
 
                     if (!successfulObjectiveDrawn) {
-                        LOG.info("Player n°" + player.getId() + " failed to draw an objective");
-                        possibleActions.remove(Action.DrawObjective);
-                        chosenAction = player.decide(new ArrayList<>(possibleActions), new Map(map));
+                        LOG.info("Player n°" + player.getId() + " failed to draw a non done objective");
+                        if(objectivesDeck.isEmpty()){
+                            possibleActions.remove(Action.DrawObjective);
+                            if(possibleActions.isEmpty()){
+                                return false;
+                            }
+                            chosenAction = player.decide(new ArrayList<>(possibleActions), new Map(map));
+                        }
                     }
 
                     actionDone = successfulObjectiveDrawn;
@@ -343,6 +353,7 @@ public class Game {
             possibleActions.clear();
             possibleActions.addAll(findPossibleActions(player));
         }
+        return true;
     }
 
     /**
