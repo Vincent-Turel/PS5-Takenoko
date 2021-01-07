@@ -1,12 +1,13 @@
-package dev.stonks.takenoko.bot;
+package dev.stonks.takenoko.bot.smartBot;
 
+import dev.stonks.takenoko.bot.Player;
 import dev.stonks.takenoko.objective.ObjectiveKind;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 
-public class EquivalentObjectivePlayer extends SmartPlayer{
+public class EquivalentObjectivePlayer extends SmartPlayer {
 
     public EquivalentObjectivePlayer(int id) {
         super(id);
