@@ -5,7 +5,6 @@ import dev.stonks.takenoko.pawn.Gardener;
 import dev.stonks.takenoko.pawn.Panda;
 import dev.stonks.takenoko.pawn.Pawn;
 
-import javax.swing.text.html.Option;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -53,7 +52,11 @@ public class Map {
 
         this.tiles = new HashMap<>(27);
         
-        map.tiles.entrySet().stream().forEach(entry -> this.tiles.put(entry.getKey(), entry.getValue()));
+        map
+                .tiles
+                .entrySet()
+                .stream()
+                .forEach(entry -> this.tiles.put(new Coordinate(entry.getKey()), new Tile(entry.getValue())));
 
         this.irrigations = map
                 .irrigations
