@@ -20,4 +20,8 @@ public class EmperorObjective extends Objective {
 
         return o instanceof EmperorObjective;
     }
+
+    public ObjectiveKind getKind() {
+        throw new IllegalCallerException("Emperor objective should not be kinded.");
+    }
 }

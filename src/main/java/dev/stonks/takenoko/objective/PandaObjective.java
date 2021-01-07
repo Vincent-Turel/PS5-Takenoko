@@ -87,4 +87,8 @@ public class PandaObjective extends Objective {
     public int hashCode() {
         return Objects.hash(super.hashCode(), bambooPattern);
     }
+
+    public ObjectiveKind getKind() {
+        return ObjectiveKind.PandaObjective;
+    }
 }

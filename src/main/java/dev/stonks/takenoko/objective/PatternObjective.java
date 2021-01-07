@@ -61,4 +61,8 @@ public class PatternObjective extends Objective {
     public int hashCode() {
         return Objects.hash(super.hashCode(), localPattern);
     }
+
+    public ObjectiveKind getKind() {
+        return ObjectiveKind.PatternObjective;
+    }
 }

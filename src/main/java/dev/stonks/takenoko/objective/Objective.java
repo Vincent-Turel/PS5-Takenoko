@@ -80,4 +80,9 @@ public abstract class Objective {
     public int hashCode() {
         return Objects.hash(nbPt, this.getClass().getSimpleName(), isValid);
     }
+
+    /**
+     * Returns the kind of objective we have.
+     */
+    public abstract ObjectiveKind getKind();
 }

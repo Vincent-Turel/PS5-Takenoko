@@ -6,6 +6,7 @@ import dev.stonks.takenoko.map.Map;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 
 /**
@@ -76,19 +77,6 @@ public class ObjectivesDeck {
         return listPossibleKind;
     }
 
-    private void removeValidatedObjectives(Map m, Player p) {
-        removeValidatedObjectivesInList(pandaDeck, m, p);
-        removeValidatedObjectivesInList(gardenerDeck, m, p);
-        removeValidatedObjectivesInList(patternDeck, m, p);
-    }
-
-    private <T extends Objective> void removeValidatedObjectivesInList(List<T> objs, Map m, Player p) {
-        objs.removeIf(o -> {
-            o.checkObjectiveValid(m, p);
-            return o.getStates();
-        });
-    }
-
     /**
      * Set an objective to a player.
      *
@@ -96,22 +84,66 @@ public class ObjectivesDeck {
      * validated from the deck.
      *
      * @param player the player who want to have an objective
+     * @return whether if the player was able to draw an objective or not.
      */
-    public void addAnObjectiveForPlayer(Map map, Player player) {
-        removeValidatedObjectives(map, player);
-        ObjectiveKind objectiveKind = player.chooseObjectiveKind(possibleKind());
+    public boolean addAnObjectiveForPlayer(Map map, Player player) {
+        Optional<Objective> chosenValidObjective = Optional.empty();
 
-        switch (objectiveKind) {
-            case PatternObjective:
-                setAPatternObjective(player);
-                break;
-            case PandaObjective:
-                setAPandaObjective(player);
-                break;
-            case GardenerObjective:
-                setAGardenerObjective(player);
-                break;
+        while (chosenValidObjective.isEmpty() && !isEmpty()) {
+            ObjectiveKind kind = player.chooseObjectiveKind(possibleKind());
+            chosenValidObjective = tryObjectiveOf(kind, map, player);
         }
+
+        if (chosenValidObjective.isPresent()) {
+            Objective o = chosenValidObjective.get();
+            player.addObjectives(o);
+        }
+
+        return chosenValidObjective.isPresent();
+    }
+
+    /**
+     * Propose the player to choose between what objective remain, and returns
+     * the corresponding objective, if it has not been validated.
+     */
+    private Optional<Objective> tryObjectiveOf(ObjectiveKind k, Map m, Player p) {
+        List<? extends Objective> objs = collectionCorrespondingTo(k);
+        if (objs.isEmpty()) {
+            return Optional.empty();
+        }
+
+        Objective o = removeRandomFromList(objs);
+        o.checkObjectiveValid(m, p);
+
+        if (o.getStates()) {
+            return Optional.empty();
+        } else {
+            return Optional.of(o);
+        }
+    }
+
+    /**
+     * Returns the objective collection corresponding to a specific kind of
+     * objective.
+     */
+    private List<? extends Objective> collectionCorrespondingTo(ObjectiveKind k) {
+        switch (k) {
+            case PatternObjective:
+                return patternDeck;
+            case PandaObjective:
+                return pandaDeck;
+            case GardenerObjective:
+                return gardenerDeck;
+            default:
+                throw new IllegalStateException("There are three kinds of objectives");
+        }
+    }
+
+    /**
+     * Returns whether if the deck is empty or not.
+     */
+    private boolean isEmpty() {
+        return pandaDeck.isEmpty() && patternDeck.isEmpty() && gardenerDeck.isEmpty();
     }
 
     /**
@@ -120,10 +152,6 @@ public class ObjectivesDeck {
      * @param players in the game
      */
     public void objectivesDistribution(ArrayList<Player> players) {
-        // We don't remove objectives that are already validated because this
-        // method is supposed to be called at the beginning of the game
-        // (eg: when no objective is validated).
-
         for (Player player : players) {
             setAPatternObjective(player);
             setAPandaObjective(player);
