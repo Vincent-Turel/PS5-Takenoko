@@ -18,7 +18,7 @@ class PlayerParserHelper extends ArrayList<String>{
     private static int count = 1;
 
     PlayerParserHelper() {
-        super(Arrays.asList("random", "dumb", "smart", "smart3", "smart4"));
+        super(Arrays.asList("random", "dumb", "smart"));
     }
 
     protected static Player convertPlayer(String s) {
@@ -29,10 +29,6 @@ class PlayerParserHelper extends ArrayList<String>{
                 return new DumbPlayer(count++);
             case "smart":
                 return new SmartPlayer(count++);
-            case "smart3":
-                return new SmartPlayer(count++, 3);
-            case "smart4":
-                return new SmartPlayer(count++, 4);
             default:
                 throw new IllegalArgumentException();
         }

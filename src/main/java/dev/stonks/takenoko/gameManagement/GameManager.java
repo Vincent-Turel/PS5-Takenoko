@@ -1,12 +1,10 @@
 package dev.stonks.takenoko.gameManagement;
 
 import dev.stonks.takenoko.bot.Player;
-import dev.stonks.takenoko.bot.SmartPlayer;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
@@ -187,13 +185,9 @@ public class GameManager {
             }
         } else {
             if (ugly) {
-                printResultInArray("┌", "└", "┐", "┘", "─",
-                        "│", "├", "┤", "┴", "┬",
-                        "┼", 25, 15, new DecimalFormat("0.00"), n, new DecimalFormat("0"));
+                printResultInArray("┌", "└", "┐", "┘", n);
             } else {
-                printResultInArray("╭", "╰", "╮", "╯", "─",
-                        "│", "├", "┤", "┴", "┬",
-                        "┼", 25, 15, new DecimalFormat("0.00"), n, new DecimalFormat("0"));
+                printResultInArray("╭", "╰", "╮", "╯", n);
             }
         }
 
@@ -203,9 +197,19 @@ public class GameManager {
      * Print the result in an array.
      */
     private void printResultInArray(String leftUpAngle, String leftDownAngle, String rightUpAngle,
-                                    String rightDownAngle, String hLine, String vLine, String vRightLine,
-                                    String vLeftLine, String hUpLine, String hDownLine, String intersection,
-                                    int width, int smallWidth, DecimalFormat df, int numberOfGames, DecimalFormat iT) {
+                                    String rightDownAngle, int numberOfGames) {
+
+        String hLine = "─";
+        String vLine = "│";
+        String vRightLine = "├";
+        String vLeftLine = "┤";
+        String hUpLine = "┴";
+        String hDownLine = "┬";
+        String intersection = "┼";
+        int width = 25;
+        int smallWidth = 15;
+        DecimalFormat df = new DecimalFormat("0.00");
+        DecimalFormat iT = new DecimalFormat("0");
 
         System.out.println(" ");
         System.out.println(" ".repeat(smallWidth + 2) + StringUtils.center("FINAL SCORE", players.size() * (width) + players.size() - 1));
@@ -213,7 +217,7 @@ public class GameManager {
         System.out.println(" ");
         System.out.print(leftUpAngle+hLine.repeat(smallWidth) + hDownLine);
         for (int i = 1; i < players.size(); i++) {
-            System.out.print(hLine.repeat(width) + hDownLine);
+            System.out.print("─".repeat(width) + "┬");
         }
         System.out.println(hLine.repeat(width) + rightUpAngle);
         System.out.print(vLine+StringUtils.center("IA ",smallWidth)+vLine);
@@ -222,10 +226,6 @@ public class GameManager {
         }
         System.out.print("\n"+vLine+StringUtils.center("Level",smallWidth)+ vLine);
         for (FinalResults result : stats) {
-            if (result.getPlayerType().equals("SmartPlayer")) {
-                SmartPlayer smartPlayer = (SmartPlayer) players.stream().filter(player -> player.getId() == result.getId()).findAny().orElseThrow(NoSuchElementException::new);
-                System.out.print(StringUtils.center(result.getPlayerType() + " (" + smartPlayer.getDepth() + ")", width) + vLine);
-            } else
                 System.out.print(StringUtils.center(result.getPlayerType(), width) + vLine);
         }
         System.out.print("\n" + vRightLine);
@@ -241,58 +241,51 @@ public class GameManager {
         }
         System.out.print("\n" + vRightLine);
         System.out.print(hLine.repeat(smallWidth) + intersection);
+
         for (int i = 1; i < players.size(); i++) {
-            System.out.print(hLine.repeat(width) + intersection);
+            System.out.print("─".repeat(width) + "┼");
         }
         System.out.print(hLine.repeat(width) + vLeftLine);
         System.out.print("\n" + vLine);
         System.out.print(StringUtils.center("% Win games", smallWidth) + vLine);
         for (FinalResults result : stats) {
-            System.out.print(StringUtils.center(df.format((result.getNbWin() / (float) numberOfGames) * 100) + "%", width) + vLine);
+            System.out.print(StringUtils.center(df.format((result.getNbWin() / (float) numberOfGames) * 100) + "%", width) + "─");
         }
-        System.out.print("\n" + vRightLine);
-        System.out.print(hLine.repeat(smallWidth) + intersection);
-        for (int i = 1; i < players.size(); i++) {
-            System.out.print(hLine.repeat(width) + intersection);
-        }
-        System.out.println(hLine.repeat(width) + vLeftLine);
-        System.out.print(vLine);
+        printArrayHelper(hLine, vLine, vRightLine, vLeftLine, intersection, width, smallWidth);
         System.out.print(StringUtils.center("Lost games", smallWidth) + vLine);
         for (FinalResults result : stats) {
             System.out.print(StringUtils.center(iT.format(result.getNbLoose())+"/"+numberOfGames, width) + vLine);
         }
-        System.out.print("\n" + vRightLine);
-        System.out.print(hLine.repeat(smallWidth) + intersection);
-        for (int i = 1; i < players.size(); i++) {
-            System.out.print(hLine.repeat(width) + intersection);
-        }
-        System.out.println(hLine.repeat(width) + vLeftLine);
-        System.out.print(vLine);
+        printArrayHelper(hLine, vLine, vRightLine, vLeftLine, intersection, width, smallWidth);
         System.out.print(StringUtils.center("% Lost games", smallWidth) + vLine);
         for (FinalResults result : stats) {
             System.out.print(StringUtils.center(df.format(((result.getNbLoose() / (float) numberOfGames) * 100)) + "%", width) + vLine);
         }
-        System.out.print("\n" + vRightLine);
-        System.out.print(hLine.repeat(smallWidth) + intersection);
-        for (int i = 1; i < players.size(); i++) {
-            System.out.print(hLine.repeat(width) + intersection);
-        }
-        System.out.println(hLine.repeat(width) + vLeftLine);
-        System.out.print(vLine);
+        printArrayHelper(hLine, vLine, vRightLine, vLeftLine, intersection, width, smallWidth);
         System.out.print(StringUtils.center("Average score", smallWidth) + vLine);
         for (FinalResults result : stats) {
             System.out.print(StringUtils.center(df.format(result.getFinalScore() / (float) numberOfGames), width) + vLine);
         }
         System.out.print("\n" + leftDownAngle);
-        System.out.print(hLine.repeat(smallWidth) + hUpLine);
+        System.out.print("─".repeat(smallWidth) + "┴");
         for (int i = 1; i < players.size(); i++) {
-            System.out.print(hLine.repeat(width) + hUpLine);
+            System.out.print("─".repeat(width) + "┴");
         }
         System.out.println(hLine.repeat(width) + rightDownAngle);
         System.out.println(leftUpAngle + hLine.repeat(width) + hDownLine + hLine.repeat(width) + rightUpAngle);
         System.out.print(vLine + StringUtils.center("Null game : " + df.format(stats.get(0).getNbDraw() / (float) numberOfGames * 100) + "%", width) + vLine);
         System.out.println(StringUtils.center(iT.format(stats.get(0).getNbDraw())+"/"+numberOfGames+" games", width) + vLine);
         System.out.print(leftDownAngle + hLine.repeat(width) + hUpLine + hLine.repeat(width) + rightDownAngle);
+    }
+
+    private void printArrayHelper(String hLine, String vLine, String vRightLine, String vLeftLine, String intersection, int width, int smallWidth) {
+        System.out.print("\n" + vRightLine);
+        System.out.print(hLine.repeat(smallWidth) + intersection);
+        for (int i = 1; i < players.size(); i++) {
+            System.out.print(hLine.repeat(width) + intersection);
+        }
+        System.out.println(hLine.repeat(width) + vLeftLine);
+        System.out.print(vLine);
     }
 
     /**
@@ -320,10 +313,6 @@ public class GameManager {
      * @param playerType the player's type
      */
     private void displayWhoItIs(int id, String playerType) {
-        SmartPlayer smartPlayer = null;
-        if (playerType.equals("SmartPlayer"))
-            smartPlayer = (SmartPlayer) players.stream().filter(player -> player.getId() == id).findAny().orElseThrow(NoSuchElementException::new);
-
-        System.out.println("Bot n°" + id + " - IA level : " + playerType + (smartPlayer != null ? " - Depth : " + smartPlayer.getDepth() : ""));
+        System.out.println("Bot n°" + id + " - IA level : " + playerType);
     }
 }
