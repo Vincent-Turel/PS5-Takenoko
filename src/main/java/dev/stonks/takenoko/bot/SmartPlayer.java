@@ -57,63 +57,64 @@ public class SmartPlayer extends Player implements Cloneable {
         switch (action) {
             case MovePanda:
                 List<Tile> possiblePandaPlacements = new ArrayList<>(map.getPossiblePawnPlacements(map.getPanda()));
-                possiblePandaPlacements.removeIf(tile -> !getInterestingPandaBamboo().contains(tile.getBamboo().getColor()));
+                Set<TileKind> interestingTileKind = getInterestingPandaBamboo();
                 for (int i = 0; i < possiblePandaPlacements.size(); i++) {
-                    usedCloneMap = new Map(map);
-                    usedCloneMap.getPanda().moveToAndAct(possiblePandaPlacements.get(i));
-                    updateRes(nb, usedCloneMap, actions, action, i, Optional.empty());
+                    if (interestingTileKind.contains(possiblePandaPlacements.get(i).getBamboo().getColor())) {
+                        usedCloneMap = new Map(map);
+                        usedCloneMap.getPanda().moveToAndAct(possiblePandaPlacements.get(i));
+                        updateRes(nb, usedCloneMap, actions, action, i, Optional.empty());
+                    }
                 }
                 break;
             case MoveGardener:
                 List<Tile> possibleGardenerPlacements = new ArrayList<>(map.getPossiblePawnPlacements(map.getGardener()));
-                possibleGardenerPlacements.removeIf(this::uselessTile);
                 for (int i = 0; i < possibleGardenerPlacements.size(); i++) {
-                    usedCloneMap = new Map(map);
-                    usedCloneMap.getGardener().moveToAndAct(possibleGardenerPlacements.get(i), usedCloneMap);
-                    updateRes(nb, usedCloneMap, actions, action, i, Optional.empty());
+                    if (!uselessTile(possibleGardenerPlacements.get(i))) {
+                        usedCloneMap = new Map(map);
+                        usedCloneMap.getGardener().moveToAndAct(possibleGardenerPlacements.get(i), usedCloneMap);
+                        updateRes(nb, usedCloneMap, actions, action, i, Optional.empty());
+                    }
                 }
                 break;
             case PutTile:
                 map.placedTiles().forEach(tile -> tile.setIrrigated(true));
                 List<Coordinate> tilePlacements = new ArrayList<>(map.getTilePlacements());
-                if (nb > 1) {
-                    tilePlacements.retainAll(List.of(coordinate.neighbors()));
-                }
                 for (int i = 0; i < tilePlacements.size(); i++) {
-                    for (int j = 0; j < TileKind.values().length - 1; j++) {
-                        usedCloneMap = new Map(map);
-                        TileKind kind = TileKind.values()[j];
-                        try {
-                            Tile t = usedCloneMap.setTile(tilePlacements.get(i), new AbstractTile(kind));
-                            t.setIrrigated(true);
-                        } catch (IllegalPlacementException e) {
-                            e.printStackTrace();
-                            System.exit(1);
+                    if (nb == 1 || Arrays.asList(coordinate.neighbors()).contains(tilePlacements.get(i))) {
+                        for (int j = 0; j < TileKind.values().length - 1; j++) {
+                            usedCloneMap = new Map(map);
+                            TileKind kind = TileKind.values()[j];
+                            try {
+                                Tile t = usedCloneMap.setTile(tilePlacements.get(i), new AbstractTile(kind));
+                                t.setIrrigated(true);
+                            } catch (IllegalPlacementException e) {
+                                e.printStackTrace();
+                                System.exit(1);
+                            }
+                            this.coordinate = tilePlacements.get(i);
+                            updateRes(nb, usedCloneMap, actions, action, i, Optional.of(j));
+                            if (nb < depth)
+                                explore(action, usedCloneMap, nb + 1, depth, actions);
                         }
-                        this.coordinate = tilePlacements.get(i);
-                        updateRes(nb, usedCloneMap, actions, action, i, Optional.of(j));
-                        if (nb < depth)
-                            explore(action, usedCloneMap, nb + 1, depth, actions);
                     }
                 }
                 break;
             case PutIrrigation:
-                List<IrrigationCoordinate> irrigationCoordinates = new ArrayList<>(map.getIrrigationPlacements());
-                if (nb > 1) {
-                    irrigationCoordinates.retainAll(new ArrayList<>(irrigationCoordinate.neighbors()));
-                }
-                for (int i = 0; i < irrigationCoordinates.size(); i++) {
-                    usedCloneMap = new Map(map);
-                    try {
-                        usedCloneMap.setIrrigation(new AbstractIrrigation().withCoordinate(irrigationCoordinates.get(i)));
-                    } catch (IllegalPlacementException e) {
-                        e.printStackTrace();
-                        System.exit(1);
+                List<IrrigationCoordinate> irrigationPlacement = new ArrayList<>(map.getIrrigationPlacements());
+                for (int i = 0; i < irrigationPlacement.size(); i++) {
+                    if (nb == 1 || irrigationCoordinate.neighbors().contains(irrigationPlacement.get(i))) {
+                        usedCloneMap = new Map(map);
+                        try {
+                            usedCloneMap.setIrrigation(new AbstractIrrigation().withCoordinate(irrigationPlacement.get(i)));
+                        } catch (IllegalPlacementException e) {
+                            e.printStackTrace();
+                            System.exit(1);
+                        }
+                        this.irrigationCoordinate = irrigationPlacement.get(i);
+                        updateRes(nb, usedCloneMap, actions, action, i, Optional.empty());
+                        if (nb < depth)
+                            explore(action, usedCloneMap, nb + 1, depth, actions);
                     }
-                    this.irrigationCoordinate = irrigationCoordinates.get(i);
-                    updateRes(nb, usedCloneMap, actions, action, i, Optional.empty());
-                    if (nb < depth)
-                        explore(action, usedCloneMap, nb + 1, depth, actions);
                 }
                 break;
             default:
@@ -145,17 +146,24 @@ public class SmartPlayer extends Player implements Cloneable {
     }
 
     private Set<TileKind> getInterestingPandaBamboo() {
-        Set<TileKind> tileKinds = new HashSet<>();
+        List<TileKind> tileKinds = new ArrayList<>();
         objectives.stream()
                 .filter(o -> o.getObjType() == ObjectiveKind.PandaObjective)
                 .map(objective -> (PandaObjective) objective)
                 .map(PandaObjective::getBambooPattern)
                 .forEach(bambooPattern -> {
                     tileKinds.add(bambooPattern.getColor());
+                    if (bambooPattern.getOptionalColor1().isEmpty()) {
+                        tileKinds.add(bambooPattern.getColor());
+                    }
                     bambooPattern.getOptionalColor1().ifPresent(tileKinds::add);
                     bambooPattern.getOptionalColor2().ifPresent(tileKinds::add);
                 });
-        return tileKinds;
+        var frequencyMap = tileKinds.stream().collect(Collectors.groupingBy(Enum::ordinal, Collectors.counting()));
+        frequencyMap.entrySet().removeIf((entry) -> collectedBamboo[entry.getKey()] >= entry.getValue());
+        Set<TileKind> interestingTileKind = new HashSet<>(tileKinds);
+        interestingTileKind.removeIf(tileKind -> !frequencyMap.containsKey(tileKind.ordinal()));
+        return interestingTileKind;
     }
 
     /**
@@ -185,10 +193,9 @@ public class SmartPlayer extends Player implements Cloneable {
 
         actions.add(0, new ArrayList<>(Collections.singletonList(score)));
 
-        if (actions.get(0).get(0).equals(chosenAction.get(0).get(0))) {
-            if (actions.size() < chosenAction.size())
-                this.chosenAction = new ArrayList<>(actions);
-        } else if (actions.get(0).get(0) > chosenAction.get(0).get(0)) {
+        if (actions.get(0).get(0) > 1 && actions.size() < chosenAction.size()) {
+            this.chosenAction = new ArrayList<>(actions);
+        } else if (actions.get(0).get(0) > chosenAction.get(0).get(0) && actions.size() == chosenAction.size()) {
             this.chosenAction = new ArrayList<>(actions);
         }
 
@@ -330,7 +337,7 @@ public class SmartPlayer extends Player implements Cloneable {
     public Optional<Tile> chooseTileToMovePanda(Map map) {
         this.currentMapState = map;
         Set<Tile> possiblePawnPlacements = getInterestingPandaPlacements();
-        if(possiblePawnPlacements.isEmpty()){
+        if (possiblePawnPlacements.isEmpty()) {
             return Optional.empty();
         }
         return Optional.of(getRandomInCollection(possiblePawnPlacements));
@@ -339,7 +346,7 @@ public class SmartPlayer extends Player implements Cloneable {
     private Set<Tile> getInterestingPandaPlacements() {
         Set<Tile> possiblePawnPlacements = currentMapState.placedTiles().filter(tile -> !tile.isInitial()).collect(Collectors.toSet());
 
-        possiblePawnPlacements.removeIf(tile -> !getInterestingPandaBamboo().contains(tile.getBamboo().getColor()) || tile.getImprovement()==Improvement.Enclosure);
+        possiblePawnPlacements.removeIf(tile -> !getInterestingPandaBamboo().contains(tile.getBamboo().getColor()) || tile.getImprovement() == Improvement.Enclosure);
         return possiblePawnPlacements;
     }
 
@@ -380,10 +387,7 @@ public class SmartPlayer extends Player implements Cloneable {
         if (irrigationCoordinates.size() < 1)
             throw new IllegalStateException("There is nowhere I can put an irrigation");
 
-        return new MultipleAnswer<>(
-                irrigations.pop(),
-
-                irrigationCoordinates.get(getResAction().get(1)));
+        return new MultipleAnswer<>(irrigations.pop(), irrigationCoordinates.get(getResAction().get(1)));
     }
 
     @Override
@@ -436,14 +440,14 @@ public class SmartPlayer extends Player implements Cloneable {
             list.remove(WeatherKind.Cloud);
         }
 
-        if(getInterestingPandaPlacements().isEmpty()){
+        if (getInterestingPandaPlacements().isEmpty()) {
             list.remove(WeatherKind.Thunderstorm);
         }
 
-        if(objectives.stream().noneMatch(objective -> objective.getObjType() == ObjectiveKind.GardenerObjective)){
+        if (objectives.stream().noneMatch(objective -> objective.getObjType() == ObjectiveKind.GardenerObjective)) {
             list.remove(WeatherKind.Rain);
         }
-        if(list.isEmpty()){
+        if (list.isEmpty()) {
             return getRandomInCollection(possiblesWeathers);
         }
         return getRandomInCollection(list);

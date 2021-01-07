@@ -10,7 +10,6 @@ import dev.stonks.takenoko.objective.ObjectivesDeck;
 import dev.stonks.takenoko.objective.PandaObjective;
 import dev.stonks.takenoko.pattern.BambooPattern;
 import dev.stonks.takenoko.pattern.MatchResult;
-import dev.stonks.takenoko.pattern.Pattern;
 import dev.stonks.takenoko.pawn.Gardener;
 import dev.stonks.takenoko.pawn.Panda;
 import dev.stonks.takenoko.weather.Weather;
@@ -230,7 +229,9 @@ public class Game {
                     Optional<Tile> tileWhereMovePanda = player.chooseTileToMovePanda(new Map(map));
                     if (tileWhereMovePanda.isPresent()) {
                         LOG.info("Player n°" + player.getId() + " move the panda pawn");
-                        map.getPanda().moveToAndAct(tileWhereMovePanda.get());
+                        Optional<TileKind> bamboo = map.getPanda().moveToAndAct(tileWhereMovePanda.get());
+                        bamboo.ifPresent(tileKind -> LOG.info("bamboo he cut : " + tileKind.toString()));
+                        bamboo.ifPresent(player::addCollectedBamboo);
                     }
                     effectDone = true;
                     break;
@@ -275,6 +276,7 @@ public class Game {
             case MovePanda:
                 Panda panda = map.getPanda();
                 Optional<TileKind> bamboo = panda.moveToAndAct(player.chooseWherePawnShouldGo(panda));
+                bamboo.ifPresent(tileKind -> LOG.info("bamboo he cut : " + tileKind.toString()));
                 bamboo.ifPresent(player::addCollectedBamboo);
                 break;
             case DrawIrrigation:
