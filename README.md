@@ -7,7 +7,7 @@ Ce projet a pour objectif d'implémenter le jeu de plateau [Takenoko](https://ww
 Le projet touche à sa fin !
 
 ## Building
-`mvn compile assembly:single`
+`mvn install assembly:single`
 
 ## Running
 `java -jar target/Takenoko-0.5.0-jar-with-dependencies.jar`  
