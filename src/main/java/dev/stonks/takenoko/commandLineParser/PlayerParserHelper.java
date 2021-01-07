@@ -40,4 +40,8 @@ class PlayerParserHelper extends ArrayList<String>{
                 throw new IllegalArgumentException();
         }
     }
+
+    protected static void resetCount() {
+        count = 1;
+    }
 }

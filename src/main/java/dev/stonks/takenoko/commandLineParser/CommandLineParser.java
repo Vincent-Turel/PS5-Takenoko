@@ -11,6 +11,8 @@ import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
+import static dev.stonks.takenoko.commandLineParser.PlayerParserHelper.*;
+
 /**
  * This class define every options and parameters that we can put in the commandLine.
  * Once the parsing is done, it execute run method.
@@ -90,8 +92,10 @@ public class CommandLineParser implements Runnable {
 
         List<Player> playerList = new ArrayList<>();
         for (String playerType : players){
-            playerList.add(PlayerParserHelper.convertPlayer(playerType));
+            playerList.add(convertPlayer(playerType));
         }
+        resetCount();
+
         GameManager gameManager = new GameManager(playerList, fullResult, ugly);
 
         LOG.severe("Starting program...\n");
