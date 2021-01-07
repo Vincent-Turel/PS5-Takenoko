@@ -8,7 +8,7 @@ public class Main {
 
         new CommandLine(new CommandLineParser()).execute("random", "smart", "-n", "10"); // <- for test
 
-        finalOutputForDelivery(); // <- for delivery
+        //finalOutputForDelivery(); // <- for delivery
 
         //new CommandLine(new CommandLineParser()).execute(args); // <- for demo
 
