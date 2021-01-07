@@ -142,7 +142,7 @@ public class ObjectivesDeck {
     /**
      * Returns whether if the deck is empty or not.
      */
-    private boolean isEmpty() {
+    public boolean isEmpty() {
         return pandaDeck.isEmpty() && patternDeck.isEmpty() && gardenerDeck.isEmpty();
     }
 

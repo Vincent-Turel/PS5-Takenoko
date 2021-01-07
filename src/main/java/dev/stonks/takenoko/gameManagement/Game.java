@@ -99,7 +99,7 @@ public class Game {
             possibleAction.add(Action.PutTile);
         if (irrigationDeck.size() > 0)
             possibleAction.add(Action.DrawIrrigation);
-        if ((player.getObjectives().size() < 5) && (objectivesDeck.deckIsNotEmpty())) {
+        if ((player.getObjectives().size() < 5) && (objectivesDeck.deckIsNotEmpty()) && (!objectivesDeck.isEmpty())) {
             possibleAction.add(Action.DrawObjective);
         }
         return possibleAction;
@@ -149,7 +149,10 @@ public class Game {
                             fillTheFinalScore();
                             return;
                         }
-                        playerPlay(player, possibleActions);
+                        if(!playerPlay(player, possibleActions)){
+                            LOG.info("nombres d'actions possibles restantes = "+possibleActions.size());
+                            break;
+                        }
                     }
                     checkObjectives(player);
                     if (!aPlayerWin) {
@@ -253,14 +256,16 @@ public class Game {
      * @param player who is playing
      * @param possibleActions the player can choose
      */
-    private void playerPlay(Player player, ArrayList<Action> possibleActions) {
+    private Boolean playerPlay(Player player, ArrayList<Action> possibleActions) {
         // Note: when an action fails, possibleActions must be updated, so that
         // there is no infinite loop.
         //
         // Similarly, chosenAction must be updated too.
 
         boolean actionDone = false;
-
+        if(possibleActions.isEmpty()){
+            return false;
+        }
         Action chosenAction = player.decide(new ArrayList<>(possibleActions), new Map(map));
 
         while (!actionDone) {
@@ -306,9 +311,12 @@ public class Game {
                     boolean successfulObjectiveDrawn = objectivesDeck.addAnObjectiveForPlayer(map, player);
 
                     if (!successfulObjectiveDrawn) {
-                        LOG.info("Player n°" + player.getId() + " failed to draw an objective");
-
-                        chosenAction = player.decide(new ArrayList<>(possibleActions), new Map(map));
+                        LOG.info("Player n°" + player.getId() + " failed to draw a non done objective");
+                        if(objectivesDeck.isEmpty()){
+                            LOG.info("LE DECK EST VIDE, on change les actions !");
+                            possibleActions.remove(Action.DrawObjective);
+                            chosenAction = player.decide(new ArrayList<>(possibleActions), new Map(map));
+                        }
                     }
 
                     actionDone = successfulObjectiveDrawn;
@@ -343,6 +351,9 @@ public class Game {
             possibleActions.clear();
             possibleActions.addAll(findPossibleActions(player));
         }
+        LOG.info("Les actions possibles après avoir joué une action : ");
+        LOG.info(possibleActions.toString());
+        return true;
     }
 
     /**
