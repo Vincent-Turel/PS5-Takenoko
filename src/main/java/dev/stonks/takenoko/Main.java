@@ -6,10 +6,9 @@ import picocli.CommandLine;
 public class Main {
     public static void main(String... args) {
 
-        new CommandLine(new CommandLineParser()).execute("random", "random","-n", "1000"); // <- for test
+        //new CommandLine(new CommandLineParser()).execute("random", "random","-n", "1000"); // <- for test
 
-
-        //finalOutputForDelivery(); // <- for delivery
+        finalOutputForDelivery(); // <- for delivery
 
         //new CommandLine(new CommandLineParser()).execute(args); // <- for demo
     }
@@ -17,9 +16,9 @@ public class Main {
     public static void finalOutputForDelivery(){
         System.out.println("\n@The StonksDev team");
         System.out.println("\n1000 games, part one : Random bot VS Dumb bot VS Smart bot"+"\nNow take a coffee and relax... ");
-        new CommandLine(new CommandLineParser()).execute("random", "dumb", "smart", "-n", "1000");
+        new CommandLine(new CommandLineParser()).execute("dumb","rushPandaPlayer","rushGardenerPlayer","equivalentObjectivePlayer","-n", "1000","-u");
         System.out.println("\n\n1000 games, part two : Smart VS Smart"+"\nNow take a coffee and relax... ");
-        new CommandLine(new CommandLineParser()).execute("smart", "smart", "-n", "1000");
+        new CommandLine(new CommandLineParser()).execute("rushPandaPlayer", "rushPandaPlayer", "-n", "1000","-u");
         System.out.println("\nDone !");
     }
 }
