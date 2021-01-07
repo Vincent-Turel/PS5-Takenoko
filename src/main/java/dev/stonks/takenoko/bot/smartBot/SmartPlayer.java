@@ -224,14 +224,14 @@ public abstract class SmartPlayer extends Player implements Cloneable {
         if (getResScore() > 0)
             return Action.values()[getResAction().get(0)];
 
-        if (possibleAction.contains(Action.DrawObjective))
+        if (copyOfPossibleAction.contains(Action.DrawObjective))
             return Action.DrawObjective;
 
-        if (possibleAction.contains(Action.DrawIrrigation)) {
+        if (copyOfPossibleAction.contains(Action.DrawIrrigation)) {
             if (this.irrigations.size() < 5)
                 return Action.DrawIrrigation;
-            else if (possibleAction.size() > 1)
-                possibleAction.remove(Action.DrawIrrigation);
+            else if (copyOfPossibleAction.size() > 1)
+                copyOfPossibleAction.remove(Action.DrawIrrigation);
         }
         return possibleAction.get(random.nextInt(possibleAction.size()));
     }

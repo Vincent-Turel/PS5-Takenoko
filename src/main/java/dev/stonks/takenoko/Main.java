@@ -8,7 +8,7 @@ public class Main {
 
         new CommandLine(new CommandLineParser()).execute(
                 "rushPandaPlayer", "rushGardenerPlayer", "equivalentObjectivePlayer", "rushPatternPlayer",
-                "-n", "100"); // <- for test
+                "-n", "1000", "-s"); // <- for test
 
         //finalOutputForDelivery(); // <- for delivery
 

@@ -307,7 +307,7 @@ public class Game {
 
                     if (!successfulObjectiveDrawn) {
                         LOG.info("Player n°" + player.getId() + " failed to draw an objective");
-
+                        possibleActions.remove(Action.DrawObjective);
                         chosenAction = player.decide(new ArrayList<>(possibleActions), new Map(map));
                     }
 
