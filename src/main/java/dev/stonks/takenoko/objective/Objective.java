@@ -63,7 +63,6 @@ public abstract class Objective {
         if (this == o) return true;
         if (Objects.isNull(o)) throw IllegalEqualityExceptionGenerator.create(Objective.class, null);
         if(
-                o.getClass() != Objective.class &&
                         o.getClass() != GardenerObjective.class &&
                         o.getClass() != PatternObjective.class &&
                         o.getClass() != PandaObjective.class &&
