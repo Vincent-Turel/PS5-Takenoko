@@ -6,12 +6,13 @@ import picocli.CommandLine;
 public class Main {
     public static void main(String... args) {
 
-        new CommandLine(new CommandLineParser()).execute("random", "smart", "-n", "10"); // <- for test
+        new CommandLine(new CommandLineParser()).execute(
+                "rushPandaPlayer", "rushGardenerPlayer", "equivalentObjectivePlayer", "rushPatternPlayer",
+                "-n", "100"); // <- for test
 
         //finalOutputForDelivery(); // <- for delivery
 
         //new CommandLine(new CommandLineParser()).execute(args); // <- for demo
-
     }
 
     public static void finalOutputForDelivery(){

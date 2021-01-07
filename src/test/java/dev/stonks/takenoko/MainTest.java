@@ -9,9 +9,9 @@ public class MainTest {
     @Test
     public void NoException() {
         new CommandLine(new CommandLineParser()).execute("random", "dumb", "-n", "10");
-        new CommandLine(new CommandLineParser()).execute("random", "smart", "-n", "10");
-        new CommandLine(new CommandLineParser()).execute("dumb", "smart", "-n", "10");
-        new CommandLine(new CommandLineParser()).execute("random", "dumb", "smart3", "-n", "10");
-        new CommandLine(new CommandLineParser()).execute("random", "dumb", "smart", "smart4", "-n", "10");
+        new CommandLine(new CommandLineParser()).execute("random", "equivalentObjectivePlayer", "-n", "10");
+        new CommandLine(new CommandLineParser()).execute("dumb", "equivalentObjectivePlayer", "-n", "10");
+        new CommandLine(new CommandLineParser()).execute("random", "dumb", "rushGardenerPlayer", "-n", "10");
+        new CommandLine(new CommandLineParser()).execute("random", "dumb", "equivalentObjectivePlayer", "rushPandaPlayer", "-n", "10");
     }
 }
