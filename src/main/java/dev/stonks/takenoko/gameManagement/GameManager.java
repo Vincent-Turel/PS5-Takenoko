@@ -98,12 +98,15 @@ public class GameManager {
      * @param actualCount the actuel number of games that have already been runned
      */
     private synchronized void updateProgressBar(int n, int actualCount) {
+        int barLength = 55;
+        float barLengthF = (float) barLength;
+
         long currentTime = System.currentTimeMillis() - time;
         if (LogManager.getLogManager().getLogger("").getHandlers()[0].getLevel().intValue() >= Level.SEVERE.intValue()) {
             float percentDone = actualCount / (float) n * 100;
             System.out.print("\r" + "Progress : " + String.format("%4s", (int) percentDone + "%")
-                    + (ugly ? " [" : " 〈") + "═".repeat((int) (percentDone / 100f * 70f))
-                    + " ".repeat(70 - (int) (percentDone / 100f * 70f)) + (ugly ? "] " : "〉 ") + actualCount + "/" + n + " games," + " Real time : " + (currentTime/1000f)+"s");
+                    + (ugly ? " [" : " 〈") + "═".repeat((int) (percentDone / 100f * barLengthF))
+                    + " ".repeat(barLength - (int) (percentDone / 100f * barLengthF)) + (ugly ? "] " : "〉 ") + actualCount + "/" + n + " games," + " Real time : " + (currentTime/1000f)+"s");
         }
     }
 
