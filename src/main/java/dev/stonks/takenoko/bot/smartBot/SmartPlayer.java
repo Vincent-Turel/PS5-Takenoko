@@ -1,5 +1,7 @@
-package dev.stonks.takenoko.bot;
+package dev.stonks.takenoko.bot.smartBot;
 
+import dev.stonks.takenoko.bot.MultipleAnswer;
+import dev.stonks.takenoko.bot.Player;
 import dev.stonks.takenoko.gameManagement.Action;
 import dev.stonks.takenoko.map.Map;
 import dev.stonks.takenoko.map.*;
@@ -18,25 +20,14 @@ import java.util.stream.Collectors;
  *
  * @see Player
  */
-public class SmartPlayer extends Player implements Cloneable {
-    private final int depth;
-
+public abstract class SmartPlayer extends Player implements Cloneable {
     private List<ArrayList<Integer>> chosenAction;
 
     private Coordinate coordinate;
     private IrrigationCoordinate irrigationCoordinate;
 
-    public SmartPlayer(int id) {
+    protected SmartPlayer(int id) {
         super(id);
-        this.depth = 2;
-        this.chosenAction = new ArrayList<>(Arrays.asList(
-                new ArrayList<>(Collections.singletonList(null)),
-                new ArrayList<>(Arrays.asList(null, null))));
-    }
-
-    public SmartPlayer(int id, int depth) {
-        super(id);
-        this.depth = depth;
         this.chosenAction = new ArrayList<>(Arrays.asList(
                 new ArrayList<>(Collections.singletonList(null)),
                 new ArrayList<>(Arrays.asList(null, null))));
@@ -210,6 +201,7 @@ public class SmartPlayer extends Player implements Cloneable {
         return chosenAction.get(1);
     }
 
+    public abstract void filterActionToTry(ArrayList<Action> possibleAction);
     /**
      * @param map the game's map
      * @return the action the player has decided to do
@@ -222,45 +214,30 @@ public class SmartPlayer extends Player implements Cloneable {
         this.currentMapState = map;
         resetResScore();
 
-        for (Action action : possibleAction) {
-            explore(action, new Map(currentMapState), 1, depth, new ArrayList<>());
-        }
+        ArrayList<Action> copyOfPossibleAction = new ArrayList<>(possibleAction);
 
-        if (possibleAction.contains(Action.DrawObjective))
-            return Action.DrawObjective;
+        filterActionToTry(copyOfPossibleAction);
+
+        for (Action action : copyOfPossibleAction) {
+            explore(action, new Map(currentMapState), 1, 2, new ArrayList<>());
+        }
         if (getResScore() > 0)
             return Action.values()[getResAction().get(0)];
-        if (possibleAction.contains(Action.DrawIrrigation)) {
+
+        if (copyOfPossibleAction.contains(Action.DrawObjective))
+            return Action.DrawObjective;
+
+        if (copyOfPossibleAction.contains(Action.DrawIrrigation)) {
             if (this.irrigations.size() < 5)
                 return Action.DrawIrrigation;
-            else if (possibleAction.size() > 1)
-                possibleAction.remove(Action.DrawIrrigation);
+            else if (copyOfPossibleAction.size() > 1)
+                copyOfPossibleAction.remove(Action.DrawIrrigation);
         }
         return possibleAction.get(random.nextInt(possibleAction.size()));
     }
 
     private void resetResScore() {
         chosenAction.get(0).set(0, 0);
-    }
-
-    /**
-     * Chose the kind of objective the player wanna draw.
-     *
-     * @param listPossibleKind a list of all objective kind the player can draw
-     * @return the objective kind
-     */
-    @Override
-    public ObjectiveKind chooseObjectiveKind(ArrayList<ObjectiveKind> listPossibleKind) {
-        if (listPossibleKind.size() < 1)
-            throw new IllegalStateException("There is no more objectives");
-
-        HashMap<ObjectiveKind, Integer> nbObjective = new HashMap<>();
-
-        listPossibleKind.forEach(x -> nbObjective.putIfAbsent(x, 0));
-
-        objectives.forEach(x -> nbObjective.computeIfPresent(x.getObjType(), (k, v) -> v + 1));
-
-        return Collections.min(nbObjective.entrySet(), java.util.Map.Entry.comparingByValue()).getKey();
     }
 
     @Override
@@ -511,16 +488,14 @@ public class SmartPlayer extends Player implements Cloneable {
     }
 
     /**
-     * Get the depth to which the player look for best action
+     * Chose the kind of objective the player wanna draw.
      *
-     * @return depth
+     * @param listPossibleKind a list of all objective kind the player can draw
+     * @return the objective kind
      */
-    public int getDepth() {
-        return depth;
-    }
+    @Override
+    public abstract ObjectiveKind chooseObjectiveKind(ArrayList<ObjectiveKind> listPossibleKind);
 
     @Override
-    public Player getNewInstance() {
-        return new SmartPlayer(this.id, this.depth);
-    }
+    public abstract Player getNewInstance();
 }

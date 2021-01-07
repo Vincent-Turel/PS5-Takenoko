@@ -1,7 +1,8 @@
 package dev.stonks.takenoko.playerTest;
 
+import dev.stonks.takenoko.bot.smartBot.EquivalentObjectivePlayer;
 import dev.stonks.takenoko.bot.MultipleAnswer;
-import dev.stonks.takenoko.bot.SmartPlayer;
+import dev.stonks.takenoko.bot.smartBot.SmartPlayer;
 import dev.stonks.takenoko.gameManagement.Action;
 import dev.stonks.takenoko.map.Map;
 import dev.stonks.takenoko.map.*;
@@ -30,7 +31,7 @@ public class SmartPlayerTest {
     @BeforeEach
     public void setup() {
         map = new Map(20);
-        smartPlayer = new SmartPlayer(3);
+        smartPlayer = new EquivalentObjectivePlayer(3);
     }
 
     @Test

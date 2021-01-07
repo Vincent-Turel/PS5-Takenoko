@@ -1,9 +1,10 @@
 package dev.stonks.takenoko.commandLineParser;
 
-import dev.stonks.takenoko.bot.DumbPlayer;
-import dev.stonks.takenoko.bot.Player;
-import dev.stonks.takenoko.bot.RandomPlayer;
-import dev.stonks.takenoko.bot.SmartPlayer;
+import dev.stonks.takenoko.bot.*;
+import dev.stonks.takenoko.bot.smartBot.EquivalentObjectivePlayer;
+import dev.stonks.takenoko.bot.smartBot.RushGardenerPlayer;
+import dev.stonks.takenoko.bot.smartBot.RushPandaPlayer;
+import dev.stonks.takenoko.bot.smartBot.RushPatternPlayer;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -18,7 +19,7 @@ class PlayerParserHelper extends ArrayList<String>{
     private static int count = 1;
 
     PlayerParserHelper() {
-        super(Arrays.asList("random", "dumb", "smart", "smart3", "smart4"));
+        super(Arrays.asList("random", "dumb", "equivalentObjectivePlayer", "rushPandaPlayer", "rushGardenerPlayer", "rushPatternPlayer"));
     }
 
     protected static Player convertPlayer(String s) {
@@ -27,12 +28,14 @@ class PlayerParserHelper extends ArrayList<String>{
                 return new RandomPlayer(count++);
             case "dumb":
                 return new DumbPlayer(count++);
-            case "smart":
-                return new SmartPlayer(count++);
-            case "smart3":
-                return new SmartPlayer(count++, 3);
-            case "smart4":
-                return new SmartPlayer(count++, 4);
+            case "equivalentObjectivePlayer":
+                return new EquivalentObjectivePlayer(count++);
+            case "rushPandaPlayer":
+                return new RushPandaPlayer(count++);
+            case "rushGardenerPlayer":
+                return new RushGardenerPlayer(count++);
+            case "rushPatternPlayer":
+                return new RushPatternPlayer(count++);
             default:
                 throw new IllegalArgumentException();
         }
