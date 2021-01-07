@@ -262,7 +262,7 @@ public class Game {
                 MultipleAnswer<AbstractTile, Coordinate, ?> answer = player.putTile(possiblesTiles);
                 tileDeck.remove(answer.getT());
                 try {
-                    map.setTile(new Tile(answer.getT().withCoordinate(answer.getU())));
+                    map.setTile(answer.getU(), answer.getT());
                 } catch (IllegalPlacementException e) {
                     e.printStackTrace();
                     System.exit(1);

@@ -60,7 +60,7 @@ public class DumbPlayer extends Player {
                         for (int j = 0; j < TileKind.values().length - 1; j++) {
                             Map usedCloneMap = new Map(currentMapState);
                             try {
-                                usedCloneMap.setTile(new AbstractTile(TileKind.values()[j]).withCoordinate(tilePlacements.get(i)));
+                                usedCloneMap.setTile(tilePlacements.get(i), new AbstractTile(TileKind.values()[j]));
                             } catch (IllegalPlacementException e) {
                                 e.printStackTrace();
                                 System.exit(1);
@@ -207,7 +207,7 @@ public class DumbPlayer extends Player {
     @Override
     public Optional<Tile> chooseTileToMovePanda(Map map) {
         this.currentMapState = map;
-        Set<Tile> possiblePawnPlacements = Arrays.stream(currentMapState.getTiles()).flatMap(Optional::stream).filter(tile -> !tile.isInitial()).collect(Collectors.toSet());
+        Set<Tile> possiblePawnPlacements = currentMapState.placedTiles().filter(tile -> !tile.isInitial()).collect(Collectors.toSet());
 
         possiblePawnPlacements.removeIf(tile -> tile.getBamboo().getSize()==0 || tile.getImprovement()==Improvement.Enclosure);
         if(possiblePawnPlacements.isEmpty()){

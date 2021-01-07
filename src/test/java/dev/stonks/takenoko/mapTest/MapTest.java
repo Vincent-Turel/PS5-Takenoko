@@ -202,19 +202,19 @@ public class MapTest {
         Coordinate southWestNeighbor = map.initialTile().getCoordinate().moveWith(Direction.SouthWest);
         Coordinate northWestNeighbor = map.initialTile().getCoordinate().moveWith(Direction.NorthWest);
 
-        Tile northTile = new AbstractTile(TileKind.Green).withCoordinate(northNeighbor);
-        Tile northEastTile = new AbstractTile(TileKind.Yellow).withCoordinate(northEastNeighbor);
-        Tile southEastTile = new AbstractTile(TileKind.Pink).withCoordinate(southEastNeighbor);
-        Tile southTile = new AbstractTile(TileKind.Pink).withCoordinate(southNeighbor);
-        Tile southWestTile = new AbstractTile(TileKind.Yellow).withCoordinate(southWestNeighbor);
-        Tile northWestTile = new AbstractTile(TileKind.Pink).withCoordinate(northWestNeighbor);
+        AbstractTile northAT = new AbstractTile(TileKind.Green);
+        AbstractTile northEastAT = new AbstractTile(TileKind.Yellow);
+        AbstractTile southEastAT = new AbstractTile(TileKind.Pink);
+        AbstractTile southAT = new AbstractTile(TileKind.Pink);
+        AbstractTile southWestAT = new AbstractTile(TileKind.Yellow);
+        AbstractTile northWestAT = new AbstractTile(TileKind.Pink);
 
-        map.setTile(northTile);
-        map.setTile(northEastTile);
-        map.setTile(southEastTile);
-        map.setTile(southTile);
-        map.setTile(southWestTile);
-        map.setTile(northWestTile);
+        map.setTile(northNeighbor, northAT);
+        map.setTile(northEastNeighbor, northEastAT);
+        map.setTile(southEastNeighbor, southEastAT);
+        map.setTile(southNeighbor, southAT);
+        map.setTile(southWestNeighbor, southWestAT);
+        map.setTile(northWestNeighbor, northWestAT);
 
         // Let's place some irrigations, so that it makes an initial-tile-centered star!
         Irrigation i1 = new Irrigation(northNeighbor, northEastNeighbor);
@@ -240,9 +240,9 @@ public class MapTest {
         assertTrue(map.getIrrigationBetween(northWestNeighbor, northNeighbor).isPresent());
 
         // Let's place more tiles, so that we can place more irrigations
-        map.setTile(new AbstractTile(TileKind.Green).withCoordinate(northNeighbor.moveWith(Direction.NorthEast)));
-        map.setTile(new AbstractTile(TileKind.Pink).withCoordinate(southNeighbor.moveWith(Direction.SouthEast)));
-        map.setTile(new AbstractTile(TileKind.Pink).withCoordinate(southWestNeighbor.moveWith(Direction.NorthWest)));
+        map.setTile(northNeighbor.moveWith(Direction.NorthEast), new AbstractTile(TileKind.Green));
+        map.setTile(southNeighbor.moveWith(Direction.SouthEast), new AbstractTile(TileKind.Pink));
+        map.setTile(southWestNeighbor.moveWith(Direction.NorthWest), new AbstractTile(TileKind.Pink));
 
         // Let's try placing irrigations that are linked to other irrigations.
         Irrigation i7 = new Irrigation(northNeighbor, northNeighbor.moveWith(Direction.NorthEast));

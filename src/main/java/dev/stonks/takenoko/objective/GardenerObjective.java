@@ -8,8 +8,10 @@ import dev.stonks.takenoko.map.Tile;
 import dev.stonks.takenoko.pattern.BambooPattern;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Class for the gardener objective
@@ -59,10 +61,7 @@ public class GardenerObjective extends Objective {
      */
     @Override
     public void checkObjectiveValid(Map map, Player player) {
-        ArrayList<Tile> allTiles = new ArrayList<>();
-        for (Optional<Tile> tile : map.getTiles()) {
-            tile.ifPresent(allTiles::add);
-        }
+        List<Tile> allTiles = map.placedTiles().collect(Collectors.toList());
         int nbMath = 0;
         for (Tile value : allTiles) {
             if (value.getBamboo().getColor().equals(bambooPattern.getColor()) && value.getBamboo().getSize() == bambooPattern.getHeight() && checkImprovement(value)) {

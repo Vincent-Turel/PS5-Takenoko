@@ -72,8 +72,7 @@ public class SmartPlayerTest {
     public void chooseTileToGrowTest() throws IllegalPlacementException {
         assertTrue(smartPlayer.chooseTileToGrow(map).isEmpty());
         map.setTile(map.initialTile().getCoordinate().moveWith(Direction.South), new AbstractTile(TileKind.Green));
-        List<Tile> tiles = Arrays.stream(map.getTiles())
-                .flatMap(Optional::stream)
+        List<Tile> tiles = map.placedTiles()
                 .filter(tile -> (tile.isIrrigated() && !tile.isInitial())).collect(Collectors.toList());
         assertTrue(smartPlayer.chooseTileToGrow(map).isEmpty());
         smartPlayer.addObjectives(new GardenerObjective(2, new BambooPattern(TileKind.Green, 2)));

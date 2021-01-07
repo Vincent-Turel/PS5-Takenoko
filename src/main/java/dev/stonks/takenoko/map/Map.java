@@ -18,15 +18,15 @@ import java.util.stream.Stream;
 public class Map {
     // Tiles are stored in the tiles attribute. Each coordinate is mapped to a
     // unique offset.
-    Optional<Tile>[] tiles;
+    private final Optional<Tile>[] tiles;
     // Irrigations are stored in the irrigations attribute. Each tile slot can
     // hold up to three irrigations, which correspond to the north, north-east
     // and south-east sides.
-    Optional<Irrigation>[] irrigations;
-    int delta;
-    int sideLen;
-    Panda panda;
-    Gardener gardener;
+    private final Optional<Irrigation>[] irrigations;
+    private final int delta;
+    private final int sideLen;
+    private final Panda panda;
+    private final Gardener gardener;
 
     /**
      * Creates an initial map. It contains the single initial tile.
@@ -45,6 +45,10 @@ public class Map {
         unsetAllTiles();
         unsetAllIrrigations();
         setInitialTile();
+
+        Coordinate initialPawnChord = new Coordinate(delta, delta);
+        panda = new Panda(initialPawnChord);
+        gardener = new Gardener(initialPawnChord);
     }
 
 
@@ -133,24 +137,22 @@ public class Map {
         Coordinate initialTileCoord = new Coordinate(delta, delta);
 
         try {
-            setTile(initialTileCoord, Tile.initialTile(initialTileCoord));
+            setTile(Tile.initialTile(initialTileCoord));
         } catch (IllegalPlacementException e) {
             throw new RuntimeException("Initial tile placement should not fail");
         }
-        panda = new Panda(initialTileCoord);
-        gardener = new Gardener(initialTileCoord);
+
     }
 
     /**
      * Writes a tile at given coordinate.
      *
-     * @param coord the coordinate at which the tile must be written
      * @param t     the tile to be written
      * @throws IllegalPlacementException thrown if a tile is already
      *                                   present.
      */
-    Tile setTile(Coordinate coord, Tile t) throws IllegalPlacementException {
-        int offset = coord.toOffset(sideLen);
+    private Tile setTile(Tile t) throws IllegalPlacementException {
+        int offset = t.getCoordinate().toOffset(sideLen);
 
         // If t is the initial tile, then the neighbor check is useless.
         // Similarly, no need to irrigate this tile.
@@ -158,10 +160,10 @@ public class Map {
             if (tiles[offset].isPresent()) {
                 throw new IllegalPlacementException("Attempt to place a tile while a tile is already here");
             }
-            if (!tileCanBePlacedAt(coord))
+            if (!tileCanBePlacedAt(t.getCoordinate()))
                 throw new IllegalPlacementException("Tile can't be placed here");
 
-            if (isNeighborOfInitial(coord)) {
+            if (isNeighborOfInitial(t.getCoordinate())) {
                 t.irrigate();
             }
         }
@@ -180,17 +182,6 @@ public class Map {
      */
     public Tile setTile(Coordinate co, AbstractTile t) throws IllegalPlacementException {
         return setTile(t.withCoordinate(co));
-    }
-
-    /**
-     * Creates and writes a tile at its coordinates
-     *
-     * @param t the tile to be written
-     * @throws IllegalPlacementException thrown if a tile is already
-     *                                   present.
-     */
-    public Tile setTile(Tile t) throws IllegalPlacementException {
-        return setTile(t.getCoordinate(), t);
     }
 
     /**
@@ -341,7 +332,7 @@ public class Map {
      * @param offset the offset of the said tile.
      * @return the tile, if it exists.
      */
-    Optional<Tile> getTile(int offset) {
+    private Optional<Tile> getTile(int offset) {
         return tiles[offset];
     }
 
@@ -450,26 +441,16 @@ public class Map {
         // least the initial tile.
         //
         // TODO: investigate if the function can return a long instead.
-        return (int) placedTilesCoordinates().count() - 1;
+        return (int) placedTiles().count() - 1;
     }
 
     /**
      * Returns all the coordinates at which a tile is placed in the map. The
      * returned stream is guaranteed to return unique values only.
      */
-    public Stream<Coordinate> placedTilesCoordinates() {
+    public Stream<Tile> placedTiles() {
         return Arrays.stream(tiles)
-                .filter(Optional::isPresent)
-                .map(ot -> ot.get().getCoordinate());
-    }
-
-    /**
-     * Return all tiles for objective verify
-     *
-     * @return the tiles contained in the map.
-     */
-    public Optional<Tile>[] getTiles() {
-        return tiles;
+                .flatMap(Optional::stream);
     }
 
     @Override

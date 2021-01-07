@@ -91,7 +91,7 @@ public class RandomPlayer extends Player {
     @Override
     public Optional<Tile> chooseTileToMovePanda(Map map) {
         this.currentMapState = map;
-        Set<Tile> possiblePawnPlacements = Arrays.stream(currentMapState.getTiles()).flatMap(Optional::stream).filter(tile -> !tile.isInitial()).collect(Collectors.toSet());
+        Set<Tile> possiblePawnPlacements = currentMapState.placedTiles().filter(tile -> !tile.isInitial()).collect(Collectors.toSet());
 
         if (possiblePawnPlacements.isEmpty())
             return Optional.empty();
