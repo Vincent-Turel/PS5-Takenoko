@@ -26,6 +26,7 @@ public class GameManager {
     private final boolean fullResult;
     private final boolean ugly;
     private ArrayList<FinalResults> stats;
+    private final long time;
 
 
     /**
@@ -38,6 +39,7 @@ public class GameManager {
         this.fullResult = fullResult;
         this.ugly = ugly;
         initialisesStats();
+        time = System.currentTimeMillis();
     }
 
     private void initialisesStats() {
@@ -66,7 +68,6 @@ public class GameManager {
      * @param sequential a boolean which indicates weither or not the game should be played in parallel.
      */
     public void playNTime(int n, boolean sequential) {
-        long start = System.currentTimeMillis();
         AtomicInteger count = new AtomicInteger(0);
         if (!sequential) {
             updateProgressBar(n, 0);
@@ -81,9 +82,8 @@ public class GameManager {
                 simulate(game);
             });
         }
-        long end = System.currentTimeMillis();
         System.out.println("\n");
-        LOG.severe("Time required to play " + n + " games : " + (end - start) / 1000f + " secondes");
+        LOG.severe("Time required to play " + n + " games : " + (System.currentTimeMillis() - time) / 1000f + " secondes");
         try {
             Thread.sleep(100);
             System.out.print("\n");
@@ -100,11 +100,12 @@ public class GameManager {
      * @param actualCount the actuel number of games that have already been runned
      */
     private void updateProgressBar(int n, int actualCount) {
+        long currentTime = System.currentTimeMillis() - time;
         if (LogManager.getLogManager().getLogger("").getHandlers()[0].getLevel().intValue() >= Level.SEVERE.intValue()) {
-            float pourcentDone = actualCount / (float) n * 100;
-            System.out.print("\r" + "Progression : " + String.format("%4s", (int) pourcentDone + "%")
-                    + (ugly ? " [" : " 〈") + "═".repeat((int) (pourcentDone / 100f * 70f))
-                    + " ".repeat(70 - (int) (pourcentDone / 100f * 70f)) + (ugly ? "] " : "〉 ") + actualCount + "/" + n);
+            float percentDone = actualCount / (float) n * 100;
+            System.out.print("\r" + "Progress : " + String.format("%4s", (int) percentDone + "%")
+                    + (ugly ? " [" : " 〈") + "═".repeat((int) (percentDone / 100f * 70f))
+                    + " ".repeat(70 - (int) (percentDone / 100f * 70f)) + (ugly ? "] " : "〉 ") + actualCount + "/" + n + " games," + " Real time : " + (currentTime/1000f)+"s");
         }
     }
 
@@ -188,11 +189,11 @@ public class GameManager {
             if (ugly) {
                 printResultInArray("┌", "└", "┐", "┘", "─",
                         "│", "├", "┤", "┴", "┬",
-                        "┼", 25, 12, new DecimalFormat("0.00"), n);
+                        "┼", 25, 15, new DecimalFormat("0.00"), n, new DecimalFormat("0"));
             } else {
                 printResultInArray("╭", "╰", "╮", "╯", "─",
                         "│", "├", "┤", "┴", "┬",
-                        "┼", 25, 12, new DecimalFormat("0.00"), n);
+                        "┼", 25, 15, new DecimalFormat("0.00"), n, new DecimalFormat("0"));
             }
         }
 
@@ -204,38 +205,83 @@ public class GameManager {
     private void printResultInArray(String leftUpAngle, String leftDownAngle, String rightUpAngle,
                                     String rightDownAngle, String hLine, String vLine, String vRightLine,
                                     String vLeftLine, String hUpLine, String hDownLine, String intersection,
-                                    int width, int smallWidth, DecimalFormat df, int numberOfGames) {
+                                    int width, int smallWidth, DecimalFormat df, int numberOfGames, DecimalFormat iT) {
 
         System.out.println(" ");
         System.out.println(" ".repeat(smallWidth + 2) + StringUtils.center("FINAL SCORE", players.size() * (width) + players.size() - 1));
+
         System.out.println(" ");
-        System.out.print(" ".repeat(smallWidth + 1) + leftUpAngle);
+        System.out.print(leftUpAngle+hLine.repeat(smallWidth) + hDownLine);
         for (int i = 1; i < players.size(); i++) {
             System.out.print(hLine.repeat(width) + hDownLine);
         }
-        System.out.print(hLine.repeat(width) + rightUpAngle);
-        System.out.print("\n" + " ".repeat(smallWidth + 1) + vLine);
+        System.out.println(hLine.repeat(width) + rightUpAngle);
+        System.out.print(vLine+StringUtils.center("IA ",smallWidth)+vLine);
         for (FinalResults results : stats) {
-            System.out.print(StringUtils.center("Bot n°" + results.getId(), width) + vLine);
+            System.out.print(StringUtils.center("Bot n°" + results.getId()+" ", width) + vLine);
         }
-        System.out.print("\n" + " ".repeat(smallWidth + 1) + vLine);
+        System.out.print("\n"+vLine+StringUtils.center("Level",smallWidth)+ vLine);
         for (FinalResults result : stats) {
             if (result.getPlayerType().equals("SmartPlayer")) {
                 SmartPlayer smartPlayer = (SmartPlayer) players.stream().filter(player -> player.getId() == result.getId()).findAny().orElseThrow(NoSuchElementException::new);
-                System.out.print(StringUtils.center("IA : " + result.getPlayerType() + " (" + smartPlayer.getDepth() + ")", width) + vLine);
+                System.out.print(StringUtils.center(result.getPlayerType() + " (" + smartPlayer.getDepth() + ")", width) + vLine);
             } else
-                System.out.print(StringUtils.center("IA : " + result.getPlayerType(), width) + vLine);
+                System.out.print(StringUtils.center(result.getPlayerType(), width) + vLine);
         }
-        System.out.print("\n" + leftUpAngle);
+        System.out.print("\n" + vRightLine);
         System.out.print(hLine.repeat(smallWidth) + intersection);
         for (int i = 1; i < players.size(); i++) {
             System.out.print(hLine.repeat(width) + intersection);
         }
         System.out.print(hLine.repeat(width) + vLeftLine);
         System.out.print("\n" + vLine);
-        System.out.print(StringUtils.center("Victoire", smallWidth) + vLine);
+        System.out.print(StringUtils.center("Win games", smallWidth) + vLine);
+        for (FinalResults result : stats) {
+            System.out.print(StringUtils.center(iT.format(result.getNbWin())+"/"+numberOfGames, width) + vLine);
+        }
+        System.out.print("\n" + vRightLine);
+        System.out.print(hLine.repeat(smallWidth) + intersection);
+        for (int i = 1; i < players.size(); i++) {
+            System.out.print(hLine.repeat(width) + intersection);
+        }
+        System.out.print(hLine.repeat(width) + vLeftLine);
+        System.out.print("\n" + vLine);
+        System.out.print(StringUtils.center("% Win games", smallWidth) + vLine);
         for (FinalResults result : stats) {
             System.out.print(StringUtils.center(df.format((result.getNbWin() / (float) numberOfGames) * 100) + "%", width) + vLine);
+        }
+        System.out.print("\n" + vRightLine);
+        System.out.print(hLine.repeat(smallWidth) + intersection);
+        for (int i = 1; i < players.size(); i++) {
+            System.out.print(hLine.repeat(width) + intersection);
+        }
+        System.out.println(hLine.repeat(width) + vLeftLine);
+        System.out.print(vLine);
+        System.out.print(StringUtils.center("Lost games", smallWidth) + vLine);
+        for (FinalResults result : stats) {
+            System.out.print(StringUtils.center(iT.format(result.getNbLoose())+"/"+numberOfGames, width) + vLine);
+        }
+        System.out.print("\n" + vRightLine);
+        System.out.print(hLine.repeat(smallWidth) + intersection);
+        for (int i = 1; i < players.size(); i++) {
+            System.out.print(hLine.repeat(width) + intersection);
+        }
+        System.out.println(hLine.repeat(width) + vLeftLine);
+        System.out.print(vLine);
+        System.out.print(StringUtils.center("% Lost games", smallWidth) + vLine);
+        for (FinalResults result : stats) {
+            System.out.print(StringUtils.center(df.format(((result.getNbLoose() / (float) numberOfGames) * 100)) + "%", width) + vLine);
+        }
+        System.out.print("\n" + vRightLine);
+        System.out.print(hLine.repeat(smallWidth) + intersection);
+        for (int i = 1; i < players.size(); i++) {
+            System.out.print(hLine.repeat(width) + intersection);
+        }
+        System.out.println(hLine.repeat(width) + vLeftLine);
+        System.out.print(vLine);
+        System.out.print(StringUtils.center("Average score", smallWidth) + vLine);
+        for (FinalResults result : stats) {
+            System.out.print(StringUtils.center(df.format(result.getFinalScore() / (float) numberOfGames), width) + vLine);
         }
         System.out.print("\n" + leftDownAngle);
         System.out.print(hLine.repeat(smallWidth) + hUpLine);
@@ -243,9 +289,10 @@ public class GameManager {
             System.out.print(hLine.repeat(width) + hUpLine);
         }
         System.out.println(hLine.repeat(width) + rightDownAngle);
-        System.out.println(leftUpAngle + hLine.repeat(width) + rightUpAngle);
-        System.out.println(vLine + StringUtils.center("Égalité : " + df.format(stats.get(0).getNbDraw() / (float) numberOfGames * 100) + "%", width) + vLine);
-        System.out.println(leftDownAngle + hLine.repeat(width) + rightDownAngle);
+        System.out.println(leftUpAngle + hLine.repeat(width) + hDownLine + hLine.repeat(width) + rightUpAngle);
+        System.out.print(vLine + StringUtils.center("Null game : " + df.format(stats.get(0).getNbDraw() / (float) numberOfGames * 100) + "%", width) + vLine);
+        System.out.println(StringUtils.center(iT.format(stats.get(0).getNbDraw())+"/"+numberOfGames+" games", width) + vLine);
+        System.out.print(leftDownAngle + hLine.repeat(width) + hUpLine + hLine.repeat(width) + rightDownAngle);
     }
 
     /**
