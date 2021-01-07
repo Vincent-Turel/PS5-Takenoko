@@ -16,13 +16,10 @@ import java.util.stream.Stream;
  * @author the StonksDev team
  */
 public class Map {
-    // Tiles are stored in the tiles attribute. Each coordinate is mapped to a
-    // unique offset.
     private final List<Tile> tiles;
-    // Irrigations are stored in the irrigations attribute. Each tile slot can
-    // hold up to three irrigations, which correspond to the north, north-east
-    // and south-east sides.
     private List<Irrigation> irrigations;
+    private Set<Coordinate> alreadyPlacedCoordinates;
+
     private final int delta;
     private final Panda panda;
     private final Gardener gardener;
@@ -38,6 +35,7 @@ public class Map {
 
         tiles = new ArrayList<>(27);
         irrigations = new ArrayList<>(20);
+        alreadyPlacedCoordinates = new HashSet<>(27);
 
         unsetAllTiles();
         unsetAllIrrigations();
@@ -65,6 +63,12 @@ public class Map {
                 .stream()
                 .map(i -> new Irrigation(i))
                 .collect(Collectors.toList());
+
+        this.alreadyPlacedCoordinates = map
+                .alreadyPlacedCoordinates
+                .stream()
+                .map(c -> new Coordinate(c))
+                .collect(Collectors.toSet());
     }
 
     private void unsetAllTiles() {
@@ -151,6 +155,7 @@ public class Map {
         }
 
         tiles.add(t);
+        alreadyPlacedCoordinates.add(t.getCoordinate());
         return t;
     }
 
@@ -347,48 +352,31 @@ public class Map {
      * @return every available position.
      */
     public Set<Coordinate> getTilePlacements() {
-        Set<Coordinate> placedCoordinates = getPlacedCoordinates();
-        Coordinate initialTileCoord = initialTile().getCoordinate();
-
         return tiles
                 .stream()
                 .flatMap(t -> Arrays.stream(t.getCoordinate().neighbors()))
-                .filter(c -> tileCanBePlacedAt(c, placedCoordinates, initialTileCoord))
-                .collect(Collectors.toSet());
-    }
-
-    private Set<Coordinate> getPlacedCoordinates() {
-        return tiles
-                .stream()
-                .map(Tile::getCoordinate)
+                .filter(this::tileCanBePlacedAt)
                 .collect(Collectors.toSet());
     }
 
     private boolean tileCanBePlacedAt(Coordinate c) {
-        Set<Coordinate> placedCoordinates = getPlacedCoordinates();
-        Coordinate initialTileCoord = initialTile().getCoordinate();
-
-        return ((amountOfNeighborsAt(c, placedCoordinates, initialTileCoord) >= 2) || isNeighborOfInitial(c)) && noTileAt(c, placedCoordinates);
+        return ((amountOfNeighborsAt(c) >= 2) || isNeighborOfInitial(c)) && noTileAt(c);
     }
 
-    private boolean tileCanBePlacedAt(Coordinate c, Set<Coordinate> placedCoordinates, Coordinate initialCoord) {
-        return ((amountOfNeighborsAt(c, placedCoordinates, initialCoord) >= 2) || isNeighborOfInitial(c)) && noTileAt(c, placedCoordinates);
+    private boolean noTileAt(Coordinate c) {
+        return !tileAt(c);
     }
 
-    private static boolean noTileAt(Coordinate c, Set<Coordinate> placedCoordinates) {
-        return !tileAt(c, placedCoordinates);
+    private boolean tileAt(Coordinate c) {
+        return alreadyPlacedCoordinates.contains(c);
     }
 
-    private static boolean tileAt(Coordinate c, Set<Coordinate> placedCoordinates) {
-        return placedCoordinates.contains(c);
-    }
-
-    private int amountOfNeighborsAt(Coordinate c, Set<Coordinate> placedCoordinates, Coordinate initialCoord) {
+    private int amountOfNeighborsAt(Coordinate c) {
         Coordinate[] neighbors = c.neighbors();
 
         int neighborCount = 0;
         for (Coordinate neighborCoord : neighbors) {
-            if (tileAt(neighborCoord, placedCoordinates)) {
+            if (tileAt(neighborCoord)) {
                 neighborCount++;
             }
         }
@@ -397,11 +385,7 @@ public class Map {
     }
 
     private boolean isNeighborOfInitial(Coordinate c) {
-        return Arrays.stream(c.neighbors())
-                .anyMatch(neighborCoord -> {
-                    Optional<Tile> concernedTile = getTile(neighborCoord);
-                    return concernedTile.isPresent() && concernedTile.get().isInitial();
-                });
+        return Arrays.asList(initialTile().getCoordinate().neighbors()).contains(c);
     }
 
     /**
