@@ -315,6 +315,9 @@ public class Game {
                         if(objectivesDeck.isEmpty()){
                             LOG.info("LE DECK EST VIDE, on change les actions !");
                             possibleActions.remove(Action.DrawObjective);
+                            if(possibleActions.isEmpty()){
+                                return false;
+                            }
                             chosenAction = player.decide(new ArrayList<>(possibleActions), new Map(map));
                         }
                     }
