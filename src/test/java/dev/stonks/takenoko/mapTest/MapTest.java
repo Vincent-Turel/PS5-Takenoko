@@ -31,29 +31,6 @@ public class MapTest {
     }
 
     @Test
-    void resetRemovesEverythingExceptInitial() throws IllegalPlacementException {
-        dev.stonks.takenoko.map.Map m = new dev.stonks.takenoko.map.Map(27);
-        m.addNeighborOf(TileKind.Green, m.initialTile().withDirection(Direction.South));
-
-        m.reset();
-
-        Coordinate initialSouthern = m.initialTile().getCoordinate().moveWith(Direction.South);
-        assertTrue(m.getTile(initialSouthern).isEmpty());
-    }
-
-    @Test
-    void resetRecreatesInitialTile() throws IllegalPlacementException {
-        dev.stonks.takenoko.map.Map m = new dev.stonks.takenoko.map.Map(27);
-        m.addNeighborOf(TileKind.Pink, m.initialTile().withDirection(Direction.South));
-
-        m.reset();
-
-        // Note: if this call does not return an exception, then the test
-        // worked.
-        m.initialTile();
-    }
-
-    @Test
     void getPlacements() throws IllegalPlacementException {
         // This test tests nearly every placement rule:
         //   - some tiles have less than two neighbors, they must not be

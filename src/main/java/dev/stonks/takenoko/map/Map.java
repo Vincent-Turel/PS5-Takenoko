@@ -18,13 +18,12 @@ import java.util.stream.Stream;
 public class Map {
     // Tiles are stored in the tiles attribute. Each coordinate is mapped to a
     // unique offset.
-    private List<Tile> tiles;
+    private final List<Tile> tiles;
     // Irrigations are stored in the irrigations attribute. Each tile slot can
     // hold up to three irrigations, which correspond to the north, north-east
     // and south-east sides.
     private List<Irrigation> irrigations;
     private final int delta;
-    private final int sideLen;
     private final Panda panda;
     private final Gardener gardener;
 
@@ -35,8 +34,6 @@ public class Map {
      *                   game.
      */
     public Map(int tileNumber) {
-        sideLen = tileNumber * 2 + 1;
-        int tileSize = sideLen * sideLen;
         delta = tileNumber + 1;
 
         tiles = new ArrayList<>(27);
@@ -44,7 +41,7 @@ public class Map {
 
         unsetAllTiles();
         unsetAllIrrigations();
-        setInitialTile();
+        setInitialTile(delta);
 
         Coordinate initialPawnChord = new Coordinate(delta, delta);
         panda = new Panda(initialPawnChord);
@@ -56,7 +53,7 @@ public class Map {
         this.panda = new Panda(map.getPanda());
         this.gardener = new Gardener(map.getGardener());
         this.delta = map.delta;
-        this.sideLen = map.sideLen;
+
         this.tiles = map
                 .tiles
                 .stream()
@@ -68,18 +65,6 @@ public class Map {
                 .stream()
                 .map(i -> new Irrigation(i))
                 .collect(Collectors.toList());
-    }
-
-    /**
-     * Resets the map.
-     * <p>
-     * This method removes every tile from the map and puts a fresh initial
-     * tile it its center.
-     */
-    public void reset() {
-        unsetAllTiles();
-        unsetAllIrrigations();
-        setInitialTile();
     }
 
     private void unsetAllTiles() {
@@ -126,7 +111,7 @@ public class Map {
         return allPossiblePawnPlacements;
     }
 
-    private void setInitialTile() {
+    private void setInitialTile(int delta) {
         Coordinate initialTileCoord = new Coordinate(delta, delta);
 
         try {
@@ -361,16 +346,9 @@ public class Map {
      * @return every available position.
      */
     public Set<Coordinate> getTilePlacements() {
-        // First step: getting all neighbors of all set tiles.
-        Set<Coordinate> candidates = new HashSet<>();
-
-        for (Tile t : tiles) {
-                candidates.addAll(Arrays.asList(t.getCoordinate().neighbors()));
-        }
-
-        // Second step: removing coordinates that cannot be placed on.
-        return candidates
+        return tiles
                 .stream()
+                .flatMap(t -> Arrays.stream(t.getCoordinate().neighbors()))
                 .filter(this::tileCanBePlacedAt)
                 .collect(Collectors.toSet());
     }
@@ -435,9 +413,7 @@ public class Map {
         if (this == o) return true;
         if (!(o instanceof Map)) throw IllegalEqualityExceptionGenerator.create(Map.class, o);
         Map map = (Map) o;
-        return delta == map.delta &&
-                sideLen == map.sideLen &&
-                tiles.equals(map.tiles) &&
+        return tiles.equals(map.tiles) &&
                 irrigations.equals(map.irrigations) &&
                 Objects.equals(panda, map.panda) &&
                 Objects.equals(gardener, map.gardener);
@@ -445,7 +421,7 @@ public class Map {
 
     @Override
     public int hashCode() {
-        int result = Objects.hash(delta, sideLen, panda, gardener);
+        int result = Objects.hash(panda, gardener);
         result = 31 * result + tiles.hashCode();
         result = 31 * result + irrigations.hashCode();
         return result;
