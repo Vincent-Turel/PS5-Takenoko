@@ -114,6 +114,10 @@ public class Map {
     private void setInitialTile(int delta) {
         Coordinate initialTileCoord = new Coordinate(delta, delta);
 
+        if (!tiles.isEmpty()) {
+            throw new IllegalStateException("Initial tile should be first tile");
+        }
+
         try {
             setTile(Tile.initialTile(initialTileCoord));
         } catch (IllegalPlacementException e) {
@@ -304,10 +308,7 @@ public class Map {
      * Returns the initial tile of the map.
      */
     public Tile initialTile() {
-        Coordinate c = new Coordinate(delta, delta);
-        // This call to getTile is guaranteed to succeed because we placed a
-        // tile at the center in the constructor.
-        return getTile(c).get();
+        return tiles.get(0);
     }
 
     /**
@@ -346,33 +347,48 @@ public class Map {
      * @return every available position.
      */
     public Set<Coordinate> getTilePlacements() {
+        Set<Coordinate> placedCoordinates = getPlacedCoordinates();
+        Coordinate initialTileCoord = initialTile().getCoordinate();
+
         return tiles
                 .stream()
                 .flatMap(t -> Arrays.stream(t.getCoordinate().neighbors()))
-                .filter(this::tileCanBePlacedAt)
+                .filter(c -> tileCanBePlacedAt(c, placedCoordinates, initialTileCoord))
+                .collect(Collectors.toSet());
+    }
+
+    private Set<Coordinate> getPlacedCoordinates() {
+        return tiles
+                .stream()
+                .map(Tile::getCoordinate)
                 .collect(Collectors.toSet());
     }
 
     private boolean tileCanBePlacedAt(Coordinate c) {
-        return noTileAt(c) && ((amountOfNeighborsAt(c) >= 2) || isNeighborOfInitial(c));
+        Set<Coordinate> placedCoordinates = getPlacedCoordinates();
+        Coordinate initialTileCoord = initialTile().getCoordinate();
+
+        return ((amountOfNeighborsAt(c, placedCoordinates, initialTileCoord) >= 2) || isNeighborOfInitial(c)) && noTileAt(c, placedCoordinates);
     }
 
-    private boolean noTileAt(Coordinate c) {
-        return !tileAt(c);
+    private boolean tileCanBePlacedAt(Coordinate c, Set<Coordinate> placedCoordinates, Coordinate initialCoord) {
+        return ((amountOfNeighborsAt(c, placedCoordinates, initialCoord) >= 2) || isNeighborOfInitial(c)) && noTileAt(c, placedCoordinates);
     }
 
-    private boolean tileAt(Coordinate c) {
-        return tiles
-                .stream()
-                .anyMatch(t -> t.getCoordinate().equals(c));
+    private static boolean noTileAt(Coordinate c, Set<Coordinate> placedCoordinates) {
+        return !tileAt(c, placedCoordinates);
     }
 
-    private int amountOfNeighborsAt(Coordinate c) {
+    private static boolean tileAt(Coordinate c, Set<Coordinate> placedCoordinates) {
+        return placedCoordinates.contains(c);
+    }
+
+    private int amountOfNeighborsAt(Coordinate c, Set<Coordinate> placedCoordinates, Coordinate initialCoord) {
         Coordinate[] neighbors = c.neighbors();
 
         int neighborCount = 0;
         for (Coordinate neighborCoord : neighbors) {
-            if (tileAt(neighborCoord)) {
+            if (tileAt(neighborCoord, placedCoordinates)) {
                 neighborCount++;
             }
         }
