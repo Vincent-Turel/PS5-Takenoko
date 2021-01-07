@@ -99,7 +99,7 @@ public class Game {
             possibleAction.add(Action.PutTile);
         if (irrigationDeck.size() > 0)
             possibleAction.add(Action.DrawIrrigation);
-        if ((player.getObjectives().size() < 5) && (objectivesDeck.deckIsNotEmpty()) && (!objectivesDeck.isEmpty())) {
+        if (player.getObjectives().size() < 5 && objectivesDeck.deckIsNotEmpty()) {
             possibleAction.add(Action.DrawObjective);
         }
         return possibleAction;
