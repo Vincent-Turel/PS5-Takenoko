@@ -425,7 +425,7 @@ public class SmartPlayer extends Player implements Cloneable {
     public WeatherKind chooseNewWeather(Set<WeatherKind> possiblesWeathers) {
         List<WeatherKind> list = new ArrayList<>(possiblesWeathers);
 
-        Set<Tile> allTiles = Arrays.stream(currentMapState.getTiles()).flatMap(Optional::stream).filter(tile -> !tile.isInitial()).collect(Collectors.toSet());
+        Set<Tile> allTiles = currentMapState.placedTiles().filter(tile -> !tile.isInitial()).collect(Collectors.toSet());
 
         allTiles.removeIf(tile -> getInteristingGardenerBamboo().stream().noneMatch(answer ->
                 tile.getBamboo().getColor() == answer.getT() &&
@@ -450,10 +450,14 @@ public class SmartPlayer extends Player implements Cloneable {
 
     @Override
     public Improvement chooseImprovement(List<Improvement> improvements) {
-        
+        if(improvements.isEmpty()){
+            throw new IllegalArgumentException("This will never append : improvements is empty !");
+        }
         List<Improvement> copy = new ArrayList<>(improvements);
 
-        Set<Tile> allTiles = Arrays.stream(currentMapState.getTiles()).flatMap(Optional::stream).filter(tile -> !tile.isInitial()).collect(Collectors.toSet());
+        Improvement chosenImprovement;
+
+        Set<Tile> allTiles = currentMapState.placedTiles().filter(tile -> !tile.isInitial()).collect(Collectors.toSet());
 
         allTiles.removeIf(tile -> getInteristingGardenerBamboo().stream().noneMatch(answer ->
                 tile.getBamboo().getColor() == answer.getT() &&
@@ -462,6 +466,7 @@ public class SmartPlayer extends Player implements Cloneable {
         if(allTiles.isEmpty()){
             for (Improvement wantedImprovement:getInteristingGardenerBamboo().stream().map(MultipleAnswer::getU).collect(Collectors.toSet())) {
                 if(improvements.contains(wantedImprovement) && !this.improvements.contains(wantedImprovement)){
+                    this.improvements.add(wantedImprovement);
                     return wantedImprovement;
                 }
             }
@@ -469,10 +474,14 @@ public class SmartPlayer extends Player implements Cloneable {
         else {
             copy.removeAll(allTiles.stream().map(Tile::getImprovement).collect(Collectors.toSet()));
             if(!copy.isEmpty()){
-                return getRandomInCollection(copy);
+                chosenImprovement = getRandomInCollection(copy);
+                this.improvements.add(chosenImprovement);
+                return chosenImprovement;
             }
         }
-        return getRandomInCollection(improvements);
+        chosenImprovement = getRandomInCollection(improvements);
+        this.improvements.add(chosenImprovement);
+        return chosenImprovement;
     }
 
     /**

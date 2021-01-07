@@ -190,11 +190,21 @@ public class SmartPlayerTest {
     public void chooseImprovementTest() throws IllegalPlacementException {
         ArrayList<Improvement> improvements = new ArrayList<>(Arrays.asList(Improvement.Watershed, Improvement.Enclosure, Improvement.Fertilizer));
         assertEquals(3, improvements.size());
-        map.setTile(map.initialTile().getCoordinate().moveWith(Direction.North), new AbstractTile(TileKind.Green));
-        smartPlayer.addObjectives(new GardenerObjective(5,new BambooPattern(TileKind.Green, 2, 1),Improvement.Enclosure));
-        assertTrue(smartPlayer.chooseImprovement(improvements).equals(Improvement.Enclosure));
-        map.setTile(map.initialTile().getCoordinate().moveWith(Direction.SouthEast), new AbstractTile(TileKind.Yellow));
 
+        map.setTile(map.initialTile().getCoordinate().moveWith(Direction.North), new AbstractTile(TileKind.Green));
+        smartPlayer.setCurrentMapState(map);
+        smartPlayer.addObjectives(new GardenerObjective(5,new BambooPattern(TileKind.Green, 2, 1),Improvement.Enclosure));
+        Improvement chosenImprovement = smartPlayer.chooseImprovement(improvements);
+        assertTrue(chosenImprovement.equals(Improvement.Enclosure));
+
+        map.setTile(map.initialTile().getCoordinate().moveWith(Direction.SouthEast), new AbstractTile(TileKind.Yellow));
+        smartPlayer.setCurrentMapState(map);
+        smartPlayer.addObjectives(new GardenerObjective(5,new BambooPattern(TileKind.Yellow, 2, 1),Improvement.Fertilizer));
+        assertTrue(smartPlayer.chooseImprovement(improvements).equals(Improvement.Fertilizer));
+
+        assertTrue(smartPlayer.getImprovements().contains(Improvement.Enclosure) &&
+                smartPlayer.getImprovements().contains(Improvement.Fertilizer) &&
+                !smartPlayer.getImprovements().contains(Improvement.Watershed));
     }
 
     @Test
