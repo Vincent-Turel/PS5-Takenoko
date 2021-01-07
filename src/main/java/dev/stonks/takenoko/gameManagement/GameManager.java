@@ -244,7 +244,7 @@ public class GameManager {
         }
         System.out.println(hLine.repeat(width) + rightDownAngle);
         System.out.println(leftUpAngle + hLine.repeat(width) + rightUpAngle);
-        System.out.println(vLine + StringUtils.center("Égalité : " + df.format(stats.get(0).getNbDraw()) + "%", width) + vLine);
+        System.out.println(vLine + StringUtils.center("Égalité : " + df.format(stats.get(0).getNbDraw() / (float) numberOfGames * 100) + "%", width) + vLine);
         System.out.println(leftDownAngle + hLine.repeat(width) + rightDownAngle);
     }
 
