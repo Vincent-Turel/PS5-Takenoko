@@ -18,9 +18,7 @@ import java.util.stream.Collectors;
  *
  * @see Player
  */
-public class SmartPlayer extends Player implements Cloneable {
-    private final int depth;
-
+public abstract class SmartPlayer extends Player implements Cloneable {
     private List<ArrayList<Integer>> chosenAction;
 
     private Coordinate coordinate;
@@ -28,15 +26,6 @@ public class SmartPlayer extends Player implements Cloneable {
 
     public SmartPlayer(int id) {
         super(id);
-        this.depth = 2;
-        this.chosenAction = new ArrayList<>(Arrays.asList(
-                new ArrayList<>(Collections.singletonList(null)),
-                new ArrayList<>(Arrays.asList(null, null))));
-    }
-
-    public SmartPlayer(int id, int depth) {
-        super(id);
-        this.depth = depth;
         this.chosenAction = new ArrayList<>(Arrays.asList(
                 new ArrayList<>(Collections.singletonList(null)),
                 new ArrayList<>(Arrays.asList(null, null))));
@@ -223,13 +212,14 @@ public class SmartPlayer extends Player implements Cloneable {
         resetResScore();
 
         for (Action action : possibleAction) {
-            explore(action, new Map(currentMapState), 1, depth, new ArrayList<>());
+            explore(action, new Map(currentMapState), 1, 2, new ArrayList<>());
         }
+        if (getResScore() > 0)
+            return Action.values()[getResAction().get(0)];
 
         if (possibleAction.contains(Action.DrawObjective))
             return Action.DrawObjective;
-        if (getResScore() > 0)
-            return Action.values()[getResAction().get(0)];
+
         if (possibleAction.contains(Action.DrawIrrigation)) {
             if (this.irrigations.size() < 5)
                 return Action.DrawIrrigation;
@@ -250,18 +240,7 @@ public class SmartPlayer extends Player implements Cloneable {
      * @return the objective kind
      */
     @Override
-    public ObjectiveKind chooseObjectiveKind(ArrayList<ObjectiveKind> listPossibleKind) {
-        if (listPossibleKind.size() < 1)
-            throw new IllegalStateException("There is no more objectives");
-
-        HashMap<ObjectiveKind, Integer> nbObjective = new HashMap<>();
-
-        listPossibleKind.forEach(x -> nbObjective.putIfAbsent(x, 0));
-
-        objectives.forEach(x -> nbObjective.computeIfPresent(x.getObjType(), (k, v) -> v + 1));
-
-        return Collections.min(nbObjective.entrySet(), java.util.Map.Entry.comparingByValue()).getKey();
-    }
+    public abstract ObjectiveKind chooseObjectiveKind(ArrayList<ObjectiveKind> listPossibleKind);
 
     @Override
     public Optional<Tile> chooseTileToGrow(Map map) {
@@ -515,12 +494,7 @@ public class SmartPlayer extends Player implements Cloneable {
      *
      * @return depth
      */
-    public int getDepth() {
-        return depth;
-    }
 
     @Override
-    public Player getNewInstance() {
-        return new SmartPlayer(this.id, this.depth);
-    }
+    public abstract Player getNewInstance();
 }

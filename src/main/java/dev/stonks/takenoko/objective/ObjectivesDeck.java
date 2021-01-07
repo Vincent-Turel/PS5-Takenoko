@@ -7,6 +7,7 @@ import dev.stonks.takenoko.map.Map;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.logging.Logger;
 
 /**
  * Here the deck who contain all objectives.
@@ -15,6 +16,7 @@ import java.util.Random;
  */
 
 public class ObjectivesDeck {
+    private final static Logger LOG = Logger.getLogger(ObjectivesDeck.class.getSimpleName());
 
     private final ArrayList<GardenerObjective> gardenerDeck;
     private final ArrayList<PatternObjective> patternDeck;
@@ -98,7 +100,11 @@ public class ObjectivesDeck {
      * @param player the player who want to have an objective
      */
     public void addAnObjectiveForPlayer(Map map, Player player) {
+        //int x = pandaDeck.size() + gardenerDeck.size() + patternDeck.size();
         removeValidatedObjectives(map, player);
+        //int y = pandaDeck.size() + gardenerDeck.size() + patternDeck.size();
+        //if (x - y != 0)
+        //    LOG.severe("Objectif retiré : " + x + " : " + y);
         ObjectiveKind objectiveKind = player.chooseObjectiveKind(possibleKind());
 
         switch (objectiveKind) {

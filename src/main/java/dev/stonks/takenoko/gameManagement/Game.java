@@ -144,8 +144,8 @@ public class Game {
                     LOG.info(possibleActions.toString());
                     nbActions = weatherActions(player, nbActions, possibleActions);
                     for (int j = 0; j < nbActions; j++) {
-                        if (gameTurn > 500) {
-                            LOG.info("Game ended due to player playing more than 500 actions (endless game)\n");
+                        if (gameTurn > 300) {
+                            LOG.info("Game ended due to player playing more than 300 actions (endless game)\n");
                             fillTheFinalScore();
                             return;
                         }
