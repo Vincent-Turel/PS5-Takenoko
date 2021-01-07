@@ -26,6 +26,7 @@ public class GameManager {
     private final boolean fullResult;
     private final boolean ugly;
     private ArrayList<FinalResults> stats;
+    private long time;
 
 
     /**
@@ -38,6 +39,7 @@ public class GameManager {
         this.fullResult = fullResult;
         this.ugly = ugly;
         initialisesStats();
+        time = System.currentTimeMillis();
     }
 
     private void initialisesStats() {
@@ -66,7 +68,6 @@ public class GameManager {
      * @param sequential a boolean which indicates weither or not the game should be played in parallel.
      */
     public void playNTime(int n, boolean sequential) {
-        long start = System.currentTimeMillis();
         AtomicInteger count = new AtomicInteger(0);
         if (!sequential) {
             updateProgressBar(n, 0);
@@ -81,9 +82,8 @@ public class GameManager {
                 simulate(game);
             });
         }
-        long end = System.currentTimeMillis();
         System.out.println("\n");
-        LOG.severe("Time required to play " + n + " games : " + (end - start) / 1000f + " secondes");
+        LOG.severe("Time required to play " + n + " games : " + (System.currentTimeMillis() - time) / 1000f + " secondes");
         try {
             Thread.sleep(100);
             System.out.print("\n");
@@ -100,11 +100,12 @@ public class GameManager {
      * @param actualCount the actuel number of games that have already been runned
      */
     private void updateProgressBar(int n, int actualCount) {
+        long currentTime = System.currentTimeMillis() - time;
         if (LogManager.getLogManager().getLogger("").getHandlers()[0].getLevel().intValue() >= Level.SEVERE.intValue()) {
             float pourcentDone = actualCount / (float) n * 100;
             System.out.print("\r" + "Progression : " + String.format("%4s", (int) pourcentDone + "%")
                     + (ugly ? " [" : " 〈") + "═".repeat((int) (pourcentDone / 100f * 70f))
-                    + " ".repeat(70 - (int) (pourcentDone / 100f * 70f)) + (ugly ? "] " : "〉 ") + actualCount + "/" + n);
+                    + " ".repeat(70 - (int) (pourcentDone / 100f * 70f)) + (ugly ? "] " : "〉 ") + actualCount + "/" + n + " Time : " + (currentTime/1000f)+"s");
         }
     }
 
@@ -243,9 +244,6 @@ public class GameManager {
         for (int i = 1; i < players.size(); i++) {
             System.out.print(hLine.repeat(width) + intersection);
         }
-
-        ////
-
         System.out.print(hLine.repeat(width) + vLeftLine);
         System.out.print("\n" + vLine);
         System.out.print(StringUtils.center("% Victoire", smallWidth) + vLine);
@@ -258,9 +256,6 @@ public class GameManager {
             System.out.print(hLine.repeat(width) + intersection);
         }
         System.out.println(hLine.repeat(width) + vLeftLine);
-
-        ////
-
         System.out.print(vLine);
         System.out.print(StringUtils.center("Nb Défaite", smallWidth) + vLine);
         for (FinalResults result : stats) {
@@ -272,11 +267,6 @@ public class GameManager {
             System.out.print(hLine.repeat(width) + intersection);
         }
         System.out.println(hLine.repeat(width) + vLeftLine);
-
-        ////
-
-        ////
-
         System.out.print(vLine);
         System.out.print(StringUtils.center("% Défaite", smallWidth) + vLine);
         for (FinalResults result : stats) {
@@ -288,11 +278,6 @@ public class GameManager {
             System.out.print(hLine.repeat(width) + intersection);
         }
         System.out.println(hLine.repeat(width) + vLeftLine);
-
-        ////
-
-        ////
-
         System.out.print(vLine);
         System.out.print(StringUtils.center("Score moyen", smallWidth) + vLine);
         for (FinalResults result : stats) {
@@ -304,9 +289,6 @@ public class GameManager {
             System.out.print(hLine.repeat(width) + hUpLine);
         }
         System.out.println(hLine.repeat(width) + rightDownAngle);
-
-        ////
-
         System.out.println(leftUpAngle + hLine.repeat(width) + hDownLine + hLine.repeat(width) + rightUpAngle);
         System.out.print(vLine + StringUtils.center("Égalité : " + df.format(stats.get(0).getNbDraw() / (float) numberOfGames * 100) + "%", width) + vLine);
         System.out.println(StringUtils.center(iT.format(stats.get(0).getNbDraw())+"/"+numberOfGames, width) + vLine);
