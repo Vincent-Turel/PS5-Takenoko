@@ -5,9 +5,7 @@ import dev.stonks.takenoko.map.Map;
 import dev.stonks.takenoko.map.*;
 import dev.stonks.takenoko.objective.Objective;
 import dev.stonks.takenoko.objective.ObjectiveKind;
-import dev.stonks.takenoko.pawn.Gardener;
 import dev.stonks.takenoko.pawn.Pawn;
-import dev.stonks.takenoko.weather.Weather;
 import dev.stonks.takenoko.weather.WeatherKind;
 
 import java.util.*;
@@ -284,8 +282,8 @@ public class DumbPlayer extends Player {
 
     @Override
     public Improvement chooseImprovement(List<Improvement> improvements) {
-        List<Improvement> copy = new ArrayList<>(improvements.stream().collect(Collectors.toSet()));
-        this.improvements.forEach(improvement -> copy.remove(improvement));
+        List<Improvement> copy = new ArrayList<>(new HashSet<>(improvements));
+        this.improvements.forEach(copy::remove);
 
         Improvement chosen;
 

@@ -4,7 +4,6 @@ import dev.stonks.takenoko.bot.DumbPlayer;
 import dev.stonks.takenoko.bot.Player;
 import dev.stonks.takenoko.bot.RandomPlayer;
 import dev.stonks.takenoko.bot.SmartPlayer;
-import picocli.CommandLine;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -14,7 +13,7 @@ import java.util.Arrays;
  * a list of candidates and associated conveter
  * for the player parameters.
  */
-class PlayerParserHelper extends ArrayList<String> implements CommandLine.ITypeConverter<Player> {
+class PlayerParserHelper extends ArrayList<String>{
 
     private static int count = 1;
 
@@ -22,8 +21,7 @@ class PlayerParserHelper extends ArrayList<String> implements CommandLine.ITypeC
         super(Arrays.asList("random", "dumb", "smart", "smart3", "smart4"));
     }
 
-    @Override
-    public Player convert(String s) {
+    protected static Player convertPlayer(String s) {
         switch (s) {
             case "random":
                 return new RandomPlayer(count++);

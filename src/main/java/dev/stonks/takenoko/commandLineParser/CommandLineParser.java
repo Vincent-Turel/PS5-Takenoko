@@ -4,7 +4,9 @@ import dev.stonks.takenoko.bot.Player;
 import dev.stonks.takenoko.gameManagement.GameManager;
 import picocli.CommandLine;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
@@ -22,10 +24,9 @@ public class CommandLineParser implements Runnable {
             index = "0",
             description = {"List of bots to use.", "Valid values : ${COMPLETION-CANDIDATES}"},
             completionCandidates = PlayerParserHelper.class,
-            converter = PlayerParserHelper.class,
             arity = "2..4"
     )
-    private Player[] players;
+    private String[] players;
 
     @CommandLine.Option(
             required = true,
@@ -87,7 +88,11 @@ public class CommandLineParser implements Runnable {
 
         setLogConfig(level);
 
-        GameManager gameManager = new GameManager(Arrays.asList(players), fullResult, ugly);
+        List<Player> playerList = new ArrayList<>();
+        for (String playerType : players){
+            playerList.add(PlayerParserHelper.convertPlayer(playerType));
+        }
+        GameManager gameManager = new GameManager(playerList, fullResult, ugly);
 
         LOG.severe("Starting program...\n");
 
