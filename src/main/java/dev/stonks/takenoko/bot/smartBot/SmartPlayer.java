@@ -214,13 +214,11 @@ public abstract class SmartPlayer extends Player implements Cloneable {
         this.currentMapState = map;
         resetResScore();
 
-        if (objectives.stream().noneMatch(objective -> objective.getObjType() == ObjectiveKind.PatternObjective))
-            possibleAction.remove(Action.PutTile);
+        ArrayList<Action> copyOfPossibleAction = new ArrayList<>(possibleAction);
 
-        if (objectives.stream().noneMatch(objective -> objective.getObjType() == ObjectiveKind.PandaObjective))
-            possibleAction.remove(Action.MovePanda);
+        filterActionToTry(copyOfPossibleAction);
 
-        for (Action action : possibleAction) {
+        for (Action action : copyOfPossibleAction) {
             explore(action, new Map(currentMapState), 1, 2, new ArrayList<>());
         }
         if (getResScore() > 0)
