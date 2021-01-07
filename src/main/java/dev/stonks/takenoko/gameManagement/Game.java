@@ -254,38 +254,66 @@ public class Game {
      * @param possibleActions the player can choose
      */
     private void playerPlay(Player player, ArrayList<Action> possibleActions) {
+        // Note: when an action fails, possibleActions must be updated, so that
+        // there is no infinite loop.
+        //
+        // Similarly, chosenAction must be updated too.
+
+        boolean actionDone = false;
+
         Action chosenAction = player.decide(new ArrayList<>(possibleActions), new Map(map));
-        LOG.info("Player n°" + player.getId() + " has chosen this action : " + chosenAction.toString());
-        switch (chosenAction) {
-            case PutTile:
-                ArrayList<AbstractTile> possiblesTiles = new ArrayList<>(3);
-                IntStream.range(0, Math.min(3, tileDeck.size())).forEach(i -> possiblesTiles.add(tileDeck.get(random.nextInt(tileDeck.size()))));
-                MultipleAnswer<AbstractTile, Coordinate, ?> answer = player.putTile(possiblesTiles);
-                tileDeck.remove(answer.getT());
-                try {
-                    map.setTile(answer.getU(), answer.getT());
-                } catch (IllegalPlacementException e) {
-                    e.printStackTrace();
-                    System.exit(1);
-                }
-                break;
-            case MoveGardener:
-                Gardener gardener = map.getGardener();
-                gardener.moveToAndAct(player.chooseWherePawnShouldGo(gardener), map);
-                break;
-            case MovePanda:
-                Panda panda = map.getPanda();
-                Optional<TileKind> bamboo = panda.moveToAndAct(player.chooseWherePawnShouldGo(panda));
-                bamboo.ifPresent(tileKind -> LOG.info("bamboo he cut : " + tileKind.toString()));
-                bamboo.ifPresent(player::addCollectedBamboo);
-                break;
-            case DrawIrrigation:
-                AbstractIrrigation drawnIrrigation = irrigationDeck.pop();
-                player.addIrrigation(drawnIrrigation);
-                break;
-            case DrawObjective:
-                objectivesDeck.addAnObjectiveForPlayer(map, player);
-                break;
+
+        while (!actionDone) {
+
+            LOG.info("Player n°" + player.getId() + " has chosen this action : " + chosenAction.toString());
+
+            switch (chosenAction) {
+                case PutTile:
+                    ArrayList<AbstractTile> possiblesTiles = new ArrayList<>(3);
+                    IntStream.range(0, Math.min(3, tileDeck.size())).forEach(i -> possiblesTiles.add(tileDeck.get(random.nextInt(tileDeck.size()))));
+                    MultipleAnswer<AbstractTile, Coordinate, ?> answer = player.putTile(possiblesTiles);
+                    tileDeck.remove(answer.getT());
+                    try {
+                        map.setTile(answer.getU(), answer.getT());
+                    } catch (IllegalPlacementException e) {
+                        e.printStackTrace();
+                        System.exit(1);
+                    }
+                    actionDone = true;
+                    break;
+
+                case MoveGardener:
+                    Gardener gardener = map.getGardener();
+                    gardener.moveToAndAct(player.chooseWherePawnShouldGo(gardener), map);
+                    actionDone = true;
+                    break;
+
+                case MovePanda:
+                    Panda panda = map.getPanda();
+                    Optional<TileKind> bamboo = panda.moveToAndAct(player.chooseWherePawnShouldGo(panda));
+                    bamboo.ifPresent(tileKind -> LOG.info("bamboo he cut : " + tileKind.toString()));
+                    bamboo.ifPresent(player::addCollectedBamboo);
+                    actionDone = true;
+                    break;
+
+                case DrawIrrigation:
+                    AbstractIrrigation drawnIrrigation = irrigationDeck.pop();
+                    player.addIrrigation(drawnIrrigation);
+                    actionDone = true;
+                    break;
+
+                case DrawObjective:
+                    boolean successfulObjectiveDrawn = objectivesDeck.addAnObjectiveForPlayer(map, player);
+
+                    if (!successfulObjectiveDrawn) {
+                        LOG.info("Player n°" + player.getId() + " failed to draw an objective");
+
+                        chosenAction = player.decide(new ArrayList<>(possibleActions), new Map(map));
+                    }
+
+                    actionDone = successfulObjectiveDrawn;
+                    break;
+            }
         }
         Optional<Action> decision;
         while ((decision = player.doYouWantToPutAnIrrigationOrAnImprovement(new Map(map))).isPresent()) {
