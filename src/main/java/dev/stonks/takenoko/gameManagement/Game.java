@@ -254,7 +254,7 @@ public class Game {
      * @param possibleActions the player can choose
      */
     private void playerPlay(Player player, ArrayList<Action> possibleActions) {
-        Action chosenAction = player.decide(new ArrayList<>(possibleActions), map);
+        Action chosenAction = player.decide(new ArrayList<>(possibleActions), new Map(map));
         LOG.info("Player n°" + player.getId() + " has chosen this action : " + chosenAction.toString());
         switch (chosenAction) {
             case PutTile:
