@@ -3,7 +3,9 @@ package dev.stonks.takenoko.pattern;
 import dev.stonks.takenoko.IllegalEqualityExceptionGenerator;
 import dev.stonks.takenoko.map.*;
 
+import java.net.NetworkInterface;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -247,8 +249,10 @@ public class Pattern {
             return Stream.empty();
         }
 
+        List<Optional<Tile>> neighbors = Arrays.stream(Direction.values()).map(d -> m.getTile(c.moveWith(d))).collect(Collectors.toList());
+
         return rotations()
-                .filter(r -> r.matchesAtNoRotate(m, c))
+                .filter(r -> r.matchesAtNoRotate(neighbors, c))
                 .map(match -> match.withCoordinate(c));
     }
 
@@ -273,9 +277,9 @@ public class Pattern {
         return p;
     }
 
-    private boolean matchesAtNoRotate(Map m, Coordinate c) {
+    private boolean matchesAtNoRotate(List<Optional<Tile>> mapNeighbors, Coordinate c) {
         return Arrays.stream(Direction.values())
-                .allMatch(d -> matchesTile(neighbors[d.index()], m.getTile(c.moveWith(d))));
+                .allMatch(d -> matchesTile(neighbors[d.index()], mapNeighbors.get(d.index())));
     }
 
     /**
