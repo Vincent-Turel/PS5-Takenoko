@@ -427,14 +427,11 @@ public class SmartPlayer extends Player implements Cloneable {
 
     @Override
     public WeatherKind chooseNewWeather(Set<WeatherKind> possiblesWeathers) {
+        if(possiblesWeathers.isEmpty()){
+            throw new IllegalArgumentException("This will never append : there isn't possible weather !");
+        }
         List<WeatherKind> list = new ArrayList<>(possiblesWeathers);
-
-        Set<MultipleAnswer<TileKind, Improvement, Integer>> multipleAnswer = getInteristingGardenerBamboo();
-        Set<Improvement> improvements = multipleAnswer.stream().map(MultipleAnswer::getU).collect(Collectors.toSet());
-        Set<TileKind> colors = multipleAnswer.stream().map(MultipleAnswer::getT).collect(Collectors.toSet());
-
-        Set<Tile> allTiles = currentMapState.placedTiles().filter(tile -> !tile.isInitial()).collect(Collectors.toSet());
-        allTiles.removeIf(tile -> !colors.contains(tile.getBamboo().getColor()) || !improvements.contains(tile.getImprovement()));
+        Set<Tile> allTiles = getTilesInterestingForGardenerObjectives();
 
         if (allTiles.isEmpty()) {
             list.remove(WeatherKind.Cloud);
@@ -455,9 +452,42 @@ public class SmartPlayer extends Player implements Cloneable {
 
     @Override
     public Improvement chooseImprovement(List<Improvement> improvements) {
-        Improvement chosen = improvements.remove(random.nextInt(improvements.size()));
-        this.improvements.add(chosen);
-        return chosen;
+        if(improvements.isEmpty()){
+            throw new IllegalArgumentException("This will never append : improvements is empty !");
+        }
+        List<Improvement> copy = new ArrayList<>(improvements);
+        Improvement chosenImprovement;
+        Set<Tile> allTiles = getTilesInterestingForGardenerObjectives();
+
+        if(allTiles.isEmpty()){
+            for (Improvement wantedImprovement:getInteristingGardenerBamboo().stream().map(MultipleAnswer::getU).collect(Collectors.toSet())) {
+                if(improvements.contains(wantedImprovement) && !this.improvements.contains(wantedImprovement)){
+                    this.improvements.add(wantedImprovement);
+                    return wantedImprovement;
+                }
+            }
+        }
+        else {
+            copy.removeAll(allTiles.stream().map(Tile::getImprovement).collect(Collectors.toSet()));
+            if(!copy.isEmpty()){
+                chosenImprovement = getRandomInCollection(copy);
+                this.improvements.add(chosenImprovement);
+                return chosenImprovement;
+            }
+        }
+        chosenImprovement = getRandomInCollection(improvements);
+        this.improvements.add(chosenImprovement);
+        return chosenImprovement;
+    }
+
+    private Set<Tile> getTilesInterestingForGardenerObjectives() {
+        Set<MultipleAnswer<TileKind, Improvement, Integer>> allTheGardenerTuple = getInteristingGardenerBamboo();
+        Set<Tile> allTiles = currentMapState.placedTiles().filter(tile -> !tile.isInitial()).collect(Collectors.toSet());
+
+        allTiles.removeIf(tile -> allTheGardenerTuple.stream().noneMatch(answer ->
+                tile.getBamboo().getColor() == answer.getT() &&
+                tile.getImprovement() == answer.getU()));
+        return allTiles;
     }
 
     /**
