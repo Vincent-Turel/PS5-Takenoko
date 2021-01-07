@@ -231,25 +231,13 @@ public class GameManager {
         System.out.print("\n" + vRightLine);
         System.out.print(hLine.repeat(smallWidth) + intersection);
         for (int i = 1; i < players.size(); i++) {
-            System.out.print(hLine.repeat(width) + intersection);
+            System.out.print("─".repeat(width) + "┼");
         }
         System.out.print(hLine.repeat(width) + vLeftLine);
         System.out.print("\n" + vLine);
         System.out.print(StringUtils.center("Win games", smallWidth) + vLine);
         for (FinalResults result : stats) {
             System.out.print(StringUtils.center(iT.format(result.getNbWin())+"/"+numberOfGames, width) + vLine);
-        }
-        System.out.print("\n" + vRightLine);
-        System.out.print(hLine.repeat(smallWidth) + intersection);
-
-        for (int i = 1; i < players.size(); i++) {
-            System.out.print("─".repeat(width) + "┼");
-        }
-        System.out.print(hLine.repeat(width) + vLeftLine);
-        System.out.print("\n" + vLine);
-        System.out.print(StringUtils.center("% Win games", smallWidth) + vLine);
-        for (FinalResults result : stats) {
-            System.out.print(StringUtils.center(df.format((result.getNbWin() / (float) numberOfGames) * 100) + "%", width) + "─");
         }
         printArrayHelper(hLine, vLine, vRightLine, vLeftLine, intersection, width, smallWidth);
         System.out.print(StringUtils.center("Lost games", smallWidth) + vLine);
