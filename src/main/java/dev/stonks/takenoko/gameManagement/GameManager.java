@@ -97,7 +97,7 @@ public class GameManager {
      * @param n           the number of games to run
      * @param actualCount the actuel number of games that have already been runned
      */
-    private void updateProgressBar(int n, int actualCount) {
+    private synchronized void updateProgressBar(int n, int actualCount) {
         long currentTime = System.currentTimeMillis() - time;
         if (LogManager.getLogManager().getLogger("").getHandlers()[0].getLevel().intValue() >= Level.SEVERE.intValue()) {
             float percentDone = actualCount / (float) n * 100;
@@ -190,7 +190,7 @@ public class GameManager {
                 printResultInArray("╭", "╰", "╮", "╯", n);
             }
         }
-
+        System.out.println("\n");
     }
 
     /**

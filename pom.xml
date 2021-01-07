@@ -65,6 +65,7 @@
                 </executions>
                 <configuration>
                     <mainClass>dev.stonks.takenoko.Main</mainClass> <!-- CHANGE ME -->
+                    <cleanupDaemonThreads>false</cleanupDaemonThreads>
                     <!--          <arguments>
                                 <argument>argument1</argument>
                               </arguments>
