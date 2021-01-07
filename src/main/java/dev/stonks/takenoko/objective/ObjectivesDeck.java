@@ -82,8 +82,8 @@ public class ObjectivesDeck {
         removeValidatedObjectivesInList(patternDeck, m, p);
     }
 
-    private <T extends Objective> void removeValidatedObjectivesInList(List<T> objs, Map m, Player p) {
-        objs.removeIf(o -> {
+    private <T extends Objective> void removeValidatedObjectivesInList(List<T> obj, Map m, Player p) {
+        obj.removeIf(o -> {
             o.checkObjectiveValid(m, p);
             return o.getStates();
         });
