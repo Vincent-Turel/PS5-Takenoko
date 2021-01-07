@@ -150,7 +150,7 @@ public class Game {
                             return;
                         }
                         if(!playerPlay(player, possibleActions)){
-                            LOG.info("nombres d'actions possibles restantes = "+possibleActions.size());
+                            LOG.info("No more possibles actions");
                             break;
                         }
                     }
@@ -313,7 +313,6 @@ public class Game {
                     if (!successfulObjectiveDrawn) {
                         LOG.info("Player n°" + player.getId() + " failed to draw a non done objective");
                         if(objectivesDeck.isEmpty()){
-                            LOG.info("LE DECK EST VIDE, on change les actions !");
                             possibleActions.remove(Action.DrawObjective);
                             if(possibleActions.isEmpty()){
                                 return false;
@@ -354,8 +353,6 @@ public class Game {
             possibleActions.clear();
             possibleActions.addAll(findPossibleActions(player));
         }
-        LOG.info("Les actions possibles après avoir joué une action : ");
-        LOG.info(possibleActions.toString());
         return true;
     }
 

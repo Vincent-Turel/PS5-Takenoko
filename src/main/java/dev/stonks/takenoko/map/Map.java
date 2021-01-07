@@ -51,7 +51,13 @@ public class Map {
         this.gardener = new Gardener(map.getGardener());
         this.delta = map.delta;
 
-        this.tiles = (HashMap<Coordinate, Tile>) map.tiles.clone();
+        this.tiles = new HashMap<>(27);
+        
+        map
+                .tiles
+                .entrySet()
+                .stream()
+                .forEach(entry -> this.tiles.put(new Coordinate(entry.getKey()), new Tile(entry.getValue())));
 
         this.irrigations = map
                 .irrigations

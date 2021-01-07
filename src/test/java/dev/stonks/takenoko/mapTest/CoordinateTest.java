@@ -160,13 +160,4 @@ public class CoordinateTest {
 
         assertArrayEquals(neighbors, rightNeighbors);
     }
-
-    @Test
-    void toOffset() {
-        int x1 = 42;
-        int y1 = 101;
-        Coordinate c1 = new Coordinate(x1, y1);
-        assertEquals(c1.toOffset(200), 200 * x1 + y1);
-        assertEquals(c1.toOffset(199), 199 * x1 + y1);
-    }
 }

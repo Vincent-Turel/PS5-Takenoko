@@ -125,17 +125,6 @@ public class IrrigationCoordinate {
     }
 
     /**
-     * Returns the offset associated to the irrigation. Each irrigation, at
-     * each position, has a different offset.
-     *
-     * @param sideLen the length of the sides of the map
-     * @return the unique irrigation offset.
-     */
-    public int toOffset(int sideLen) {
-        return coord.toOffset(sideLen) * 3 + getStorageOffset();
-    }
-
-    /**
      * Returns the offset associated to the neighbor irrigations.
      * An irrigation is the neighbor of another irrigation if they share one
      * end.
