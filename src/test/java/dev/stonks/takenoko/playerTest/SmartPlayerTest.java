@@ -188,13 +188,14 @@ public class SmartPlayerTest {
     }
 
     @Test
-    public void chooseImprovementTest() {
-        ArrayList<Improvement> improvements = new ArrayList<>(Arrays.asList(Improvement.Watershed, Improvement.Watershed));
-        assertEquals(2, improvements.size());
-        smartPlayer.chooseImprovement(improvements);
-        assertEquals(1, improvements.size());
-        improvements.addAll(Arrays.asList(Improvement.Watershed, Improvement.Watershed));
+    public void chooseImprovementTest() throws IllegalPlacementException {
+        ArrayList<Improvement> improvements = new ArrayList<>(Arrays.asList(Improvement.Watershed, Improvement.Enclosure, Improvement.Fertilizer));
         assertEquals(3, improvements.size());
+        map.setTile(map.initialTile().getCoordinate().moveWith(Direction.North), new AbstractTile(TileKind.Green));
+        smartPlayer.addObjectives(new GardenerObjective(5,new BambooPattern(TileKind.Green, 2, 1),Improvement.Enclosure));
+        assertTrue(smartPlayer.chooseImprovement(improvements).equals(Improvement.Enclosure));
+        map.setTile(map.initialTile().getCoordinate().moveWith(Direction.SouthEast), new AbstractTile(TileKind.Yellow));
+
     }
 
     @Test
