@@ -3,6 +3,7 @@ package dev.stonks.takenoko.pattern;
 import dev.stonks.takenoko.IllegalEqualityExceptionGenerator;
 import dev.stonks.takenoko.map.*;
 
+import java.net.NetworkInterface;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;

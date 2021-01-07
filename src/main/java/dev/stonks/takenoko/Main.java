@@ -6,9 +6,8 @@ import picocli.CommandLine;
 public class Main {
     public static void main(String... args) {
 
-        new CommandLine(new CommandLineParser()).execute(
-                "rushPandaPlayer", "rushGardenerPlayer", "equivalentObjectivePlayer", "rushPatternPlayer",
-                "-n", "1000", "-s"); // <- for test
+        new CommandLine(new CommandLineParser()).execute("random", "random","-n", "1000"); // <- for test
+
 
         //finalOutputForDelivery(); // <- for delivery
 
