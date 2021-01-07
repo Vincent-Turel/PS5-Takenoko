@@ -18,11 +18,11 @@ import java.util.stream.Stream;
 public class Map {
     // Tiles are stored in the tiles attribute. Each coordinate is mapped to a
     // unique offset.
-    private final Optional<Tile>[] tiles;
+    private List<Tile> tiles;
     // Irrigations are stored in the irrigations attribute. Each tile slot can
     // hold up to three irrigations, which correspond to the north, north-east
     // and south-east sides.
-    private final Optional<Irrigation>[] irrigations;
+    private List<Irrigation> irrigations;
     private final int delta;
     private final int sideLen;
     private final Panda panda;
@@ -39,8 +39,8 @@ public class Map {
         int tileSize = sideLen * sideLen;
         delta = tileNumber + 1;
 
-        tiles = new Optional[tileSize];
-        irrigations = new Optional[tileSize * 3];
+        tiles = new ArrayList<>(27);
+        irrigations = new ArrayList<>(20);
 
         unsetAllTiles();
         unsetAllIrrigations();
@@ -57,20 +57,17 @@ public class Map {
         this.gardener = new Gardener(map.getGardener());
         this.delta = map.delta;
         this.sideLen = map.sideLen;
-        this.tiles = new Optional[map.tiles.length];
-        for (int i = 0; i < tiles.length; i++) {
-            if (map.tiles[i].isPresent())
-                tiles[i] = Optional.of(new Tile(map.tiles[i].get()));
-            else
-                tiles[i] = Optional.empty();
-        }
-        this.irrigations = new Optional[map.irrigations.length];
-        for (int i = 0; i < irrigations.length; i++) {
-            if (map.irrigations[i].isPresent())
-                irrigations[i] = Optional.of(new Irrigation(map.irrigations[i].get()));
-            else
-                irrigations[i] = Optional.empty();
-        }
+        this.tiles = map
+                .tiles
+                .stream()
+                .map(t -> new Tile(t))
+                .collect(Collectors.toList());
+
+        this.irrigations = map
+                .irrigations
+                .stream()
+                .map(i -> new Irrigation(i))
+                .collect(Collectors.toList());
     }
 
     /**
@@ -86,15 +83,11 @@ public class Map {
     }
 
     private void unsetAllTiles() {
-        for (int i = 0; i < tiles.length; i++) {
-            tiles[i] = Optional.empty();
-        }
+        this.tiles.clear();
     }
 
     private void unsetAllIrrigations() {
-        for (int i = 0; i < irrigations.length; i++) {
-            irrigations[i] = Optional.empty();
-        }
+        this.irrigations.clear();
     }
 
     /**
@@ -152,14 +145,14 @@ public class Map {
      *                                   present.
      */
     private Tile setTile(Tile t) throws IllegalPlacementException {
-        int offset = t.getCoordinate().toOffset(sideLen);
-
         // If t is the initial tile, then the neighbor check is useless.
         // Similarly, no need to irrigate this tile.
+
         if (!t.isInitial()) {
-            if (tiles[offset].isPresent()) {
+            if (getTile(t.getCoordinate()).isPresent()) {
                 throw new IllegalPlacementException("Attempt to place a tile while a tile is already here");
             }
+
             if (!tileCanBePlacedAt(t.getCoordinate()))
                 throw new IllegalPlacementException("Tile can't be placed here");
 
@@ -168,7 +161,7 @@ public class Map {
             }
         }
 
-        tiles[offset] = Optional.of(t);
+        tiles.add(t);
         return t;
     }
 
@@ -198,9 +191,7 @@ public class Map {
             throw new IllegalPlacementException("Attempt to place an irrigation in a non-legal position");
         }
 
-        int offset = i.getCoordinate().toOffset(sideLen);
-
-        if (irrigations[offset].isPresent()) {
+        if (getIrrigation(i.getCoordinate()).isPresent()) {
             throw new IllegalPlacementException("Attempt to replace an irrigation");
         }
 
@@ -212,7 +203,7 @@ public class Map {
             }
         });
 
-        irrigations[offset] = Optional.of(i);
+        irrigations.add(i);
     }
 
     /**
@@ -221,12 +212,8 @@ public class Map {
      */
     public Optional<Irrigation> getIrrigationBetween(Coordinate a, Coordinate b) {
         try {
-            // We cheat: we temporarily create an irrigation at the specified
-            // coordinates, so that we can compute the offset.
-            Irrigation tmp = new Irrigation(a, b);
-
-            int offset = tmp.getCoordinate().toOffset(sideLen);
-            return irrigations[offset];
+            IrrigationCoordinate coords = new IrrigationCoordinate(a, b);
+            return getIrrigation(coords);
         } catch (IllegalPlacementException e) {
             return Optional.empty();
         }
@@ -250,9 +237,11 @@ public class Map {
     /**
      * Returns an irrigation, if it exists.
      */
-    Optional<Irrigation> getIrrigation(IrrigationCoordinate i) {
-        int offset = i.toOffset(sideLen);
-        return irrigations[offset];
+    Optional<Irrigation> getIrrigation(IrrigationCoordinate coord) {
+        return irrigations
+                .stream()
+                .filter(i -> i.getCoordinate().equals(coord))
+                .findFirst();
     }
 
     /**
@@ -293,8 +282,7 @@ public class Map {
         return i
                 .neighbors()
                 .stream()
-                .map(coord -> coord.toOffset(sideLen))
-                .anyMatch(offset -> irrigations[offset].isPresent());
+                .anyMatch(coord -> getIrrigation(coord).isPresent());
     }
 
     /**
@@ -305,9 +293,8 @@ public class Map {
                 .getConvergingIrrigationCoordinate()
                 .stream();
 
-        Stream<IrrigationCoordinate> neighborsOfAll = Arrays.stream(irrigations)
-                .filter(Optional::isPresent)
-                .map(Optional::get)
+        Stream<IrrigationCoordinate> neighborsOfAll = irrigations
+                .stream()
                 .flatMap(irrigation -> irrigation.getCoordinate().neighbors().stream());
 
         return Stream.concat(neighborOfInitial, neighborsOfAll)
@@ -322,18 +309,10 @@ public class Map {
      * @return the tile, if it exists.
      */
     public Optional<Tile> getTile(Coordinate coord) {
-        return getTile(coord.toOffset(sideLen));
-    }
-
-    /**
-     * Returns the tile at given offset. This offset must be a valid tile
-     * index.
-     *
-     * @param offset the offset of the said tile.
-     * @return the tile, if it exists.
-     */
-    private Optional<Tile> getTile(int offset) {
-        return tiles[offset];
+        return tiles
+                .stream()
+                .filter(t -> t.getCoordinate().equals(coord))
+                .findFirst();
     }
 
     /**
@@ -385,11 +364,8 @@ public class Map {
         // First step: getting all neighbors of all set tiles.
         Set<Coordinate> candidates = new HashSet<>();
 
-        for (Optional<Tile> maybeTile : tiles) {
-            if (maybeTile.isPresent()) {
-                Tile t = maybeTile.get();
+        for (Tile t : tiles) {
                 candidates.addAll(Arrays.asList(t.getCoordinate().neighbors()));
-            }
         }
 
         // Second step: removing coordinates that cannot be placed on.
@@ -408,7 +384,9 @@ public class Map {
     }
 
     private boolean tileAt(Coordinate c) {
-        return tiles[c.toOffset(sideLen)].isPresent();
+        return tiles
+                .stream()
+                .anyMatch(t -> t.getCoordinate().equals(c));
     }
 
     private int amountOfNeighborsAt(Coordinate c) {
@@ -449,8 +427,7 @@ public class Map {
      * returned stream is guaranteed to return unique values only.
      */
     public Stream<Tile> placedTiles() {
-        return Arrays.stream(tiles)
-                .flatMap(Optional::stream);
+        return tiles.stream();
     }
 
     @Override
@@ -460,8 +437,8 @@ public class Map {
         Map map = (Map) o;
         return delta == map.delta &&
                 sideLen == map.sideLen &&
-                Arrays.equals(tiles, map.tiles) &&
-                Arrays.equals(irrigations, map.irrigations) &&
+                tiles.equals(map.tiles) &&
+                irrigations.equals(map.irrigations) &&
                 Objects.equals(panda, map.panda) &&
                 Objects.equals(gardener, map.gardener);
     }
@@ -469,8 +446,8 @@ public class Map {
     @Override
     public int hashCode() {
         int result = Objects.hash(delta, sideLen, panda, gardener);
-        result = 31 * result + Arrays.hashCode(tiles);
-        result = 31 * result + Arrays.hashCode(irrigations);
+        result = 31 * result + tiles.hashCode();
+        result = 31 * result + irrigations.hashCode();
         return result;
     }
 
@@ -494,8 +471,8 @@ public class Map {
     }
 
     public Set<Tile> getImprovementPlacements() {
-        return Arrays.stream(tiles)                         // The whole map...
-                .flatMap(Optional::stream)                  // ... Except where there is no tile...
+        return tiles                                        // The whole map...
+                .stream()
                 .filter(Tile::canReceiveImprovement)        // ... Except the tiles where no improvement can be added
                 .collect(Collectors.toSet());               // ... In a Set.
     }
