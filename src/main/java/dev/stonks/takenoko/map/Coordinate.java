@@ -114,15 +114,6 @@ public class Coordinate {
     }
 
     /**
-     * Returns the integer offset corresponding to the coordinate.
-     *
-     * @param mapSideLength how much tiles at maximum the map has on each side
-     */
-    public int toOffset(int mapSideLength) {
-        return x * mapSideLength + y;
-    }
-
-    /**
      * Returns a new coordinate pointing a displacement of one tile in the
      * provided direction.
      *

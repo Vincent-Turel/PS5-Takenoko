@@ -157,21 +157,6 @@ public class IrrigationCoordinateTest {
     }
 
     @Test
-    void toOffset() throws IllegalPlacementException {
-        Coordinate c1 = new Coordinate(32, 24);
-        Coordinate c2 = c1.moveWith(Direction.SouthEast);
-        IrrigationCoordinate i1 = new IrrigationCoordinate(c1, c2);
-
-        assertEquals(i1.toOffset(99), (99 * 32 + 24) * 3 + 2);
-
-        Coordinate c3 = new Coordinate(111, 4);
-        Coordinate c4 = c3.moveWith(Direction.North);
-        IrrigationCoordinate i2 = new IrrigationCoordinate(c3, c4);
-
-        assertEquals(i2.toOffset(202), (111 * 202 + 4) * 3 + 0);
-    }
-
-    @Test
     void neighborIrrigationsOffset() throws IllegalPlacementException {
         Coordinate c1 = new Coordinate(30, 11);
         Coordinate c2 = c1.moveWith(Direction.South);
