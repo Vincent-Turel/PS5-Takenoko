@@ -8,11 +8,11 @@ import java.util.Optional;
 
 public class PatternConstraint {
     private final TileKind kind;
-    private final Coordinate coord;
+    private final Coordinate coordinate;
 
     PatternConstraint(TileKind k, Coordinate c) {
         kind = k;
-        coord = c;
+        coordinate = c;
     }
 
     static Optional<PatternConstraint> fromPatternData(Optional<TileKind> k, Coordinate c) {
@@ -30,11 +30,11 @@ public class PatternConstraint {
         }
 
         PatternConstraint rhs = (PatternConstraint) other;
-        return this.kind.equals(rhs.kind) && this.coord.equals(rhs.coord);
+        return this.kind.equals(rhs.kind) && this.coordinate.equals(rhs.coordinate);
     }
 
     @Override
     public int hashCode() {
-        return kind.hashCode() * coord.hashCode();
+        return kind.hashCode() * coordinate.hashCode();
     }
 }

@@ -25,22 +25,6 @@ public class MatchResult {
     }
 
     /**
-     * Returns the stored pattern.
-     */
-    Pattern pattern() {
-        return p;
-    }
-
-    /**
-     * Returns the coordinate at which the pattern matched.
-     * The coordinate of the match is defined as the coordinate of the center
-     * tile.
-     */
-    Coordinate coordinate() {
-        return c;
-    }
-
-    /**
      * Tests for equality with an other object. <br>
      * <p>
      * There are plenty of ways to encode a pattern. For instance, a pattern
@@ -50,7 +34,7 @@ public class MatchResult {
      * In order to guarantee such rules, a set of constraints are generated
      * from both object, and they are then compared. <br>
      * <p>
-     * TLDR: if two patterns matched on the same group of tiles, then they are
+     * If two patterns matched on the same group of tiles, then they are
      * guaranteed to be equals.
      */
     @Override
