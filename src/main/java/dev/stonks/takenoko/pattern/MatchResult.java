@@ -34,7 +34,7 @@ public class MatchResult {
      * In order to guarantee such rules, a set of constraints are generated
      * from both object, and they are then compared. <br>
      * <p>
-     * If two patterns matched on the same group of tiles, then they are
+     * TLDR : if two patterns matched on the same group of tiles, then they are
      * guaranteed to be equals.
      */
     @Override

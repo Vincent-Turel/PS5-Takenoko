@@ -22,6 +22,6 @@ public class EmperorObjective extends Objective {
     }
 
     public ObjectiveKind getKind() {
-        throw new IllegalCallerException("Emperor objective should not be adapted.");
+        throw new IllegalCallerException("Emperor objective should not be kind.");
     }
 }
