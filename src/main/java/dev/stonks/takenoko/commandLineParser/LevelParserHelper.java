@@ -8,7 +8,7 @@ import java.util.logging.Level;
 
 /**
  * This class aims to give to the commandLineParser
- * a list of candidates and associated conveter
+ * a list of candidates and associated converter
  * for the log level option.
  */
 public class LevelParserHelper extends ArrayList<String> implements CommandLine.ITypeConverter<Level> {

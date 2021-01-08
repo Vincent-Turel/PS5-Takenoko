@@ -40,21 +40,21 @@ public class CommandLineParser implements Runnable {
 
     @CommandLine.Option(
             names = {"-s", "--sequential"},
-            description = {"Weither or not the games should be played sequentially.", "(default: ${DEFAULT-VALUE})"},
+            description = {"Whether or not the games should be played sequentially.", "(default: ${DEFAULT-VALUE})"},
             defaultValue = "false"
     )
     private Boolean sequential;
 
     @CommandLine.Option(
             names = {"-f", "--full-result"},
-            description = {"Weither or not the result should be full written.", "(default: ${DEFAULT-VALUE})"},
+            description = {"Whether or not the result should be full written.", "(default: ${DEFAULT-VALUE})"},
             defaultValue = "false"
     )
     private Boolean fullResult;
 
     @CommandLine.Option(
             names = {"-u", "--ugly"},
-            description = {"Weither or not the result should be ugly.", "(default: ${DEFAULT-VALUE})"},
+            description = {"Whether or not the result should be ugly.", "(default: ${DEFAULT-VALUE})"},
             defaultValue = "false"
     )
     private Boolean ugly;

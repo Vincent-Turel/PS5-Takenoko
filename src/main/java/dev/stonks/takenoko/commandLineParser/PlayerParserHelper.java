@@ -11,7 +11,7 @@ import java.util.Arrays;
 
 /**
  * This class aims to give to the commandLineParser
- * a list of candidates and associated conveter
+ * a list of candidates and associated converter
  * for the player parameters.
  */
 class PlayerParserHelper extends ArrayList<String>{
