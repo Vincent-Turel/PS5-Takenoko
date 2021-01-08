@@ -7,15 +7,22 @@ Ce projet a pour objectif d'implémenter le jeu de plateau [Takenoko](https://ww
 Le projet touche à sa fin !
 
 ## Building
-`mvn install assembly:single`
+
+```bash
+mvn compile
+```
 
 ## Running
-`java -jar target/Takenoko-0.5.0-jar-with-dependencies.jar`  
-This project requires parameters and is configurable.
-To see every parameters and option, run with `-h` or `--help` parameters.
+
+```bash
+mvn exec:java
+```
 
 ## Testing
-`mvn test`
+
+```bash
+mvn test
+```
 
 ## Authors
 * [Di Grande Thomas](https://github.com/DigrandeArduino)
