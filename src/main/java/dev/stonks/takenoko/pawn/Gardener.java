@@ -9,14 +9,14 @@ import java.util.Arrays;
 import java.util.Optional;
 
 /**
- * Represente a Gardener
+ * Represent a Gardener
  *
  * @see Pawn
  */
 public class Gardener extends Pawn {
 
-    public Gardener(Coordinate initialTileCoord) {
-        super(initialTileCoord);
+    public Gardener(Coordinate initialTileCoordinate) {
+        super(initialTileCoordinate);
     }
 
     public Gardener(Gardener gardener) {
@@ -24,7 +24,7 @@ public class Gardener extends Pawn {
     }
 
     /**
-     * Move and make the bamboo grow on the tile,  and its neigbors if :
+     * Move and make the bamboo grow on the tile,  and its neighbors if :
      * - the neighbor is present
      * - the neighbor's kind is the same as the tile
      * - the neighbor is irrigated

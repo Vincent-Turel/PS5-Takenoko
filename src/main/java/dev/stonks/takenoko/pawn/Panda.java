@@ -8,8 +8,8 @@ import java.util.Optional;
 
 public class Panda extends Pawn {
 
-    public Panda(Coordinate initialTileCoord) {
-        super(initialTileCoord);
+    public Panda(Coordinate initialTileCoordinate) {
+        super(initialTileCoordinate);
     }
 
     public Panda(Panda panda) {

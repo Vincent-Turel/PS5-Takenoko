@@ -16,10 +16,10 @@ public abstract class Pawn {
     /**
      * Build a pawn
      *
-     * @param initialTileCoord the initial tile's coordinate
+     * @param initialTileCoordinate the initial tile's coordinate
      */
-    protected Pawn(Coordinate initialTileCoord) {
-        this.currentCoordinate = initialTileCoord;
+    protected Pawn(Coordinate initialTileCoordinate) {
+        this.currentCoordinate = initialTileCoordinate;
     }
 
     /**
