@@ -208,7 +208,7 @@ public abstract class SmartPlayer extends Player implements Cloneable {
      */
     @Override
     public Action decide(ArrayList<Action> possibleAction, Map map) {
-        if (possibleAction.size() < 1)
+        if (possibleAction.isEmpty())
             throw new IllegalStateException("There should always have possible actions");
 
         this.currentMapState = map;
@@ -230,7 +230,7 @@ public abstract class SmartPlayer extends Player implements Cloneable {
         if (copyOfPossibleAction.contains(Action.DrawIrrigation)) {
             if (this.irrigation.size() < 5)
                 return Action.DrawIrrigation;
-            else if (copyOfPossibleAction.size() > 1)
+            else if (!copyOfPossibleAction.isEmpty())
                 copyOfPossibleAction.remove(Action.DrawIrrigation);
         }
         return possibleAction.get(random.nextInt(possibleAction.size()));
@@ -249,7 +249,7 @@ public abstract class SmartPlayer extends Player implements Cloneable {
 
         tiles.removeIf(this::uselessTile);
 
-        if (tiles.size() > 0) {
+        if (!tiles.isEmpty()) {
             return Optional.of(getRandomInCollection(tiles));
         }
         return Optional.empty();
@@ -270,9 +270,9 @@ public abstract class SmartPlayer extends Player implements Cloneable {
     public MultipleAnswer<AbstractTile, Coordinate, ?> putTile(ArrayList<AbstractTile> tiles) {
         ArrayList<Coordinate> tilePlacements = new ArrayList<>(currentMapState.getTilePlacements());
 
-        if (tiles.size() < 1)
+        if (tiles.isEmpty())
             throw new IllegalStateException("This action shouldn't be possible if there is no tiles remaining");
-        if (tilePlacements.size() < 1)
+        if (tilePlacements.isEmpty())
             throw new IllegalStateException("There should always have a place for a new tile");
 
         AbstractTile chosenTile = getRandomInCollection(tiles);
@@ -301,7 +301,7 @@ public abstract class SmartPlayer extends Player implements Cloneable {
     @Override
     public Tile chooseWherePawnShouldGo(Pawn pawn) {
         ArrayList<Tile> possiblePawnPlacements = new ArrayList<>(currentMapState.getPossiblePawnPlacements(pawn));
-        if (possiblePawnPlacements.size() < 1)
+        if (possiblePawnPlacements.isEmpty())
             throw new IllegalStateException("This action shouldn't be possible if the pawn can't move anywhere");
         if (getResScore() == 0) {
             return possiblePawnPlacements.get(random.nextInt(possiblePawnPlacements.size()));
@@ -337,14 +337,14 @@ public abstract class SmartPlayer extends Player implements Cloneable {
     @Override
     public Optional<Action> doYouWantToPutAnIrrigationOrAnImprovement(Map map) {
         this.currentMapState = map;
-        if (irrigation.size() > 0 && new ArrayList<>(currentMapState.getIrrigationPlacements()).size() > 0) {
+        if (!irrigation.isEmpty() && !new ArrayList<>(currentMapState.getIrrigationPlacements()).isEmpty()) {
             resetResScore();
             explore(Action.PutIrrigation, new Map(currentMapState), 1, irrigation.size(), new ArrayList<>());
 
             if (getResScore() > 0)
                 return Optional.of(Action.PutIrrigation);
         }
-        if (improvements.size() > 0 && new ArrayList<>(currentMapState.getImprovementPlacements()).size() > 0)
+        if (!improvements.isEmpty() && !new ArrayList<>(currentMapState.getImprovementPlacements()).isEmpty())
             return Optional.of(Action.PutImprovement);
 
         return Optional.empty();
@@ -359,9 +359,9 @@ public abstract class SmartPlayer extends Player implements Cloneable {
     public MultipleAnswer<AbstractIrrigation, IrrigationCoordinate, ?> putIrrigation() {
         List<IrrigationCoordinate> irrigationCoordinates = new ArrayList<>(currentMapState.getIrrigationPlacements());
 
-        if (irrigation.size() < 1)
+        if (irrigation.isEmpty())
             throw new IllegalStateException("This action shouldn't be possible");
-        if (irrigationCoordinates.size() < 1)
+        if (irrigationCoordinates.isEmpty())
             throw new IllegalStateException("There is nowhere I can put an irrigation");
 
         return new MultipleAnswer<>(irrigation.pop(), irrigationCoordinates.get(getResAction().get(1)));
@@ -371,9 +371,9 @@ public abstract class SmartPlayer extends Player implements Cloneable {
     public MultipleAnswer<Tile, Improvement, ?> putImprovement() {
         Set<Tile> improvementPlacements = currentMapState.getImprovementPlacements();
 
-        if (improvements.size() < 1)
+        if (improvements.isEmpty())
             throw new IllegalStateException("This action shouldn't be possible");
-        if (improvementPlacements.size() < 1)
+        if (improvementPlacements.isEmpty())
             throw new IllegalStateException("There is nowhere I can put an improvement");
 
         List<Improvement> possibleImprovements = new ArrayList<>(improvements);

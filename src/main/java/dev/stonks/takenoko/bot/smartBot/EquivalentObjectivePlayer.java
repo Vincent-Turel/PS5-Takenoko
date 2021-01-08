@@ -28,7 +28,7 @@ public class EquivalentObjectivePlayer extends SmartPlayer {
 
     @Override
     public ObjectiveKind chooseObjectiveKind(ArrayList<ObjectiveKind> listPossibleKind) {
-        if (listPossibleKind.size() < 1)
+        if (listPossibleKind.isEmpty())
             throw new IllegalStateException("There is no more objectives");
 
         HashMap<ObjectiveKind, Integer> nbObjective = new HashMap<>();

@@ -28,7 +28,7 @@ public class RandomPlayer extends Player {
      */
     @Override
     public Action decide(ArrayList<Action> possibleAction, Map map) {
-        if (possibleAction.size() < 1)
+        if (possibleAction.isEmpty())
             throw new IllegalStateException("There should always have possible actions");
         currentMapState = map;
         return getRandomInCollection(possibleAction);
@@ -42,7 +42,7 @@ public class RandomPlayer extends Player {
      */
     @Override
     public ObjectiveKind chooseObjectiveKind(ArrayList<ObjectiveKind> listPossibleKind) {
-        if (listPossibleKind.size() < 1) {
+        if (listPossibleKind.isEmpty()) {
             throw new IllegalStateException("There is no more objectives");
         }
         return getRandomInCollection(listPossibleKind);
@@ -61,9 +61,9 @@ public class RandomPlayer extends Player {
     public MultipleAnswer<AbstractTile, Coordinate, ?> putTile(ArrayList<AbstractTile> tiles) {
         Set<Coordinate> possiblePlacements = this.currentMapState.getTilePlacements();
 
-        if (tiles.size() < 1)
+        if (tiles.isEmpty())
             throw new IllegalStateException("This action shouldn't be possible if there is no tiles remaining");
-        if (possiblePlacements.size() < 1)
+        if (possiblePlacements.isEmpty())
             throw new IllegalStateException("There should always have a place for a new tile");
 
         AbstractTile chosenAbstractTile = getRandomInCollection(tiles);
@@ -82,7 +82,7 @@ public class RandomPlayer extends Player {
     public Tile chooseWherePawnShouldGo(Pawn pawn) {
         Set<Tile> possiblePawnPlacements = currentMapState.getPossiblePawnPlacements(pawn);
 
-        if (possiblePawnPlacements.size() < 1)
+        if (possiblePawnPlacements.isEmpty())
             throw new IllegalStateException("This action shouldn't be possible if there the panda can't move anywhere");
 
         return getRandomInCollection(possiblePawnPlacements);
@@ -110,14 +110,14 @@ public class RandomPlayer extends Player {
     public Optional<Action> doYouWantToPutAnIrrigationOrAnImprovement(Map map) {
         this.currentMapState = map;
         int x = random.nextInt(2);
-        if (irrigation.size() > 0 && currentMapState.getIrrigationPlacements().size() > 0) {
-            if (improvements.size() > 0 && currentMapState.getImprovementPlacements().size() > 0) {
+        if (!irrigation.isEmpty() && !currentMapState.getIrrigationPlacements().isEmpty()) {
+            if (!improvements.isEmpty() && !currentMapState.getImprovementPlacements().isEmpty()) {
                 x = random.nextInt(3);
                 return x == 0 ? Optional.of(Action.PutIrrigation) : x == 1 ? Optional.of(Action.PutImprovement) : Optional.empty();
             } else {
                 return x == 0 ? Optional.of(Action.PutIrrigation) : Optional.empty();
             }
-        } else if (improvements.size() > 0 && currentMapState.getImprovementPlacements().size() > 0) {
+        } else if (!improvements.isEmpty() && !currentMapState.getImprovementPlacements().isEmpty()) {
             return x == 0 ? Optional.of(Action.PutImprovement) : Optional.empty();
         } else
             return Optional.empty();
@@ -132,9 +132,9 @@ public class RandomPlayer extends Player {
     public MultipleAnswer<AbstractIrrigation, IrrigationCoordinate, ?> putIrrigation() {
         Set<IrrigationCoordinate> irrigationCoordinates = currentMapState.getIrrigationPlacements();
 
-        if (irrigation.size() < 1)
+        if (irrigation.isEmpty())
             throw new IllegalStateException("This action shouldn't be possible");
-        if (irrigationCoordinates.size() < 1)
+        if (irrigationCoordinates.isEmpty())
             throw new IllegalStateException("There is nowhere I can put an irrigation");
 
         return new MultipleAnswer<>(irrigation.pop(), getRandomInCollection(irrigationCoordinates));

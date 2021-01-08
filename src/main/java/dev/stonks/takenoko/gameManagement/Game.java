@@ -91,13 +91,13 @@ public class Game {
      */
     public ArrayList<Action> findPossibleActions(Player player) {
         ArrayList<Action> possibleAction = new ArrayList<>();
-        if (map.getPossiblePawnPlacements(map.getGardener()).size() > 0)
+        if (!map.getPossiblePawnPlacements(map.getGardener()).isEmpty())
             possibleAction.add(Action.MoveGardener);
-        if (map.getPossiblePawnPlacements(map.getPanda()).size() > 0)
+        if (!map.getPossiblePawnPlacements(map.getPanda()).isEmpty())
             possibleAction.add(Action.MovePanda);
-        if (map.getTilePlacements().size() > 0 && tileDeck.size() > 0)
+        if (!map.getTilePlacements().isEmpty() && !tileDeck.isEmpty())
             possibleAction.add(Action.PutTile);
-        if (irrigationDeck.size() > 0)
+        if (!irrigationDeck.isEmpty())
             possibleAction.add(Action.DrawIrrigation);
         if (player.getObjectives().size() < 5 && objectivesDeck.deckIsNotEmpty()) {
             possibleAction.add(Action.DrawObjective);

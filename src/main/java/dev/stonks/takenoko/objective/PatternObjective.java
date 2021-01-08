@@ -42,7 +42,7 @@ public class PatternObjective extends Objective {
     @Override
     public void checkObjectiveValid(Map map, Player player) {
         Set<MatchResult> result = localPattern.getMatchesOn(map);
-        if (result.size() != 0) {
+        if (!result.isEmpty()) {
             this.updateStates();
         }
     }

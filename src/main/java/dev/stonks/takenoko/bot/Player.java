@@ -99,7 +99,7 @@ public abstract class Player {
         List<Tile> tiles = currentMapState.placedTiles()
                 .filter(tile -> (tile.isIrrigated() && !tile.isInitial())).collect(Collectors.toList());
 
-        if (tiles.size() > 0) {
+        if (!tiles.isEmpty()) {
             return Optional.of(getRandomInCollection(tiles));
         }
         return Optional.empty();
@@ -276,9 +276,9 @@ public abstract class Player {
     public MultipleAnswer<Tile, Improvement, ?> putImprovement() {
         Set<Tile> improvementPlacements = currentMapState.getImprovementPlacements();
 
-        if (improvements.size() < 1)
+        if (improvements.isEmpty())
             throw new IllegalStateException("This action shouldn't be possible");
-        if (improvementPlacements.size() < 1)
+        if (improvementPlacements.isEmpty())
             throw new IllegalStateException("There is nowhere I can put an improvement");
 
         Tile chosenTile = getRandomInCollection(improvementPlacements);
