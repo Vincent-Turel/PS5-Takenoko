@@ -79,7 +79,7 @@ public class DumbPlayer extends Player {
         }
     }
 
-    private void explore_irrigations() {
+    private void explore_irrigation() {
         Map usedCloneMap;
         var irrigationPlacements = new ArrayList<>(currentMapState.getIrrigationPlacements());
         for (int i = 0; i < irrigationPlacements.size(); i++) {
@@ -117,7 +117,7 @@ public class DumbPlayer extends Player {
         if (possibleAction.contains(Action.DrawObjective))
             return Action.DrawObjective;
         if (possibleAction.contains(Action.DrawIrrigation)) {
-            if (this.irrigations.size() < 4)
+            if (this.irrigation.size() < 4)
                 return Action.DrawIrrigation;
             else if (possibleAction.size() > 1)
                 possibleAction.remove(Action.DrawIrrigation);
@@ -153,7 +153,7 @@ public class DumbPlayer extends Player {
     }
 
     /**
-     * @param tiles A liste of tiles
+     * @param tiles A list of tiles
      * @return The coordinate and the tile the player has chosen
      */
     @Override
@@ -215,7 +215,7 @@ public class DumbPlayer extends Player {
     }
 
     /**
-     * Return the action that the player want to do among [PutIrrigation, PutAmmenagment]
+     * Return the action that the player want to do among [PutIrrigation, PutLayout]
      * Return an empty optional if he doesn't want to play
      *
      * @param map the map state
@@ -227,9 +227,9 @@ public class DumbPlayer extends Player {
         if (improvements.size() > 0 && new HashSet<>(currentMapState.getImprovementPlacements()).size() > 0) {
             return Optional.of(Action.PutImprovement);
         }
-        if (irrigations.size() > 0 && new ArrayList<>(currentMapState.getIrrigationPlacements()).size() > 0) {
+        if (irrigation.size() > 0 && new ArrayList<>(currentMapState.getIrrigationPlacements()).size() > 0) {
             resetAction(chosenOptionalAction);
-            explore_irrigations();
+            explore_irrigation();
             if (chosenOptionalAction.get(0) > 0)
                 return Optional.of(Action.PutIrrigation);
             else {
@@ -250,7 +250,7 @@ public class DumbPlayer extends Player {
     public MultipleAnswer<AbstractIrrigation, IrrigationCoordinate, ?> putIrrigation() {
         List<IrrigationCoordinate> irrigationCoordinates = new ArrayList<>(currentMapState.getIrrigationPlacements());
 
-        if (irrigations.size() < 1)
+        if (irrigation.size() < 1)
             throw new IllegalStateException("This action shouldn't be possible");
         if (irrigationCoordinates.size() < 1)
             throw new IllegalStateException("There is nowhere I can put an irrigation");
@@ -260,7 +260,7 @@ public class DumbPlayer extends Player {
                 getRandomInCollection(irrigationCoordinates);
 
         return new MultipleAnswer<>(
-                irrigations.pop(),
+                irrigation.pop(),
                 chosenIrrigationCoordinate);
     }
 

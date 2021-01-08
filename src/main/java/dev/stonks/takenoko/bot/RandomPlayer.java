@@ -54,7 +54,7 @@ public class RandomPlayer extends Player {
     }
 
     /**
-     * @param tiles A liste of tiles
+     * @param tiles A list of tiles
      * @return The coordinate and the tile the player has chosen
      */
     @Override
@@ -100,7 +100,7 @@ public class RandomPlayer extends Player {
     }
 
     /**
-     * Return the action that the player want to do among [PutIrrigation, PutAmmenagment]
+     * Return the action that the player want to do among [PutIrrigation, PutLayout]
      * Return an empty optional if he doesn't want to play
      *
      * @param map the map state
@@ -110,7 +110,7 @@ public class RandomPlayer extends Player {
     public Optional<Action> doYouWantToPutAnIrrigationOrAnImprovement(Map map) {
         this.currentMapState = map;
         int x = random.nextInt(2);
-        if (irrigations.size() > 0 && currentMapState.getIrrigationPlacements().size() > 0) {
+        if (irrigation.size() > 0 && currentMapState.getIrrigationPlacements().size() > 0) {
             if (improvements.size() > 0 && currentMapState.getImprovementPlacements().size() > 0) {
                 x = random.nextInt(3);
                 return x == 0 ? Optional.of(Action.PutIrrigation) : x == 1 ? Optional.of(Action.PutImprovement) : Optional.empty();
@@ -132,12 +132,12 @@ public class RandomPlayer extends Player {
     public MultipleAnswer<AbstractIrrigation, IrrigationCoordinate, ?> putIrrigation() {
         Set<IrrigationCoordinate> irrigationCoordinates = currentMapState.getIrrigationPlacements();
 
-        if (irrigations.size() < 1)
+        if (irrigation.size() < 1)
             throw new IllegalStateException("This action shouldn't be possible");
         if (irrigationCoordinates.size() < 1)
             throw new IllegalStateException("There is nowhere I can put an irrigation");
 
-        return new MultipleAnswer<>(irrigations.pop(), getRandomInCollection(irrigationCoordinates));
+        return new MultipleAnswer<>(irrigation.pop(), getRandomInCollection(irrigationCoordinates));
     }
 
     @Override

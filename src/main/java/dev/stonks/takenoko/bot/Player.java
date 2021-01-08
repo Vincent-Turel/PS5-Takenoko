@@ -21,7 +21,7 @@ public abstract class Player {
     protected int id;
     protected ArrayList<Objective> objectives;
     protected int[] collectedBamboo;
-    protected Stack<AbstractIrrigation> irrigations;
+    protected Stack<AbstractIrrigation> irrigation;
     protected List<Improvement> improvements;
     protected int nbObjectivesAchieved;
     protected int nbPandaObjectivesAchieved;
@@ -35,7 +35,7 @@ public abstract class Player {
         this.nbObjectivesAchieved = 0;
         this.nbPandaObjectivesAchieved = 0;
         this.collectedBamboo = new int[]{0, 0, 0}; //[green,yellow,pink]
-        this.irrigations = new Stack<>();
+        this.irrigation = new Stack<>();
         this.improvements = new ArrayList<>();
         this.score = 0;
         this.random = new Random();
@@ -50,7 +50,7 @@ public abstract class Player {
     public abstract Action decide(ArrayList<Action> possibleAction, Map map);
 
     /**
-     * @param tiles A liste of tiles
+     * @param tiles A list of tiles
      * @return The coordinate and the tile the player has chosen
      */
     public abstract MultipleAnswer<AbstractTile, Coordinate, ?> putTile(ArrayList<AbstractTile> tiles);
@@ -67,7 +67,7 @@ public abstract class Player {
      * This method return the tile where the player want to move the panda with the weather effect
      *
      * @param map the current map state
-     * @return a optionnal tile if the player want to move the panda, or an empty optionnal if he doesn't want or can't
+     * @return a optional tile if the player want to move the panda, or an empty optional if he doesn't want or can't
      */
     public abstract Optional<Tile> chooseTileToMovePanda(Map map);
 
@@ -89,7 +89,7 @@ public abstract class Player {
 
     /**
      * This method return the tile where the player want to grow bamboo
-     * and return an optional empty if he dosen't want or if he can't
+     * and return an optional empty if he doesn't want or if he can't
      *
      * @param map the current map
      * @return an optional of a tile
@@ -118,7 +118,7 @@ public abstract class Player {
     }
 
     /**
-     * Get a list of all objectives the player curently has
+     * Get a list of all objectives the player currently has
      *
      * @return objectives
      */
@@ -132,16 +132,16 @@ public abstract class Player {
      * @param irrigation the irrigation to add
      */
     public void addIrrigation(AbstractIrrigation irrigation) {
-        irrigations.push(irrigation);
+        this.irrigation.push(irrigation);
     }
 
     /**
-     * Get a stack of all irrigations the player curently has
+     * Get a stack of all irrigation the player currently has
      *
-     * @return irrigations
+     * @return irrigation
      */
-    public Stack<AbstractIrrigation> getIrrigations() {
-        return irrigations;
+    public Stack<AbstractIrrigation> getIrrigation() {
+        return irrigation;
     }
 
     /**
@@ -154,7 +154,7 @@ public abstract class Player {
     }
 
     /**
-     * Get the score of the player for the curent game
+     * Get the score of the player for the current game
      *
      * @return score
      */
@@ -163,7 +163,7 @@ public abstract class Player {
     }
 
     /**
-     * Get the number of objectives the player has achieved since the bigining of the game
+     * Get the number of objectives the player has achieved since the beginning of the game
      *
      * @return nbObjectivesAchieved
      */
@@ -226,7 +226,7 @@ public abstract class Player {
     }
 
     /**
-     * Return the action that the player want to do among [PutIrrigation, PutAmmenagment]
+     * Return the action that the player want to do among [PutIrrigation, PutLayout]
      * Return an empty optional if he doesn't want to play
      *
      * @param map the map state
@@ -271,7 +271,7 @@ public abstract class Player {
     /**
      * Chose where the player wanna put his irrigation and return it.
      *
-     * @return an improvement as a tile in order to update the tile on the map with the caracteristics of this tile
+     * @return an improvement as a tile in order to update the tile on the map with the characteristics of this tile
      */
     public MultipleAnswer<Tile, Improvement, ?> putImprovement() {
         Set<Tile> improvementPlacements = currentMapState.getImprovementPlacements();
@@ -301,7 +301,7 @@ public abstract class Player {
                 getScore() == player.getScore() &&
                 Objects.equals(getObjectives(), player.getObjectives()) &&
                 Arrays.equals(getCollectedBamboo(), player.getCollectedBamboo()) &&
-                Objects.equals(getIrrigations(), player.getIrrigations()) &&
+                Objects.equals(getIrrigation(), player.getIrrigation()) &&
                 Objects.equals(getImprovements(), player.getImprovements()) &&
                 Objects.equals(getCurrentMapState(), player.getCurrentMapState()) &&
                 Objects.equals(random, player.random);
@@ -309,7 +309,7 @@ public abstract class Player {
 
     @Override
     public int hashCode() {
-        int result = Objects.hash(id, objectives, irrigations, nbObjectivesAchieved, currentMapState, score, random);
+        int result = Objects.hash(id, objectives, irrigation, nbObjectivesAchieved, currentMapState, score, random);
         result = 31 * result + Arrays.hashCode(collectedBamboo);
         return result;
     }
@@ -320,7 +320,7 @@ public abstract class Player {
     }
 
     /**
-     * Check if an action has achevied an objective
+     * Check if an action has achieved an objective
      *
      * @param player    the player who tried the action
      * @param clonedMap the map on which we tried the action

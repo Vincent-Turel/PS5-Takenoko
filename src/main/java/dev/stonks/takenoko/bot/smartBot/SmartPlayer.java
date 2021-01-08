@@ -115,7 +115,7 @@ public abstract class SmartPlayer extends Player implements Cloneable {
             actions.remove(actions.size() - 1);
     }
 
-    private Set<MultipleAnswer<TileKind, Improvement, Integer>> getInteristingGardenerBamboo() {
+    private Set<MultipleAnswer<TileKind, Improvement, Integer>> getInterestingGardenerBamboo() {
         Set<MultipleAnswer<TileKind, Improvement, Integer>> answers = new HashSet<>();
         objectives.stream()
                 .filter(o -> o.getObjType() == ObjectiveKind.GardenerObjective)
@@ -228,7 +228,7 @@ public abstract class SmartPlayer extends Player implements Cloneable {
             return Action.DrawObjective;
 
         if (copyOfPossibleAction.contains(Action.DrawIrrigation)) {
-            if (this.irrigations.size() < 5)
+            if (this.irrigation.size() < 5)
                 return Action.DrawIrrigation;
             else if (copyOfPossibleAction.size() > 1)
                 copyOfPossibleAction.remove(Action.DrawIrrigation);
@@ -256,14 +256,14 @@ public abstract class SmartPlayer extends Player implements Cloneable {
     }
 
     private boolean uselessTile(Tile tile) {
-        return getInteristingGardenerBamboo().stream().noneMatch(answer ->
+        return getInterestingGardenerBamboo().stream().noneMatch(answer ->
                 tile.getBamboo().getColor() == answer.getT() &&
                         tile.getImprovement() == answer.getU() &&
                         tile.getBamboo().getSize() < answer.getV().orElseThrow(NoSuchElementException::new));
     }
 
     /**
-     * @param tiles A liste of tiles
+     * @param tiles A list of tiles
      * @return The coordinate and the tile the player has chosen
      */
     @Override
@@ -328,7 +328,7 @@ public abstract class SmartPlayer extends Player implements Cloneable {
     }
 
     /**
-     * Return the action that the player want to do among [PutIrrigation, PutAmmenagment]
+     * Return the action that the player want to do among [PutIrrigation, PutLayout]
      * Return an empty optional if he doesn't want to play
      *
      * @param map the map state
@@ -337,9 +337,9 @@ public abstract class SmartPlayer extends Player implements Cloneable {
     @Override
     public Optional<Action> doYouWantToPutAnIrrigationOrAnImprovement(Map map) {
         this.currentMapState = map;
-        if (irrigations.size() > 0 && new ArrayList<>(currentMapState.getIrrigationPlacements()).size() > 0) {
+        if (irrigation.size() > 0 && new ArrayList<>(currentMapState.getIrrigationPlacements()).size() > 0) {
             resetResScore();
-            explore(Action.PutIrrigation, new Map(currentMapState), 1, irrigations.size(), new ArrayList<>());
+            explore(Action.PutIrrigation, new Map(currentMapState), 1, irrigation.size(), new ArrayList<>());
 
             if (getResScore() > 0)
                 return Optional.of(Action.PutIrrigation);
@@ -359,12 +359,12 @@ public abstract class SmartPlayer extends Player implements Cloneable {
     public MultipleAnswer<AbstractIrrigation, IrrigationCoordinate, ?> putIrrigation() {
         List<IrrigationCoordinate> irrigationCoordinates = new ArrayList<>(currentMapState.getIrrigationPlacements());
 
-        if (irrigations.size() < 1)
+        if (irrigation.size() < 1)
             throw new IllegalStateException("This action shouldn't be possible");
         if (irrigationCoordinates.size() < 1)
             throw new IllegalStateException("There is nowhere I can put an irrigation");
 
-        return new MultipleAnswer<>(irrigations.pop(), irrigationCoordinates.get(getResAction().get(1)));
+        return new MultipleAnswer<>(irrigation.pop(), irrigationCoordinates.get(getResAction().get(1)));
     }
 
     @Override
@@ -377,8 +377,8 @@ public abstract class SmartPlayer extends Player implements Cloneable {
             throw new IllegalStateException("There is nowhere I can put an improvement");
 
         List<Improvement> possibleImprovements = new ArrayList<>(improvements);
-        var neededImpovement = getNeededImprovement().stream().map(MultipleAnswer::getU).collect(Collectors.toCollection(HashSet::new));
-        possibleImprovements.retainAll(neededImpovement);
+        var neededImprovement = getNeededImprovement().stream().map(MultipleAnswer::getU).collect(Collectors.toCollection(HashSet::new));
+        possibleImprovements.retainAll(neededImprovement);
         Improvement chosenImprovement;
         if (possibleImprovements.isEmpty()) {
             chosenImprovement = improvements.remove(random.nextInt(improvements.size()));
@@ -437,7 +437,7 @@ public abstract class SmartPlayer extends Player implements Cloneable {
         Set<Tile> allTiles = getTilesInterestingForGardenerObjectives();
 
         if(allTiles.isEmpty()){
-            for (Improvement wantedImprovement:getInteristingGardenerBamboo().stream().map(MultipleAnswer::getU).collect(Collectors.toSet())) {
+            for (Improvement wantedImprovement: getInterestingGardenerBamboo().stream().map(MultipleAnswer::getU).collect(Collectors.toSet())) {
                 if(improvements.contains(wantedImprovement) && !this.improvements.contains(wantedImprovement)){
                     return wantedImprovement;
                 }
@@ -455,7 +455,7 @@ public abstract class SmartPlayer extends Player implements Cloneable {
     }
 
     private Set<Tile> getTilesInterestingForGardenerObjectives() {
-        Set<MultipleAnswer<TileKind, Improvement, Integer>> allTheGardenerTuple = getInteristingGardenerBamboo();
+        Set<MultipleAnswer<TileKind, Improvement, Integer>> allTheGardenerTuple = getInterestingGardenerBamboo();
         Set<Tile> allTiles = currentMapState.placedTiles().filter(tile -> !tile.isInitial()).collect(Collectors.toSet());
 
         allTiles.removeIf(tile -> allTheGardenerTuple.stream().noneMatch(answer ->

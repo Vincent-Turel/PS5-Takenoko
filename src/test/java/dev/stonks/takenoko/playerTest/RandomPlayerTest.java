@@ -158,10 +158,10 @@ public class RandomPlayerTest {
         randomPlayer.setCurrentMapState(map);
 
         randomPlayer.addIrrigation(new AbstractIrrigation());
-        assertEquals(1, randomPlayer.getIrrigations().size());
+        assertEquals(1, randomPlayer.getIrrigation().size());
         MultipleAnswer<AbstractIrrigation, IrrigationCoordinate, ?> answer = randomPlayer.putIrrigation();
         Irrigation irrigation = answer.getT().withCoordinate(answer.getU());
-        assertEquals(0, randomPlayer.getIrrigations().size());
+        assertEquals(0, randomPlayer.getIrrigation().size());
         assertTrue(map.getIrrigationPlacements().contains(irrigation.getCoordinate()));
         assertThrows(IllegalStateException.class, () -> randomPlayer.putIrrigation());
     }

@@ -215,10 +215,10 @@ public class DumbPlayerTest {
         dumbPlayer.setCurrentMapState(map);
 
         dumbPlayer.addIrrigation(new AbstractIrrigation());
-        assertEquals(1, dumbPlayer.getIrrigations().size());
+        assertEquals(1, dumbPlayer.getIrrigation().size());
         MultipleAnswer<AbstractIrrigation, IrrigationCoordinate, ?> answer2 = dumbPlayer.putIrrigation();
         Irrigation irrigation2 = answer2.getT().withCoordinate(answer2.getU());
-        assertEquals(0, dumbPlayer.getIrrigations().size());
+        assertEquals(0, dumbPlayer.getIrrigation().size());
         assertTrue(map.getIrrigationPlacements().contains(irrigation2.getCoordinate()));
         assertThrows(IllegalStateException.class, () -> dumbPlayer.putIrrigation());
     }

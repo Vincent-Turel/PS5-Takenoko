@@ -235,11 +235,11 @@ public class SmartPlayerTest {
         smartPlayer.setCurrentMapState(map);
 
         smartPlayer.addIrrigation(new AbstractIrrigation());
-        assertEquals(1, smartPlayer.getIrrigations().size());
+        assertEquals(1, smartPlayer.getIrrigation().size());
         smartPlayer.setChosenAction(List.of(new ArrayList<>(Collections.singletonList(2)), new ArrayList<>(Arrays.asList(3, 0))));
         MultipleAnswer<AbstractIrrigation, IrrigationCoordinate, ?> answer3 = smartPlayer.putIrrigation();
         Irrigation irrigation3 = answer3.getT().withCoordinate(answer3.getU());
-        assertEquals(0, smartPlayer.getIrrigations().size());
+        assertEquals(0, smartPlayer.getIrrigation().size());
         assertTrue(map.getIrrigationPlacements().contains(irrigation3.getCoordinate()));
         assertThrows(IllegalStateException.class, () -> smartPlayer.putIrrigation());
     }
