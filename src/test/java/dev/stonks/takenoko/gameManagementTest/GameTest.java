@@ -20,7 +20,6 @@ import java.util.stream.Collectors;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
 public class GameTest {
@@ -45,7 +44,7 @@ public class GameTest {
         expected.remove(Action.PutIrrigation);
         expected.remove(Action.PutImprovement);
         Set<Action> result = new HashSet<>(game.findPossibleActions(player1));
-        assertTrue(result.equals(expected));
+        assertEquals(expected, result);
     }
 
     @Test

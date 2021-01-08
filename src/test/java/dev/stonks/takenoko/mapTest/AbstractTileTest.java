@@ -13,7 +13,6 @@ public class AbstractTileTest {
     @Test
     void withCoordinates() {
         AbstractTile at = new AbstractTile(TileKind.Yellow);
-        Coordinate co = new Coordinate(42, 101);
 
         Coordinate[] cs = {
                 new Coordinate(42, 101),

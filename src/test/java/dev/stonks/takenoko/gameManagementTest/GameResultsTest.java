@@ -19,8 +19,8 @@ public class GameResultsTest {
 
     @Test
     public void testEqualitiesResults() {
-        assertTrue(res1.equals(res1));
-        assertFalse(res2.equals(new GameResults(2, 40, 2, 3)));
+        assertEquals(res1, res1);
+        assertNotEquals(new GameResults(2, 40, 2, 3), res2);
     }
 
     @Test
