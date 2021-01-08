@@ -328,7 +328,7 @@ public abstract class SmartPlayer extends Player implements Cloneable {
     }
 
     /**
-     * Return the action that the player want to do among [PutIrrigation, PutLayout]
+     * Return the action that the player want to do among [PutIrrigation, PutImprovement]
      * Return an empty optional if he doesn't want to play
      *
      * @param map the map state
