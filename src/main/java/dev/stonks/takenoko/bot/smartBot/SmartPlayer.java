@@ -439,7 +439,6 @@ public abstract class SmartPlayer extends Player implements Cloneable {
         if(allTiles.isEmpty()){
             for (Improvement wantedImprovement:getInteristingGardenerBamboo().stream().map(MultipleAnswer::getU).collect(Collectors.toSet())) {
                 if(improvements.contains(wantedImprovement) && !this.improvements.contains(wantedImprovement)){
-                    this.improvements.add(wantedImprovement);
                     return wantedImprovement;
                 }
             }
@@ -448,12 +447,10 @@ public abstract class SmartPlayer extends Player implements Cloneable {
             copy.removeAll(allTiles.stream().map(Tile::getImprovement).collect(Collectors.toSet()));
             if(!copy.isEmpty()){
                 chosenImprovement = getRandomInCollection(copy);
-                this.improvements.add(chosenImprovement);
                 return chosenImprovement;
             }
         }
         chosenImprovement = getRandomInCollection(improvements);
-        this.improvements.add(chosenImprovement);
         return chosenImprovement;
     }
 

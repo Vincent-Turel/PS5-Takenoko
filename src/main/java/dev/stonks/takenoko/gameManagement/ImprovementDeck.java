@@ -5,6 +5,7 @@ import dev.stonks.takenoko.map.Improvement;
 
 import java.util.Objects;
 import java.util.Optional;
+import java.util.logging.Logger;
 
 /**
  * Handles the whole improvement deck, hence abstracting it away from the game class.
@@ -12,6 +13,7 @@ import java.util.Optional;
  * @author the StonksDev team.
  */
 public class ImprovementDeck {
+    private final static Logger LOG = Logger.getLogger(ImprovementDeck.class.getSimpleName());
     /**
      * The amount of improvements of a specific type at the beginning of the game.
      */
@@ -123,5 +125,24 @@ public class ImprovementDeck {
     @Override
     public int hashCode() {
         return Objects.hash(remainingWatershed, remainingEnclosure, remainingFertilizer);
+    }
+
+    public void remove(Improvement chosenImprovement, int id) {
+        switch (chosenImprovement) {
+            case Watershed:
+                drawWatershed();
+                LOG.info("Player n°" + id + " draw a watershed improvement");
+                break;
+            case Enclosure:
+                drawEnclosure();
+                LOG.info("Player n°" + id + " draw an enclosure improvement");
+                break;
+            case Fertilizer:
+                drawFertilizer();
+                LOG.info("Player n°" + id + " draw a fertilizer improvement");
+                break;
+            default:
+                throw new RuntimeException("Improvement problem : this should not be possible");
+        }
     }
 }

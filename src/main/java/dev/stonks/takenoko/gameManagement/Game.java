@@ -195,22 +195,9 @@ public class Game {
                         if (improvementDeck.isFertilizerAvailable()) {
                             improvements.add(Improvement.Fertilizer);
                         }
-                        switch (player.chooseImprovement(improvements)) {
-                            case Watershed:
-                                improvementDeck.drawWatershed();
-                                LOG.info("Player n°" + player.getId() + " draw a watershed improvement");
-                                break;
-                            case Enclosure:
-                                improvementDeck.drawEnclosure();
-                                LOG.info("Player n°" + player.getId() + " draw an enclosure improvement");
-                                break;
-                            case Fertilizer:
-                                improvementDeck.drawFertilizer();
-                                LOG.info("Player n°" + player.getId() + " draw a fertilizer improvement");
-                                break;
-                            default:
-                                throw new RuntimeException("Improvement problem : this should not be possible");
-                        }
+                        Improvement chosenImprovement = player.chooseImprovement(improvements);
+                        player.addImprovement(chosenImprovement);
+                        improvementDeck.remove(chosenImprovement, player.getId());
                         effectDone = true;
                     }
                     break;
