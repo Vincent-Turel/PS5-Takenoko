@@ -62,8 +62,8 @@ public class GameManager {
      * Play n time the same game with the same bots,
      * and display statistics at the end.
      *
-     * @param n          the numnber of games that are going to be played
-     * @param sequential a boolean which indicates weither or not the game should be played in parallel.
+     * @param n          the number of games that are going to be played
+     * @param sequential a boolean which indicates whether or not the game should be played in parallel.
      */
     public void playNTime(int n, boolean sequential) {
         AtomicInteger count = new AtomicInteger(0);
@@ -81,7 +81,7 @@ public class GameManager {
             });
         }
         System.out.println("\n");
-        LOG.severe("Time required to play " + n + " games : " + (System.currentTimeMillis() - time) / 1000f + " secondes");
+        LOG.severe("Time required to play " + n + " games : " + (System.currentTimeMillis() - time) / 1000f + " seconds");
         try {
             Thread.sleep(100);
             System.out.print("\n");
@@ -92,10 +92,10 @@ public class GameManager {
     }
 
     /**
-     * Display the progress bar curent state
+     * Display the progress bar current state
      *
      * @param n           the number of games to run
-     * @param actualCount the actuel number of games that have already been runned
+     * @param actualCount the actual number of games that have already been run
      */
     private synchronized void updateProgressBar(int n, int actualCount) {
         int barLength = 55;
@@ -122,7 +122,7 @@ public class GameManager {
 
     /**
      * Add the statistics of the game in the stats.
-     * stats = [bot1[nbWinGame,nbLoseGame,nbDrawGame,summOfTheScore],...,botN[]]
+     * stats = [bot1[nbWinGame,nbLoseGame,nbDrawGame,sumOfTheScore],...,botN[]]
      * stats[0] contains the statistics of the first player, stats[n]  contains the statistics of the player number n
      */
     private void changeStats(Game game) {
@@ -139,7 +139,7 @@ public class GameManager {
      * @param id      the player's id
      * @param results the game result
      * @return an optional boolean for the victory
-     * if it's epty, it's a draw
+     * if it's empty, it's a draw
      */
     private Optional<Boolean> gameStateOf(int id, ArrayList<GameResults> results) {
         Optional<Boolean> victory = Optional.empty();
@@ -178,7 +178,7 @@ public class GameManager {
      * <p>
      * The display must include the number and percentage of games won/lost/null,
      * and the average score of each bot.
-     * [bot1[nbWinGame,nbLoseGame,nbDrawGame,summOfTheScore],...,botN[]]
+     * [bot1[nbWinGame,nbLoseGame,nbDrawGame,sumOfTheScore],...,botN[]]
      */
     private void displayStats(int n) throws UnsupportedOperationException {
         if (fullResult) {
@@ -279,9 +279,9 @@ public class GameManager {
             System.out.print(StringUtils.center(df.format(result.getFinalScore() / (float) numberOfGames), width) + vLine);
         }
         System.out.print("\n" + leftDownAngle);
-        System.out.print("─".repeat(smallWidth) + "┴");
+        System.out.print("─".repeat(smallWidth) + hUpLine);
         for (int i = 1; i < players.size(); i++) {
-            System.out.print("─".repeat(width) + "┴");
+            System.out.print("─".repeat(width) + hUpLine);
         }
         System.out.println(hLine.repeat(width) + rightDownAngle);
     }

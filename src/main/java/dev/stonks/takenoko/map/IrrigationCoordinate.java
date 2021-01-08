@@ -11,19 +11,19 @@ import java.util.stream.Stream;
  * Represents an the coordinate of a potential irrigation. Note that this does
  * not represent the irrigation itself, but its position.
  * <p>
- * Internally, irrigations are represented as a combinaison of a coordinate
- * and a direction, such that { coord, coord.moveWith(dir) } is the set of
+ * Internally, irrigation are represented as a combination of a coordinate
+ * and a direction, such that { coordinate, coordinate.moveWith(dir) } is the set of
  * the two tiles that are irrigated.
  * <p>
  * Privileging one of the two coordinates allows us to determine, for each
  * irrigation, where is has to be stored on the map.
  */
 public class IrrigationCoordinate {
-    // Note: coord represents the south-ouest-most coordinate of the two
+    // Note: coordinate represents the south-west-most coordinate of the two
     // irrigated tiles.
-    private final Coordinate coord;
+    private final Coordinate coordinate;
     // Note: dir represents the direction for which the second tile equals
-    // coord.moveWith(dir).
+    // coordinate.moveWith(dir).
     private final Direction dir;
 
     /**
@@ -35,27 +35,27 @@ public class IrrigationCoordinate {
      */
     public IrrigationCoordinate(Coordinate ca, Coordinate cb) throws IllegalPlacementException {
         try {
-            coord = Coordinate.getIrrigationStorage(ca, cb);
+            coordinate = Coordinate.getIrrigationStorage(ca, cb);
         } catch (NoSuchElementException e) {
             throw new IllegalPlacementException("Attempt to place an irrigation between two non-neighbor tiles");
         }
-        Coordinate otherCoord = Coordinate.getSecondaryIrrigationStorage(ca, cb);
-        // This call to get is guaranteed to succeed because the neighborness
+        Coordinate otherCoordinate = Coordinate.getSecondaryIrrigationStorage(ca, cb);
+        // This call to get is guaranteed to succeed because the neighbors
         // of getIrrigationStorage is checked by getIrrigationStorage.
-        dir = coord.displacementFor(otherCoord).get();
+        dir = coordinate.displacementFor(otherCoordinate).get();
     }
 
-    public IrrigationCoordinate(IrrigationCoordinate coord) {
-        this.coord = new Coordinate(coord.coord);
-        this.dir = coord.dir;
+    public IrrigationCoordinate(IrrigationCoordinate coordinate) {
+        this.coordinate = new Coordinate(coordinate.coordinate);
+        this.dir = coordinate.dir;
     }
 
     /**
      * Returns the other coordinate stored internally. This coordinate is, with
-     * coord, the other coordinate that is irrigated by the irrigation.
+     * coordinate, the other coordinate that is irrigated by the irrigation.
      */
-    private Coordinate otherCoord() {
-        return coord.moveWith(dir);
+    private Coordinate otherCoordinate() {
+        return coordinate.moveWith(dir);
     }
 
     /**
@@ -63,7 +63,7 @@ public class IrrigationCoordinate {
      * directly irrigated by the current irrigation.
      */
     public Set<Coordinate> getDirectlyIrrigatedCoordinates() {
-        return Set.of(coord, otherCoord());
+        return Set.of(coordinate, otherCoordinate());
     }
 
     /**
@@ -86,7 +86,7 @@ public class IrrigationCoordinate {
 
         IrrigationCoordinate rhs = (IrrigationCoordinate) o;
 
-        return coord.equals(rhs.coord) && dir.equals(rhs.dir);
+        return coordinate.equals(rhs.coordinate) && dir.equals(rhs.dir);
     }
 
     /**
@@ -99,14 +99,14 @@ public class IrrigationCoordinate {
     public int hashCode() {
         // Note: we don't use Object.hash here because we need to ensure that
         // a and b can be swapped and still get the same hash code.
-        return coord.hashCode() * otherCoord().hashCode();
+        return coordinate.hashCode() * otherCoordinate().hashCode();
     }
 
     /**
      * Returns where in the map the irrigation should be stored.
      */
     public Coordinate getStorageCoordinate() {
-        return coord;
+        return coordinate;
     }
 
     /**
@@ -125,14 +125,14 @@ public class IrrigationCoordinate {
     }
 
     /**
-     * Returns the offset associated to the neighbor irrigations.
+     * Returns the offset associated to the neighbor irrigation.
      * An irrigation is the neighbor of another irrigation if they share one
      * end.
      * The result is guaranteed to contain exactly four elements.
      */
     public Set<IrrigationCoordinate> neighbors() {
-        Coordinate ca = coord;
-        Coordinate cb = otherCoord();
+        Coordinate ca = coordinate;
+        Coordinate cb = otherCoordinate();
         Set<Coordinate> commonNeighbors = ca.commonNeighborsWith(cb);
 
 
@@ -142,7 +142,7 @@ public class IrrigationCoordinate {
             throw new IllegalStateException("Two neighbor tiles should have exactly two common neighbors");
         }
 
-        // Here we cheat a bit: we create irrigations that we use only in
+        // Here we cheat a bit: we create irrigation that we use only in
         // order to compute the offset.
         return commonNeighbors.stream()
                 .flatMap(neighbor -> {
@@ -163,6 +163,6 @@ public class IrrigationCoordinate {
      * Returns the coordinates of the tiles that are against the irrigation.
      */
     Set<Coordinate> getCoordinatesOfPointedTiles() {
-        return coord.commonNeighborsWith(coord.moveWith(dir));
+        return coordinate.commonNeighborsWith(coordinate.moveWith(dir));
     }
 }

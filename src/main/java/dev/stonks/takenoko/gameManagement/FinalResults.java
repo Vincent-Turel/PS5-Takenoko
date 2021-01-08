@@ -27,7 +27,7 @@ public class FinalResults {
     /**
      * Change the final statistics of a player
      *
-     * @param victory is an optionnal boolean who tell if it's a victory
+     * @param victory is an optional boolean who tell if it's a victory
      * @param score is the score of the player at the end of the game
      */
     public synchronized void change(Optional<Boolean> victory, int score) {

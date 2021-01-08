@@ -37,8 +37,6 @@ public enum Direction {
     /**
      * Returns an index which is unique for each code specific. Index 0
      * corresponds to north, it is increased by one clockwise.
-     *
-     * @return
      */
     public int index() {
         return this.ordinal();
@@ -46,8 +44,6 @@ public enum Direction {
 
     /**
      * Create a <code>Direction</code> pointing in the opposite direction.
-     *
-     * @return
      */
     public Direction reverse() {
         int newDir = (ordinal() + 3) % 6;

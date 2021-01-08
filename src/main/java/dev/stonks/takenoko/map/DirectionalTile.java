@@ -9,12 +9,12 @@ import java.util.Objects;
  *
  * @author the StonksDev team
  */
-public class DirectionnedTile {
+public class DirectionalTile {
     private final Tile t;
     private final Direction d;
 
     /**
-     * Constructs a new <code>DirectionnedTile</code>
+     * Constructs a new <code>DirectionalTile</code>
      * <p>
      * This method should not called directly. <code>Tile:withDirection</code>
      * should be used instead.
@@ -22,7 +22,7 @@ public class DirectionnedTile {
      * @param t the associated <code>Tile</code>
      * @param d the associated <code>Direction</code>
      */
-    DirectionnedTile(Tile t, Direction d) {
+    DirectionalTile(Tile t, Direction d) {
         this.t = t;
         this.d = d;
     }
@@ -44,8 +44,8 @@ public class DirectionnedTile {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof DirectionnedTile)) throw IllegalEqualityExceptionGenerator.create(DirectionnedTile.class, o);
-        DirectionnedTile that = (DirectionnedTile) o;
+        if (!(o instanceof DirectionalTile)) throw IllegalEqualityExceptionGenerator.create(DirectionalTile.class, o);
+        DirectionalTile that = (DirectionalTile) o;
         return Objects.equals(t, that.t) &&
                 d == that.d;
     }

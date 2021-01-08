@@ -16,7 +16,7 @@ import java.util.stream.Stream;
  * @author the StonksDev team
  */
 public class Map {
-    private final List<Irrigation> irrigations;
+    private final List<Irrigation> irrigation;
     private final HashMap<Coordinate, Tile> tiles;
 
     private final int delta;
@@ -33,10 +33,10 @@ public class Map {
         delta = tileNumber + 1;
 
         tiles = new HashMap<>(27);
-        irrigations = new ArrayList<>(20);
+        irrigation = new ArrayList<>(20);
 
         unsetAllTiles();
-        unsetAllIrrigations();
+        unsetAllIrrigation();
         setInitialTile();
 
         Coordinate initialPawnChord = new Coordinate(delta, delta);
@@ -54,12 +54,10 @@ public class Map {
         
         map
                 .tiles
-                .entrySet()
-                .stream()
-                .forEach(entry -> this.tiles.put(new Coordinate(entry.getKey()), new Tile(entry.getValue())));
+                .forEach((key, value) -> this.tiles.put(new Coordinate(key), new Tile(value)));
 
-        this.irrigations = map
-                .irrigations
+        this.irrigation = map
+                .irrigation
                 .stream()
                 .map(Irrigation::new)
                 .collect(Collectors.toList());
@@ -69,8 +67,8 @@ public class Map {
         this.tiles.clear();
     }
 
-    private void unsetAllIrrigations() {
-        this.irrigations.clear();
+    private void unsetAllIrrigation() {
+        this.irrigation.clear();
     }
 
     /**
@@ -110,14 +108,14 @@ public class Map {
     }
 
     private void setInitialTile() {
-        Coordinate initialTileCoord = new Coordinate(delta, delta);
+        Coordinate initialTileCoordinate = new Coordinate(delta, delta);
 
         if (!tiles.isEmpty()) {
             throw new IllegalStateException("Initial tile should be first tile");
         }
 
         try {
-            setTile(Tile.initialTile(initialTileCoord));
+            setTile(Tile.initialTile(initialTileCoordinate));
         } catch (IllegalPlacementException e) {
             throw new RuntimeException("Initial tile placement should not fail");
         }
@@ -190,7 +188,7 @@ public class Map {
             }
         });
 
-        irrigations.add(i);
+        irrigation.add(i);
     }
 
     /**
@@ -207,27 +205,12 @@ public class Map {
     }
 
     /**
-     * Returns an irrigation, if it exists. If a and b are not neighbors, then
-     * returns Optional.empty.
-     */
-    Optional<Irrigation> getIrrigationAgainst(Coordinate a, Coordinate b) {
-        // This cast is safe because commonNeighborsWith returns a set of
-        // Coordinates.
-        Coordinate[] trueCoordinates = (Coordinate[]) a.commonNeighborsWith(b).toArray();
-        if (trueCoordinates.length != 2) {
-            return Optional.empty();
-        }
-
-        return getIrrigationBetween(trueCoordinates[0], trueCoordinates[1]);
-    }
-
-    /**
      * Returns an irrigation, if it exists.
      */
-    Optional<Irrigation> getIrrigation(IrrigationCoordinate coord) {
-        return irrigations
+    Optional<Irrigation> getIrrigation(IrrigationCoordinate coordinate) {
+        return irrigation
                 .stream()
-                .filter(i -> i.getCoordinate().equals(coord))
+                .filter(i -> i.getCoordinate().equals(coordinate))
                 .findFirst();
     }
 
@@ -269,18 +252,18 @@ public class Map {
         return i
                 .neighbors()
                 .stream()
-                .anyMatch(coord -> getIrrigation(coord).isPresent());
+                .anyMatch(coordinate -> getIrrigation(coordinate).isPresent());
     }
 
     /**
-     * Returns a set of every avalaible irrigation placement position.
+     * Returns a set of every available irrigation placement position.
      */
     public Set<IrrigationCoordinate> getIrrigationPlacements() {
         Stream<IrrigationCoordinate> neighborOfInitial = initialTile()
                 .getConvergingIrrigationCoordinate()
                 .stream();
 
-        Stream<IrrigationCoordinate> neighborsOfAll = irrigations
+        Stream<IrrigationCoordinate> neighborsOfAll = irrigation
                 .stream()
                 .flatMap(irrigation -> irrigation.getCoordinate().neighbors().stream());
 
@@ -292,15 +275,15 @@ public class Map {
     /**
      * Returns the tile at given coordinate.
      *
-     * @param coord the coordinate of the said tile.
+     * @param coordinate the coordinate of the said tile.
      * @return the tile, if it exists.
      */
-    public Optional<Tile> getTile(Coordinate coord) {
-        if (!tiles.containsKey(coord)) {
+    public Optional<Tile> getTile(Coordinate coordinate) {
+        if (!tiles.containsKey(coordinate)) {
             return Optional.empty();
         }
 
-        return Optional.of(tiles.get(coord));
+        return Optional.of(tiles.get(coordinate));
     }
 
     /**
@@ -314,7 +297,7 @@ public class Map {
     /**
      * Adds a new tile to the <code>Map</code>.
      * <p>
-     * The `DirectionnedTile` class is used here because it allows to group
+     * The `DirectionalTile` class is used here because it allows to group
      * both a tile and a direction together.
      * <p>
      * This function updates the tiles passed as argument in order to add
@@ -329,15 +312,15 @@ public class Map {
      * <p>
      * Will place <code>a</code> on top of <code>b</code>.
      */
-    public Tile addNeighborOf(TileKind kind, DirectionnedTile... tiles) throws IllegalPlacementException {
+    public Tile addNeighborOf(TileKind kind, DirectionalTile... tiles) throws IllegalPlacementException {
         Coordinate c = Coordinate.fromNeighbors(tiles);
         AbstractTile at = new AbstractTile(kind);
         return setTile(c, at);
     }
 
     public Optional<Tile> getNeighborOf(Tile t, Direction d) {
-        Coordinate coord = t.getCoordinate().moveWith(d);
-        return getTile(coord);
+        Coordinate coordinate = t.getCoordinate().moveWith(d);
+        return getTile(coordinate);
     }
 
     /**
@@ -371,8 +354,8 @@ public class Map {
         Coordinate[] neighbors = c.neighbors();
 
         int neighborCount = 0;
-        for (Coordinate neighborCoord : neighbors) {
-            if (tileAt(neighborCoord)) {
+        for (Coordinate neighborCoordinate : neighbors) {
+            if (tileAt(neighborCoordinate)) {
                 neighborCount++;
             }
         }
@@ -385,23 +368,11 @@ public class Map {
     }
 
     /**
-     * Returns the number of tiles that are on the board.
-     * The initial tile is not counted.
-     */
-    int getPlacedTileNumber() {
-        // This is guaranteed to be higher than or equal to 0 since we have at
-        // least the initial tile.
-        //
-        // TODO: investigate if the function can return a long instead.
-        return (int) placedTiles().count() - 1;
-    }
-
-    /**
      * Returns all the coordinates at which a tile is placed in the map. The
      * returned stream is guaranteed to return unique values only.
      */
     public Stream<Tile> placedTiles() {
-        return tiles.entrySet().stream().map(java.util.Map.Entry::getValue);
+        return tiles.values().stream();
     }
 
     @Override
@@ -410,7 +381,7 @@ public class Map {
         if (!(o instanceof Map)) throw IllegalEqualityExceptionGenerator.create(Map.class, o);
         Map map = (Map) o;
         return tiles.equals(map.tiles) &&
-                irrigations.equals(map.irrigations) &&
+                irrigation.equals(map.irrigation) &&
                 Objects.equals(panda, map.panda) &&
                 Objects.equals(gardener, map.gardener);
     }
@@ -419,7 +390,7 @@ public class Map {
     public int hashCode() {
         int result = Objects.hash(panda, gardener);
         result = 31 * result + tiles.hashCode();
-        result = 31 * result + irrigations.hashCode();
+        result = 31 * result + irrigation.hashCode();
         return result;
     }
 
@@ -443,10 +414,10 @@ public class Map {
     }
 
     public Set<Tile> getImprovementPlacements() {
+        // ... as a stream...
         return tiles                                        // The whole map...
-                .entrySet()                                 //
-                .stream()                                   // ... as a stream...
-                .map(java.util.Map.Entry::getValue)         // ... but only the tiles...
+                .values()                                 //
+                .stream()         // ... but only the tiles...
                 .filter(Tile::canReceiveImprovement)        // ... Except the tiles where no improvement can be added...
                 .collect(Collectors.toSet());               // ... In a Set.
     }

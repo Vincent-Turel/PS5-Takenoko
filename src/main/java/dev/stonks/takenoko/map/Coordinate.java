@@ -23,9 +23,9 @@ public class Coordinate {
         this.y = y;
     }
 
-    public Coordinate(Coordinate coord) {
-        this.x = coord.x;
-        this.y = coord.y;
+    public Coordinate(Coordinate coordinate) {
+        this.x = coordinate.x;
+        this.y = coordinate.y;
     }
 
     /**
@@ -64,16 +64,16 @@ public class Coordinate {
      *                                   and tile coordinates does not
      *                                   match each other.
      */
-    static Coordinate fromNeighbors(DirectionnedTile... neighbors) throws IllegalPlacementException {
-        Coordinate tileCoord = null;
+    static Coordinate fromNeighbors(DirectionalTile... neighbors) throws IllegalPlacementException {
+        Coordinate tileCoordinate = null;
 
-        for (DirectionnedTile neighbor : neighbors) {
+        for (DirectionalTile neighbor : neighbors) {
             Direction d = neighbor.direction();
             Coordinate c = neighbor.tile().getCoordinate();
 
-            if (tileCoord == null) {
-                tileCoord = c.moveWith(d.reverse());
-            } else if (!tileCoord.moveWith(d).equals(c)) {
+            if (tileCoordinate == null) {
+                tileCoordinate = c.moveWith(d.reverse());
+            } else if (!tileCoordinate.moveWith(d).equals(c)) {
                 throw new IllegalPlacementException("Tiles can not be neighbor");
             }
         }
@@ -85,7 +85,7 @@ public class Coordinate {
             throw new IllegalPlacementException("Tile don't have required neighbors");
         }
 
-        return tileCoord;
+        return tileCoordinate;
     }
 
     /**
@@ -100,7 +100,7 @@ public class Coordinate {
      *                                   computed coordinate don't have
      *                                   the correct neighbors.
      */
-    static Coordinate validFromNeighbor(DirectionnedTile... neighbors) throws IllegalPlacementException {
+    static Coordinate validFromNeighbor(DirectionalTile... neighbors) throws IllegalPlacementException {
         Coordinate c = fromNeighbors(neighbors);
 
         boolean neighborOfInitial = Arrays.stream(neighbors).anyMatch(dt -> dt.tile().isInitial());

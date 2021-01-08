@@ -12,14 +12,14 @@ import java.util.Set;
  * @author the StonksDev team
  */
 public class Tile {
-    private final Coordinate coord;
+    private final Coordinate coordinate;
     private final Bamboo bamboo;
     private final TileKind kind;
     private boolean irrigated;
     private Improvement improvement;
 
     public Tile(Coordinate c, TileKind k, Improvement i) {
-        coord = c;
+        coordinate = c;
         kind = k;
         bamboo = new Bamboo(this.kind);
         irrigated = false;
@@ -36,7 +36,7 @@ public class Tile {
 
     public Tile(Tile tile) {
         this.bamboo = new Bamboo(tile.bamboo);
-        this.coord = new Coordinate(tile.coord);
+        this.coordinate = new Coordinate(tile.coordinate);
         this.irrigated = tile.irrigated;
         this.kind = tile.kind;
         this.improvement = tile.improvement;
@@ -52,7 +52,7 @@ public class Tile {
     /**
      * Creates a tile with given neighbors.
      * <p>
-     * The `DirectionnedTile` class is used here because it allows to group
+     * The `DirectionalTile` class is used here because it allows to group
      * both a tile and a direction together.
      * <p>
      * The direction is the direction relative to the newly created tile. For
@@ -67,27 +67,27 @@ public class Tile {
      * @param neighbors The neighbors of the tile.
      * @return The newly created tile
      */
-    public static Tile neighborOf(TileKind kind, DirectionnedTile... neighbors) throws IllegalPlacementException {
-        Coordinate tileCoord = Coordinate.validFromNeighbor(neighbors);
-        return new Tile(tileCoord, kind);
+    public static Tile neighborOf(TileKind kind, DirectionalTile... neighbors) throws IllegalPlacementException {
+        Coordinate tileCoordinate = Coordinate.validFromNeighbor(neighbors);
+        return new Tile(tileCoordinate, kind);
     }
 
     /**
-     * Creates a DirectionnedTile, with a given direction.
+     * Creates a DirectionalTile, with a given direction.
      *
      * @param d the direction associated to the current <code>Tile</code>.
-     * @return a <code>DirectionnedTile</code> storing both <code>d</code> and
+     * @return a <code>DirectionalTile</code> storing both <code>d</code> and
      * the current <code>Tile</code>.
      */
-    public DirectionnedTile withDirection(Direction d) {
-        return new DirectionnedTile(this, d);
+    public DirectionalTile withDirection(Direction d) {
+        return new DirectionalTile(this, d);
     }
 
     /**
      * Returns the tile's coordinates.
      */
     public Coordinate getCoordinate() {
-        return coord;
+        return coordinate;
     }
 
     /**
@@ -98,11 +98,11 @@ public class Tile {
     }
 
     /**
-     * This method is usefull for the players because it allows
+     * This method is useful for the players because it allows
      * him to irrigate a tile without growing the bamboo.
-     * Also usefull for test
+     * Also useful for test
      *
-     * @param irrigated boolean which specifies weither or not the tile should be irrigated.
+     * @param irrigated boolean which specifies whether or not the tile should be irrigated.
      */
     public void setIrrigated(boolean irrigated) {
         this.irrigated = irrigated;
@@ -187,7 +187,7 @@ public class Tile {
         }
 
         Tile tile = (Tile) o;
-        return coord.equals(tile.coord) &&
+        return coordinate.equals(tile.coordinate) &&
                 bamboo.equals(tile.bamboo) &&
                 kind == tile.kind &&
                 improvement == tile.improvement;
@@ -195,14 +195,14 @@ public class Tile {
 
     @Override
     public int hashCode() {
-        return Objects.hash(coord, bamboo, kind);
+        return Objects.hash(coordinate, bamboo, kind);
     }
 
     /**
      * Returns all the IrrigationPosition that are around the tile.
      */
     public Set<IrrigationCoordinate> getConvergingIrrigationCoordinate() {
-        return coord.getConvertingIrrigationCoordinate();
+        return coordinate.getConvertingIrrigationCoordinate();
     }
 
     /**

@@ -5,15 +5,15 @@ import dev.stonks.takenoko.IllegalEqualityExceptionGenerator;
 /**
  * Represents an irrigation, which has been placed on the map.
  * <p>
- * Internally, irrigations are represented as a combinaison of a coordinate
- * and a direction, such that { coord, coord.moveWith(dir) } is the set of
+ * Internally, irrigation are represented as a combination of a coordinate
+ * and a direction, such that { coordinate, coordinate.moveWith(dir) } is the set of
  * the two tiles that are irrigated.
  * <p>
  * Privileging one of the two coordinates allows us to determine, for each
  * irrigation, where is has to be stored on the map.
  */
 public class Irrigation {
-    private final IrrigationCoordinate coord;
+    private final IrrigationCoordinate coordinate;
 
     /**
      * Creates a new Irrigation from the two two tile coordinates that are on
@@ -23,19 +23,19 @@ public class Irrigation {
      *                                   each other.
      */
     public Irrigation(Coordinate ca, Coordinate cb) throws IllegalPlacementException {
-        coord = new IrrigationCoordinate(ca, cb);
+        coordinate = new IrrigationCoordinate(ca, cb);
     }
 
     public Irrigation(IrrigationCoordinate irrigationCoordinate) {
-        coord = irrigationCoordinate;
+        coordinate = irrigationCoordinate;
     }
 
     public Irrigation(Irrigation irrigation) {
-        this.coord = new IrrigationCoordinate(irrigation.coord);
+        this.coordinate = new IrrigationCoordinate(irrigation.coordinate);
     }
 
     public IrrigationCoordinate getCoordinate() {
-        return coord;
+        return coordinate;
     }
 
     @Override
@@ -49,11 +49,11 @@ public class Irrigation {
         }
 
         Irrigation rhs = (Irrigation) other;
-        return coord.equals(rhs.coord);
+        return coordinate.equals(rhs.coordinate);
     }
 
     @Override
     public int hashCode() {
-        return coord.hashCode();
+        return coordinate.hashCode();
     }
 }
