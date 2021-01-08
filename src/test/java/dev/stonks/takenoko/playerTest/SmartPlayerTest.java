@@ -196,12 +196,15 @@ public class SmartPlayerTest {
         smartPlayer.setCurrentMapState(map);
         smartPlayer.addObjectives(new GardenerObjective(5,new BambooPattern(TileKind.Green, 2, 1),Improvement.Enclosure));
         Improvement chosenImprovement = smartPlayer.chooseImprovement(improvements);
+        smartPlayer.addImprovement(chosenImprovement);
         assertTrue(chosenImprovement.equals(Improvement.Enclosure));
 
         map.setTile(map.initialTile().getCoordinate().moveWith(Direction.SouthEast), new AbstractTile(TileKind.Yellow));
         smartPlayer.setCurrentMapState(map);
         smartPlayer.addObjectives(new GardenerObjective(5,new BambooPattern(TileKind.Yellow, 2, 1),Improvement.Fertilizer));
-        assertTrue(smartPlayer.chooseImprovement(improvements).equals(Improvement.Fertilizer));
+        chosenImprovement = smartPlayer.chooseImprovement(improvements);
+        smartPlayer.addImprovement(chosenImprovement);
+        assertTrue(chosenImprovement.equals(Improvement.Fertilizer));
 
         assertTrue(smartPlayer.getImprovements().contains(Improvement.Enclosure) &&
                 smartPlayer.getImprovements().contains(Improvement.Fertilizer) &&
@@ -216,7 +219,7 @@ public class SmartPlayerTest {
         Tile t = map.setTile(map.initialTile().getCoordinate().moveWith(Direction.South), new AbstractTile(TileKind.Green));
         t.cutBamboo();
 
-        smartPlayer.chooseImprovement(improvements);
+        smartPlayer.addImprovement(smartPlayer.chooseImprovement(improvements));
         assertEquals(1, smartPlayer.getImprovements().size());
         var answer = smartPlayer.putImprovement();
         assertEquals(Improvement.Watershed, answer.getU());
