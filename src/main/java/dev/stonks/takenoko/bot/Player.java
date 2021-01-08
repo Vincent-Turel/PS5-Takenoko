@@ -257,6 +257,10 @@ public abstract class Player {
         return improvements;
     }
 
+    public void addImprovement(Improvement improvement) {
+        this.improvements.add(improvement);
+    }
+
     /**
      * Chose where the player wanna put his irrigation and return it.
      *
