@@ -264,6 +264,16 @@ public class GameManager {
             System.out.print(StringUtils.center(df.format(((result.getNbLoose() / (float) numberOfGames) * 100)) + "%", width) + vLine);
         }
         printArrayHelper(hLine, vLine, vRightLine, vLeftLine, intersection, width, smallWidth);
+        System.out.print(StringUtils.center("Draw", smallWidth) + vLine);
+        for (FinalResults result : stats) {
+            System.out.print(StringUtils.center(iT.format(result.getNbDraw())+"/"+numberOfGames, width) + vLine);
+        }
+        printArrayHelper(hLine, vLine, vRightLine, vLeftLine, intersection, width, smallWidth);
+        System.out.print(StringUtils.center("% Draw", smallWidth) + vLine);
+        for (FinalResults result : stats) {
+            System.out.print(StringUtils.center(df.format(((result.getNbDraw() / (float) numberOfGames) * 100)) + "%", width) + vLine);
+        }
+        printArrayHelper(hLine, vLine, vRightLine, vLeftLine, intersection, width, smallWidth);
         System.out.print(StringUtils.center("Average score", smallWidth) + vLine);
         for (FinalResults result : stats) {
             System.out.print(StringUtils.center(df.format(result.getFinalScore() / (float) numberOfGames), width) + vLine);
@@ -274,10 +284,6 @@ public class GameManager {
             System.out.print("─".repeat(width) + "┴");
         }
         System.out.println(hLine.repeat(width) + rightDownAngle);
-        System.out.println(leftUpAngle + hLine.repeat(width) + hDownLine + hLine.repeat(width) + rightUpAngle);
-        System.out.print(vLine + StringUtils.center("Null game : " + df.format(stats.get(0).getNbDraw() / (float) numberOfGames * 100) + "%", width) + vLine);
-        System.out.println(StringUtils.center(iT.format(stats.get(0).getNbDraw())+"/"+numberOfGames+" games", width) + vLine);
-        System.out.print(leftDownAngle + hLine.repeat(width) + hUpLine + hLine.repeat(width) + rightDownAngle);
     }
 
     private void printArrayHelper(String hLine, String vLine, String vRightLine, String vLeftLine, String intersection, int width, int smallWidth) {
