@@ -30,7 +30,7 @@ public class FinalResults {
      * @param victory is an optionnal boolean who tell if it's a victory
      * @param score is the score of the player at the end of the game
      */
-    public void change(Optional<Boolean> victory, int score) {
+    public synchronized void change(Optional<Boolean> victory, int score) {
         if (victory.isEmpty()) {
             nbDraw++;
         } else {
